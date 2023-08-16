@@ -1,0 +1,47 @@
+@import models.requests.DataRequest
+@import uk.gov.hmrc.govukfrontend.views.viewmodels.charactercount.CharacterCount
+@import viewmodels.LabelSize
+
+@this(
+        layout: templates.Layout,
+        formHelper: FormWithCSRF,
+        govukErrorSummary: GovukErrorSummary,
+        govukCharacterCount : GovukCharacterCount,
+        govukButton: GovukButton,
+        h1: components.h1,
+        h2: components.h2,
+        continueOrExit: components.continueOrExit
+)
+
+@(form: Form[_], mode: Mode)(implicit request: DataRequest[_], messages: Messages)
+
+@layout(pageTitle = title(form, messages("$className;format="decap"$.title"))) {
+
+    @formHelper(action = routes.$className$Controller.onSubmit(request.ern, request.arc, mode)) {
+
+        @if(form.errors.nonEmpty) {
+            @govukErrorSummary(ErrorSummaryViewModel(form))
+        }
+
+        @h2(messages("arc.subHeading", request.arc), "govuk-caption-l")
+
+        @{govukCharacterCount(CharacterCount(
+            id = "value",
+            name = "value",
+            maxLength = Some($maxLength$),
+            label = LabelViewModel(Text(messages("$className;format="decap"$.heading"))).asPageHeading(LabelSize.Large),
+            value = form("value").value,
+            errorMessage = form.errors("value") match {
+                case Nil => None
+                case errors => Some(ErrorMessage(content = HtmlContent(errors.map(err => messages(err.message)).mkString("<br>"))))
+            }
+        ))}
+
+        @continueOrExit()
+
+    }
+}
+
+@{
+    //$COVERAGE-OFF$
+}

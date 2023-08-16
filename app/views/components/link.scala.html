@@ -1,0 +1,43 @@
+@*
+ * Copyright 2023 HM Revenue & Customs
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *@
+
+@this()
+
+@(
+        link: String,
+        messageKey: String,
+        id: Option[String] = None,
+        opensInNewTab: Boolean = false,
+        button: Boolean = false,
+        buttonSecondary: Boolean = false,
+        classes: String = "govuk-link",
+        hiddenContent: Option[String] = None,
+        withEndingComma: Boolean = false,
+        withFullStop: Boolean = false,
+        withSingleQuotes: Boolean = false
+)(implicit messages: Messages)
+
+@if(withSingleQuotes){&lsquo;}<a href="@link"
+   class="@classes@if(button){ govuk-button}@if(buttonSecondary){ govuk-button--secondary}"
+   @id.map(x => s" id=$x")
+   @if(opensInNewTab){target="_blank" rel="noopener noreferrer"}
+   @if(button){role="button" data-module="govuk-button"}>@messages(messageKey)@if(opensInNewTab)(" " + messages("site.opensInNewTab"))@hiddenContent.map { content=>
+        <span class="govuk-visually-hidden"> @content</span>
+    }</a>@if(withSingleQuotes){&rsquo;}@if(withEndingComma){,}@if(withFullStop){.}
+
+@{
+ //$COVERAGE-OFF$
+}

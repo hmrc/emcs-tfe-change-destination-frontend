@@ -1,0 +1,66 @@
+@*
+ * Copyright 2023 HM Revenue & Customs
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *@
+
+@import config.AppConfig
+@import models.requests.UserRequest
+
+@this(
+        layout: templates.Layout,
+        govukButton: GovukButton,
+        appConfig: AppConfig,
+        h1: components.h1,
+        p: components.p,
+        bullets: components.bullets,
+        link: components.link
+)
+
+@()(implicit request: UserRequest[_], messages: Messages, config: AppConfig)
+
+@layout(pageTitle = titleNoForm(messages("journeyRecovery.title"))) {
+
+    @h1("journeyRecovery.heading", classes = "govuk-heading-xl")
+
+    @p() {
+        @messages("journeyRecovery.p1")
+    }
+
+    @p() {
+        @messages("journeyRecovery.p2")
+    }
+
+    @bullets(Seq(
+        HtmlFormat.fill(Seq(
+            Html(messages("journeyRecovery.numbered1.preLink")),
+            link(config.emcsMovementsUrl(request.ern), "journeyRecovery.numbered1.link", withSingleQuotes = true),
+            Html(messages("journeyRecovery.numbered1.afterLink"))
+        )),
+        Html(messages("journeyRecovery.numbered2")),
+        Html(messages("journeyRecovery.numbered3"))
+    ), numbered = true)
+
+    @p() {
+        @HtmlFormat.fill(Seq(
+            Html(messages("journeyRecovery.p3")),
+            link(config.emcsTfeHomeUrl(Some(request.ern)), "journeyRecovery.p3.viewAccountLink", withEndingComma = true),
+            Html(messages("journeyRecovery.p3.or")),
+            link(controllers.auth.routes.AuthController.signOut().url, "journeyRecovery.p3.signOutLink", withFullStop = true)
+        ))
+    }
+}
+
+@{
+    //$COVERAGE-OFF$
+}
