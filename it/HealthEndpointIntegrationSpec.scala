@@ -1,5 +1,3 @@
-package uk.gov.hmrc.emcstfechangedestinationfrontend
-
 import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
