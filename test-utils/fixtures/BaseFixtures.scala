@@ -33,7 +33,6 @@ trait BaseFixtures {
   val testOnwardRoute = Call("GET", "/foo")
 
   val emptyUserAnswers: UserAnswers = UserAnswers(
-    internalId = testInternalId,
     ern = testErn,
     arc = testArc,
     lastUpdated = Instant.now().truncatedTo(ChronoUnit.MILLIS)

@@ -53,7 +53,7 @@ class IndexController @Inject()(override val messagesApi: MessagesApi,
 //          )
 
         case _ =>
-          initialiseAndRedirect(UserAnswers(request.internalId, request.ern, request.arc))
+          initialiseAndRedirect(UserAnswers(request.ern, request.arc))
       }
     }
 
