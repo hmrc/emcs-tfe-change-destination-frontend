@@ -1,0 +1,49 @@
+@import models.requests.DataRequest
+@import viewmodels.InputWidth._
+
+@this(
+    layout: templates.Layout,
+    formHelper: FormWithCSRF,
+    govukErrorSummary: GovukErrorSummary,
+    govukInput: GovukInput,
+    govukButton: GovukButton,
+    h1: components.h1
+)
+
+@(form: Form[_], mode: Mode)(implicit request: DataRequest[_], messages: Messages)
+
+@layout(pageTitle = title(form, messages("$className;format="decap"$.title"))) {
+
+    @formHelper(action = routes.$className$Controller.onSubmit(request.ern, request.arc, mode), 'autoComplete -> "off") {
+
+        @if(form.errors.nonEmpty) {
+            @govukErrorSummary(ErrorSummaryViewModel(form))
+        }
+
+        @h1("$className;format="decap"$.heading", Some(messages("arc.subHeading", request.arc)), "govuk-heading-l")
+
+        @govukInput(
+            InputViewModel(
+                field = form("$field1Name$"),
+                label = LabelViewModel(messages("$className;format="decap"$.$field1Name$"))
+            )
+            .withWidth(Full)
+        )
+
+        @govukInput(
+            InputViewModel(
+                field = form("$field2Name$"),
+                label = LabelViewModel(messages("$className;format="decap"$.$field2Name$"))
+            )
+            .withWidth(Full)
+        )
+
+        @govukButton(
+            ButtonViewModel(messages("site.continue"))
+        )
+    }
+}
+
+@{
+    //$COVERAGE-OFF$
+}

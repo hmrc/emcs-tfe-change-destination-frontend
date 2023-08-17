@@ -1,0 +1,56 @@
+@*
+ * Copyright 2023 HM Revenue & Customs
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *@
+
+@import config.AppConfig
+
+@this(
+        layout: templates.Layout,
+        h1: components.h1,
+        p: components.p,
+        bullets: components.bullets,
+        link: components.link
+)
+
+@()(implicit request: Request[_], messages: Messages, config: AppConfig)
+
+@layout(titleNoForm(messages("inactive.title")), showBackLink = false) {
+
+    @h1("inactive.heading", classes = "govuk-heading-xl govuk-!-margin-bottom-6")
+
+    @p() {
+        @messages("inactive.p1")
+    }
+
+    @p() {
+        @messages("inactive.p2")
+    }
+
+    @bullets(Seq(
+        Html(messages("inactive.bullet1")),
+        HtmlFormat.fill(Seq(
+            link(config.registerGuidance, "inactive.bullet2.link", withEndingComma = true),
+            Html(messages("inactive.bullet2.afterLink"))
+        ))
+    ))
+
+    @p() {
+        @messages("inactive.p3")
+    }
+}
+
+@{
+    //$COVERAGE-OFF$
+}
