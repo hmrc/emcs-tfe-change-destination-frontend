@@ -9,6 +9,18 @@
     </appender>
 
     <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <filter class="ch.qos.logback.core.filter.EvaluatorFilter">
+            <evaluator>
+                <matcher>
+                    <Name>assets</Name>
+                    <regex>\/assets\/</regex>
+                </matcher>
+
+                <expression>assets.matches(formattedMessage)</expression>
+            </evaluator>
+            <OnMismatch>NEUTRAL</OnMismatch>
+            <OnMatch>DENY</OnMatch>
+        </filter>
         <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
             <pattern>[%highlight(%.-4level)] %message %replace(exception=[%xException]){'^exception=\[\]$',''} %date{ISO8601} %n</pattern>
         </encoder>
@@ -43,20 +55,17 @@
     </logger>
 
     <logger name="com.google.inject" level="OFF"/>
-
     <logger name="org.asynchttpclient.netty" level="OFF"/>
     <logger name="io.netty.buffer" level="OFF"/>
     <logger name="play.core.netty" level="OFF"/>
+    <logger name="play.shaded.ahc.io.netty" level="OFF"/>
+    <logger name="uk.gov.hmrc.play.bootstrap.audit.DisabledDatastreamMetricsProvider" level="OFF"/>
 
-
-    <logger name="application" level="INFO"/>
-    <logger name="uk.gov.hmrc.emcstfe" level="DEBUG"/>
-
-    <logger name="connector" level="ERROR">
-        <appender-ref ref="STDOUT"/>
-    </logger>
+    <logger name="uk.gov" level="WARN"/>
+    <logger name="application" level="DEBUG"/>
 
     <root level="WARN">
         <appender-ref ref="FILE"/>
+        <appender-ref ref="STDOUT"/>
     </root>
 </configuration>
