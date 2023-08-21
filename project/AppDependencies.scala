@@ -14,8 +14,7 @@ object AppDependencies {
     "uk.gov.hmrc"             %%  "play-frontend-hmrc"                % s"7.18.0$playSuffix",
     "uk.gov.hmrc"             %% s"bootstrap-frontend$playSuffix"     %  hmrcBootstrapVersion,
     "uk.gov.hmrc.mongo"       %% s"hmrc-mongo$playSuffix"             %  hmrcMongoVersion,
-    "com.google.inject"       %   "guice"                             % "5.1.0",
-    "org.codehaus.janino"     %   "janino"                            % "3.1.10"
+    "com.google.inject"       %   "guice"                             % "5.1.0"
   )
 
   val test = Seq(
