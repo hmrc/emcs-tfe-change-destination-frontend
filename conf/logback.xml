@@ -50,7 +50,7 @@
     <logger name="play.shaded.ahc.io.netty" level="OFF"/>
     <logger name="uk.gov.hmrc.play.bootstrap.audit.DisabledDatastreamMetricsProvider" level="OFF"/>
 
-    <logger name="uk.gov" level="WARN"/>
+    <logger name="uk.gov" level="INFO"/>
     <logger name="application" level="DEBUG"/>
 
     <root level="WARN">
