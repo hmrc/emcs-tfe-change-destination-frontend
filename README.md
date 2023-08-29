@@ -1,7 +1,7 @@
 
 # emcs-tfe-change-destination-frontend
 
-Contains the frontend journey for EMCS TFE to cancel a movement. Using hmrc-scaffold-g8.
+Contains the frontend journey for EMCS TFE to change a destination for a movement. Using hmrc-scaffold-g8.
 
 ## How to build pages with the Scaffolding
 
