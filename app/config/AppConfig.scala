@@ -58,6 +58,10 @@ class AppConfig @Inject()(servicesConfig: ServicesConfig, configuration: Configu
 
   lazy val signUpBetaFormUrl: String = configuration.get[String]("urls.signupBetaForm")
 
+  lazy val fallbackProceduresUrl: String = configuration.get[String]("urls.fallbackProcedures")
+
+  lazy val contactEMCSHelpdeskUrl: String = configuration.get[String]("urls.contactEmcsHelpdesk")
+
   def loginContinueUrl(ern: String, arc: String): String = configuration.get[String]("urls.loginContinue") + s"/trader/$ern/movement/$arc"
 
   def languageTranslationEnabled: Boolean = isEnabled(WelshLanguage)

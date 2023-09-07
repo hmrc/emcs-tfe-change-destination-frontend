@@ -33,7 +33,7 @@ object InactiveEnrolmentMessages {
   object English extends ViewMessages with BaseEnglish {
     override val heading = "There is a problem"
     override val title = titleHelper("There is a problem")
-    override val p1 = "You do not have an active enrollment for the Excise Movement and Control System (EMCS)."
+    override val p1 = "You do not have an active enrolment for the Excise Movement and Control System (EMCS)."
     override val p2 = "To use this service you must either:"
     override val bullet1 = "activate EMCS using the activation code that was sent to you by post"
     override val bullet2 = "re-enrol for EMCS and get a new activation code, if it has been more than 28 days since your code was sent to you"
@@ -43,7 +43,7 @@ object InactiveEnrolmentMessages {
   object Welsh extends ViewMessages with BaseWelsh {
     override val heading = "There is a problem"
     override val title = titleHelper("There is a problem")
-    override val p1 = "You do not have an active enrollment for the Excise Movement and Control System (EMCS)."
+    override val p1 = "You do not have an active enrolment for the Excise Movement and Control System (EMCS)."
     override val p2 = "To use this service you must either:"
     override val bullet1 = "activate EMCS using the activation code that was sent to you by post"
     override val bullet2 = "re-enrol for EMCS and get a new activation code, if it has been more than 28 days since your code was sent to you"
