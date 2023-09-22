@@ -49,11 +49,13 @@ private[mappings] class LocalDateFormatter(
       args
     )
 
+    val trimmedData = data.map { case (k, v) => k -> v.trim }
+
     for {
-      day   <- int.bind(s"$key.day", data).right
-      month <- int.bind(s"$key.month", data).right
-      year  <- int.bind(s"$key.year", data).right
-      date  <- toDate(key, day, month, year).right
+      day   <- int.bind(s"$key.day", trimmedData)
+      month <- int.bind(s"$key.month", trimmedData)
+      year  <- int.bind(s"$key.year", trimmedData)
+      date  <- toDate(key, day, month, year)
     } yield date
   }
 
