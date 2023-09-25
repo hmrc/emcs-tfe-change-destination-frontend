@@ -31,19 +31,23 @@ trait DateFluency {
 
     def apply(
                field: Field,
-               legend: Legend
+               legend: Legend,
+               fieldsWithErrors: Seq[String]
              )(implicit messages: Messages): DateInput =
       apply(
         field    = field,
-        fieldset = Fieldset(legend = Some(legend))
+        fieldset = Fieldset(legend = Some(legend)),
+        fieldsWithErrors
       )
 
     def apply(
                field: Field,
-               fieldset: Fieldset
+               fieldset: Fieldset,
+               fieldsWithErrors: Seq[String]
              )(implicit messages: Messages): DateInput = {
 
-      val errorClass = if (errorMessage(field).isDefined) "govuk-input--error" else ""
+      val globalError = errorMessage(field).isDefined
+      def fieldError(field: String) = if(fieldsWithErrors.contains(field) || (fieldsWithErrors.isEmpty && globalError)) "govuk-input--error" else ""
 
       val items = Seq(
         InputItem(
@@ -51,21 +55,21 @@ trait DateFluency {
           name    = s"${field.name}.day",
           value   = field("day").value,
           label   = Some(messages("date.day")),
-          classes = s"govuk-input--width-2 $errorClass".trim
+          classes = s"govuk-input--width-2 ${fieldError("day")}".trim
         ),
         InputItem(
           id      = s"${field.id}.month",
           name    = s"${field.name}.month",
           value   = field("month").value,
           label   = Some(messages("date.month")),
-          classes = s"govuk-input--width-2 $errorClass".trim
+          classes = s"govuk-input--width-2 ${fieldError("month")}".trim
         ),
         InputItem(
           id      = s"${field.id}.year",
           name    = s"${field.name}.year",
           value   = field("year").value,
           label   = Some(messages("date.year")),
-          classes = s"govuk-input--width-4 $errorClass".trim
+          classes = s"govuk-input--width-4 ${fieldError("year")}".trim
         )
       )
 
