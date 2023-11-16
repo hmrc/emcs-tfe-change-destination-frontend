@@ -39,7 +39,7 @@ class UserAllowListActionSpec extends SpecBase with MockFactory with MockUserAll
 
   lazy val app = applicationBuilder(userAnswers = None).build()
   implicit val hc = HeaderCarrier()
-  implicit lazy val request = UserRequest(FakeRequest(), testErn, testInternalId, testCredId)
+  implicit lazy val request = UserRequest(FakeRequest(), testErn, testInternalId, testCredId, false)
 
   lazy val errorHandler = app.injector.instanceOf[ErrorHandler]
   override lazy val config = mock[AppConfig]

@@ -18,23 +18,32 @@ package controllers.actions
 
 import models.requests.{MovementRequest, OptionalDataRequest}
 import play.api.mvc.ActionTransformer
-import services.UserAnswersService
+import services.{ GetTraderKnownFactsService, UserAnswersService}
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.http.HeaderCarrierConverter
 
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
-class DataRetrievalActionImpl @Inject()(val userAnswersService: UserAnswersService)
+class DataRetrievalActionImpl @Inject()(val userAnswersService: UserAnswersService,
+                                        val getTraderKnownFactsService: GetTraderKnownFactsService)
                                        (implicit val executionContext: ExecutionContext) extends DataRetrievalAction {
 
   override protected def transform[A](request: MovementRequest[A]): Future[OptionalDataRequest[A]] = {
 
     implicit val hc: HeaderCarrier = HeaderCarrierConverter.fromRequestAndSession(request, request.session)
 
-    userAnswersService.get(request.ern, request.arc).map {
-      OptionalDataRequest(request, _)
+    for {
+      userAnswers <- userAnswersService.get(request.ern, request.arc)
+      traderKnownFacts <- getTraderKnownFactsService.getTraderKnownFacts(request.ern)
+    } yield {
+      OptionalDataRequest(request, userAnswers, traderKnownFacts)
     }
+
+//
+//    userAnswersService.get(request.ern, request.arc).map {
+//      OptionalDataRequest(request, _)
+//    }
   }
 }
 

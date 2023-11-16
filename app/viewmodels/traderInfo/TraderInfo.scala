@@ -14,12 +14,6 @@
  * limitations under the License.
  */
 
-package models.requests
+package viewmodels.traderInfo
 
-import play.api.mvc.{Request, WrappedRequest}
-
-case class UserRequest[A](request: Request[A],
-                          ern: String,
-                          internalId: String,
-                          credId: String,
-                          hasMultipleErns: Boolean) extends WrappedRequest[A](request)
+case class TraderInfo(name: String, ern: String)

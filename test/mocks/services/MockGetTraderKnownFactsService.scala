@@ -14,20 +14,24 @@
  * limitations under the License.
  */
 
-package controllers.action
+package mocks.services
 
-import controllers.actions.DataRetrievalAction
-import models.UserAnswers
-import models.requests.{MovementRequest, OptionalDataRequest}
 import models.response.referenceData.TraderKnownFacts
+import org.scalamock.handlers.CallHandler2
+import org.scalamock.scalatest.MockFactory
+import services.GetTraderKnownFactsService
+import uk.gov.hmrc.http.HeaderCarrier
 
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.Future
 
-class FakeDataRetrievalAction(dataToReturn: Option[UserAnswers], optTraderKnownFacts: Option[TraderKnownFacts]) extends DataRetrievalAction {
+trait MockGetTraderKnownFactsService extends MockFactory {
 
-  override protected def transform[A](request: MovementRequest[A]): Future[OptionalDataRequest[A]] =
-    Future(OptionalDataRequest(request, dataToReturn, optTraderKnownFacts))
+  lazy val mockGetTraderKnownFactsService: GetTraderKnownFactsService = mock[GetTraderKnownFactsService]
 
-  override protected implicit val executionContext: ExecutionContext =
-    scala.concurrent.ExecutionContext.Implicits.global
+  object MockGetTraderKnownFactsService {
+
+    def getTraderKnownFacts(ern: String): CallHandler2[String, HeaderCarrier, Future[Option[TraderKnownFacts]]] =
+      (mockGetTraderKnownFactsService.getTraderKnownFacts(_: String)(_: HeaderCarrier)).expects(ern, *)
+
+  }
 }

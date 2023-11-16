@@ -16,8 +16,10 @@
 
 package views
 
+import models.requests.DataRequest
 import play.api.data.Form
 import play.api.i18n.Messages
+import viewmodels.traderInfo.TraderInfo
 
 object ViewUtils {
 
@@ -33,4 +35,11 @@ object ViewUtils {
   def errorPrefix(form: Form[_])(implicit messages: Messages): String = {
     if (form.hasErrors || form.hasGlobalErrors) messages("error.browser.title.prefix") else ""
   }
+
+  def maybeShowActiveTrader(request: DataRequest[_]): Option[TraderInfo] = {
+    Option.when(request.request.request.hasMultipleErns) {
+      TraderInfo(request.movementDetails.consignorTrader.traderName, request.ern)
+    }
+  }
+
 }

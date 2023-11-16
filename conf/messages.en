@@ -103,3 +103,5 @@ journeyRecovery.p3 = You can also choose to
 journeyRecovery.p3.viewAccountLink = view all your account information
 journeyRecovery.p3.or = or
 journeyRecovery.p3.signOutLink = sign out
+
+activeTrader.link = Change trader type

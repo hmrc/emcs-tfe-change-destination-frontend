@@ -17,6 +17,7 @@
 package fixtures
 
 import models.UserAnswers
+import models.response.referenceData.TraderKnownFacts
 import play.api.mvc.Call
 
 import java.time.Instant
@@ -37,4 +38,15 @@ trait BaseFixtures {
     arc = testArc,
     lastUpdated = Instant.now().truncatedTo(ChronoUnit.MILLIS)
   )
+
+  val testMinTraderKnownFacts: TraderKnownFacts = TraderKnownFacts(
+    traderName = "testTraderName",
+    addressLine1 = None,
+    addressLine2 = None,
+    addressLine3 = None,
+    addressLine4 = None,
+    addressLine5 = None,
+    postcode = None
+  )
+
 }
