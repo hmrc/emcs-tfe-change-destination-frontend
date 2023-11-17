@@ -39,12 +39,8 @@ class DataRetrievalActionImpl @Inject()(val userAnswersService: UserAnswersServi
     } yield {
       OptionalDataRequest(request, userAnswers, traderKnownFacts)
     }
-
-//
-//    userAnswersService.get(request.ern, request.arc).map {
-//      OptionalDataRequest(request, _)
-//    }
   }
+
 }
 
 trait DataRetrievalAction extends ActionTransformer[MovementRequest, OptionalDataRequest]
