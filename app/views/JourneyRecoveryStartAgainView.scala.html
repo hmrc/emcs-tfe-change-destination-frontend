@@ -29,7 +29,7 @@
 
 @()(implicit request: UserRequest[_], messages: Messages, config: AppConfig)
 
-@layout(pageTitle = titleNoForm(messages("journeyRecovery.title"))) {
+@layout(pageTitle = titleNoForm(messages("journeyRecovery.title")), maybeShowActiveTrader = None) {
 
     @h1("journeyRecovery.heading", classes = "govuk-heading-xl")
 

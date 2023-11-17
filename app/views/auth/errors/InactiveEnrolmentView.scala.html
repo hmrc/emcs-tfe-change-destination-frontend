@@ -26,7 +26,7 @@
 
 @()(implicit request: Request[_], messages: Messages, config: AppConfig)
 
-@layout(titleNoForm(messages("inactive.title")), showBackLink = false) {
+@layout(titleNoForm(messages("inactive.title")), maybeShowActiveTrader = None, showBackLink = false) {
 
     @h1("inactive.heading", classes = "govuk-heading-xl govuk-!-margin-bottom-6")
 
