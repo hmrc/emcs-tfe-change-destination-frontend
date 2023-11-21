@@ -103,7 +103,7 @@ class AppConfig @Inject()(servicesConfig: ServicesConfig, configuration: Configu
     if (isEnabled(StubGetTraderKnownFacts)) {
       servicesConfig.baseUrl("emcs-tfe-reference-data-stub")
     } else {
-      servicesConfig.baseUrl("emcs-tfe-reference-data")
+      servicesConfig.baseUrl("reference-data")
     }
 
   def betaBannerFeedbackUrl(implicit request: RequestHeader): String =
