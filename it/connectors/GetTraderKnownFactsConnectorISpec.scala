@@ -17,7 +17,7 @@ import uk.gov.hmrc.http.HeaderCarrier
 
 import scala.concurrent.ExecutionContext.Implicits.global
 
-class GetTraderKnownFactsConnectorSpec extends AnyFreeSpec
+class GetTraderKnownFactsConnectorISpec extends AnyFreeSpec
   with WireMockHelper
   with ScalaFutures
   with Matchers
