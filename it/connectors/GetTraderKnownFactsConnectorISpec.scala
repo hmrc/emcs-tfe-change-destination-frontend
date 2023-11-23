@@ -45,7 +45,7 @@ class GetTraderKnownFactsConnectorISpec extends AnyFreeSpec
 
       def app: Application =
         new GuiceApplicationBuilder()
-          .configure("microservice.services.reference-data.port" -> server.port)
+          .configure("microservice.services.emcs-tfe-reference-data.port" -> server.port)
           .configure("features.stub-get-trader-known-facts" -> "false")
           .build()
 
