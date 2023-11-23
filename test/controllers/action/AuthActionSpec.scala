@@ -42,7 +42,7 @@ class AuthActionSpec extends SpecBase with BaseFixtures with BeforeAndAfterAll {
 
   type AuthRetrieval = ~[~[~[Option[AffinityGroup], Enrolments], Option[String]], Option[Credentials]]
 
-  implicit val fakeRequest = FakeRequest().withSession(SessionKeys.sessionId -> UUID.randomUUID().toString)
+  implicit val fakeRequest = FakeRequest()
 
   lazy val app = applicationBuilder(userAnswers = None).build()
 

@@ -18,7 +18,7 @@ package controllers.actions
 
 import models.requests.{MovementRequest, OptionalDataRequest}
 import play.api.mvc.ActionTransformer
-import services.{ GetTraderKnownFactsService, UserAnswersService}
+import services.{GetTraderKnownFactsService, UserAnswersService}
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.http.HeaderCarrierConverter
 

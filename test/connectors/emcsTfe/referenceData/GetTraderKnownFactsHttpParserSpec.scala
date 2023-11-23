@@ -19,7 +19,7 @@ package connectors.emcsTfe.referenceData
 import base.SpecBase
 import connectors.referenceData.GetTraderKnownFactsHttpParser
 import mocks.MockHttpClient
-import models.UnexpectedDownstreamResponseError
+import models.{JsonValidationError, UnexpectedDownstreamResponseError}
 import play.api.http.Status
 import play.api.libs.json.Json
 import uk.gov.hmrc.http.{HttpClient, HttpResponse}
@@ -33,6 +33,12 @@ class GetTraderKnownFactsHttpParserSpec extends SpecBase with GetTraderKnownFact
     "should return 'Some(traderKnownFacts)'" - {
       s"when an OK (${Status.OK}) response is retrieved" in {
         GetTraderKnownFactsReads(testErn).read("", "", HttpResponse(Status.OK, Json.obj("traderName" -> "testTraderName").toString())) mustBe Right(Some(testMinTraderKnownFacts))
+      }
+    }
+
+    "should return JsonValidationError" - {
+      s"when an OK (${Status.OK}) response is retrieved but JSON is invalid" in {
+        GetTraderKnownFactsReads(testErn).read("", "", HttpResponse(Status.OK, "bad json")) mustBe Left(JsonValidationError)
       }
     }
 
