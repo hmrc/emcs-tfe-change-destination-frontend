@@ -17,6 +17,8 @@
 @import config.AppConfig
 @import views.html.helper.CSPNonce
 @import views.html.templates.FullWidthMainContentTemplate
+@import views.html.components.activeTrader
+@import viewmodels.traderInfo.TraderInfo
 
 @this(
     appConfig: AppConfig,
@@ -32,10 +34,18 @@
     hmrcScripts: HmrcScripts,
     betaBanner: StandardBetaBanner,
     defaultMainContent: TwoThirdsMainContent,
-    fullWidthMainContent: FullWidthMainContentTemplate
+    fullWidthMainContent: FullWidthMainContentTemplate,
+    activeTrader: activeTrader
 )
 
-@(pageTitle: String, showBackLink: Boolean = true, timeout: Boolean = true, showSignOut: Boolean = true, fullWidthContent: Boolean = false)(contentBlock: Html)(implicit request: Request[_], messages: Messages)
+@(
+    pageTitle: String,
+    maybeShowActiveTrader: Option[TraderInfo],
+    showBackLink: Boolean = true,
+    timeout: Boolean = true,
+    showSignOut: Boolean = true,
+    fullWidthContent: Boolean = false
+)(contentBlock: Html)(implicit request: Request[_], messages: Messages)
 
 @head = {
 
@@ -63,6 +73,8 @@
 }
 
 @beforeContent = {
+
+    @{ activeTrader(maybeShowActiveTrader, appConfig) }
 
     @if(appConfig.languageTranslationEnabled) {
         @hmrcLanguageSelect(LanguageSelect(

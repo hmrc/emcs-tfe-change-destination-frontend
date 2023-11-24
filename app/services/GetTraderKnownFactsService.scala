@@ -14,20 +14,25 @@
  * limitations under the License.
  */
 
-package controllers.action
+package services
 
-import controllers.actions.DataRetrievalAction
-import models.UserAnswers
-import models.requests.{MovementRequest, OptionalDataRequest}
+import connectors.referenceData.GetTraderKnownFactsConnector
+import models.TraderKnownFactsException
 import models.response.referenceData.TraderKnownFacts
+import uk.gov.hmrc.http.HeaderCarrier
 
+import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
-class FakeDataRetrievalAction(dataToReturn: Option[UserAnswers], optTraderKnownFacts: Option[TraderKnownFacts]) extends DataRetrievalAction {
+@Singleton
+class GetTraderKnownFactsService @Inject()(connector: GetTraderKnownFactsConnector)
+                                          (implicit ec: ExecutionContext) {
 
-  override protected def transform[A](request: MovementRequest[A]): Future[OptionalDataRequest[A]] =
-    Future(OptionalDataRequest(request, dataToReturn, optTraderKnownFacts))
+  def getTraderKnownFacts(ern: String)(implicit hc: HeaderCarrier): Future[Option[TraderKnownFacts]] = {
+    connector.getTraderKnownFacts(ern).map {
+      case Left(_) => throw TraderKnownFactsException(s"No known facts found for trader $ern")
+      case Right(value) => value
+    }
+  }
 
-  override protected implicit val executionContext: ExecutionContext =
-    scala.concurrent.ExecutionContext.Implicits.global
 }

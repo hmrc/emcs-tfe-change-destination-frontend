@@ -47,10 +47,10 @@ class IndexController @Inject()(override val messagesApi: MessagesApi,
             Ok(view())
           )
 
-//        case Some(answers) if answers.data.fields.nonEmpty =>
-//          Future.successful(
-//            Redirect(routes.ChangeDestination.onPageLoad(ern, arc))
-//          )
+        //        case Some(answers) if answers.data.fields.nonEmpty =>
+        //          Future.successful(
+        //            Redirect(routes.ChangeDestination.onPageLoad(ern, arc))
+        //          )
 
         case _ =>
           initialiseAndRedirect(UserAnswers(request.ern, request.arc))

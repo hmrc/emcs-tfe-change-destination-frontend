@@ -14,20 +14,15 @@
  * limitations under the License.
  */
 
-package models.requests
+package fixtures.messages
 
-import models.UserAnswers
-import models.response.emcsTfe.GetMovementResponse
-import models.response.referenceData.TraderKnownFacts
-import play.api.mvc.WrappedRequest
+import fixtures.i18n
 
-case class DataRequest[A](request: MovementRequest[A],
-                          userAnswers: UserAnswers,
-                          traderKnownFacts: TraderKnownFacts) extends WrappedRequest[A](request) {
+object ActiveTraderMessages {
 
-  val internalId: String = request.internalId
-  val ern: String = request.ern
-  val arc: String = request.arc
-  val movementDetails: GetMovementResponse = request.movementDetails
+  sealed trait ViewMessages { _: i18n =>
+    val changeTraderType: String = "Change trader type"
+  }
 
+  object English extends ViewMessages with BaseEnglish
 }
