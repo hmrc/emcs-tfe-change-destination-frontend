@@ -18,7 +18,7 @@ package views
 
 import base.ViewSpecBase
 import fixtures.messages.IndexMessages
-import models.requests.DataRequest
+import models.requests.{DataRequest, OptionalDataRequest}
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import play.api.i18n.Messages
@@ -37,7 +37,7 @@ class IndexPageSpec extends ViewSpecBase with ViewBehaviours {
       s"when being rendered in lang code of '${messagesForLanguage.lang.code}'" - {
 
         implicit val msgs: Messages = messages(app, messagesForLanguage.lang)
-        implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), emptyUserAnswers)
+        implicit val request: OptionalDataRequest[AnyContentAsEmpty.type] = optionalDataRequest(FakeRequest())
 
         val view = app.injector.instanceOf[IndexPage]
 

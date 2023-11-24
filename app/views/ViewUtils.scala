@@ -16,7 +16,7 @@
 
 package views
 
-import models.requests.DataRequest
+import models.requests.{DataRequest, OptionalDataRequest}
 import play.api.data.Form
 import play.api.i18n.Messages
 import viewmodels.traderInfo.TraderInfo
@@ -25,7 +25,7 @@ object ViewUtils {
 
   def title(form: Form[_], title: String, section: Option[String] = None)(implicit messages: Messages): String =
     titleNoForm(
-      title   = s"${errorPrefix(form)} ${messages(title)}",
+      title = s"${errorPrefix(form)} ${messages(title)}",
       section = section
     )
 
@@ -39,6 +39,11 @@ object ViewUtils {
   def maybeShowActiveTrader(request: DataRequest[_]): Option[TraderInfo] =
     Option.when(request.request.request.hasMultipleErns) {
       TraderInfo(request.traderKnownFacts.traderName, request.ern)
+    }
+
+  def maybeShowActiveTrader(request: OptionalDataRequest[_]): Option[TraderInfo] =
+    Option.when(request.request.request.hasMultipleErns && request.traderKnownFacts.isDefined) {
+      TraderInfo(request.traderKnownFacts.get.traderName, request.ern)
     }
 
 }

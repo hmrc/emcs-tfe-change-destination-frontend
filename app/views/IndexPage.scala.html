@@ -14,11 +14,11 @@
  * limitations under the License.
  *@
 
-@import models.requests.DataRequest
+@import models.requests.OptionalDataRequest
 
 @this(layout: templates.Layout)
 
-@()(implicit request: DataRequest[_], messages: Messages)
+@()(implicit request: OptionalDataRequest[_], messages: Messages)
 
 @layout(pageTitle = titleNoForm("emcs-tfe-change-destination-frontend"), maybeShowActiveTrader = maybeShowActiveTrader(request), showBackLink = false) {
     <h1 class="govuk-heading-xl">emcs-tfe-change-destination-frontend</h1>

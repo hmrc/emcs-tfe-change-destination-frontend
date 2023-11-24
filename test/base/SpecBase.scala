@@ -20,7 +20,7 @@ import controllers.action.{FakeAuthAction, FakeDataRetrievalAction, FakeMovement
 import controllers.actions.{AuthAction, DataRetrievalAction, MovementAction, UserAllowListAction}
 import fixtures.{BaseFixtures, GetMovementResponseFixtures}
 import models.UserAnswers
-import models.requests.{DataRequest, MovementRequest, UserRequest}
+import models.requests.{DataRequest, MovementRequest, OptionalDataRequest, UserRequest}
 import models.response.referenceData.TraderKnownFacts
 import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
 import org.scalatest.freespec.AnyFreeSpec
@@ -75,4 +75,9 @@ trait SpecBase
                      answers: UserAnswers = emptyUserAnswers,
                      traderKnownFacts: TraderKnownFacts = testMinTraderKnownFacts): DataRequest[A] =
     DataRequest(movementRequest(request), answers, traderKnownFacts)
+
+  def optionalDataRequest[A](request: Request[A],
+                     answers: Option[UserAnswers] = Some(emptyUserAnswers),
+                     traderKnownFacts: Option[TraderKnownFacts] = Some(testMinTraderKnownFacts)): OptionalDataRequest[A] =
+    OptionalDataRequest(movementRequest(request), answers, traderKnownFacts)
 }
