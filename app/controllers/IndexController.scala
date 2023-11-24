@@ -16,8 +16,9 @@
 
 package controllers
 
-import controllers.actions.{AuthAction, DataRetrievalAction, MovementAction}
+import controllers.actions._
 import models.UserAnswers
+import navigation.Navigator
 import play.api.i18n.MessagesApi
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
 import services.UserAnswersService
@@ -29,33 +30,27 @@ import javax.inject.Inject
 import scala.concurrent.Future
 
 class IndexController @Inject()(override val messagesApi: MessagesApi,
-                                val userAnswersService: UserAnswersService,
+                                override val userAnswersService: UserAnswersService,
+                                override val navigator: Navigator,
+                                override val auth: AuthAction,
+                                override val withMovement: MovementAction,
+                                override val getData: DataRetrievalAction,
+                                override val requireData: DataRequiredAction,
+                                override val userAllowList: UserAllowListAction,
                                 val controllerComponents: MessagesControllerComponents,
-                                authAction: AuthAction,
-                                withMovement: MovementAction,
-                                getData: DataRetrievalAction,
                                 view: IndexPage
-                               ) extends BaseController with Logging {
+                               ) extends BaseNavigationController with AuthActionHelper with Logging {
 
-  def onPageLoad(ern: String, arc: String): Action[AnyContent] =
-    (authAction(ern, arc) andThen withMovement.fromCache(arc) andThen getData).async { implicit request =>
-      request.userAnswers match {
-
-        // TODO: Remove this case match when we have the 1st controller to redirect to
-        case Some(answers) if answers.data.fields.isEmpty =>
-          Future.successful(
-            Ok(view())
-          )
-
-//        case Some(answers) if answers.data.fields.nonEmpty =>
-//          Future.successful(
-//            Redirect(routes.ChangeDestination.onPageLoad(ern, arc))
-//          )
-
-        case _ =>
-          initialiseAndRedirect(UserAnswers(request.ern, request.arc))
+  def onPageLoad(ern: String, arc: String): Action[AnyContent] = {
+    authorisedDataRequestWithCachedMovementAsync(ern, arc) { implicit request =>
+      if (request.userAnswers.data.fields.isEmpty) {
+        Future.successful(Ok(view()))
+      } else {
+        initialiseAndRedirect(UserAnswers(request.ern, request.arc))
       }
     }
+  }
+
 
   private def initialiseAndRedirect(answers: UserAnswers)(implicit hc: HeaderCarrier): Future[Result] =
     userAnswersService.set(answers).map { _ =>
