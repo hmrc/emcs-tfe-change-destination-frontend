@@ -26,7 +26,7 @@
 
 @()(implicit request: Request[_], messages: Messages, config: AppConfig)
 
-@layout(titleNoForm(messages("notAnOrganisation.title")), showBackLink = false) {
+@layout(titleNoForm(messages("notAnOrganisation.title")), maybeShowActiveTrader = None, showBackLink = false) {
 
     @h1("notAnOrganisation.heading", classes = "govuk-heading-xl govuk-!-margin-bottom-6")
 

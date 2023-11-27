@@ -12,7 +12,7 @@
 
 @(form: Form[_], mode: Mode)(implicit request: DataRequest[_], messages: Messages)
 
-@layout(pageTitle = title(form, messages("$className;format="decap"$.title"))) {
+@layout(pageTitle = title(form, messages("$className;format="decap"$.title")), maybeShowActiveTrader = maybeShowActiveTrader(request)) {
 
     @formHelper(action = routes.$className$Controller.onSubmit(request.ern, request.arc, mode), 'autoComplete -> "off") {
 

@@ -25,10 +25,11 @@
 @()(implicit request: Request[_], messages: Messages)
 
 @layout(
-    pageTitle    = titleNoForm(messages("signedOut.title")),
+    pageTitle = titleNoForm(messages("signedOut.title")),
+    maybeShowActiveTrader = None,
     showBackLink = false,
-    timeout      = false,
-    showSignOut  = false
+    timeout = false,
+    showSignOut = false
 ) {
 
     <h1 class="govuk-heading-xl">@messages("signedOut.heading")</h1>

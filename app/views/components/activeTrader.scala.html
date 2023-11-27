@@ -14,15 +14,22 @@
  * limitations under the License.
  *@
 
-@import models.requests.OptionalDataRequest
+@import config.AppConfig
+@import viewmodels.traderInfo.TraderInfo
 
-@this(layout: templates.Layout)
+@this()
 
-@()(implicit request: OptionalDataRequest[_], messages: Messages)
+@(maybeShowActiveTrader: Option[TraderInfo], appConfig: AppConfig)(implicit messages: Messages)
 
-@layout(pageTitle = titleNoForm("emcs-tfe-change-destination-frontend"), maybeShowActiveTrader = maybeShowActiveTrader(request), showBackLink = false) {
-    <h1 class="govuk-heading-xl">emcs-tfe-change-destination-frontend</h1>
-    <p class="govuk-body">TODO</p>
+@{
+    maybeShowActiveTrader match {
+        case Some(TraderInfo(traderName, ern)) =>
+            <div class="active-trader-info govuk-!-margin-bottom-0" aria-label="Organisation switcher">
+                <div class="active-trader-info__title">{ traderName } ({ ern })</div>
+                <a href={ appConfig.emcsTfeHomeUrl(None) } class="active-trader-info__link">{ messages("activeTrader.link") }</a>
+            </div>
+        case None => ()
+    }
 }
 
 @{

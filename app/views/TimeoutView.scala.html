@@ -24,7 +24,7 @@
 
 @()(implicit request: Request[_], messages: Messages, config: AppConfig)
 
-@layout(pageTitle = titleNoForm(messages("timeout.timedOut.title")), showBackLink = false, timeout = false) {
+@layout(pageTitle = titleNoForm(messages("timeout.timedOut.title")), maybeShowActiveTrader = None, showBackLink = false, timeout = false) {
 
     <h1 class="govuk-heading-xl">@messages("timeout.timedOut.heading")</h1>
 
