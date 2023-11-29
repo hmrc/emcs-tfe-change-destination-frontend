@@ -16,10 +16,19 @@
 
 package pages.sections.journeyType
 
+import models.requests.DataRequest
+import models.sections.journeyType.JourneyTime
 import pages.QuestionPage
-import play.api.libs.json.JsPath
+import play.api.libs.json.{JsError, JsPath, JsResultException, JsString, JsSuccess}
 
 case object JourneyTimeHoursPage extends QuestionPage[Int] {
   override val toString: String = "journeyTimeHours"
   override val path: JsPath = JourneyTypeSection.path \ toString
+
+  override def getValueFromIE801(implicit request: DataRequest[_]): Option[Int] =
+    JourneyTime.reads.reads(JsString(request.movementDetails.journeyTime)) match {
+      case JsSuccess(JourneyTime.Days(_), _) => None
+      case JsSuccess(JourneyTime.Hours(time), _) => Some(time.toInt)
+      case JsError(errors) => throw JsResultException(errors)
+    }
 }

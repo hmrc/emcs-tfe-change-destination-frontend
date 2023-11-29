@@ -32,12 +32,13 @@ class JourneyTypeIndexController @Inject()(
                                             override val auth: AuthAction,
                                             override val getData: DataRetrievalAction,
                                             override val requireData: DataRequiredAction,
+                                            override val withMovement: MovementAction,
                                             override val userAllowList: UserAllowListAction,
                                             val controllerComponents: MessagesControllerComponents
                                           ) extends BaseNavigationController with AuthActionHelper {
 
   def onPageLoad(ern: String, arc: String): Action[AnyContent] =
-    authorisedDataRequest(ern, arc) { implicit request =>
+    authorisedDataRequestWithUpToDateMovement(ern, arc) { implicit request =>
       if (JourneyTypeSection.isCompleted) {
         Redirect(controllers.sections.journeyType.routes.CheckYourAnswersJourneyTypeController.onPageLoad(ern, arc))
       } else {

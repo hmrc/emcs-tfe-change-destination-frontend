@@ -17,10 +17,13 @@
 package pages.sections.transportUnit
 
 import models.Index
+import models.requests.DataRequest
 import pages.QuestionPage
 import play.api.libs.json.JsPath
 
 case class TransportSealChoicePage(idx: Index) extends QuestionPage[Boolean] {
   override val toString: String = "transportSealChoice"
   override val path: JsPath = TransportUnitSection(idx).path \ toString
+
+  override def getValueFromIE801(implicit request: DataRequest[_]): Option[Boolean] = None
 }

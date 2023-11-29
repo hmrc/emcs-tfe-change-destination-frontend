@@ -36,6 +36,7 @@ class CheckYourAnswersJourneyTypeController @Inject()(
                                                        override val auth: AuthAction,
                                                        override val getData: DataRetrievalAction,
                                                        override val requireData: DataRequiredAction,
+                                                       override val withMovement: MovementAction,
                                                        override val userAllowList: UserAllowListAction,
                                                        val checkYourAnswersJourneyTypeHelper: CheckYourAnswersJourneyTypeHelper,
                                                        val controllerComponents: MessagesControllerComponents,
@@ -43,7 +44,7 @@ class CheckYourAnswersJourneyTypeController @Inject()(
                                                      ) extends BaseNavigationController with AuthActionHelper {
 
   def onPageLoad(ern: String, arc: String): Action[AnyContent] =
-    authorisedDataRequest(ern, arc) { implicit request =>
+    authorisedDataRequestWithUpToDateMovement(ern, arc) { implicit request =>
       Ok(view(
         checkYourAnswersJourneyTypeHelper.summaryList(),
         controllers.sections.journeyType.routes.CheckYourAnswersJourneyTypeController.onSubmit(ern, arc)
@@ -51,7 +52,7 @@ class CheckYourAnswersJourneyTypeController @Inject()(
     }
 
   def onSubmit(ern: String, arc: String): Action[AnyContent] =
-    authorisedDataRequest(ern, arc) { implicit request =>
+    authorisedDataRequestWithUpToDateMovement(ern, arc) { implicit request =>
       Redirect(navigator.nextPage(CheckYourAnswersJourneyTypePage, NormalMode, request.userAnswers))
     }
 }

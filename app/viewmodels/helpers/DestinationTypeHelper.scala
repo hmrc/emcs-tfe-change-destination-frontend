@@ -16,7 +16,7 @@
 
 package viewmodels.helpers
 
-import models._
+import models.UserType._
 import models.requests.DataRequest
 import models.response.InvalidUserTypeException
 import models.sections.info.DispatchPlace

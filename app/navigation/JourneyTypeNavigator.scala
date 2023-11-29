@@ -18,6 +18,7 @@ package navigation
 
 import controllers.routes
 import controllers.sections.journeyType.{routes => jtRoutes}
+import models.requests.DataRequest
 import models.sections.journeyType.HowMovementTransported.Other
 import models.{CheckMode, Mode, NormalMode, ReviewMode, UserAnswers}
 import pages.Page
@@ -29,7 +30,7 @@ import javax.inject.{Inject, Singleton}
 @Singleton
 class JourneyTypeNavigator @Inject()() extends BaseNavigator {
 
-  private val normalRoutes: Page => UserAnswers => Call = {
+  private def normalRoutes(implicit request: DataRequest[_]): Page => UserAnswers => Call = {
     case HowMovementTransportedPage =>
       (userAnswers: UserAnswers) =>
         userAnswers.get(HowMovementTransportedPage) match {
@@ -58,7 +59,7 @@ class JourneyTypeNavigator @Inject()() extends BaseNavigator {
       jtRoutes.CheckYourAnswersJourneyTypeController.onPageLoad(userAnswers.ern, userAnswers.arc)
   }
 
-  private[navigation] val checkRouteMap: Page => UserAnswers => Call = {
+  private[navigation] def checkRouteMap(implicit request: DataRequest[_]): Page => UserAnswers => Call = {
     case HowMovementTransportedPage =>
       (userAnswers: UserAnswers) =>
         userAnswers.get(HowMovementTransportedPage) match {
@@ -76,11 +77,11 @@ class JourneyTypeNavigator @Inject()() extends BaseNavigator {
       (userAnswers: UserAnswers) => routes.CheckYourAnswersController.onPageLoad(userAnswers.ern, userAnswers.arc)
   }
 
-  override def nextPage(page: Page, mode: Mode, userAnswers: UserAnswers): Call = mode match {
+  override def nextPage(page: Page, mode: Mode, userAnswers: UserAnswers)(implicit request: DataRequest[_]): Call = mode match {
     case NormalMode =>
-      normalRoutes(page)(userAnswers)
+      normalRoutes(request)(page)(userAnswers)
     case CheckMode =>
-      checkRouteMap(page)(userAnswers)
+      checkRouteMap(request)(page)(userAnswers)
     case ReviewMode =>
       reviewRouteMap(page)(userAnswers)
   }

@@ -25,6 +25,7 @@ import play.api.libs.json.{Json, OFormat}
 import queries.TransportUnitsCount
 import utils.{JsonOptionFormatter, Logging, ModelConstructorHelpers}
 
+//TODO: REFACTOR FOR ACTUAL COD SUBMISSION
 case class TransportDetailsModel(
     transportUnitCode: String,
     identityOfTransportUnits: Option[String],

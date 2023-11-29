@@ -40,6 +40,7 @@ class TransportArrangerVatController @Inject()(
                                                 override val auth: AuthAction,
                                                 override val getData: DataRetrievalAction,
                                                 override val requireData: DataRequiredAction,
+                                                override val withMovement: MovementAction,
                                                 override val userAllowList: UserAllowListAction,
                                                 formProvider: TransportArrangerVatFormProvider,
                                                 val controllerComponents: MessagesControllerComponents,
@@ -47,12 +48,12 @@ class TransportArrangerVatController @Inject()(
                                               ) extends BaseNavigationController with AuthActionHelper {
 
   def onPageLoad(ern: String, arc: String, mode: Mode): Action[AnyContent] =
-    authorisedDataRequest(ern, arc) { implicit request =>
+    authorisedDataRequestWithUpToDateMovement(ern, arc) { implicit request =>
       renderView(Ok, fillForm(TransportArrangerVatPage, formProvider()), mode)
     }
 
   def onSubmit(ern: String, arc: String, mode: Mode): Action[AnyContent] =
-    authorisedDataRequestAsync(ern, arc) { implicit request =>
+    authorisedDataRequestWithUpToDateMovementAsync(ern, arc) { implicit request =>
       formProvider().bindFromRequest().fold(
         formWithErrors => Future.successful(renderView(BadRequest, formWithErrors, mode)),
         saveAndRedirect(TransportArrangerVatPage, _, mode)
@@ -60,7 +61,7 @@ class TransportArrangerVatController @Inject()(
     }
 
   def onNonGbVAT(ern: String, arc: String): Action[AnyContent] =
-    authorisedDataRequestAsync(ern, arc) { implicit request =>
+    authorisedDataRequestWithUpToDateMovementAsync(ern, arc) { implicit request =>
       saveAndRedirect(TransportArrangerVatPage, NONGBVAT, NormalMode)
     }
 

@@ -37,6 +37,7 @@ class DestinationDetailsChoiceController @Inject()(override val messagesApi: Mes
                                                    override val auth: AuthAction,
                                                    override val getData: DataRetrievalAction,
                                                    override val requireData: DataRequiredAction,
+                                                   override val withMovement: MovementAction,
                                                    formProvider: DestinationDetailsChoiceFormProvider,
                                                    val controllerComponents: MessagesControllerComponents,
                                                    view: DestinationDetailsChoiceView,
@@ -44,7 +45,7 @@ class DestinationDetailsChoiceController @Inject()(override val messagesApi: Mes
                                                   ) extends BaseNavigationController with AuthActionHelper {
 
   def onPageLoad(ern: String, arc: String, mode: Mode): Action[AnyContent] =
-    authorisedDataRequest(ern, arc) {
+    authorisedDataRequestWithUpToDateMovement(ern, arc) {
       implicit request =>
         withAnswer(DestinationTypePage) {
           movementScenario =>
@@ -57,7 +58,7 @@ class DestinationDetailsChoiceController @Inject()(override val messagesApi: Mes
     }
 
   def onSubmit(ern: String, arc: String, mode: Mode): Action[AnyContent] =
-    authorisedDataRequestAsync(ern, arc) {
+    authorisedDataRequestWithUpToDateMovementAsync(ern, arc) {
       implicit request =>
         withAnswerAsync(DestinationTypePage) {
           movementScenario =>

@@ -34,6 +34,7 @@ class CheckYourAnswersController @Inject()(override val messagesApi: MessagesApi
                                            override val userAllowList: UserAllowListAction,
                                            override val getData: DataRetrievalAction,
                                            override val requireData: DataRequiredAction,
+                                           override val withMovement: MovementAction,
                                            val controllerComponents: MessagesControllerComponents,
                                            val navigator: Navigator,
                                            view: CheckYourAnswersView,
@@ -41,7 +42,7 @@ class CheckYourAnswersController @Inject()(override val messagesApi: MessagesApi
                                           ) extends BaseController with AuthActionHelper {
 
   def onPageLoad(ern: String, arc: String): Action[AnyContent] =
-    authorisedDataRequestAsync(ern, arc) { implicit request =>
+    authorisedDataRequestWithUpToDateMovementAsync(ern, arc) { implicit request =>
       Future.successful(Ok(view(
         routes.CheckYourAnswersController.onSubmit(ern, arc),
         checkAnswersHelper.summaryList(Seq.empty)
@@ -49,7 +50,7 @@ class CheckYourAnswersController @Inject()(override val messagesApi: MessagesApi
     }
 
   def onSubmit(ern: String, arc: String): Action[AnyContent] =
-    authorisedDataRequest(ern, arc) { implicit request =>
+    authorisedDataRequestWithUpToDateMovement(ern, arc) { implicit request =>
       //TODO: Add Call to Submission Service and replace `PLACEHOLDER` with receipt from Downstream
       Redirect(navigator.nextPage(CheckAnswersPage, NormalMode, request.userAnswers))
         .addingToSession(SUBMISSION_RECEIPT_REFERENCE -> "PLACEHOLDER")

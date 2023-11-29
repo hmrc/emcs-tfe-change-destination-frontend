@@ -24,10 +24,8 @@ import utils.ModelConstructorHelpers
 
 import java.time.format.DateTimeFormatter
 
+//TODO: REFACTOR FOR ACTUAL COD SUBMISSION
 case class EadEsadDraftModel(
-                              localReferenceNumber: String,
-                              invoiceNumber: String,
-                              invoiceDate: Option[String],
                               originTypeCode: OriginType,
                               dateOfDispatch: String,
                               timeOfDispatch: Option[String]
@@ -39,9 +37,6 @@ object EadEsadDraftModel extends ModelConstructorHelpers {
   private lazy val timeFormatter: DateTimeFormatter = DateTimeFormatter.ofPattern("HH:mm:ss")
 
   def apply(implicit request: DataRequest[_]): EadEsadDraftModel = EadEsadDraftModel(
-    localReferenceNumber = mandatoryPage(LocalReferenceNumberPage()),
-    invoiceNumber = mandatoryPage(InvoiceDetailsPage()).reference,
-    invoiceDate = Some(mandatoryPage(InvoiceDetailsPage()).date.toString),
     originTypeCode = mandatoryPage(DestinationTypePage).originType,
     dateOfDispatch = mandatoryPage(DispatchDetailsPage()).date.toString,
     timeOfDispatch = Some(mandatoryPage(DispatchDetailsPage()).time.format(timeFormatter))

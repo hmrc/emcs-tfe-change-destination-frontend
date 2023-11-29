@@ -42,6 +42,7 @@ class DeclarationController @Inject()(
                                        override val userAllowList: UserAllowListAction,
                                        override val getData: DataRetrievalAction,
                                        override val requireData: DataRequiredAction,
+                                       override val withMovement: MovementAction,
                                        val controllerComponents: MessagesControllerComponents,
                                        val userAnswersService: UserAnswersService,
                                        val navigator: Navigator,
@@ -51,14 +52,14 @@ class DeclarationController @Inject()(
                                      )(implicit appConfig: AppConfig) extends BaseNavigationController with I18nSupport with AuthActionHelper with Logging {
 
   def onPageLoad(ern: String, arc: String): Action[AnyContent] =
-    authorisedDataRequestAsync(ern, arc) { implicit request =>
+    authorisedDataRequestWithUpToDateMovementAsync(ern, arc) { implicit request =>
       withSubmitChangeDestinationModel { _ =>
         Future.successful(Ok(view(submitAction = routes.DeclarationController.onSubmit(ern, arc))))
       }
     }
 
   def onSubmit(ern: String, arc: String): Action[AnyContent] =
-    authorisedDataRequestAsync(ern, arc) { implicit request =>
+    authorisedDataRequestWithUpToDateMovementAsync(ern, arc) { implicit request =>
       withSubmitChangeDestinationModel { submitChangeDestinationModel =>
         service.submit(submitChangeDestinationModel).flatMap {
           response =>

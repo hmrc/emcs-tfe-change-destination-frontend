@@ -16,33 +16,65 @@
 
 package models
 
-sealed trait UserType
-
-case object GreatBritainRegisteredConsignor extends UserType
-
-case object NorthernIrelandRegisteredConsignor extends UserType
-
-case object GreatBritainWarehouseKeeper extends UserType
-
-case object NorthernIrelandWarehouseKeeper extends UserType
-
-case object GreatBritainWarehouse extends UserType
-
-case object NorthernIrelandWarehouse extends UserType
-
-case object Unknown extends UserType
+sealed trait UserType {
+  def isNorthernIrelandErn: Boolean
+  def isGreatBritainErn: Boolean
+}
 
 object UserType {
 
+  case object GreatBritainRegisteredConsignor extends UserType {
+    override def isNorthernIrelandErn: Boolean = false
+
+    override def isGreatBritainErn: Boolean = true
+  }
+
+  case object NorthernIrelandRegisteredConsignor extends UserType {
+    override def isNorthernIrelandErn: Boolean = true
+
+    override def isGreatBritainErn: Boolean = false
+  }
+
+  case object GreatBritainWarehouseKeeper extends UserType {
+    override def isNorthernIrelandErn: Boolean = false
+
+    override def isGreatBritainErn: Boolean = true
+  }
+
+  case object NorthernIrelandWarehouseKeeper extends UserType {
+    override def isNorthernIrelandErn: Boolean = true
+
+    override def isGreatBritainErn: Boolean = false
+  }
+
+  case object GreatBritainWarehouse extends UserType {
+    override def isNorthernIrelandErn: Boolean = false
+
+    override def isGreatBritainErn: Boolean = true
+  }
+
+  case object NorthernIrelandWarehouse extends UserType {
+    override def isNorthernIrelandErn: Boolean = true
+
+    override def isGreatBritainErn: Boolean = false
+  }
+
+  case object Unknown extends UserType {
+    override def isNorthernIrelandErn: Boolean = false
+
+    override def isGreatBritainErn: Boolean = false
+  }
+
   private val ERN_PREFIX_LENGTH = 4
 
-  def apply(ern: String): UserType = ern.take(ERN_PREFIX_LENGTH).toUpperCase match {
-    case "GBRC" => GreatBritainRegisteredConsignor
-    case "XIRC" => NorthernIrelandRegisteredConsignor
-    case "GBWK" => GreatBritainWarehouseKeeper
-    case "XIWK" => NorthernIrelandWarehouseKeeper
-    case "XI00" => NorthernIrelandWarehouse
-    case "GB00" => GreatBritainWarehouse
-    case _ => Unknown
-  }
+  def apply(ern: String): UserType =
+    ern.take(ERN_PREFIX_LENGTH).toUpperCase match {
+      case "GBRC" => GreatBritainRegisteredConsignor
+      case "XIRC" => NorthernIrelandRegisteredConsignor
+      case "GBWK" => GreatBritainWarehouseKeeper
+      case "XIWK" => NorthernIrelandWarehouseKeeper
+      case "XI00" => NorthernIrelandWarehouse
+      case "GB00" => GreatBritainWarehouse
+      case _ => Unknown
+    }
 }

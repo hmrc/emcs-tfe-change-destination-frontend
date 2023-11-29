@@ -22,6 +22,10 @@ import controllers.actions.predraft.PreDraftDataRequiredAction
 import fixtures.BaseFixtures
 import handlers.ErrorHandler
 import models.UserAnswers
+import models.requests.{DataRequest, MovementRequest, OptionalDataRequest, UserRequest}
+import models.response.emcsTfe.GetMovementResponse
+import models.response.referenceData.TraderKnownFacts
+import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
 import models.requests.{DataRequest, UserRequest}
 import org.scalatest.OptionValues
 import org.scalatest.concurrent.ScalaFutures
@@ -52,6 +56,16 @@ trait SpecBase extends AnyFreeSpec with Matchers with OptionValues with ScalaFut
   def userRequest[A](request: Request[A], ern: String = testErn): UserRequest[A] =
     UserRequest(request, ern, testInternalId, testCredId, testSessionId, hasMultipleErns = false)
 
-  def dataRequest[A](request: Request[A], answers: UserAnswers = emptyUserAnswers, ern: String = testErn): DataRequest[A] =
-    DataRequest(userRequest(request, ern), testDraftId, answers, testMinTraderKnownFacts)
+  def movementRequest[A](request: Request[A],
+                         ern: String = testErn,
+                         movementDetails: GetMovementResponse = getMovementResponseModel
+                        ): MovementRequest[A] =
+    MovementRequest(userRequest(request, ern), testArc, movementDetails)
+
+  def dataRequest[A](request: Request[A],
+                     answers: UserAnswers = emptyUserAnswers,
+                     ern: String = testErn,
+                     movementDetails: GetMovementResponse = getMovementResponseModel
+                    ): DataRequest[A] =
+    DataRequest(userRequest(request, ern, movementDetails), testDraftId, answers, testMinTraderKnownFacts)
 }

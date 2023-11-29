@@ -34,12 +34,13 @@ class DestinationIndexController @Inject()(
                                             override val auth: AuthAction,
                                             override val getData: DataRetrievalAction,
                                             override val requireData: DataRequiredAction,
+                                            override val withMovement: MovementAction,
                                             override val userAllowList: UserAllowListAction,
                                             val controllerComponents: MessagesControllerComponents
                                           ) extends BaseNavigationController with AuthActionHelper {
 
   def onPageLoad(ern: String, arc: String): Action[AnyContent] =
-    authorisedDataRequest(ern, arc) { implicit request =>
+    authorisedDataRequestWithUpToDateMovement(ern, arc) { implicit request =>
       withAnswer(DestinationTypePage) {
         implicit destinationTypePageAnswer =>
           if (DestinationSection.isCompleted) {

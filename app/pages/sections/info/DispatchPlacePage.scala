@@ -16,6 +16,7 @@
 
 package pages.sections.info
 
+import models.requests.DataRequest
 import models.sections.info.DispatchPlace
 import pages.QuestionPage
 import play.api.libs.json.JsPath
@@ -23,4 +24,6 @@ import play.api.libs.json.JsPath
 case object DispatchPlacePage extends QuestionPage[DispatchPlace] {
   override val toString: String = "dispatchPlace"
   override val path: JsPath = InfoSection.path \ toString
+
+  override def getValueFromIE801(implicit request: DataRequest[_]): Option[DispatchPlace] = None // TODO: update
 }

@@ -17,6 +17,7 @@
 package navigation
 
 import controllers.routes
+import models.requests.DataRequest
 import models.sections.guarantor.GuarantorArranger.{GoodsOwner, Transporter}
 import models.{CheckMode, Mode, NormalMode, ReviewMode, UserAnswers}
 import pages.Page
@@ -25,9 +26,10 @@ import play.api.mvc.Call
 
 import javax.inject.Inject
 
+//noinspection ScalaStyle
 class GuarantorNavigator @Inject() extends BaseNavigator {
 
-  private val normalRoutes: Page => UserAnswers => Call = {
+  private def normalRoutes(implicit request: DataRequest[_]): Page => UserAnswers => Call = {
     case GuarantorRequiredPage => (userAnswers: UserAnswers) =>
 
       userAnswers.get(GuarantorRequiredPage) match {
@@ -73,9 +75,9 @@ class GuarantorNavigator @Inject() extends BaseNavigator {
         controllers.sections.guarantor.routes.GuarantorCheckAnswersController.onPageLoad(userAnswers.ern, userAnswers.arc)
   }
 
-  override def nextPage(page: Page, mode: Mode, userAnswers: UserAnswers): Call = mode match {
+  override def nextPage(page: Page, mode: Mode, userAnswers: UserAnswers)(implicit request: DataRequest[_]): Call = mode match {
     case NormalMode =>
-      normalRoutes(page)(userAnswers)
+      normalRoutes(request)(page)(userAnswers)
     case CheckMode =>
       checkRoutes(page)(userAnswers)
     case ReviewMode =>

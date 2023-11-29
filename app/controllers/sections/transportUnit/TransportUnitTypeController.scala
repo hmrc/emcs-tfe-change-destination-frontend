@@ -41,20 +41,21 @@ class TransportUnitTypeController @Inject()(
                                              override val auth: AuthAction,
                                              override val getData: DataRetrievalAction,
                                              override val requireData: DataRequiredAction,
+                                             override val withMovement: MovementAction,
                                              formProvider: TransportUnitTypeFormProvider,
                                              val controllerComponents: MessagesControllerComponents,
                                              view: TransportUnitTypeView
                                            ) extends BaseTransportUnitNavigationController with AuthActionHelper {
 
   def onPageLoad(ern: String, arc: String, idx: Index, mode: Mode): Action[AnyContent] =
-    authorisedDataRequestAsync(ern, arc) { implicit request =>
+    authorisedDataRequestWithUpToDateMovementAsync(ern, arc) { implicit request =>
       validateIndex(idx) {
         renderView(Ok, fillForm(TransportUnitTypePage(idx), formProvider()), idx, mode)
       }
     }
 
   def onSubmit(ern: String, arc: String, idx: Index, mode: Mode): Action[AnyContent] =
-    authorisedDataRequestAsync(ern, arc) { implicit request =>
+    authorisedDataRequestWithUpToDateMovementAsync(ern, arc) { implicit request =>
       validateIndex(idx) {
         formProvider().bindFromRequest().fold(
           formWithErrors =>

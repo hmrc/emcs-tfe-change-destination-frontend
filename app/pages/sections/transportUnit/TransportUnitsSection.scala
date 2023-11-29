@@ -16,6 +16,7 @@
 
 package pages.sections.transportUnit
 
+import models.Enumerable
 import models.requests.DataRequest
 import models.sections.transportUnit.TransportUnitsAddToListModel
 import pages.sections.Section
@@ -23,21 +24,22 @@ import play.api.libs.json.{JsObject, JsPath}
 import queries.TransportUnitsCount
 import viewmodels.taskList.{Completed, InProgress, TaskListStatus}
 
-case object TransportUnitsSection extends Section[JsObject] {
+case object TransportUnitsSection extends Section[JsObject] with Enumerable.Implicits {
   override val toString: String = "transportUnits"
   override val path: JsPath = JsPath \ toString
   val MAX: Int = 99
 
-  override def status(implicit request: DataRequest[_]): TaskListStatus = {
-    (TransportUnitsSectionUnits.status, request.userAnswers.get(TransportUnitsAddToListPage), request.userAnswers.get(TransportUnitsCount)) match {
-      case (Completed, _, Some(MAX)) => Completed
-      case (Completed, Some(TransportUnitsAddToListModel.NoMoreToCome), _) => Completed
-      case (Completed, Some(TransportUnitsAddToListModel.MoreToCome) | None, _) => InProgress
-      case (Completed, Some(TransportUnitsAddToListModel.Yes) | None, _) => InProgress
-      case (InProgress, _, _) => InProgress
-      case (status, _, _) => status
+  override def status(implicit request: DataRequest[_]): TaskListStatus =
+    sectionHasBeenReviewed(TransportUnitsReviewPage) {
+      (TransportUnitsSectionUnits.status, request.userAnswers.get(TransportUnitsAddToListPage), request.userAnswers.get(TransportUnitsCount)) match {
+        case (Completed, _, Some(MAX)) => Completed
+        case (Completed, Some(TransportUnitsAddToListModel.NoMoreToCome), _) => Completed
+        case (Completed, Some(TransportUnitsAddToListModel.MoreToCome) | None, _) => InProgress
+        case (Completed, Some(TransportUnitsAddToListModel.Yes) | None, _) => InProgress
+        case (InProgress, _, _) => InProgress
+        case (status, _, _) => status
+      }
     }
-  }
 
   override def canBeCompletedForTraderAndDestinationType(implicit request: DataRequest[_]): Boolean = true
 }

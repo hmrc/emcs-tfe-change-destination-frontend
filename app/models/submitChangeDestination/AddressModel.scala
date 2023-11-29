@@ -19,6 +19,7 @@ package models.submitChangeDestination
 import models.UserAddress
 import play.api.libs.json.{Format, Json}
 
+//TODO: REFACTOR FOR ACTUAL COD SUBMISSION
 case class AddressModel(streetNumber: Option[String],
                         street: Option[String],
                         postcode: Option[String],

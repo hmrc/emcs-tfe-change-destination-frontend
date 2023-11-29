@@ -35,6 +35,7 @@ class Module extends AbstractModule {
     bind(classOf[DataRequiredAction]).to(classOf[DataRequiredActionImpl]).asEagerSingleton()
     bind(classOf[AuthAction]).to(classOf[AuthActionImpl]).asEagerSingleton()
     bind(classOf[UserAllowListAction]).to(classOf[UserAllowListActionImpl]).asEagerSingleton()
+    bind(classOf[MovementAction]).to(classOf[MovementActionImpl]).asEagerSingleton()
     bind(classOf[TimeMachine]).to(classOf[TimeMachineImpl]).asEagerSingleton()
     bind(classOf[SessionRepository]).to(classOf[SessionRepositoryImpl]).asEagerSingleton()
     bind(classOf[UserAnswersConnector]).to(classOf[UserAnswersConnectorImpl]).asEagerSingleton()

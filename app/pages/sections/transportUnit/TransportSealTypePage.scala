@@ -17,11 +17,22 @@
 package pages.sections.transportUnit
 
 import models.Index
+import models.requests.DataRequest
 import models.sections.transportUnit.TransportSealTypeModel
 import pages.QuestionPage
 import play.api.libs.json.JsPath
+import queries.TransportUnitsCount
 
 case class TransportSealTypePage(idx: Index) extends QuestionPage[TransportSealTypeModel] {
   override val toString: String = "transportSealType"
   override val path: JsPath = TransportUnitSection(idx).path \ toString
+
+  override def getValueFromIE801(implicit request: DataRequest[_]): Option[TransportSealTypeModel] =
+    ifIndexIsValid(TransportUnitsCount, idx)(valueIfIndexIsValid = {
+      val transportDetails = request.movementDetails.transportDetails(idx.position)
+      transportDetails.commercialSealIdentification.map {
+        identification =>
+          TransportSealTypeModel(identification, transportDetails.sealInformation)
+      }
+    })
 }

@@ -31,12 +31,13 @@ class GuarantorIndexController @Inject()(
                                           override val auth: AuthAction,
                                           override val getData: DataRetrievalAction,
                                           override val requireData: DataRequiredAction,
+                                          override val withMovement: MovementAction,
                                           override val userAllowList: UserAllowListAction,
                                           val controllerComponents: MessagesControllerComponents
                                         ) extends GuarantorBaseController with AuthActionHelper {
 
   def onPageLoad(ern: String, arc: String): Action[AnyContent] =
-    authorisedDataRequest(ern, arc) { implicit request =>
+    authorisedDataRequestWithUpToDateMovement(ern, arc) { implicit request =>
       if (GuarantorSection.isCompleted) {
         Redirect(controllers.sections.guarantor.routes.GuarantorCheckAnswersController.onPageLoad(ern, arc))
       } else {

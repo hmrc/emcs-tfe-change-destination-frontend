@@ -16,9 +16,9 @@
 
 package controllers.actions.predraft
 
-import controllers.actions.{AuthAction, UserAllowListAction}
-import models.requests.{DataRequest, UserRequest}
-import play.api.mvc.{Action, ActionBuilder, AnyContent, Result}
+import controllers.actions.{AuthAction, MovementAction, UserAllowListAction}
+import models.requests.{DataRequest, MovementRequest, UserRequest}
+import play.api.mvc.{Action, ActionBuilder, ActionRefiner, AnyContent, Result}
 
 import scala.concurrent.Future
 
@@ -28,14 +28,30 @@ trait PreDraftAuthActionHelper {
   val getPreDraftData: PreDraftDataRetrievalAction
   val requirePreDraftData: PreDraftDataRequiredAction
   val userAllowList: UserAllowListAction
+  val withMovement: MovementAction
 
-  private def authorised(ern: String): ActionBuilder[UserRequest, AnyContent] =
-    auth(ern) andThen userAllowList
+  private def authorised(ern: String,
+                         arc: String,
+                         movementRefiner: => ActionRefiner[UserRequest, MovementRequest]): ActionBuilder[MovementRequest, AnyContent] =
+    auth(ern, arc) andThen userAllowList andThen movementRefiner
 
-  private def authorisedWithPreDraftData(ern: String): ActionBuilder[DataRequest, AnyContent] =
-    authorised(ern) andThen getPreDraftData() andThen requirePreDraftData
+  private def authedUpToDate(ern: String, arc: String) =
+    authorised(ern, arc, withMovement.upToDate(arc))
 
-  def authorisedPreDraftDataRequestAsync(ern: String)(block: DataRequest[_] => Future[Result]): Action[AnyContent] =
-    authorisedWithPreDraftData(ern).async(block)
+  private def authorisedWithPreDraftDataUpToDateMovement(ern: String, arc: String): ActionBuilder[DataRequest, AnyContent] =
+    authedUpToDate(ern, arc) andThen getPreDraftData() andThen requirePreDraftData
+
+  def authorisedWithPreDraftDataUpToDateMovementAsync(ern: String, arc: String)(block: DataRequest[_] => Future[Result]): Action[AnyContent] =
+    authorisedWithPreDraftDataUpToDateMovement(ern, arc).async(block)
+
+
+  private def authedCache(ern: String, arc: String) =
+    authorised(ern, arc, withMovement.fromCache(arc))
+
+  private def authorisedWithPreDraftDataCachedMovement(ern: String, arc: String): ActionBuilder[DataRequest, AnyContent] =
+    authedCache(ern, arc) andThen getPreDraftData() andThen requirePreDraftData
+
+  def authorisedWithPreDraftDataCachedMovementAsync(ern: String, arc: String)(block: DataRequest[_] => Future[Result]): Action[AnyContent] =
+    authorisedWithPreDraftDataUpToDateMovement(ern, arc).async(block)
 
 }

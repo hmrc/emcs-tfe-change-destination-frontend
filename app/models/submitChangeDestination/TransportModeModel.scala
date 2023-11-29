@@ -21,6 +21,7 @@ import pages.sections.journeyType.{GiveInformationOtherTransportPage, HowMovemen
 import play.api.libs.json.{Json, OFormat}
 import utils.ModelConstructorHelpers
 
+//TODO: REFACTOR FOR ACTUAL COD SUBMISSION
 case class TransportModeModel(
                                transportModeCode: String,
                                complementaryInformation: Option[String]

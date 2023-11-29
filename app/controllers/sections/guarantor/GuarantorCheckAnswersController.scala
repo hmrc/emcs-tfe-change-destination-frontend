@@ -35,6 +35,7 @@ class GuarantorCheckAnswersController @Inject()(
                                                  override val auth: AuthAction,
                                                  override val getData: DataRetrievalAction,
                                                  override val requireData: DataRequiredAction,
+                                                 override val withMovement: MovementAction,
                                                  override val userAllowList: UserAllowListAction,
                                                  val cyaHelper: GuarantorCheckAnswersHelper,
                                                  val controllerComponents: MessagesControllerComponents,
@@ -42,7 +43,7 @@ class GuarantorCheckAnswersController @Inject()(
                                                ) extends GuarantorBaseController with AuthActionHelper {
 
   def onPageLoad(ern: String, arc: String): Action[AnyContent] =
-    authorisedDataRequest(ern, arc) { implicit request =>
+    authorisedDataRequestWithUpToDateMovement(ern, arc) { implicit request =>
       Ok(view(
         cyaHelper.summaryList(),
         controllers.sections.guarantor.routes.GuarantorCheckAnswersController.onSubmit(ern, arc)
@@ -50,7 +51,7 @@ class GuarantorCheckAnswersController @Inject()(
     }
 
   def onSubmit(ern: String, arc: String): Action[AnyContent] =
-    authorisedDataRequest(ern, arc) { implicit request =>
+    authorisedDataRequestWithUpToDateMovement(ern, arc) { implicit request =>
       Redirect(navigator.nextPage(GuarantorCheckAnswersPage, NormalMode, request.userAnswers))
     }
 

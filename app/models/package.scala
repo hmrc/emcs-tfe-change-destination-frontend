@@ -111,6 +111,7 @@ package object models {
       }
     }
 
+    //noinspection ScalaStyle
     def remove(path: JsPath): JsResult[JsValue] =
       (path.path, jsValue) match {
         case (Nil, _) => JsError("path cannot be empty")

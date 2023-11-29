@@ -17,10 +17,14 @@
 package pages.sections.info
 
 import models.sections.info.movementScenario.MovementScenario
+import models.requests.DataRequest
 import pages.QuestionPage
 import play.api.libs.json.JsPath
 
 case object DestinationTypePage extends QuestionPage[MovementScenario] {
   override val toString: String = "destinationType"
   override val path: JsPath = InfoSection.path \ toString
+
+  override def getValueFromIE801(implicit request: DataRequest[_]): Option[MovementScenario] =
+    Some(MovementScenario.getMovementScenarioFromMovement)
 }

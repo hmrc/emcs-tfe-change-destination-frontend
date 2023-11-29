@@ -17,9 +17,10 @@
 package pages.sections
 
 import models.requests.DataRequest
-import pages.QuestionPage
-import play.api.libs.json.JsValue
-import viewmodels.taskList.{Completed, TaskListStatus}
+import models.sections.ReviewAnswer
+import pages.{QuestionPage, ReviewPage}
+import play.api.libs.json.{JsValue, Reads}
+import viewmodels.taskList.{Completed, Review, TaskListStatus}
 
 trait Section[T <: JsValue] extends QuestionPage[T] {
   def status(implicit request: DataRequest[_]): TaskListStatus
@@ -29,4 +30,13 @@ trait Section[T <: JsValue] extends QuestionPage[T] {
   def canBeCompletedForTraderAndDestinationType(implicit request: DataRequest[_]): Boolean
 
   final def isCompleted(implicit request: DataRequest[_]): Boolean = status == Completed
+
+  override def getValueFromIE801(implicit request: DataRequest[_]): Option[T] = None
+
+  def sectionHasBeenReviewed(page: ReviewPage)(f: => TaskListStatus)(implicit request: DataRequest[_], reads: Reads[ReviewAnswer]) =
+    request.userAnswers.get(page) match {
+      case Some(ReviewAnswer.KeepAnswers) => Completed
+      case Some(ReviewAnswer.ChangeAnswers) => f
+      case None => Review
+    }
 }

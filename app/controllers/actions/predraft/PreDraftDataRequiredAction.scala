@@ -32,9 +32,9 @@ class PreDraftDataRequiredActionImpl @Inject()(implicit val executionContext: Ex
       case Some(traderKnownFacts) =>
         request.userAnswers match {
           case None =>
-            Future.successful(Left(Redirect(routes.IndexController.onPageLoad(request.ern))))
+            Future.successful(Left(Redirect(routes.IndexController.onPageLoad(request.ern, request.arc))))
           case Some(data) =>
-            Future.successful(Right(DataRequest(request.request, request.request.sessionId, data, traderKnownFacts)))
+            Future.successful(Right(DataRequest(request.request, data, traderKnownFacts)))
         }
       case None => Future.successful(Left(Redirect(routes.JourneyRecoveryController.onPageLoad())))
     }

@@ -16,6 +16,7 @@
 
 package pages.sections.transportUnit
 
+import models.requests.DataRequest
 import models.sections.transportUnit.TransportUnitsAddToListModel
 import pages.QuestionPage
 import play.api.libs.json.JsPath
@@ -23,4 +24,6 @@ import play.api.libs.json.JsPath
 case object TransportUnitsAddToListPage extends QuestionPage[TransportUnitsAddToListModel] {
   override val toString: String = "transportUnitsAddToList"
   override val path: JsPath = TransportUnitsSection.path \ toString
+
+  override def getValueFromIE801(implicit request: DataRequest[_]): Option[TransportUnitsAddToListModel] = None
 }

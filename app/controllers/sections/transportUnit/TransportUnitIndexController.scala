@@ -34,12 +34,13 @@ class TransportUnitIndexController @Inject()(
                                               override val auth: AuthAction,
                                               override val getData: DataRetrievalAction,
                                               override val requireData: DataRequiredAction,
+                                              override val withMovement: MovementAction,
                                               override val userAllowList: UserAllowListAction,
                                               val controllerComponents: MessagesControllerComponents
                                             ) extends BaseNavigationController with AuthActionHelper {
 
   def onPageLoad(ern: String, arc: String): Action[AnyContent] =
-    authorisedDataRequest(ern, arc) { implicit request =>
+    authorisedDataRequestWithUpToDateMovement(ern, arc) { implicit request =>
       request.userAnswers.get(TransportUnitsCount) match {
         case None | Some(0) => Redirect(
           controllers.sections.transportUnit.routes.TransportUnitTypeController.onPageLoad(request.ern, request.arc, Index(0), NormalMode)

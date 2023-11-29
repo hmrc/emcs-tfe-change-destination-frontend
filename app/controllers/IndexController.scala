@@ -31,18 +31,13 @@ class IndexController @Inject()(override val messagesApi: MessagesApi,
                                 userAllowed: UserAllowListAction,
                                 val controllerComponents: MessagesControllerComponents) extends BaseController {
 
-  def onPageLoad(ern: String): Action[AnyContent] =
-    (authAction(ern) andThen userAllowed) { request =>
+  def onPageLoad(ern: String, arc: String): Action[AnyContent] =
+    (authAction(ern, arc) andThen userAllowed).async {
 
       // clear down any in flight pre draft and start again
-      preDraftService.set(
-        UserAnswers(
-          ern = ern,
-          arc = request.sessionId
-        )
-      )
-
-      Redirect(controllers.sections.info.routes.InfoIndexController.onPreDraftPageLoad(ern))
+      preDraftService.set(UserAnswers(ern, arc)).map { _ =>
+        Redirect(controllers.sections.info.routes.InfoIndexController.onPageLoad(ern, arc))
+      }
     }
 
 }

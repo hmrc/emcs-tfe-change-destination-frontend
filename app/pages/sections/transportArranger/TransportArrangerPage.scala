@@ -16,6 +16,7 @@
 
 package pages.sections.transportArranger
 
+import models.requests.DataRequest
 import models.sections.transportArranger.TransportArranger
 import pages.QuestionPage
 import play.api.libs.json.JsPath
@@ -23,4 +24,7 @@ import play.api.libs.json.JsPath
 case object TransportArrangerPage extends QuestionPage[TransportArranger] {
   override val toString: String = "transportArranger"
   override val path: JsPath = TransportArrangerSection.path \ toString
+
+  override def getValueFromIE801(implicit request: DataRequest[_]): Option[TransportArranger] =
+    Some(request.movementDetails.headerEadEsad.transportArrangement)
 }
