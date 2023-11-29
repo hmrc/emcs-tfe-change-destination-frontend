@@ -16,10 +16,13 @@
 
 package queries
 
+import models.requests.DataRequest
 import pages.sections.sad.SadSectionDocuments
 import play.api.libs.json.{JsPath, JsValue}
 
 case object SadCount extends Derivable[List[JsValue], Int] {
   override val derive: List[JsValue] => Int = _.size
   override val path: JsPath = SadSectionDocuments.path
+
+  override def getValueFromIE801(implicit request: DataRequest[_]): Option[List[JsValue]] = None
 }

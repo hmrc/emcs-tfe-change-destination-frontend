@@ -37,6 +37,11 @@ case object NotStarted extends TaskListStatus {
   override val tagClass = Some("govuk-tag--grey")
 }
 
+case object Review extends TaskListStatus {
+  override val msgKey: String = "taskListStatus.review"
+  override val tagClass = Some("govuk-tag--grey")
+}
+
 case object CannotStartYet extends TaskListStatus {
   override val msgKey: String = "taskListStatus.cannotStartYet"
   override val tagClass = Some("govuk-tag--grey")

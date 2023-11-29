@@ -16,34 +16,42 @@
 
 package pages.sections.consignee
 
-import models.requests.DataRequest
+import models.Enumerable
 import models.movementScenario.MovementScenario.UnknownDestination
+import models.requests.DataRequest
+import models.sections.ReviewAnswer
 import pages.sections.Section
 import pages.sections.info.DestinationTypePage
 import play.api.libs.json.{JsObject, JsPath, Reads}
-import viewmodels.taskList.{Completed, InProgress, NotStarted, TaskListStatus}
+import viewmodels.taskList._
 
 import scala.annotation.unused
 
-case object ConsigneeSection extends Section[JsObject] {
+case object ConsigneeSection extends Section[JsObject] with Enumerable.Implicits {
   override val path: JsPath = JsPath \ "consignee"
 
   override def status(implicit request: DataRequest[_]): TaskListStatus = {
-    (
-      request.userAnswers.get(ConsigneeExportPage),
-      request.userAnswers.get(ConsigneeExcisePage),
-      request.userAnswers.get(ConsigneeExemptOrganisationPage)
-    ) match {
-      case (Some(value), _, _) =>
-        value match {
-          case true => checkBusinessNameAndAddressBothExistWithPage(request.userAnswers.get(ConsigneeExportVatPage))
-          case false => checkBusinessNameAndAddressBothExistWithPage(request.userAnswers.get(ConsigneeExcisePage))
+    request.userAnswers.get(ConsigneeReviewPage) match {
+      case Some(ReviewAnswer.KeepAnswers) => Completed
+      case Some(ReviewAnswer.ChangeAnswers) =>
+        (
+          request.userAnswers.get(ConsigneeExportPage),
+          request.userAnswers.get(ConsigneeExcisePage),
+          request.userAnswers.get(ConsigneeExemptOrganisationPage)
+        ) match {
+          case (Some(value), _, _) =>
+            value match {
+              case true => checkBusinessNameAndAddressBothExistWithPage(request.userAnswers.get(ConsigneeExportVatPage))
+              case false => checkBusinessNameAndAddressBothExistWithPage(request.userAnswers.get(ConsigneeExcisePage))
+            }
+          case (_, Some(value), _) =>
+            checkBusinessNameAndAddressBothExistWithPage(Some(value))
+          case (_, _, Some(value)) =>
+            checkBusinessNameAndAddressBothExistWithPage(Some(value))
+          case _ => NotStarted
         }
-      case (_, Some(value), _) => checkBusinessNameAndAddressBothExistWithPage(Some(value))
-      case (_, _, Some(value)) => checkBusinessNameAndAddressBothExistWithPage(Some(value))
-      case _ => NotStarted
+      case None => Review
     }
-
   }
 
   /**

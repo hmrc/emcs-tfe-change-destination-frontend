@@ -16,6 +16,7 @@
 
 package pages.sections.sad
 
+import models.requests.DataRequest
 import models.sections.sad.SadAddToListModel
 import pages.QuestionPage
 import play.api.libs.json.JsPath
@@ -23,4 +24,6 @@ import play.api.libs.json.JsPath
 case object SadAddToListPage extends QuestionPage[SadAddToListModel] {
   override val toString: String = "sadAddToList"
   override val path: JsPath = SadSection.path \ toString
+
+  override def getValueFromIE801(implicit request: DataRequest[_]): Option[SadAddToListModel] = None
 }

@@ -16,10 +16,13 @@
 
 package pages.sections.importInformation
 
+import models.requests.DataRequest
 import pages.QuestionPage
 import play.api.libs.json.JsPath
 
 case object ImportCustomsOfficeCodePage extends QuestionPage[String] {
   override val toString: String = "importCustomsOfficeCode"
   override val path: JsPath = ImportInformationSection.path \ toString
+
+  override def getValueFromIE801(implicit request: DataRequest[_]): Option[String] = None // TODO: update
 }

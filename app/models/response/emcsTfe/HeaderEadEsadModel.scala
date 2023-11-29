@@ -17,6 +17,7 @@
 package models.response.emcsTfe
 
 import models.movementScenario.DestinationType
+import models.sections.transportArranger.TransportArranger
 import play.api.libs.json.{Json, OFormat}
 
 case class HeaderEadEsadModel(
@@ -24,7 +25,7 @@ case class HeaderEadEsadModel(
     dateAndTimeOfUpdateValidation: String,
     destinationType: DestinationType,
     journeyTime: String,
-    transportArrangement: TransportArrangement
+    transportArrangement: TransportArranger
 )
 
 object HeaderEadEsadModel {

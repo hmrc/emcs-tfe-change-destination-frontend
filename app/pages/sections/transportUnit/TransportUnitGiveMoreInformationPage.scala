@@ -17,10 +17,15 @@
 package pages.sections.transportUnit
 
 import models.Index
+import models.requests.DataRequest
 import pages.QuestionPage
 import play.api.libs.json.JsPath
+import queries.TransportUnitsCount
 
 case class TransportUnitGiveMoreInformationPage(idx: Index) extends QuestionPage[Option[String]] {
   override val toString: String = "transportUnitGiveMoreInformation"
   override val path: JsPath = TransportUnitSection(idx).path \ toString
+
+  override def getValueFromIE801(implicit request: DataRequest[_]): Option[Option[String]] =
+    ifIndexIsValid(TransportUnitsCount, idx)(valueIfIndexIsValid = Some(request.movementDetails.transportDetails(idx.position).complementaryInformation))
 }

@@ -14,23 +14,21 @@
  * limitations under the License.
  */
 
-package models.response.emcsTfe
+package models.sections
 
 import models.{Enumerable, WithName}
 
-sealed trait TransportArrangement
+sealed trait ReviewAnswer
 
-object TransportArrangement extends Enumerable.Implicits {
+object ReviewAnswer {
+  case object ChangeAnswers extends WithName("yes") with ReviewAnswer
+  case object KeepAnswers extends WithName("no") with ReviewAnswer
 
-  case object Consignor extends WithName("1") with TransportArrangement
-  case object Consignee extends WithName("2") with TransportArrangement
-  case object OwnerOfGoods extends WithName("3") with TransportArrangement
-  case object Other extends WithName("4") with TransportArrangement
-
-  val values: Seq[TransportArrangement] = Seq(
-    Consignor, Consignee, OwnerOfGoods, Other
+  val values: Seq[ReviewAnswer] = Seq(
+    ChangeAnswers,
+    KeepAnswers
   )
 
-  implicit val enumerable: Enumerable[TransportArrangement] =
+  implicit val enumerable: Enumerable[ReviewAnswer] =
     Enumerable(values.map(v => v.toString -> v): _*)
 }

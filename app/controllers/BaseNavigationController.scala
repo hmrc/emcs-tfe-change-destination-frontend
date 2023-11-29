@@ -33,7 +33,6 @@ trait BaseNavigationController extends BaseController with Logging {
   val userAnswersService: UserAnswersService
   val navigator: BaseNavigator
 
-  // TODO: update "withAnswer" function to retrieve from GetMovementResponse if not present in userAnswers
   def withAnswer[A](page: QuestionPage[A])(f: A => Future[Result])(implicit request: DataRequest[_], reads: Reads[A]): Future[Result] =
     request.userAnswers.get(page) match {
       case Some(value) => f(value)
@@ -43,7 +42,7 @@ trait BaseNavigationController extends BaseController with Logging {
     }
 
   def saveAndRedirect[A](page: QuestionPage[A], answer: A, currentAnswers: UserAnswers, mode: Mode)
-                        (implicit hc: HeaderCarrier, format: Format[A]): Future[Result] =
+                        (implicit request: DataRequest[_], hc: HeaderCarrier, format: Format[A]): Future[Result] =
     save(page, answer, currentAnswers).map { updatedAnswers =>
       Redirect(navigator.nextPage(page, mode, updatedAnswers))
     }
@@ -54,7 +53,8 @@ trait BaseNavigationController extends BaseController with Logging {
       Redirect(navigator.nextPage(page, mode, updatedAnswers))
     }
 
-  private def save[A](page: QuestionPage[A], answer: A, currentAnswers: UserAnswers)(implicit hc: HeaderCarrier, format: Format[A]): Future[UserAnswers] =
+  private def save[A](page: QuestionPage[A], answer: A, currentAnswers: UserAnswers)
+                     (implicit request: DataRequest[_], hc: HeaderCarrier, format: Format[A]): Future[UserAnswers] =
     if (currentAnswers.get[A](page).contains(answer)) {
       Future.successful(currentAnswers)
     } else {

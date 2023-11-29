@@ -18,15 +18,19 @@ package fixtures
 
 import models.movementScenario.{DestinationType, OriginType}
 import models.response.emcsTfe._
+import models.sections.transportArranger.TransportArranger
 import play.api.libs.json.{JsValue, Json}
 
 trait GetMovementResponseFixtures {
   _: BaseFixtures =>
 
+  private val destinationTypeForModel = DestinationType.DirectDelivery
+  private val destinationTypeForJson = destinationTypeForModel.toString
+
   val getMovementResponseModel: GetMovementResponse = GetMovementResponse(
     arc = "ExciseMovementArc",
     sequenceNumber = 1,
-    destinationType = DestinationType.TemporaryCertifiedConsignee,
+    destinationType = destinationTypeForModel,
     memberStateCode = Some("CCTMemberStateCode"),
     serialNumberOfCertificateOfExemption = Some("CCTSerialNumber"),
     consignorTrader = TraderModel(
@@ -144,16 +148,16 @@ trait GetMovementResponseFixtures {
     headerEadEsad = HeaderEadEsadModel(
       sequenceNumber = 1,
       dateAndTimeOfUpdateValidation = "HeaderEadEsadDateTime",
-      destinationType = DestinationType.TemporaryCertifiedConsignee,
+      destinationType = destinationTypeForModel,
       journeyTime = "10 hours",
-      transportArrangement = TransportArrangement.Consignee
+      transportArrangement = TransportArranger.Consignee
     ),
     transportMode = TransportModeModel(
       transportModeCode = "TransportModeTransportModeCode",
       complementaryInformation = Some("TransportModeComplementaryInformation")
     ),
     movementGuarantee = MovementGuaranteeModel(
-      guarantorTypeCode = GuarantorType.ConsignorTransporterOwner,
+      guarantorTypeCode = GuarantorType.Consignor,
       guarantorTrader = Some(
         Seq(
           TraderModel(
@@ -206,7 +210,7 @@ trait GetMovementResponseFixtures {
   val getMovementResponseInputJson: JsValue = Json.obj(
     "arc" -> "ExciseMovementArc",
     "sequenceNumber" -> 1,
-    "destinationType" -> "10",
+    "destinationType" -> destinationTypeForJson,
     "memberStateCode" -> "CCTMemberStateCode",
     "serialNumberOfCertificateOfExemption" -> "CCTSerialNumber",
     "consignorTrader" -> Json.obj(
@@ -305,7 +309,7 @@ trait GetMovementResponseFixtures {
     "headerEadEsad" -> Json.obj(
       "sequenceNumber" -> 1,
       "dateAndTimeOfUpdateValidation" -> "HeaderEadEsadDateTime",
-      "destinationType" -> "10",
+      "destinationType" -> destinationTypeForJson,
       "journeyTime" -> "10 hours",
       "transportArrangement" -> "2"
     ),
@@ -314,7 +318,7 @@ trait GetMovementResponseFixtures {
       "complementaryInformation" -> "TransportModeComplementaryInformation"
     ),
     "movementGuarantee" -> Json.obj(
-      "guarantorTypeCode" -> "123",
+      "guarantorTypeCode" -> "1",
       "guarantorTrader" -> Json.arr(
         Json.obj(
           "traderExciseNumber" -> "GuarantorTraderErn1",

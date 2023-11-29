@@ -42,7 +42,7 @@ case class DataRequest[A](request: MovementRequest[A],
   lazy val isWarehouseKeeper: Boolean = request.isWarehouseKeeper
   lazy val isRegisteredConsignor: Boolean = request.isRegisteredConsignor
 
-  def dispatchPlace: Option[DispatchPlace] = userAnswers.get(DispatchPlacePage) match {
+  def dispatchPlace: Option[DispatchPlace] = userAnswers.get(DispatchPlacePage)(this, implicitly) match {
     case Some(dp) if dp == GreatBritain => Some(GreatBritain)
     case Some(dp) if dp == NorthernIreland => Some(NorthernIreland)
     case None if !isNorthernIrelandErn => Some(GreatBritain)

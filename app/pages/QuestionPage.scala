@@ -16,6 +16,18 @@
 
 package pages
 
-import queries.{Gettable, Settable}
+import models.Index
+import models.requests.DataRequest
+import play.api.libs.json.Reads
+import queries.{Derivable, Gettable, Settable}
 
-trait QuestionPage[+A] extends Page with Gettable[A] with Settable[A]
+trait QuestionPage[+A] extends Page with Gettable[A] with Settable[A] {
+
+  def ifIndexIsValid[T, B](itemCount: Derivable[T, Int], idx: Index)
+                          (valueIfIndexIsValid: Option[B])
+                          (implicit request: DataRequest[_], reads: Reads[T]): Option[B] =
+    request.userAnswers.get(itemCount) match {
+      case Some(value) if idx.position >= 0 && idx.position < value => valueIfIndexIsValid
+      case _ => None
+    }
+}

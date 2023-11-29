@@ -16,10 +16,13 @@
 
 package pages.sections.destination
 
+import models.requests.DataRequest
 import pages.QuestionPage
 import play.api.libs.json.JsPath
 
 case object DestinationConsigneeDetailsPage extends QuestionPage[Boolean] {
   override val toString: String = "destinationConsigneeDetails"
   override val path: JsPath = DestinationSection.path \ toString
+
+  override def getValueFromIE801(implicit request: DataRequest[_]): Option[Boolean] = None // TODO: check
 }

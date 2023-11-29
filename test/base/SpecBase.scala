@@ -22,6 +22,7 @@ import fixtures.{BaseFixtures, GetMovementResponseFixtures}
 import handlers.ErrorHandler
 import models.UserAnswers
 import models.requests.{DataRequest, MovementRequest, OptionalDataRequest, UserRequest}
+import models.response.emcsTfe.GetMovementResponse
 import models.response.referenceData.TraderKnownFacts
 import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
 import org.scalatest.freespec.AnyFreeSpec
@@ -66,11 +67,18 @@ trait SpecBase
 
   def userRequest[A](request: Request[A], ern: String = testErn): UserRequest[A] =
     UserRequest(request, ern, testInternalId, testCredId, hasMultipleErns = false)
-  def movementRequest[A](request: Request[A], ern: String = testErn): MovementRequest[A] =
-    MovementRequest(userRequest(request, ern), testArc, getMovementResponseModel)
+  def movementRequest[A](request: Request[A],
+                         ern: String = testErn,
+                         movementDetails: GetMovementResponse = getMovementResponseModel
+                        ): MovementRequest[A] =
+    MovementRequest(userRequest(request, ern), testArc, movementDetails)
 
-  def dataRequest[A](request: Request[A], answers: UserAnswers = emptyUserAnswers, ern: String = testErn): DataRequest[A] =
-    DataRequest(movementRequest(request, ern), answers, testMinTraderKnownFacts)
+  def dataRequest[A](request: Request[A],
+                     answers: UserAnswers = emptyUserAnswers,
+                     ern: String = testErn,
+                     movementDetails: GetMovementResponse = getMovementResponseModel
+                    ): DataRequest[A] =
+    DataRequest(movementRequest(request, ern, movementDetails), answers, testMinTraderKnownFacts)
 
   def optionalDataRequest[A](request: Request[A],
                      answers: Option[UserAnswers] = Some(emptyUserAnswers),

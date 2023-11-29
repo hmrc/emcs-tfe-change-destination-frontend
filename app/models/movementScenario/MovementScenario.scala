@@ -35,7 +35,7 @@ object MovementScenario extends Enumerable.Implicits with Logging {
   //noinspection ScalaStyle - Cyclomatic Complexity
   def getMovementScenarioFromMovement(implicit request: DataRequest[_]): MovementScenario = {
     val movementDetails = request.request.movementDetails
-    movementDetails.headerEadEsad.destinationType match {
+    movementDetails.destinationType match {
       case DestinationType.TaxWarehouse =>
         if (movementDetails.deliveryPlaceTrader.flatMap(_.traderExciseNumber).exists(UserType(_).isGreatBritainErn) || movementDetails.deliveryPlaceTrader.flatMap(_.traderExciseNumber).exists(UserType(_).isNorthernIrelandErn)) {
           MovementScenario.GbTaxWarehouse

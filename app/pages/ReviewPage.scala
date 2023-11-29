@@ -14,19 +14,12 @@
  * limitations under the License.
  */
 
-package utils
+package pages
 
 import models.requests.DataRequest
-import models.{MissingMandatoryPage, UserAnswers}
-import pages.QuestionPage
-import play.api.libs.json.Reads
+import models.sections.ReviewAnswer
 
-trait ModelConstructorHelpers extends Logging {
-
-  def mandatoryPage[A](page: QuestionPage[A])(implicit request: DataRequest[_], userAnswers: UserAnswers, rds: Reads[A]): A = userAnswers.get(page) match {
-    case Some(a) => a
-    case None =>
-      logger.error(s"Missing mandatory UserAnswer for page: '$page'")
-      throw MissingMandatoryPage(s"Missing mandatory UserAnswer for page: '$page'")
-  }
+trait ReviewPage extends QuestionPage[ReviewAnswer] {
+  override val toString: String = "review"
+  override def getValueFromIE801(implicit request: DataRequest[_]): Option[ReviewAnswer] = None
 }

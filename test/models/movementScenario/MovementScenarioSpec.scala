@@ -30,48 +30,29 @@ class MovementScenarioSpec extends SpecBase {
 
   "getMovementScenarioFromMovement" - {
     def testDataRequestWithDeliveryPlaceCustomsOffice(value: Option[String], destinationType: DestinationType): DataRequest[_] =
-      dataRequest(FakeRequest())
+      dataRequest(FakeRequest(), movementDetails = getMovementResponseModel
         .copy(
-          request =
-            movementRequest(FakeRequest())
-              .copy(
-                movementDetails =
-                  getMovementResponseModel
-                    .copy(
-                      deliveryPlaceCustomsOfficeReferenceNumber = value,
-                      headerEadEsad = getMovementResponseModel.headerEadEsad.copy(destinationType = destinationType)
-                    )
-              )
+          deliveryPlaceCustomsOfficeReferenceNumber = value,
+          headerEadEsad = getMovementResponseModel.headerEadEsad.copy(destinationType = destinationType)
         )
+      )
 
     def testDataRequestWithDeliveryPlaceTrader(value: Option[String], destinationType: DestinationType): DataRequest[_] =
-      dataRequest(FakeRequest())
-        .copy(
-          request =
-            movementRequest(FakeRequest())
-              .copy(
-                movementDetails =
-                  getMovementResponseModel
-                    .copy(
-                      deliveryPlaceTrader = getMovementResponseModel.deliveryPlaceTrader.map(_.copy(traderExciseNumber = value)),
-                      headerEadEsad = getMovementResponseModel.headerEadEsad.copy(destinationType = destinationType)
-                    )
-              )
-        )
+      dataRequest(FakeRequest(), movementDetails =
+        getMovementResponseModel
+          .copy(
+            deliveryPlaceTrader = getMovementResponseModel.deliveryPlaceTrader.map(_.copy(traderExciseNumber = value)),
+            headerEadEsad = getMovementResponseModel.headerEadEsad.copy(destinationType = destinationType)
+          )
+      )
 
     def testDataRequest(destinationType: DestinationType): DataRequest[_] =
-      dataRequest(FakeRequest())
-        .copy(
-          request =
-            movementRequest(FakeRequest())
-              .copy(
-                movementDetails =
-                  getMovementResponseModel
-                    .copy(
-                      headerEadEsad = getMovementResponseModel.headerEadEsad.copy(destinationType = destinationType)
-                    )
-              )
-        )
+      dataRequest(FakeRequest(), movementDetails =
+        getMovementResponseModel
+          .copy(
+            headerEadEsad = getMovementResponseModel.headerEadEsad.copy(destinationType = destinationType)
+          )
+      )
 
     "when DestinationType is Export" - {
       "must return ExportWithCustomsDeclarationLodgedInTheUk" - {

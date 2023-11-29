@@ -16,10 +16,13 @@
 
 package pages.sections.info
 
+import models.requests.DataRequest
 import pages.QuestionPage
 import play.api.libs.json.JsPath
 
 case object InformationCheckAnswersPage extends QuestionPage[Boolean] {
   override val toString: String = "informationCheckAnswers"
   override val path: JsPath = InfoSection.path \ toString
+
+  override def getValueFromIE801(implicit request: DataRequest[_]): Option[Boolean] = None
 }

@@ -17,10 +17,15 @@
 package pages.sections.sad
 
 import models.Index
+import models.requests.DataRequest
 import pages.QuestionPage
 import play.api.libs.json.JsPath
+import queries.SadCount
 
 case class ImportNumberPage(idx: Index) extends QuestionPage[String] {
   override val toString: String = "importNumber"
   override val path: JsPath = SadSectionItem(idx).path \ toString
+
+  override def getValueFromIE801(implicit request: DataRequest[_]): Option[String] =
+    ifIndexIsValid(SadCount, idx)(valueIfIndexIsValid = request.movementDetails.eadEsad.importSadNumber.map(_(idx.position)))
 }

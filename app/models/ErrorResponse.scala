@@ -38,4 +38,5 @@ case class UserAnswersException(message: String) extends Exception(message) with
 case class MissingMandatoryPage(message: String) extends Exception(message) with NoStackTrace with ErrorResponse
 case class InvalidUserTypeException(message: String) extends Exception(message) with NoStackTrace with ErrorResponse
 case class InvalidDestinationTypeException(message: String) extends Exception(message) with NoStackTrace with ErrorResponse
+case class InvalidGuarantorTypeException(message: String) extends Exception(message) with NoStackTrace with ErrorResponse
 case class TraderKnownFactsException(message: String) extends Exception(message) with NoStackTrace with ErrorResponse

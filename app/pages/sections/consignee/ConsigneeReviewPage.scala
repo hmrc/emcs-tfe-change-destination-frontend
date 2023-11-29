@@ -14,19 +14,14 @@
  * limitations under the License.
  */
 
-package utils
+package pages.sections.consignee
 
 import models.requests.DataRequest
-import models.{MissingMandatoryPage, UserAnswers}
-import pages.QuestionPage
-import play.api.libs.json.Reads
+import models.response.emcsTfe.TraderModel
+import models.sections.consignee.{ConsigneeExportVat, ConsigneeExportVatType}
+import pages.{QuestionPage, ReviewPage}
+import play.api.libs.json.JsPath
 
-trait ModelConstructorHelpers extends Logging {
-
-  def mandatoryPage[A](page: QuestionPage[A])(implicit request: DataRequest[_], userAnswers: UserAnswers, rds: Reads[A]): A = userAnswers.get(page) match {
-    case Some(a) => a
-    case None =>
-      logger.error(s"Missing mandatory UserAnswer for page: '$page'")
-      throw MissingMandatoryPage(s"Missing mandatory UserAnswer for page: '$page'")
-  }
+case object ConsigneeReviewPage extends ReviewPage {
+  override val path: JsPath = ConsigneeSection.path \ toString
 }
