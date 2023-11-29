@@ -17,12 +17,12 @@
 package controllers
 
 import base.SpecBase
+import controllers.actions.FakeDataRetrievalAction
 import mocks.services.MockUserAnswersService
 import play.api.http.Status.SEE_OTHER
-import play.api.inject.bind
 import play.api.test.FakeRequest
-import play.api.test.Helpers.{GET, defaultAwaitTimeout, redirectLocation, route, running, status, writeableOf_AnyContentAsEmpty}
-import services.UserAnswersService
+import play.api.test.Helpers.{defaultAwaitTimeout, redirectLocation, status}
+import views.html.IndexPage
 
 import scala.concurrent.Future
 
@@ -38,24 +38,22 @@ class IndexControllerSpec extends SpecBase with MockUserAnswersService {
 
           MockUserAnswersService.set(emptyUserAnswers).returns(Future.successful(emptyUserAnswers))
 
-          val application = applicationBuilder(userAnswers = None).overrides(
-            bind[UserAnswersService].toInstance(mockUserAnswersService)
-          ).build()
+          val controller = new IndexController(
+            messagesApi,
+            mockUserAnswersService,
+            messagesControllerComponents,
+            fakeAuthAction,
+            fakeMovementAction,
+            new FakeDataRetrievalAction(None, Some(testMinTraderKnownFacts)),
+            app.injector.instanceOf[IndexPage]
+          )
 
-          running(application) {
-            val request = FakeRequest(GET, routes.IndexController.onPageLoad(testErn, testArc).url)
+          val result = controller.onPageLoad(testErn, testArc)(FakeRequest())
 
-            val result = route(application, request).value
-
-            status(result) mustEqual SEE_OTHER
-            redirectLocation(result) mustBe Some(routes.IndexController.onPageLoad(testErn, testArc).url)
-          }
+          status(result) mustEqual SEE_OTHER
+          redirectLocation(result) mustBe Some(routes.IndexController.onPageLoad(testErn, testArc).url)
         }
       }
-
-
     }
-
   }
-
 }

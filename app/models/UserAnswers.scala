@@ -16,8 +16,9 @@
 
 package models
 
+import pages.QuestionPage
 import play.api.libs.json._
-import queries.{Gettable, Settable}
+import queries.{Derivable, Gettable, Settable}
 import uk.gov.hmrc.mongo.play.json.formats.MongoJavatimeFormats
 
 import java.time.Instant
@@ -26,6 +27,24 @@ final case class UserAnswers(ern: String,
                              arc: String,
                              data: JsObject = Json.obj(),
                              lastUpdated: Instant = Instant.now) {
+
+  /**
+   * @param pages a Seq of pages you want to leave in UserAnswers
+   * @return this UserAnswers, where any pages not in the `pages` parameter are filtered out
+   */
+  def filterForPages(pages: Seq[QuestionPage[_]]): UserAnswers = {
+    val pagesWithAnswersInData: Seq[(String, Json.JsValueWrapper)] = pages.flatMap {
+      page =>
+        data \ page match {
+          case JsDefined(value) => Some(page.toString -> Json.toJsFieldJsValueWrapper(value))
+          case _: JsUndefined => None
+        }
+    }
+
+    val newAnswers = Json.obj(pagesWithAnswersInData: _*)
+
+    this.copy(data = newAnswers)
+  }
 
   private[models] def handleResult: JsResult[JsObject] => UserAnswers = {
     case JsSuccess(updatedAnswers, _) =>
@@ -36,6 +55,9 @@ final case class UserAnswers(ern: String,
 
   def get[A](page: Gettable[A])(implicit rds: Reads[A]): Option[A] =
     Reads.optionNoError(Reads.at(page.path)).reads(data).asOpt.flatten
+
+  def get[A, B](query: Derivable[A, B])(implicit rds: Reads[A]): Option[B] =
+    get(query.asInstanceOf[Gettable[A]]).map(query.derive)
 
   def set[A](page: Settable[A], value: A)(implicit writes: Writes[A]): UserAnswers =
     handleResult {
@@ -55,7 +77,7 @@ object UserAnswers {
     import play.api.libs.functional.syntax._
 
     (
-        (__ \ "ern").read[String] and
+      (__ \ "ern").read[String] and
         (__ \ "arc").read[String] and
         (__ \ "data").read[JsObject] and
         (__ \ "lastUpdated").read(MongoJavatimeFormats.instantFormat)
@@ -67,7 +89,7 @@ object UserAnswers {
     import play.api.libs.functional.syntax._
 
     (
-        (__ \ "ern").write[String] and
+      (__ \ "ern").write[String] and
         (__ \ "arc").write[String] and
         (__ \ "data").write[JsObject] and
         (__ \ "lastUpdated").write(MongoJavatimeFormats.instantFormat)

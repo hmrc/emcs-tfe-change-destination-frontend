@@ -27,18 +27,16 @@ class SignedOutControllerSpec extends SpecBase {
 
     "must return OK and the correct view for a GET" in {
 
-      val application = applicationBuilder(userAnswers = None).build()
+      lazy val view = app.injector.instanceOf[SignedOutView]
 
-      running(application) {
-        val request = FakeRequest(GET, routes.SignedOutController.onPageLoad.url)
+      lazy val controller = new SignedOutController(messagesControllerComponents, view)
+      lazy val request = FakeRequest()
 
-        val result = route(application, request).value
+      val result = controller.onPageLoad()(request)
 
-        val view = application.injector.instanceOf[SignedOutView]
 
-        status(result) mustEqual OK
-        contentAsString(result) mustEqual view()(request, messages(application)).toString
-      }
+      status(result) mustEqual OK
+      contentAsString(result) mustEqual view()(request, messages(request)).toString
     }
   }
 }

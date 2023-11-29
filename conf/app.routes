@@ -1,21 +1,19 @@
 # microservice specific routes
 
-->         /hmrc-frontend                               hmrcfrontend.Routes
+->         /hmrc-frontend                    hmrcfrontend.Routes
 
-->         /error                                       error.Routes
+->         /error                            error.Routes
 
-GET        /refresh-session                             controllers.KeepAliveController.keepAlive()
+GET        /refresh-session                  controllers.KeepAliveController.keepAlive()
 
-GET        /language/:lang                              controllers.LanguageSwitchController.switchToLanguage(lang: String)
+GET        /assets/*file                     controllers.Assets.versioned(path = "/public", file: Asset)
 
-GET        /assets/*file                                controllers.Assets.versioned(path = "/public", file: Asset)
+GET        /account/sign-out-survey          controllers.auth.AuthController.signOut()
+GET        /account/sign-out                 controllers.auth.AuthController.signOutNoSurvey()
+GET        /account/signed-out               controllers.auth.SignedOutController.onPageLoad()
+GET        /account/timeout                  controllers.TimeoutController.onPageLoad()
 
-GET        /account/sign-out-survey                     controllers.auth.AuthController.signOut()
-GET        /account/sign-out                            controllers.auth.AuthController.signOutNoSurvey()
-GET        /account/signed-out                          controllers.auth.SignedOutController.onPageLoad()
-GET        /account/timeout                             controllers.TimeoutController.onPageLoad()
+GET        /trader/:ern/movement/:arc        controllers.IndexController.onPageLoad(ern: String, arc: String)
 
-GET        /trader/:ern/movement/:arc                                   controllers.IndexController.onPageLoad(ern: String, arc: String)
-
-GET        /trader/:ern/movement/:arc/no-information-delay              controllers.JourneyRecoveryController.onPageLoad(ern: String, arc: String)
+GET        /there-is-a-problem               controllers.JourneyRecoveryController.onPageLoad(continueUrl: Option[RedirectUrl] ?= None)
 

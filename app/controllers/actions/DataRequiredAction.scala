@@ -31,7 +31,7 @@ class DataRequiredActionImpl @Inject()(implicit val executionContext: ExecutionC
     (request.userAnswers, request.traderKnownFacts) match {
       case (Some(data), Some(traderKnownFacts)) =>
         Future.successful(Right(DataRequest(request.request, data, traderKnownFacts)))
-      case _ => Future.successful(Left(Redirect(routes.JourneyRecoveryController.onPageLoad(request.ern, request.arc))))
+      case _ => Future.successful(Left(Redirect(routes.JourneyRecoveryController.onPageLoad())))
     }
   }
 }

@@ -24,12 +24,12 @@
 
 @()(implicit request: Request[_], messages: Messages, config: AppConfig)
 
-@layout(pageTitle = titleNoForm(messages("timeout.timedOut.title")), maybeShowActiveTrader = None, showBackLink = false, timeout = false) {
+@layout(pageTitle = titleNoForm(messages("signedOut.title")), maybeShowActiveTrader = None, showBackLink = false, timeout = false) {
 
-    <h1 class="govuk-heading-xl">@messages("timeout.timedOut.heading")</h1>
+    <h1 class="govuk-heading-xl">@messages("signedOut.heading")</h1>
 
     @p() {
-        @messages("timeout.timedOut.p1")
+        @messages("signedOut.guidance.notSaved")
     }
 
     @govukButton(

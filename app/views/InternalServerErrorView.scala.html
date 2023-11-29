@@ -36,21 +36,21 @@
     @p(classes = "govuk-body") {
         @link(
             appConfig.fallbackProceduresUrl,
-            messageKey = "global.error.InternalServerError500.p1.href.text",
+            messageKey = "global.error.Error503.p1.link",
             opensInNewTab = false,
             id = Some("feedbackSurvey")
         )
-        @messages("global.error.InternalServerError500.p1.href.suffix")
+        @messages("global.error.Error503.p1.afterLink")
     }
 
     @p(classes = "govuk-body") {
         @link(
             appConfig.contactEMCSHelpdeskUrl,
-            messageKey = "global.error.InternalServerError500.p2.href.text",
+            messageKey = "global.error.Error503.p2.link",
             opensInNewTab = false,
             id = Some("feedbackSurvey")
         )
-        @messages("global.error.InternalServerError500.p2.href.suffix")
+        @messages("global.error.Error503.p2.afterLink")
     }
 
 }

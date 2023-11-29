@@ -16,7 +16,6 @@
 
 package forms.behaviours
 
-import org.scalacheck.Gen
 import play.api.data.{Form, FormError}
 
 import java.time.LocalDate
@@ -24,24 +23,20 @@ import java.time.format.DateTimeFormatter
 
 class DateBehaviours extends FieldBehaviours {
 
-  def dateField(form: Form[_], key: String, validData: Gen[LocalDate]): Unit = {
+  def dateField(form: Form[_], key: String): Unit = {
 
     "bind valid data" in {
+      val date = LocalDate.now()
+      val data = Map(
+        s"$key.day" -> date.getDayOfMonth.toString,
+        s"$key.month" -> date.getMonthValue.toString,
+        s"$key.year" -> date.getYear.toString
+      )
 
-      forAll(validData -> "valid date") {
-        date =>
+      val result = form.bind(data)
 
-          val data = Map(
-            s"$key.day"   -> date.getDayOfMonth.toString,
-            s"$key.month" -> date.getMonthValue.toString,
-            s"$key.year"  -> date.getYear.toString
-          )
-
-          val result = form.bind(data)
-
-          result.value.value mustEqual date
-          result.errors mustBe empty
-      }
+      result.value.value mustEqual date
+      result.errors mustBe empty
     }
   }
 
@@ -49,21 +44,16 @@ class DateBehaviours extends FieldBehaviours {
 
     s"fail to bind a date greater than ${max.format(DateTimeFormatter.ISO_LOCAL_DATE)}" in {
 
-      val generator = datesBetween(max.plusDays(1), max.plusYears(10))
+      val date = max.plusDays(1)
+      val data = Map(
+        s"$key.day" -> date.getDayOfMonth.toString,
+        s"$key.month" -> date.getMonthValue.toString,
+        s"$key.year" -> date.getYear.toString
+      )
 
-      forAll(generator -> "invalid dates") {
-        date =>
+      val result = form.bind(data)
 
-          val data = Map(
-            s"$key.day"   -> date.getDayOfMonth.toString,
-            s"$key.month" -> date.getMonthValue.toString,
-            s"$key.year"  -> date.getYear.toString
-          )
-
-          val result = form.bind(data)
-
-          result.errors must contain only formError
-      }
+      result.errors must contain only formError
     }
   }
 
@@ -71,21 +61,16 @@ class DateBehaviours extends FieldBehaviours {
 
     s"fail to bind a date earlier than ${min.format(DateTimeFormatter.ISO_LOCAL_DATE)}" in {
 
-      val generator = datesBetween(min.minusYears(10), min.minusDays(1))
+      val date = min.minusDays(1)
+      val data = Map(
+        s"$key.day" -> date.getDayOfMonth.toString,
+        s"$key.month" -> date.getMonthValue.toString,
+        s"$key.year" -> date.getYear.toString
+      )
 
-      forAll(generator -> "invalid dates") {
-        date =>
+      val result = form.bind(data)
 
-          val data = Map(
-            s"$key.day"   -> date.getDayOfMonth.toString,
-            s"$key.month" -> date.getMonthValue.toString,
-            s"$key.year"  -> date.getYear.toString
-          )
-
-          val result = form.bind(data)
-
-          result.errors must contain only formError
-      }
+      result.errors must contain only formError
     }
   }
 

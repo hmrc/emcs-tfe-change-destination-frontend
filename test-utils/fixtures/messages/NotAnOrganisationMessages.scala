@@ -16,34 +16,20 @@
 
 package fixtures.messages
 
-import fixtures.i18n
+import fixtures.messages.BaseEnglish.titleHelper
+
 
 object NotAnOrganisationMessages {
 
-  sealed trait ViewMessages { _: i18n =>
-    val title: String
-    val heading: String
-    val p1: String
-    val p2: String
-    val bullet1: String
-    val bullet2: String
+  sealed trait ViewMessages {
+    _: i18n =>
+    val heading = "There is a problem"
+    val title = titleHelper("There is a problem")
+    val p1 = "You must be signed in as an organisation."
+    val p2 = "To use this service you must either:"
+    val bullet1 = "sign in to a business tax account that has an EMCS enrolment, if you have one of those"
+    val bullet2 = "register for a business tax account and enrol for EMCS"
   }
 
-  object English extends ViewMessages with BaseEnglish {
-    override val heading = "There is a problem"
-    override val title = titleHelper("There is a problem")
-    override val p1 = "You must be signed in as an organisation."
-    override val p2 = "To use this service you must either:"
-    override val bullet1 = "sign in to a business tax account that has an EMCS enrolment, if you have one of those"
-    override val bullet2 = "register for a business tax account and enrol for EMCS"
-  }
-
-  object Welsh extends ViewMessages with BaseWelsh {
-    override val heading = "There is a problem"
-    override val title = titleHelper("There is a problem")
-    override val p1 = "You must be signed in as an organisation."
-    override val p2 = "To use this service you must either:"
-    override val bullet1 = "sign in to a business tax account that has an EMCS enrolment, if you have one of those"
-    override val bullet2 = "register for a business tax account and enrol for EMCS"
-  }
+  object English extends ViewMessages with BaseEnglish
 }

@@ -18,9 +18,10 @@ package models.response.emcsTfe
 
 import play.api.libs.json.{Format, Json}
 
-case class TraderModel(traderId: Option[String],
+case class TraderModel(traderExciseNumber: Option[String],
                        traderName: Option[String],
                        address: Option[AddressModel],
+                       vatNumber: Option[String],
                        eoriNumber: Option[String])
 
 object TraderModel {

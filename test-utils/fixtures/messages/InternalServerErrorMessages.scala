@@ -16,31 +16,19 @@
 
 package fixtures.messages
 
-import fixtures.i18n
+import fixtures.messages.BaseEnglish.titleHelper
+
 
 object InternalServerErrorMessages {
 
-  sealed trait ViewMessages { _: i18n =>
-    val title: String
-    val heading: String
-    val p1: String
-    val p2: String
-    val p3: String
+  sealed trait ViewMessages {
+    _: i18n =>
+    val title: String = titleHelper("Sorry, we are experiencing technical difficulties - 500")
+    val heading = "Sorry, we’re experiencing technical difficulties"
+    val p1 = "Please try again in a few minutes."
+    val p2 = "Use fallback procedures for the Excise Movement and Control System (EMCS) if you need to create a movement and the digital service is unavailable."
+    val p3 = "Contact the EMCS helpdesk if you need to speak to someone about your account."
   }
 
-  object English extends ViewMessages with BaseEnglish {
-    override val title: String = titleHelper("Sorry, there is a problem with the service")
-    override val heading = "Sorry, there is a problem with the service"
-    override val p1 = "Try again later."
-    override val p2 = "Use fallback procedures for the Excise Movement and Control System (EMCS) if you need to create a movement and the digital service is unavailable."
-    override val p3 = "Contact the EMCS helpdesk if you need to speak to someone about your account."
-  }
-
-  object Welsh extends ViewMessages with BaseWelsh {
-    override val title: String = titleHelper("Sorry, there is a problem with the service")
-    override val heading = "Sorry, there is a problem with the service"
-    override val p1 = "Try again later."
-    override val p2 = "Use fallback procedures for the Excise Movement and Control System (EMCS) if you need to create a movement and the digital service is unavailable."
-    override val p3 = "Contact the EMCS helpdesk if you need to speak to someone about your account."
-  }
+  object English extends ViewMessages with BaseEnglish
 }

@@ -16,7 +16,7 @@
 
 package views.errors
 
-import base.ViewSpecBase
+import base.SpecBase
 import fixtures.messages.UnauthorisedMessages
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
@@ -26,17 +26,17 @@ import play.api.test.FakeRequest
 import views.{BaseSelectors, ViewBehaviours}
 import views.html.auth.errors.UnauthorisedView
 
-class UnauthorisedViewSpec extends ViewSpecBase with ViewBehaviours {
+class UnauthorisedViewSpec extends SpecBase with ViewBehaviours {
 
   object Selectors extends BaseSelectors
 
   "UnauthorisedView" - {
 
-    Seq(UnauthorisedMessages.English, UnauthorisedMessages.Welsh).foreach { messagesForLanguage =>
+    Seq(UnauthorisedMessages.English).foreach { messagesForLanguage =>
 
       s"when being rendered in lang code of '${messagesForLanguage.lang.code}'" - {
 
-        implicit val msgs: Messages = messages(app, messagesForLanguage.lang)
+        implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
         implicit val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest()
 
         val view = app.injector.instanceOf[UnauthorisedView]

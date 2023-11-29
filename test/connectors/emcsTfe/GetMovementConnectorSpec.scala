@@ -17,7 +17,6 @@
 package connectors.emcsTfe
 
 import base.SpecBase
-import config.AppConfig
 import fixtures.GetMovementResponseFixtures
 import mocks.MockHttpClient
 import models.JsonValidationError
@@ -29,11 +28,8 @@ import scala.concurrent.{ExecutionContext, Future}
 class GetMovementConnectorSpec extends SpecBase
   with Status with MimeTypes with HeaderNames with MockHttpClient with GetMovementResponseFixtures {
 
-  lazy val app = applicationBuilder(userAnswers = None).build()
-
   implicit lazy val hc: HeaderCarrier = HeaderCarrier()
   implicit lazy val ec: ExecutionContext = app.injector.instanceOf[ExecutionContext]
-  lazy val appConfig = app.injector.instanceOf[AppConfig]
 
   lazy val connector = new GetMovementConnector(mockHttpClient, appConfig)
 

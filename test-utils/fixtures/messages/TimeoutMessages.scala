@@ -16,24 +16,16 @@
 
 package fixtures.messages
 
-import fixtures.i18n
+import fixtures.messages.TimeoutMessages.English.titleHelper
+
 object TimeoutMessages {
 
-  sealed trait ViewMessages { _: i18n =>
-    val title: String
-    val heading: String
-    val p1: String
+  sealed trait ViewMessages {
+    _: i18n =>
+    val title = titleHelper("For your security, we signed you out")
+    val heading = "For your security, we signed you out"
+    val p1 = "We have not saved your answers."
   }
 
-  object English extends ViewMessages with BaseEnglish {
-    override val title = titleHelper("For your security, we signed you out")
-    override val heading = "For your security, we signed you out"
-    override val p1 = "We have not saved your answers."
-  }
-
-  object Welsh extends ViewMessages with BaseWelsh {
-    override val title = titleHelper("For your security, we signed you out")
-    override val heading = "For your security, we signed you out"
-    override val p1 = "We have not saved your answers."
-  }
+  object English extends ViewMessages with BaseEnglish
 }

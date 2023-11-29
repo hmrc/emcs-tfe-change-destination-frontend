@@ -16,6 +16,7 @@
 
 package models.requests
 
+import models.UserType
 import models.response.emcsTfe.GetMovementResponse
 import play.api.mvc.WrappedRequest
 
@@ -23,4 +24,11 @@ case class MovementRequest[A](request: UserRequest[A], arc: String, movementDeta
 
   val internalId = request.internalId
   val ern = request.ern
+
+  lazy val isNorthernIrelandErn: Boolean = request.isNorthernIrelandErn
+
+  lazy val userTypeFromErn: UserType = request.userTypeFromErn
+
+  lazy val isWarehouseKeeper: Boolean = request.isWarehouseKeeper
+  lazy val isRegisteredConsignor: Boolean = request.isRegisteredConsignor
 }

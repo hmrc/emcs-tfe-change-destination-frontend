@@ -18,20 +18,19 @@ package services
 
 import base.SpecBase
 import models.audit.AuditModel
-import org.mockito.ArgumentMatchers.{any, eq => eqm}
-import org.mockito.Mockito.{mock, verify}
-import play.api.libs.json.{JsValue, Json}
+import org.scalamock.scalatest.MockFactory
+import play.api.libs.json.{JsValue, Json, Writes}
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 
 import scala.concurrent.ExecutionContext
 
-class AuditServiceSpec extends SpecBase {
+class AuditServiceSpec extends SpecBase with MockFactory {
 
   implicit val hc = HeaderCarrier()
   implicit val ec: ExecutionContext = ExecutionContext.global
 
-  val auditConnector: AuditConnector = mock(classOf[AuditConnector])
+  val auditConnector: AuditConnector = mock[AuditConnector]
   val auditingService = new AuditingService(auditConnector)
 
   "The AuditService should" - {
@@ -43,9 +42,11 @@ class AuditServiceSpec extends SpecBase {
         override val detail: JsValue = Json.obj("detail" -> "some details")
       }
 
-      auditingService.audit(auditModel)
+      (auditConnector.sendExplicitAudit(_: String, _: JsValue)(_: HeaderCarrier, _: ExecutionContext, _: Writes[JsValue]))
+        .expects(auditModel.auditType, auditModel.detail, *, *, *)
+        .returns(())
 
-      verify(auditConnector).sendExplicitAudit(eqm(auditModel.auditType), eqm(auditModel.detail))(any(), any(), any())
+      auditingService.audit(auditModel)
     }
   }
 

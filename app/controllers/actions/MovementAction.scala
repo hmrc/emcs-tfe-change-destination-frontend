@@ -17,7 +17,6 @@
 package controllers.actions
 
 import connectors.emcsTfe.GetMovementConnector
-import handlers.ErrorHandler
 import models.requests.{MovementRequest, UserRequest}
 import play.api.mvc.Results.Redirect
 import play.api.mvc.{ActionRefiner, Result}
@@ -26,8 +25,7 @@ import uk.gov.hmrc.play.http.HeaderCarrierConverter
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
-class MovementActionImpl @Inject()(getMovementConnector: GetMovementConnector,
-                                   errorHandler: ErrorHandler)
+class MovementActionImpl @Inject()(getMovementConnector: GetMovementConnector)
                                   (implicit ec: ExecutionContext) extends MovementAction {
 
   override def apply(arc: String, forceFetchNew: Boolean): ActionRefiner[UserRequest, MovementRequest] = new ActionRefiner[UserRequest, MovementRequest] {

@@ -16,10 +16,20 @@
 
 package models.requests
 
+import models.UserType
+import models.UserType.{GreatBritainRegisteredConsignor, GreatBritainWarehouseKeeper, NorthernIrelandRegisteredConsignor, NorthernIrelandWarehouseKeeper}
 import play.api.mvc.{Request, WrappedRequest}
 
 case class UserRequest[A](request: Request[A],
                           ern: String,
                           internalId: String,
                           credId: String,
-                          hasMultipleErns: Boolean) extends WrappedRequest[A](request)
+                          hasMultipleErns: Boolean) extends WrappedRequest[A](request) {
+
+  lazy val isNorthernIrelandErn: Boolean = ern.startsWith("XI")
+
+  lazy val userTypeFromErn: UserType = UserType(ern)
+
+  lazy val isWarehouseKeeper: Boolean = (userTypeFromErn == GreatBritainWarehouseKeeper) || (userTypeFromErn == NorthernIrelandWarehouseKeeper)
+  lazy val isRegisteredConsignor: Boolean = (userTypeFromErn == GreatBritainRegisteredConsignor) || (userTypeFromErn == NorthernIrelandRegisteredConsignor)
+}

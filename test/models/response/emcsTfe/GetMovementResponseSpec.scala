@@ -22,14 +22,14 @@
 package models.response.emcsTfe
 
 import base.SpecBase
-import play.api.libs.json.{JsSuccess, Json}
+import play.api.libs.json.Json
 
 
 class GetMovementResponseSpec extends SpecBase {
 
   "GetMovementResponse" - {
     "should read from json" in {
-      Json.fromJson[GetMovementResponse](getMovementResponseInputJson) mustBe JsSuccess(getMovementResponseModel)
+      Json.fromJson[GetMovementResponse](getMovementResponseInputJson).get mustBe getMovementResponseModel
     }
   }
 }

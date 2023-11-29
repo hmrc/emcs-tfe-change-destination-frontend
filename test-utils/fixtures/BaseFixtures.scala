@@ -16,7 +16,7 @@
 
 package fixtures
 
-import models.UserAnswers
+import models.{Index, UserAnswers}
 import models.response.referenceData.TraderKnownFacts
 import play.api.mvc.Call
 
@@ -27,11 +27,16 @@ trait BaseFixtures {
 
   val testCredId: String = "credId"
   val testInternalId: String = "internalId"
-  val testErn: String = "ern"
+  val testErn: String = "XIRC123456789"
+  val testNorthernIrelandErn = "XIWK123456789"
+  val testGreatBritainErn = "GBRC123456789"
   val testArc: String = "arc"
   val testConfirmationReference = "UYVQBLMXCYK6HAEBZI7TSWAQ6XDTXFYU"
   val testReceiptDate = "2023-06-07T10:11:12.000"
   val testOnwardRoute = Call("GET", "/foo")
+  val testIndex1: Index = Index(0)
+  val testIndex2: Index = Index(1)
+  val testIndex3: Index = Index(2)
 
   val emptyUserAnswers: UserAnswers = UserAnswers(
     ern = testErn,

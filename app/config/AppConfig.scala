@@ -16,9 +16,8 @@
 
 package config
 
-import featureswitch.core.config.{FeatureSwitching, ReturnToLegacy, WelshLanguage, StubGetTraderKnownFacts}
+import featureswitch.core.config.{FeatureSwitching, ReturnToLegacy, StubGetTraderKnownFacts}
 import play.api.Configuration
-import play.api.i18n.Lang
 import play.api.mvc.RequestHeader
 import uk.gov.hmrc.play.bootstrap.binders.SafeRedirectUrl
 import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
@@ -64,15 +63,13 @@ class AppConfig @Inject()(servicesConfig: ServicesConfig, configuration: Configu
 
   def loginContinueUrl(ern: String, arc: String): String = configuration.get[String]("urls.loginContinue") + s"/trader/$ern/movement/$arc"
 
-  def languageTranslationEnabled: Boolean = isEnabled(WelshLanguage)
-
   def emcsTfeService: String = servicesConfig.baseUrl("emcs-tfe")
 
   def emcsTfeBaseUrl: String = s"$emcsTfeService/emcs-tfe"
 
   def getFeatureSwitchValue(feature: String): Boolean = configuration.get[Boolean](feature)
 
-  def emcsTfeHomeUrl(ern: Option[String]): String = {
+  def emcsTfeHomeUrl(ern: Option[String] = None): String = {
     if (isEnabled(ReturnToLegacy)) {
       configuration.get[String]("urls.legacy.atAGlance") + ern.fold("")(s"/" + _)
     } else {
@@ -93,11 +90,6 @@ class AppConfig @Inject()(servicesConfig: ServicesConfig, configuration: Configu
     } else {
       configuration.get[String]("urls.emcsTfeMovementsIn") + s"/$ern"
     }
-
-  def languageMap: Map[String, Lang] = Map(
-    "en" -> Lang("en"),
-    "cy" -> Lang("cy")
-  )
 
   private def traderKnownFactsReferenceDataService: String =
     if (isEnabled(StubGetTraderKnownFacts)) {

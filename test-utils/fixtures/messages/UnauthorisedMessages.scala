@@ -16,37 +16,21 @@
 
 package fixtures.messages
 
-import fixtures.i18n
+import fixtures.messages.BaseEnglish.titleHelper
+
 
 object UnauthorisedMessages {
 
-  sealed trait ViewMessages { _: i18n =>
-    val title: String
-    val heading: String
-    val p1: String
-    val p2: String
-    val bullet1: String
-    val bullet2: String
-    val p3: String
+  sealed trait ViewMessages {
+    _: i18n =>
+    val heading = "There is a problem"
+    val title = titleHelper("There is a problem")
+    val p1 = "You do not have permission to view this page."
+    val p2 = "You should:"
+    val bullet1 = "check you have signed in with the right details"
+    val bullet2 = "check you are using the right excise reference number (ERN)"
+    val p3 = "If you are using the right sign in details and ERN, check the web address is correct."
   }
 
-  object English extends ViewMessages with BaseEnglish {
-    override val heading = "There is a problem"
-    override val title = titleHelper("There is a problem")
-    override val p1 = "You do not have permission to view this page."
-    override val p2 = "You should:"
-    override val bullet1 = "check you have signed in with the right details"
-    override val bullet2 = "check you are using the right excise reference number (ERN)"
-    override val p3 = "If you are using the right sign in details and ERN, check the web address is correct."
-  }
-
-  object Welsh extends ViewMessages with BaseWelsh {
-    override val heading = "There is a problem"
-    override val title = titleHelper("There is a problem")
-    override val p1 = "You do not have permission to view this page."
-    override val p2 = "You should:"
-    override val bullet1 = "check you have signed in with the right details"
-    override val bullet2 = "check you are using the right excise reference number (ERN)"
-    override val p3 = "If you are using the right sign in details and ERN, check the web address is correct."
-  }
+  object English extends ViewMessages with BaseEnglish
 }

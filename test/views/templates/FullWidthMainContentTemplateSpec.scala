@@ -16,14 +16,14 @@
 
 package views.templates
 
-import base.ViewSpecBase
+import base.SpecBase
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import play.twirl.api.Html
 import views.ViewBehaviours
 import views.html.templates.FullWidthMainContentTemplate
 
-class FullWidthMainContentTemplateSpec extends ViewSpecBase with ViewBehaviours {
+class FullWidthMainContentTemplateSpec extends SpecBase with ViewBehaviours {
 
   "FullWidthMainContentTemplate" in {
     val view = app.injector.instanceOf[FullWidthMainContentTemplate]

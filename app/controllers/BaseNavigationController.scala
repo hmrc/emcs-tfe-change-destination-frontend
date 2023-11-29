@@ -33,12 +33,13 @@ trait BaseNavigationController extends BaseController with Logging {
   val userAnswersService: UserAnswersService
   val navigator: BaseNavigator
 
+  // TODO: update "withAnswer" function to retrieve from GetMovementResponse if not present in userAnswers
   def withAnswer[A](page: QuestionPage[A])(f: A => Future[Result])(implicit request: DataRequest[_], reads: Reads[A]): Future[Result] =
     request.userAnswers.get(page) match {
       case Some(value) => f(value)
       case None =>
         logger.warn(s"Failed to retrieve expected answer for page: $page on uri: ${request.uri}")
-        Future.successful(Redirect(routes.JourneyRecoveryController.onPageLoad(request.ern, request.arc)))
+        Future.successful(Redirect(routes.JourneyRecoveryController.onPageLoad()))
     }
 
   def saveAndRedirect[A](page: QuestionPage[A], answer: A, currentAnswers: UserAnswers, mode: Mode)

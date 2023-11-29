@@ -1,0 +1,804 @@
+service.name = Excise Movement and Control System
+
+site.back = Back
+site.remove = Remove
+site.continueEditing = Continue editing
+site.change = Change
+site.no = No
+site.yes = Yes
+site.continue = Continue
+site.confirmAnswers = Confirm answers
+site.notProvided = Not provided
+site.saveAndContinue = Save and continue
+site.returnToDraft = Return to draft
+site.saveAndReturnToMovement = Save and return to movement
+site.start = Start now
+site.skipQuestion = Skip this question for now
+site.startAgain = Start again
+site.signIn = Sign in
+site.signBackIn = Sign back in to EMCS
+site.govuk = GOV.UK
+site.opensInNewTab = (opens in new tab)
+site.item = item
+site.noResultsFound = No results found
+site.divider = or
+
+country.austria = Austria
+country.belgium = Belgium
+country.bulgaria = Bulgaria
+country.czechia = Czechia
+country.germany = Germany
+country.greece = Greece
+country.spain = Spain
+country.italy = Italy
+country.luxembourg = Luxembourg
+country.malta = Malta
+country.netherlands = Netherlands
+country.poland = Poland
+country.portugal = Portugal
+country.romania = Romania
+
+taskListStatus.completed = Completed
+taskListStatus.inProgress = In Progress
+taskListStatus.notStarted = Not Started
+taskListStatus.cannotStartYet = Cannot Start Yet
+taskListStatus.incomplete = Incomplete
+
+unitOfMeasure.kilograms.short = kg
+unitOfMeasure.kilograms.long = kilograms
+unitOfMeasure.litres15.short = litres
+unitOfMeasure.litres15.long = litres (temperature of 15�C)
+unitOfMeasure.litres20.short = litres
+unitOfMeasure.litres20.long = litres (temperature of 20�C)
+unitOfMeasure.thousands.short = x1000
+unitOfMeasure.thousands.long = x1000 items
+
+date.day = Day
+date.month = Month
+date.year = Year
+date.month.1 = January
+date.month.2 = February
+date.month.3 = March
+date.month.4 = April
+date.month.5 = May
+date.month.6 = June
+date.month.7 = July
+date.month.8 = August
+date.month.9 = September
+date.month.10 = October
+date.month.11 = November
+date.month.12 = December
+
+timeout.title = You’re about to be signed out
+timeout.message = For your security, we will sign you out in
+timeout.keepAlive = Stay signed in
+timeout.signOut = Sign out
+
+error.browser.title.prefix = Error:
+error.boolean = Please give an answer
+error.invalid_date = Give a correct date
+error.date.day_blank = Enter a day
+error.date.day_invalid = Give a correct day using numbers 1 to 31
+error.date.month_blank = Enter a month
+error.date.month_invalid = Give a correct month using numbers 1 to 12
+error.date.year_blank = Enter a year
+error.date.year_invalid = Give a correct year
+error.integer = Give an answer in whole numbers
+error.non_numeric = Give a value using only numbers
+error.number = Please enter a valid number
+error.required = Please enter a value
+error.summary.title = There is a problem
+
+notPermittedPage.title = There is a problem
+notPermittedPage.heading = There is a problem
+notPermittedPage.p1 = You do not have permission to view this page.
+notPermittedPage.p2.link = Go to your ‘At a glance’ page
+notPermittedPage.p2.suffix = to see information about a specific movement or receipt.
+notPermittedPage.p3.prefix = You can also visit the
+notPermittedPage.p3.link = EMCS general enquiries page
+notPermittedPage.p3.suffix = for more help.
+
+notAnOrganisation.title = There is a problem
+notAnOrganisation.heading = There is a problem
+notAnOrganisation.p1 = You must be signed in as an organisation.
+notAnOrganisation.p2 = To use this service you must either:
+notAnOrganisation.bullet1.link = sign in to a business tax account that has an EMCS enrolment
+notAnOrganisation.bullet1.afterLink = if you have one of those
+notAnOrganisation.bullet2.link = register for a business tax account and enrol for EMCS
+
+noEnrolment.title = There is a problem
+noEnrolment.heading = There is a problem
+noEnrolment.p1 = To use this service you or the account administrator must either:
+noEnrolment.bullet1.link = enrol for EMCS
+noEnrolment.bullet2.link = sign in to a business tax account that has an EMCS enrolment
+noEnrolment.bullet2.afterLink = if you have one of those
+noEnrolment.p2 = If you think you have signed in with the wrong details, sign out and check the details you have are correct.
+noEnrolment.p3 = If you think you have signed in with the wrong details, sign out and check the details you have are correct.
+
+inactive.title = There is a problem
+inactive.heading = There is a problem
+inactive.p1 = You do not have an active enrolment for the Excise Movement and Control System (EMCS).
+inactive.p2 = To use this service, you must either:
+inactive.bullet1 = activate EMCS using the activation code that was sent to you by post
+inactive.bullet2.link = re-enrol for EMCS and get a new activation code
+inactive.bullet2.afterLink = if it has been more than 28 days since your code was sent to you
+inactive.p3 = If you think you have signed in with the wrong details, sign out and check the details you have are correct.
+
+unauthorised.title = There is a problem
+unauthorised.heading = There is a problem
+unauthorised.p1 = You do not have permission to view this page.
+unauthorised.p2 = You should:
+unauthorised.bullet1 = check you have signed in with the right details
+unauthorised.bullet2 = check you are using the right excise reference number (ERN)
+unauthorised.p3 = If you are using the right sign in details and ERN, check the web address is correct.
+
+notOnPrivateBeta.title = There is a problem
+notOnPrivateBeta.heading = There is a problem
+notOnPrivateBeta.p1 = You do not have permission to view this page.
+notOnPrivateBeta.alreadySignedUp.h2 = If you have signed up for the Excise Movement and Control System (EMCS) private beta research
+notOnPrivateBeta.alreadySignedUp.p1 = If you typed the web address, check it is correct. If you pasted the web address, check you copied the entire address.
+notOnPrivateBeta.alreadySignedUp.p2 = If you think you have signed in with the wrong details, sign out and check the details you have are correct.
+notOnPrivateBeta.notSignedUp.h2 = If you have not signed up for the EMCS private beta research
+notOnPrivateBeta.notSignedUp.p1.preLink = You can choose to
+notOnPrivateBeta.notSignedUp.p1.link = take part in the EMCS private beta research
+notOnPrivateBeta.notSignedUp.p1.afterLink = if you are not already involved.
+notOnPrivateBeta.notSignedUp.p2 = To take part you must currently submit EMCS receipts using the HMRC platform.
+
+global.error.Error503.title= Sorry, there is a problem with the service
+global.error.Error503.heading= Sorry, there is a problem with the service
+global.error.Error503.message= You will be able to use the service from 9am on Monday 19 November 2018.
+global.error.Error503.p1.link= Use fallback procedures for the Excise Movement and Control System (EMCS)
+global.error.Error503.p1.afterLink= if you need to create a movement and the digital service is unavailable.
+global.error.Error503.p2.link= Contact the EMCS helpdesk
+global.error.Error503.p2.afterLink= if you need to speak to someone about your account.
+
+journeyRecovery.continue.title = Sorry, there is a problem with the service
+journeyRecovery.continue.heading = Sorry, there is a problem with the service
+journeyRecovery.continue.guidance = [Add content to explain how to proceed.]
+journeyRecovery.startAgain.title = Sorry, there is a problem with the service
+journeyRecovery.startAgain.heading = Sorry, there is a problem with the service
+journeyRecovery.startAgain.guidance = [Add content to explain why the user needs to start again.]
+
+signedOut.title = For your security, we signed you out
+signedOut.heading = For your security, we signed you out
+signedOut.guidance.saved = We have saved your answers.
+signedOut.guidance.notSaved = We have not saved your answers.
+
+activeTrader.link = Change trader type
+
+lrn.subHeading = Create movement for {0}
+
+draftMovement.title = Draft movement
+draftMovement.lrn = Local Reference Number (LRN): {0}
+draftMovement.consignee = Consignee: {0}
+draftMovement.notProvided = Not provided
+draftMovement.delete = Delete this draft
+draftMovement.heading.importFor = Import for {0}
+draftMovement.heading.gbTaxWarehouseTo = Great Britain tax warehouse to {0}
+draftMovement.heading.gbTaxWarehouse = Great Britain tax warehouse
+draftMovement.heading.euTaxWarehouse = European Union tax warehouse
+draftMovement.heading.dispatchPlaceTo = {0} tax warehouse to {1}
+draftMovement.section.movement = Movement
+draftMovement.section.movement.movementDetails = Movement details
+draftMovement.section.delivery = Delivery
+draftMovement.section.delivery.import = Import
+draftMovement.section.delivery.consignee = Consignee
+draftMovement.section.delivery.destination = Place of destination
+draftMovement.section.delivery.export = Export
+draftMovement.section.guarantor = Guarantor
+draftMovement.section.guarantor.guarantor = Guarantor
+draftMovement.section.transport = Transport
+draftMovement.section.transport.journeyType = Journey type
+draftMovement.section.transport.transportArranger = Transport arranger
+draftMovement.section.transport.firstTransporter = First transporter
+draftMovement.section.transport.units = Transport units
+draftMovement.section.items = Items
+draftMovement.section.items.items = Items
+draftMovement.section.documents = Documents
+draftMovement.section.documents.sad = Single Administrative Documents
+draftMovement.section.submit = Submit
+draftMovement.section.submit.reviewAndSubmit = Review and submit
+
+checkYourAnswers.title = Check your answers before submitting your movement
+checkYourAnswers.heading = Check your answers before submitting your movement
+checkYourAnswers.submit.button = Submit movement
+
+address.consigneeAddress.title = Enter the consignee’s address
+address.consigneeAddress.heading = Enter the consignee’s address
+address.consigneeAddress.subheading = Consignee information
+address.consigneeAddress.checkYourAnswers.label = Address
+
+address.destinationAddress.title = Enter the place of destination address
+address.destinationAddress.heading = Enter the place of destination address
+address.destinationAddress.subheading = Place of destination information
+address.destinationAddress.checkYourAnswers.label = Address
+address.destinationAddress.change.hidden = Address
+
+address.transportArrangerAddress.3.title = Enter the goods owner’s business address
+address.transportArrangerAddress.3.heading = Enter the goods owner’s business address
+address.transportArrangerAddress.4.title = Enter the transporter’s business address
+address.transportArrangerAddress.4.heading = Enter the transporter’s business address
+address.transportArrangerAddress.subheading = Transport arranger
+
+address.firstTransporterAddress.title = Enter the first transporter’s business address
+address.firstTransporterAddress.heading = Enter the first transporter’s business address
+address.firstTransporterAddress.subheading = First transporter
+address.firstTransporterAddress.checkYourAnswers.label = Address
+address.firstTransporterAddress.change.hidden = first transporters address
+
+address.guarantorAddress.subheading = Guarantor
+address.guarantorAddress.checkYourAnswers.label = Address
+address.guarantorAddress.checkYourAnswers.notProvided = {0} section not complete
+address.guarantorAddress.3.title = Enter the good owner’s business address
+address.guarantorAddress.3.heading = Enter the good owner’s business address
+address.guarantorAddress.3.change.hidden = good owner’s address
+address.guarantorAddress.4.title = Enter the transporter’s business address
+address.guarantorAddress.4.heading = Enter the transporter’s business address
+address.guarantorAddress.4.change.hidden = transporter’s address
+
+
+address.property = Property name or number (optional)
+address.property.error.length = Enter a property name or number up to 11 characters
+address.property.error.character = Property must contain letters or numbers
+address.property.error.invalid = Property name or number must not contain < and > and : and ;
+address.street = Street name
+address.street.error.required = Enter a street name
+address.street.error.length = Enter a street name up to 65 characters
+address.street.error.character = Street must contain letters or numbers
+address.street.error.invalid = Street name must not contain < and > and : and ;
+address.town = Town or city
+address.town.error.required = Enter a town or city
+address.town.error.length = Enter a town or city name up to 50 characters
+address.town.error.character = Town or city must contain letters or numbers
+address.town.error.invalid = Town or city must not contain < and > and : and ;
+address.postcode = Postcode
+address.postcode.error.required = Enter a postcode
+address.postcode.error.length = Enter a postcode up to 10 characters
+address.postcode.error.character = Postcode must contain letters or numbers
+address.postcode.error.invalid = Postcode must not contain < and > and : and ;
+
+checkYourAnswersConsignor.caption = Consignor information
+checkYourAnswersConsignor.title = Check your answers
+checkYourAnswersConsignor.heading = Check your answers
+checkYourAnswersConsignor.subHeading = Consignor
+checkYourAnswersConsignor.traderName = Trader name
+checkYourAnswersConsignor.ern = Excise registration number (ERN)
+checkYourAnswersConsignor.address = Address
+
+journeyType.subHeading = Journey type
+consignee.subHeading = Consignee information
+transportArranger.subHeading = Transport arranger
+firstTransporter.subHeading = First transporter
+transportUnit.subHeading = Transport units
+destination.subHeading = Place of destination information
+guarantor.subHeading = Guarantor
+movementInformation.subHeading = Movement information
+exportInformation.subHeading = Export information
+importInformation.subHeading = Import information
+documents.subHeading = Documents
+items.subHeading = Item information
+draftMovement.subHeading = Draft movement
+subHeading.hidden = This section is
+
+checkYourAnswersJourneyType.title = Check your answers
+checkYourAnswersJourneyType.heading = Check your answers
+
+destinationType.heading.movement = What is the destination type for this movement?
+destinationType.heading.import = What is the destination type for this import?
+destinationType.title.movement = What is the destination type for this movement?
+destinationType.title.import = What is the destination type for this import?
+
+destinationType.exportWithCustomsDeclarationLodgedInTheUk = Export with customs declaration lodged in the United Kingdom
+destinationType.gbTaxWarehouse = Tax warehouse in Great Britain
+destinationType.directDelivery = Direct delivery
+destinationType.euTaxWarehouse = Tax warehouse in the European Union
+destinationType.exemptedOrganisation = Exempted organisation
+destinationType.exportWithCustomsDeclarationLodgedInTheEu = Export with customs declaration lodged in the European Union
+destinationType.registeredConsignee = Registered consignee
+destinationType.temporaryRegisteredConsignee = Temporary registered consignee
+destinationType.unknownDestination = Unknown destination
+
+destinationType.error.required.movement = Select the place of destination for this movement
+destinationType.error.required.import = Select the place of destination for this import
+destinationType.checkYourAnswersLabel = Destination type
+destinationType.change.hidden = destination type
+
+howMovementTransported.title = How will the goods be transported?
+howMovementTransported.heading = How will the goods be transported?
+howMovementTransported.4 = Air transport
+howMovementTransported.7 = Fixed transport installations
+howMovementTransported.8 = Inland waterway transport
+howMovementTransported.5 = Postal consignment
+howMovementTransported.2 = Rail transport
+howMovementTransported.3 = Road transport
+howMovementTransported.1 = Sea transport
+howMovementTransported.0 = Other
+howMovementTransported.checkYourAnswers.label = Type of transport
+howMovementTransported.error.required = Select how the goods will be transported
+howMovementTransported.change.hidden = how will the goods be transported
+
+giveInformationOtherTransport.title = Give information about your other type of transport
+giveInformationOtherTransport.heading = Give information about your other type of transport
+giveInformationOtherTransport.checkYourAnswers.label = Information about other transport
+giveInformationOtherTransport.error.required = Enter information about your other type of transport
+giveInformationOtherTransport.error.length = Information must be 350 characters or less
+giveInformationOtherTransport.error.character = Information must contain letters or numbers
+giveInformationOtherTransport.error.xss = Information must not include < and > and : and ;
+giveInformationOtherTransport.change.hidden = give information about your other type of transport
+
+journeyTimeDays.title = How many days will the journey take?
+journeyTimeDays.heading = How many days will the journey take?
+journeyTimeDays.input.suffix = days
+journeyTimeDays.switchToHours = Journey time is shorter than one day
+journeyTimeDays.checkYourAnswersLabel = Journey time
+journeyTimeDays.checkYourAnswersValue = {0} days
+journeyTimeDays.error.nonNumeric = Days must only contain numbers
+journeyTimeDays.error.required = Enter how many days the journey will take
+journeyTimeDays.error.wholeNumber = Days must only contain numbers
+journeyTimeDays.error.outOfRange = Days must be between {0} and {1}
+journeyTimeDays.change.hidden = how many days the journey will take
+
+journeyTimeHours.title = How many hours will the journey take?
+journeyTimeHours.heading = How many hours will the journey take?
+journeyTimeHours.input.suffix = hours
+journeyTimeHours.switchToDays = Journey time is longer than 24 hours
+journeyTimeHours.checkYourAnswersLabel = Journey time
+journeyTimeHours.checkYourAnswersValue = {0} hours
+journeyTimeHours.error.nonNumeric = Hours must only contain numbers
+journeyTimeHours.error.required = Enter how many hours the journey will take
+journeyTimeHours.error.wholeNumber = Hours must only contain numbers
+journeyTimeHours.error.outOfRange = Hours must be between {0} and {1}
+journeyTimeHours.change.hidden = how many hours the journey will take
+
+consigneeBusinessName.title = What is the consignee’s business name?
+consigneeBusinessName.heading = What is the consignee’s business name?
+consigneeBusinessName.checkYourAnswersLabel = Trader name
+consigneeBusinessName.error.required = Enter the consignee business name
+consigneeBusinessName.error.length = Consignee business name must be {0} characters or less
+consigneeBusinessName.error.invalidCharacter = Consignee business name must not contain < and > and : and ;
+consigneeBusinessName.change.hidden = consignee trader name
+
+consigneeAddress.title = StringPageH1
+consigneeAddress.heading = StringPageH1
+consigneeAddress.checkYourAnswersLabel = consigneeAddress
+consigneeAddress.error.required = Enter a value
+consigneeAddress.error.length = Value must be N characters or less must be 100 characters or less
+consigneeAddress.change.hidden = ConsigneeAddress
+
+consigneeExport.title = Are the goods being exported outside of the UK and EU?
+consigneeExport.heading = Are the goods being exported outside of the UK and EU?
+consigneeExport.checkYourAnswers.label = Export outside of the UK and EU
+consigneeExport.error.required = Select yes if the goods are being exported outside of the UK and EU
+consigneeExport.change.hidden = if the goods are being exported outside of the UK and EU
+
+consigneeExportVat.title = Do you know the VAT or EORI number of the person representing the consignor at the office of export?
+consigneeExportVat.heading = Do you know the VAT or EORI number of the person representing the consignor at the office of export?
+consigneeExportVat.yesVatNumber = Yes - VAT number
+consigneeExportVat.yesEoriNumber = Yes - EORI number
+consigneeExportVat.no = No
+consigneeExportVat.checkYourAnswers.label = VAT or EORI number of the person representing the consignor
+consigneeExportVat.checkYourAnswers.label.yesEoriNumber = EORI Number
+consigneeExportVat.checkYourAnswers.label.yesVatNumber = VAT Number
+consigneeExportVat.checkYourAnswers.label.notKnown = VAT or EORI number
+consigneeExportVat.checkYourAnswers.value.notKnown = Number not known
+consigneeExportVat.error.required = Select consigneeExportVat
+consigneeExportVat.change.hidden = VAT or EORI number of the person representing the consignor
+consigneeExportVat.vatNumber.label = VAT number
+consigneeExportVat.eoriNumber.label = EORI number
+consigneeExportVat.consigneeExportType.error.required = Select ''no'' if you don''t know the VAT or EORI number
+consigneeExportVat.vatNumber.error.required = VAT number must be between 1 and 14 characters
+consigneeExportVat.vatNumber.error.length = VAT number must be 14 characters or less
+consigneeExportVat.eoriNumber.error.required = EORI number must be between 1 and 17 characters
+consigneeExportVat.eoriNumber.error.length = EORI number must be 17 characters or less
+
+consigneeExemptOrganisation.title = Exempt organisation details
+consigneeExemptOrganisation.heading = Exempt organisation details
+consigneeExemptOrganisation.change.hidden = ConsigneeExemptOrganisation
+consigneeExemptOrganisation.memberState.hint = Select the destination
+consigneeExemptOrganisation.memberState.label = Select the member state of destination
+consigneeExemptOrganisation.memberState.error.required = Select the member state of destination
+consigneeExemptOrganisation.certificateSerialNumber.label = Enter the exemption certificate serial number
+consigneeExemptOrganisation.certificateSerialNumber.error.required = Enter the exemption certificate serial number
+consigneeExemptOrganisation.certificateSerialNumber.error.length = Serial number must be between 1 and 255 characters
+consigneeExemptOrganisation.certificateSerialNumber.error.character = Serial number must contain letters or numbers
+consigneeExemptOrganisation.certificateSerialNumber.error.xss = Serial number must not contain < and > and : and ;
+consigneeExemptOrganisation.checkYourAnswersLabel = Exempted organisation details
+
+transportArranger.title = Who is arranging the transport for this movement?
+transportArranger.heading = Who is arranging the transport for this movement?
+transportArranger.1 = Consignor
+transportArranger.2 = Consignee
+transportArranger.3 = Goods owner
+transportArranger.4 = Other
+transportArranger.checkYourAnswers.label = Transport arranger
+transportArranger.error.required = Select who is arranging the transport for this movement
+transportArranger.change.hidden = transport arranger
+
+transportArrangerName.3.title = What is the goods owner''s business name?
+transportArrangerName.4.title = What is the transport arranger''s business name?
+transportArrangerName.3.heading = What is the goods owner''s business name?
+transportArrangerName.4.heading = What is the transport arranger''s business name?
+transportArrangerName.error.required = Enter the business name
+transportArrangerName.error.length = Business name must be 182 characters or less
+transportArrangerName.error.invalidCharacter = Business name must not contain < and > and : and ;
+transportArrangerName.checkYourAnswers.label = Business name
+transportArrangerName.checkYourAnswers.notProvided = {0} section not complete
+transportArrangerName.change.hidden = transport arranger name
+
+transportArrangerVat.3.title = What is the goods owner’s UK VAT registration number?
+transportArrangerVat.3.heading = What is the goods owner’s UK VAT registration number?
+transportArrangerVat.4.title = What is the transport arranger’s UK VAT registration number?
+transportArrangerVat.4.heading = What is the transport arranger’s UK VAT registration number?
+transportArrangerVat.hint = This is 9 or 12 numbers, sometimes with ‘GB’ at the start, like 123456789 or GB123456789.
+transportArrangerVat.3.notUkVatLink = The goods owner is not UK VAT registered
+transportArrangerVat.4.notUkVatLink = The transport arranger is not UK VAT registered
+transportArrangerVat.error.required = Enter a VAT registration number
+transportArrangerVat.error.alphanumeric = VAT registration number must only contain letters and numbers
+transportArrangerVat.error.length = VAT registration number must be {0} characters or less
+transportArrangerVat.checkYourAnswers.label = VAT registration number
+transportArrangerVat.change.hidden = VAT registration number
+
+transportArrangerAddress.checkYourAnswers.label = Address
+transportArrangerAddress.checkYourAnswers.notProvided = {0} section not complete
+transportArrangerAddress.change.hidden = transport arranger address
+
+transportArrangerCheckAnswers.title = Check your answers
+transportArrangerCheckAnswers.heading = Check your answers
+
+firstTransporterName.title = What is the first transporter''s business name?
+firstTransporterName.heading = What is the first transporter''s business name?
+firstTransporterName.error.required = Enter the business name
+firstTransporterName.error.length = Business name must be 182 characters or less
+firstTransporterName.error.invalidCharacter = Business name must not contain < and > and : and ;
+firstTransporterName.checkYourAnswersLabel = Business name
+firstTransporterName.change.hidden = first transporters business name
+
+firstTransporterVat.title = What is the first transporter''s VAT registration number?
+firstTransporterVat.heading = What is the first transporter''s VAT registration number?
+firstTransporterVat.hint = This is 9 or 12 numbers, sometimes with ‘GB’ at the start, like 123456789 or GB123456789.
+firstTransporterVat.notUkVatLink = The first transporter is not VAT registered
+firstTransporterVat.error.required = Enter a VAT registration number
+firstTransporterVat.error.length = VAT registration number must be 12 characters or less
+firstTransporterVat.error.alphanumeric = VAT registration number number must only contain letters and numbers
+firstTransporterVat.checkYourAnswersLabel = VAT registration number
+firstTransporterVat.change.hidden = first transporters VAT registration number
+
+firstTransporterCheckAnswers.heading = Check your answers
+firstTransporterName.checkYourAnswers.label = Business name
+firstTransporterVat.checkYourAnswers.label = VAT registration number
+
+consigneeExcise.temporaryConsignee.heading = What is the Temporary Registered Consignee’s authorisation reference?
+consigneeExcise.temporaryConsignee.title = What is the Temporary Registered Consignee’s authorisation reference?
+consigneeExcise.temporaryConsignee.hint = This contains 13 characters, starting with 2 letters that represent the member state of the Temporary Registered Consignee. For example, GB12345678900. This is sometimes referred to as a Temporary Registration Code.
+consigneeExcise.temporaryConsignee.error.noInput = Enter the authorisation reference
+consigneeExcise.temporaryConsignee.error.tooLong = The authorisation reference must be 16 characters or less
+consigneeExcise.temporaryConsignee.error.invalidCharacters = The authorisation reference must only contain letters and numbers
+consigneeExcise.heading = What is the consignee’s excise registration number (ERN)?
+consigneeExcise.title = What is the consignee’s excise registration number (ERN)?
+consigneeExcise.hint = An ERN contains 13 characters, starting with GB. It can be found on your approval letter.
+consigneeExcise.error.noInput = Enter the consignee’s ERN
+consigneeExcise.error.tooLong = The ERN must be 13 characters or less
+consigneeExcise.error.invalidCharacters = The ERN must only contain letters and numbers
+consigneeExcise.checkYourAnswersLabel = Excise registration number (ERN)
+
+transportUnitType.title = What will the goods be transported in?
+transportUnitType.heading = What will the goods be transported in?
+transportUnitType.hint = You can return to this page to select another option.
+transportUnitType.1 = Container
+transportUnitType.5 = Fixed transport installations
+transportUnitType.4 = Tractor
+transportUnitType.3 = Trailer
+transportUnitType.2 = Vehicle
+
+transportUnitType.checkYourAnswersLabel = Transport type
+transportUnitType.error.required = Select what the goods will be transported in
+transportUnitType.change.hidden = transport type
+
+transportUnitIdentity.title.1 = What is the container number or unique identifier for this container?
+transportUnitIdentity.title.2 = What is the vehicle registration number or unique identifier for this vehicle?
+transportUnitIdentity.title.3 = What is the trailer number or unique identifier for this trailer?
+transportUnitIdentity.title.4 = What is the vehicle registration number or unique identifier for this tractor?
+transportUnitIdentity.title.5 = What is the unique identifier for this fixed transport installation?
+transportUnitIdentity.heading.1 = What is the container number or unique identifier for this container?
+transportUnitIdentity.heading.2 = What is the vehicle registration number or unique identifier for this vehicle?
+transportUnitIdentity.heading.3 = What is the trailer number or unique identifier for this trailer?
+transportUnitIdentity.heading.4 = What is the vehicle registration number or unique identifier for this tractor?
+transportUnitIdentity.heading.5 = What is the unique identifier for this fixed transport installation?
+
+transportUnitIdentity.checkYourAnswersLabel = Transport identifier
+transportUnitIdentity.error.required.1 = Enter the container number or unique identifier
+transportUnitIdentity.error.required.2 = Enter the vehicle registration number or unique identifier
+transportUnitIdentity.error.required.3 = Enter the trailer number or unique identifier
+transportUnitIdentity.error.required.4 = Enter the vehicle registration number or unique identifier
+transportUnitIdentity.error.required.5 = Enter the unique identifier
+
+transportUnitIdentity.error.length.1 = Container number or unique identifier must be 35 characters or less
+transportUnitIdentity.error.length.2 = Vehicle registration number or unique identifier must be 35 characters or less
+transportUnitIdentity.error.length.3 = Trailer number or unique identifier must be 35 characters or less
+transportUnitIdentity.error.length.4 = Vehicle registration number or unique identifier must be 35 characters or less
+transportUnitIdentity.error.length.5 = Unique identifier must be 35 characters or less
+
+transportUnitIdentity.error.invalidCharacters.1 = Container number or unique identifier must only contain letters and numbers
+transportUnitIdentity.error.invalidCharacters.2 = Vehicle registration number or unique identifier must only contain letters and numbers
+transportUnitIdentity.error.invalidCharacters.3 = Trailer number or unique identifier must only contain letters and numbers
+transportUnitIdentity.error.invalidCharacters.4 = Vehicle registration number or unique identifier must only contain letters and numbers
+transportUnitIdentity.error.invalidCharacters.5 = Unique identifier must only contain letters and numbers
+
+transportUnitIdentity.change.hidden = transport identifier
+
+guarantorRequired.title = Is a guarantor required for this movement?
+guarantorRequired.heading = Is a guarantor required for this movement?
+guarantorRequired.checkYourAnswersLabel = Guarantor required
+guarantorRequired.error.required = Select yes if a guarantor is required for this movement
+guarantorRequired.change.hidden = if a guarantor is required for this movement
+
+exportCustomsOffice.title = Enter the customs office code for the place where the export declaration is lodged
+exportCustomsOffice.heading = Enter the customs office code for the place where the export declaration is lodged
+exportCustomsOffice.hint = This code is also known as a customs office reference number. It starts with 2 letters representing the member state. For example, GBSOU001.
+exportCustomsOffice.hint.eu.link = Search for EU customs office codes here
+exportCustomsOffice.hint.gb.link = Search for UK customs office codes here
+exportCustomsOffice.error.required = Enter the customs office code
+exportCustomsOffice.error.length = Customs office code must be {0} characters
+exportCustomsOffice.error.invalidCharacter = Customs office code must not contain < and > and : and ;
+exportCustomsOffice.error.customOfficeRegex = Customs office code must start with 2 capital letters followed by 6 mixed numbers and letters.
+exportCustomsOffice.checkYourAnswers.label = Customs office code
+exportCustomsOffice.change.hidden = customs office code
+
+exportInformationCheckAnswers.title = Check your answers
+exportInformationCheckAnswers.heading = Check your answers
+
+guarantorArranger.title = Who is providing the guarantee for this movement?
+guarantorArranger.heading = Who is providing the guarantee for this movement?
+guarantorArranger.1 = Consignor
+guarantorArranger.2 = Consignee
+guarantorArranger.3 = Goods owner
+guarantorArranger.4 = Transporter
+guarantorArranger.checkYourAnswersLabel = Guarantor arranger
+guarantorArranger.error.required = Select who is providing the guarantee for this movement
+guarantorArranger.change.hidden = who is providing the guarantee for this movement?
+
+guarantorName.3.title = What is the goods owner''s business name?
+guarantorName.3.heading = What is the goods owner''s business name?
+guarantorName.4.title = What is the transporter''s business name?
+guarantorName.4.heading = What is the transporter''s business name?
+guarantorName.checkYourAnswersLabel = Business name
+guarantorName.checkYourAnswers.notProvided = {0} section not complete
+guarantorName.error.required = Enter the business name
+guarantorName.error.length = Business name must be 182 characters or less
+guarantorName.error.invalidCharacter = Business name must not contain < and > and : and ;
+guarantorName.change.hidden = business name
+
+guarantorVat.3.title = What is the goods owner’s VAT registration number?
+guarantorVat.3.heading = What is the goods owner’s VAT registration number?
+guarantorVat.4.title = What is the transporter’s VAT registration number?
+guarantorVat.4.heading = What is the transporter’s VAT registration number?
+guarantorVat.hint = This is 9 or 12 numbers, sometimes with ‘GB’ at the start, like 123456789 or GB123456789.
+guarantorVat.3.notUkVatLink = The goods owner is not VAT registered
+guarantorVat.4.notUkVatLink = The transporter is not VAT registered
+guarantorVat.checkYourAnswersLabel = VAT registration number
+guarantorVat.error.required = Enter a VAT registration number
+guarantorVat.error.length = VAT registration number must be 14 characters or less
+guarantorVat.error.alphanumeric = VAT registration number must only contain letters and numbers
+guarantorVat.change.hidden = VAT registration number
+
+guarantorCheckAnswers.title = Check your answers
+guarantorCheckAnswers.heading = Check your answers
+
+destinationBusinessName.title = What is the business name of the place of destination?
+destinationBusinessName.heading = What is the business name of the place of destination?
+destinationBusinessName.error.required = Enter the business name of the place of destination
+destinationBusinessName.error.length = Business name must be less than 182 characters
+destinationBusinessName.error.invalid = Business name must not contain < and > and : and ;
+destinationBusinessName.checkYourAnswersLabel = Trader name
+destinationBusinessName.change.hidden = Trader name
+
+checkYourAnswersConsignee.title = Check your answers
+checkYourAnswersConsignee.heading = Check your answers
+checkYourAnswersConsignee.traderName = Trader name
+checkYourAnswersConsignee.ern = Excise registration number (ERN)
+checkYourAnswersConsignee.yesEoriNumber = EORI Number
+checkYourAnswersConsignee.yesVatNumber = VAT Number
+checkYourAnswersConsignee.exemptOrganisation = Exempted organisation details
+checkYourAnswersConsignee.address = Address
+
+destinationDetailsChoice.title = Do you want to give the address and business name of the {0}?
+destinationDetailsChoice.heading = Do you want to give the address and business name of the {0}?
+destinationDetailsChoice.hint = This information is optional.
+destinationDetailsChoice.error.required = Select ‘yes’ to enter the address and business name of the {0}
+destinationDetailsChoice.checkYourAnswersLabel = Give details of {0}
+destinationDetailsChoice.change.hidden = Give details of {0}
+
+destinationWarehouseVat.title = What is the VAT number for the {0}? (optional)
+destinationWarehouseVat.heading = What is the VAT number for the {0}? (optional)
+destinationWarehouseVat.error.required = Enter a VAT number or use link to skip this question
+destinationWarehouseVat.error.invalidCharacters = VAT registration number must not contain < and > and : and ;
+destinationWarehouseVat.error.length = VAT registration number must be 14 characters or less
+destinationWarehouseVat.link.skip = Skip this question for now
+destinationWarehouseVat.checkYourAnswers.label = VAT number
+destinationWarehouseVat.change.hidden = VAT number
+
+destinationConsigneeDetails.title = Is the place of destination the same as the consignee details?
+destinationConsigneeDetails.heading = Is the place of destination the same as the consignee details?
+destinationConsigneeDetails.checkYourAnswersLabel = Use consignee details
+destinationConsigneeDetails.error.required = Select yes if the place of destination and consignee details are the same
+destinationConsigneeDetails.change.hidden = use consignee details
+
+transportSealChoice.heading.1 = Is there a commercial seal on this container?
+transportSealChoice.heading.2 = Is there a commercial seal on this vehicle?
+transportSealChoice.heading.3 = Is there a commercial seal on this trailer?
+transportSealChoice.heading.4 = Is there a commercial seal on this tractor?
+transportSealChoice.heading.5 = Is there a commercial seal on this fixed transport installation?
+transportSealChoice.error.required.1 = Select yes if there is a commercial seal on this container
+transportSealChoice.error.required.2 = Select yes if there is a commercial seal on this vehicle
+transportSealChoice.error.required.3 = Select yes if there is a commercial seal on this trailer
+transportSealChoice.error.required.4 = Select yes if there is a commercial seal on this tractor
+transportSealChoice.error.required.5 = Select yes if there is a commercial seal on this fixed transport installation
+transportSealChoice.hint = This is a seal that prevents items being removed or added.
+transportSealChoice.checkYourAnswersLabel = Commercial seal
+transportSealChoice.change.hidden = commercial seal
+
+transportSealType.heading.1 = What type of commercial seal is on this container?
+transportSealType.heading.2 = What type of commercial seal is on this vehicle?
+transportSealType.heading.3 = What type of commercial seal is on this trailer?
+transportSealType.heading.4 = What type of commercial seal is on this tractor?
+transportSealType.heading.5 = What type of commercial seal is on this fixed transport installation?
+transportSealType.sealType = Type of commercial seal
+transportSealType.sealType.error.required = Enter the type of commercial seal
+transportSealType.sealType.error.length = Commercial seal type must be 35 characters or less
+transportSealType.sealType.error.invalid = Commercial seal type must only contain letters and numbers
+transportSealType.moreInfo = Give more information (optional)
+transportSealType.moreInfo.hint = Describe the seal so that it can be identified if the packaging has been tampered with. Include a reference number if there is one.
+transportSealType.moreInfo.error.invalid = Information must only contain letters and numbers
+transportSealType.moreInfo.error.invalidCharacter = Information must not include < and > and : and ;
+transportSealType.moreInfo.error.length = Information must be 350 characters or less
+transportSealType.sealType.checkYourAnswersLabel = Commercial seal type
+transportSealType.sealType.change.hidden = commercial seal type
+transportSealType.moreInfo.checkYourAnswersLabel = Commercial seal information
+transportSealType.moreInfo.checkYourAnswersAddInfo = Enter more information about the commercial seal (optional)
+transportSealType.moreInfo.change.hidden = commercial seal information
+
+transportUnitGiveMoreInformationChoice.title = Do you know any more information about this {0}?
+transportUnitGiveMoreInformationChoice.heading = Do you know any more information about this {0}?
+transportUnitGiveMoreInformationChoice.transportUnitType.1 = container
+transportUnitGiveMoreInformationChoice.transportUnitType.2 = vehicle
+transportUnitGiveMoreInformationChoice.transportUnitType.3 = trailer
+transportUnitGiveMoreInformationChoice.transportUnitType.4 = tractor
+transportUnitGiveMoreInformationChoice.transportUnitType.5 = fixed transport installation
+transportUnitGiveMoreInformationChoice.error.required = Select yes if you know more information about this {0}
+transportUnitGiveMoreInformationChoice.hint = For example, the identity of the subsequent transporter or information about subsequent transport units.
+
+transportUnitGiveMoreInformation.title = Give more information about this {0} (optional)
+transportUnitGiveMoreInformation.heading = Give more information about this {0} (optional)
+transportUnitGiveMoreInformation.hint.1 = You must give more information about the transport if you know it.
+transportUnitGiveMoreInformation.hint.2 = For example, the identity of the subsequent transporter or information about subsequent transport units.
+transportUnitGiveMoreInformation.checkYourAnswersLabel = More information
+transportUnitGiveMoreInformation.checkYourAnswersValue = Enter more information about the transport unit (optional)
+transportUnitGiveMoreInformation.error.required = Enter more information about this {0}
+transportUnitGiveMoreInformation.error.length = Information must be 350 characters or less
+transportUnitGiveMoreInformation.error.xss = Information must not contain < and > and : and ;
+transportUnitGiveMoreInformation.error.character = Information must contain letters or numbers
+transportUnitGiveMoreInformation.change.hidden = more information
+transportUnitGiveMoreInformation.transportUnitType.1 = container
+transportUnitGiveMoreInformation.transportUnitType.2 = vehicle
+transportUnitGiveMoreInformation.transportUnitType.3 = trailer
+transportUnitGiveMoreInformation.transportUnitType.4 = tractor
+transportUnitGiveMoreInformation.transportUnitType.5 = fixed transport installation
+
+transportUnitsAddToList.title.singular = You have given information for 1 transport unit
+transportUnitsAddToList.title.plural = You have given information for {0} transport units
+transportUnitsAddToList.heading.singular = You have given information for 1 transport unit
+transportUnitsAddToList.heading.plural = You have given information for {0} transport units
+transportUnitsAddToList.transportUnitCardTitle = Transport unit {0}
+transportUnitsAddToList.legend = Do you need to add another transport unit?
+transportUnitsAddToList.1 = Yes
+transportUnitsAddToList.2 = I will add more transport units later
+transportUnitsAddToList.3 = No, this is the only transport unit for this movement
+transportUnitsAddToList.error.required = Select yes if you need to add another transport unit
+
+transportUnitRemoveUnit.title = Are you sure you want to remove transport unit {0}?
+transportUnitRemoveUnit.heading = Are you sure you want to remove transport unit {0}?
+transportUnitRemoveUnit.error.required = Select yes if you want to remove this transport unit
+
+destinationWarehouseExcise.title = What is the excise ID of the tax warehouse of destination?
+destinationWarehouseExcise.heading = What is the excise ID of the tax warehouse of destination?
+destinationWarehouseExcise.text = This is sometimes called an excise registration number (ERN), starting with two letters identifying the member state of the destination warehouse. For example, GB00123456789.
+destinationWarehouseExcise.error.required = Enter the excise ID of the tax warehouse of destination
+destinationWarehouseExcise.error.length = Excise ID of the tax warehouse must be 16 characters or less
+destinationWarehouseExcise.error.invalidCharacter = Excise ID of the tax warehouse must not include < and > and : and ;
+destinationWarehouseExcise.checkYourAnswersLabel = Warehouse excise ID
+destinationWarehouseExcise.change.hidden = Warehouse excise ID
+
+importCustomsOfficeCode.greatBritainRegisteredConsignor.title = Enter the customs office code for the place where the goods originally entered the UK
+importCustomsOfficeCode.greatBritainRegisteredConsignor.heading = Enter the customs office code for the place where the goods originally entered the UK
+importCustomsOfficeCode.northernIrishRegisteredConsignor.title = Enter the customs office code for the place where the goods originally entered the EU or UK
+importCustomsOfficeCode.northernIrishRegisteredConsignor.heading = Enter the customs office code for the place where the goods originally entered the EU or UK
+importCustomsOfficeCode.preLink = This code is also known as a customs office reference number.
+importCustomsOfficeCode.ukLink = Search for UK customs office codes
+importCustomsOfficeCode.afterLink = &nbsp;or&nbsp;
+importCustomsOfficeCode.euLink = search for EU customs office codes
+importCustomsOfficeCode.error.required = Enter the customs office code
+importCustomsOfficeCode.error.length = Customs office code must be 8 characters
+importCustomsOfficeCode.error.invalidCharacter = Customs office code must not contain < and > and : and ;
+importCustomsOfficeCode.error.customsOfficeCodeRegex = Customs office code starts with 2 letters, followed by 6 numbers or 6 mixed letters and numbers
+importCustomsOfficeCode.change.hidden = customs office code
+importCustomsOfficeCode.checkYourAnswers.label = Customs office code
+
+checkYourAnswersImport.heading = Check your answers
+checkYourAnswersImport.title = Check your answers
+checkYourAnswersImport.hidden = This section is:
+
+destinationCheckAnswers.title = Check your answers
+destinationCheckAnswers.heading = Check your answers
+destinationCheckAnswers.consignee.notProvided = Consignee section not complete
+destinationCheckAnswers.destination.notProvided = Not provided
+
+referenceAvailable.title = Does the document have a reference?
+referenceAvailable.heading = Does the document have a reference?
+referenceAvailable.checkYourAnswersLabel = Reference Available
+referenceAvailable.error.required = Select yes if the document has a reference
+referenceAvailable.change.hidden = Reference Available
+
+documentReference.title = Enter a reference for this document
+documentReference.heading = Enter a reference for this document
+documentReference.error.required = Enter a reference for this document
+documentReference.error.length = Document reference must be 35 characters or less
+documentReference.error.xss = Document reference must not contain < and > and : and ;
+documentReference.change.hidden = Document reference
+documentReference.checkYourAnswersLabel = Document reference
+
+documentDescription.title = Enter a description for this document
+documentDescription.heading = Enter a description for this document
+documentDescription.error.required = Enter a description for this document
+documentDescription.error.length = Document description must be 350 characters or less
+documentDescription.error.xss = Document description must not contain < and > and : and ;
+documentDescription.change.hidden = Document description
+documentDescription.checkYourAnswersLabel = Document description
+
+sad.subHeading = Single Administrative Document
+
+importNumber.title = Enter the number of the Single Administrative Document (SAD) used for releasing the goods for free circulation
+importNumber.heading = Enter the number of the Single Administrative Document (SAD) used for releasing the goods for free circulation
+importNumber.checkYourAnswersLabel = Number
+importNumber.error.required = Enter the number of the Single Administrative Document
+importNumber.error.length = The number must be 21 characters or less
+importNumber.hint = For example, 555 A12345B 14092016. You will have the chance to add more SAD numbers later.
+importNumber.error.invalidCharacter = Document reference must not include < and > and : and ;
+importNumber.change.hidden = import number
+importNumber.error.alphanumeric = Document reference must only contain letters and numbers
+
+sadAddToList.title.singular = You have given information for 1 Single Administrative Document (SAD) number
+sadAddToList.title.plural = You have given information for {0} Single Administrative Document (SAD) numbers
+sadAddToList.heading.singular = You have given information for 1 Single Administrative Document (SAD) number
+sadAddToList.heading.plural = You have given information for {0} Single Administrative Document (SAD) numbers
+sadAddToList.error.required = Enter Select yes if you need to add another SAD import number
+sadAddToList.sadCardTitle = SAD document number {0}
+sadAddToList.legend = Do you need to add another Single Administrative Document (SAD) number for this movement?
+sadAddToList.1 = Yes
+sadAddToList.2 = No, there are no other Single Administrative Document (SAD) numbers for this movement
+
+sadRemoveDocument.title = Are you sure you want to remove this Single Administrative Document (SAD) number?
+sadRemoveDocument.heading = Are you sure you want to remove this Single Administrative Document (SAD) number?
+sadRemoveDocument.error.required = Select yes if you want to remove this Single Administrative Document
+
+declaration.title = Declaration
+declaration.heading = Declaration
+declaration.content = By submitting this draft movement you are confirming that to the best of your knowledge, the details you are providing are correct.
+declaration.submit = Submit draft movement
+
+confirmation.title = Draft movement submitted
+confirmation.heading = Draft movement submitted
+confirmation.movementInformation = Movement information
+confirmation.localReferenceNumber = Local Reference Number
+confirmation.dateOfSubmission = Date of submission
+confirmation.printLink = Print this screen
+confirmation.printMessage = to make a record of your submission.
+confirmation.whatHappensNext = What happens next
+confirmation.p1 = If the submission is successful you’ll receive a 21 digit administrative reference code (ARC). This can take up to 15 minutes.
+confirmation.p2.beforeLink = If unsuccessful, you’ll get an error which you must correct and resubmit until you get an ARC.
+confirmation.p2.link = Contact the HMRC excise helpline
+confirmation.p2.afterLink = if you need more help or information about excise duties.
+confirmation.p3 = Goods must not be dispatched before an ARC has been allocated.
+confirmation.p4 = The ARC must be visible on either a printed eAD or any other commercial document, and must come with the goods.
+confirmation.returnToAccountLink = Return to account
+confirmation.feedbackLink = What did you think of this service?
+confirmation.feedbackText = (takes 30 seconds)

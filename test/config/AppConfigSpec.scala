@@ -21,7 +21,7 @@ import featureswitch.core.config.{FeatureSwitching, ReturnToLegacy, StubGetTrade
 
 class AppConfigSpec extends SpecBase with FeatureSwitching {
 
-  override lazy val config = applicationBuilder().build().injector.instanceOf[AppConfig]
+  override lazy val config = app.injector.instanceOf[AppConfig]
 
   "AppConfig" - {
 
@@ -99,10 +99,6 @@ class AppConfigSpec extends SpecBase with FeatureSwitching {
           config.emcsMovementsUrl(testErn) mustBe s"http://localhost:8310/emcs-tfe/movements-in/$testErn"
         }
       }
-    }
-
-    ".languageMap()" in {
-      config.languageMap.size mustBe 2
     }
 
     ".traderKnownFactsReferenceDataBaseUrl" - {

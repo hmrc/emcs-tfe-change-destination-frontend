@@ -17,8 +17,6 @@
 package controllers
 
 import base.SpecBase
-import config.AppConfig
-import play.api.i18n.Messages
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import views.html.TimeoutView
@@ -31,21 +29,14 @@ class TimeoutControllerSpec extends SpecBase {
 
       "must return OK and the correct view for a GET" in {
 
-        val application = applicationBuilder().build()
+        lazy val view = app.injector.instanceOf[TimeoutView]
+        val controller = new TimeoutController(messagesApi, messagesControllerComponents, view)(appConfig)
 
-        running(application) {
-          implicit val request = FakeRequest(GET, routes.TimeoutController.onPageLoad().url)
+        val result = controller.onPageLoad()(FakeRequest())
 
-          implicit val msgs: Messages = messages(application)
-          implicit val appConfig: AppConfig = application.injector.instanceOf[AppConfig]
 
-          val result = route(application, request).value
-
-          val view = application.injector.instanceOf[TimeoutView]
-
-          status(result) mustEqual OK
-          contentAsString(result) mustEqual view().toString
-        }
+        status(result) mustEqual OK
+        contentAsString(result) mustEqual view()(FakeRequest(), messages(FakeRequest()), appConfig).toString
 
       }
     }

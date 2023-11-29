@@ -20,18 +20,35 @@ import play.api.data.{Form, FormError}
 
 trait StringFieldBehaviours extends FieldBehaviours {
 
-    def fieldWithMaxLength(form: Form[_],
-                           fieldName: String,
-                           maxLength: Int,
-                           lengthError: FormError): Unit = {
+  def fieldWithMaxLength(form: Form[_],
+                         fieldName: String,
+                         maxLength: Int,
+                         lengthError: FormError): Unit = {
 
     s"not bind strings longer than $maxLength characters" in {
+      val veryLongString = "0" * (maxLength + 1)
+      val result = form.bind(Map(fieldName -> veryLongString)).apply(fieldName)
+      result.errors must contain only lengthError
+    }
+  }
 
-      forAll(stringsLongerThan(maxLength) -> "longString") {
-        string =>
-          val result = form.bind(Map(fieldName -> string)).apply(fieldName)
-          result.errors must contain only lengthError
-      }
+  def fieldWithXSSCharacters(form: Form[_],
+                             fieldName: String,
+                             requiredError: FormError): Unit = {
+
+    s"not bind strings with XSS characters" in {
+      val result = form.bind(Map(fieldName -> "<javascript>")).apply(fieldName)
+      result.errors must contain only requiredError
+    }
+  }
+
+  def fieldWithAtLeastOneAlphanumeric(form: Form[_],
+                                      fieldName: String,
+                                      error: FormError): Unit = {
+
+    s"not bind strings that do not contain alphanumerics" in {
+      val result = form.bind(Map(fieldName -> "!!!")).apply(fieldName)
+      result.errors must contain only error
     }
   }
 }

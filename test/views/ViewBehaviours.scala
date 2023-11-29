@@ -16,11 +16,11 @@
 
 package views
 
-import base.ViewSpecBase
+import base.SpecBase
 import org.jsoup.nodes.Document
 import utils.Logging
 
-trait ViewBehaviours extends Logging { _: ViewSpecBase =>
+trait ViewBehaviours extends Logging { _: SpecBase =>
 
   def pageWithExpectedElementsAndMessages(checks: Seq[(String, String)])(implicit document: Document): Unit = checks foreach {
     case (selector, message) =>

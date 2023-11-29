@@ -16,12 +16,13 @@
 
 package views
 
-import base.ViewSpecBase
+import base.SpecBase
 import play.api.data.Form
 import play.api.i18n.Messages
 import play.api.data.Forms._
+import play.api.test.FakeRequest
 
-class ViewUtilsSpec extends ViewSpecBase with ViewBehaviours {
+class ViewUtilsSpec extends SpecBase with ViewBehaviours {
 
   ".title" in {
     case class UserData(name: String, age: Int)
@@ -33,14 +34,14 @@ class ViewUtilsSpec extends ViewSpecBase with ViewBehaviours {
       )(UserData.apply)(UserData.unapply)
     )
 
-    implicit val msgs: Messages = messages(app)
+    implicit val msgs: Messages = messages(FakeRequest())
 
     ViewUtils.title(userForm, "TITLE") mustBe " TITLE - Excise Movement and Control System - GOV.UK"
   }
 
   ".titleNoForm" in {
 
-    implicit val msgs: Messages = messages(app)
+    implicit val msgs: Messages = messages(FakeRequest())
     ViewUtils.titleNoForm("TITLE") mustBe "TITLE - Excise Movement and Control System - GOV.UK"
   }
 

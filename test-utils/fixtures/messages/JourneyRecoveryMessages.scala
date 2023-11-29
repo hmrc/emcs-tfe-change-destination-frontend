@@ -16,40 +16,22 @@
 
 package fixtures.messages
 
-import fixtures.i18n
+import fixtures.messages.JourneyRecoveryMessages.English.titleHelper
+
 
 object JourneyRecoveryMessages {
 
-  sealed trait ViewMessages { _: i18n =>
-    val heading: String
-    val title: String
-    val p1: String
-    val p2: String
-    val numbered1: String
-    val numbered2: String
-    val numbered3: String
-    val p3: String
+  sealed trait ViewMessages {
+    _: i18n =>
+    val title: String = titleHelper("There is a problem")
+    val heading = "There is a problem"
+    val p1 = "You have not added any information to cancel a movement yet."
+    val p2 = "To submit a cancellation of a movement you must:"
+    val numbered1 = "Go to the ‘View all movements’ page"
+    val numbered2 = "Select to view the details of the movement you want to delay"
+    val numbered3 = "Select to ‘Submit a cancellation of a movement’"
+    val p3 = "You can also choose to view all your account information, or sign out."
   }
 
-  object English extends ViewMessages with BaseEnglish {
-    override val title: String = titleHelper("There is a problem")
-    override val heading = "There is a problem"
-    override val p1 = "You have not added any information to cancel a movement yet."
-    override val p2 = "To submit a cancellation of a movement you must:"
-    override val numbered1 = "Go to the ‘View all movements’ page"
-    override val numbered2 = "Select to view the details of the movement you want to delay"
-    override val numbered3 = "Select to ‘Submit a cancellation of a movement’"
-    override val p3 = "You can also choose to view all your account information, or sign out."
-  }
-
-  object Welsh extends ViewMessages with BaseWelsh {
-    override val title: String = titleHelper("There is a problem")
-    override val heading = "There is a problem"
-    override val p1 = "You have not added any information to cancel a movement yet."
-    override val p2 = "To submit a cancellation of a movement you must:"
-    override val numbered1 = "Go to the ‘View all movements’ page"
-    override val numbered2 = "Select to view the details of the movement you want to delay"
-    override val numbered3 = "Select to ‘Submit a cancellation of a movement’"
-    override val p3 = "You can also choose to view all your account information, or sign out."
-  }
+  object English extends ViewMessages with BaseEnglish
 }

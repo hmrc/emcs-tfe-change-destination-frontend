@@ -16,8 +16,6 @@
 
 package fixtures.messages
 
-import fixtures.i18n
-
 object IndexMessages {
 
   sealed trait ViewMessages { _: i18n =>
@@ -26,11 +24,6 @@ object IndexMessages {
   }
 
   object English extends ViewMessages with BaseEnglish {
-    override val heading = "Excise Movement and Control System - GOV.UK"
-    override val title = titleHelper("emcs-tfe-change-destination-frontend")
-  }
-
-  object Welsh extends ViewMessages with BaseWelsh {
     override val heading = "Excise Movement and Control System - GOV.UK"
     override val title = titleHelper("emcs-tfe-change-destination-frontend")
   }

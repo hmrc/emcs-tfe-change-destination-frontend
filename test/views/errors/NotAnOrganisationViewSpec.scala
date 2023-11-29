@@ -16,7 +16,7 @@
 
 package views.errors
 
-import base.ViewSpecBase
+import base.SpecBase
 import config.AppConfig
 import fixtures.messages.NotAnOrganisationMessages
 import org.jsoup.Jsoup
@@ -26,17 +26,17 @@ import play.api.test.FakeRequest
 import views.{BaseSelectors, ViewBehaviours}
 import views.html.auth.errors.NotAnOrganisationView
 
-class NotAnOrganisationViewSpec extends ViewSpecBase with ViewBehaviours {
+class NotAnOrganisationViewSpec extends SpecBase with ViewBehaviours {
 
   object Selectors extends BaseSelectors
 
   "NotAnOrganisationView" - {
 
-    Seq(NotAnOrganisationMessages.English, NotAnOrganisationMessages.Welsh).foreach { messagesForLanguage =>
+    Seq(NotAnOrganisationMessages.English).foreach { messagesForLanguage =>
 
       s"when being rendered in lang code of '${messagesForLanguage.lang.code}'" - {
 
-        implicit val msgs: Messages = messages(app, messagesForLanguage.lang)
+        implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
         implicit val request = FakeRequest()
         implicit val appConfig: AppConfig = app.injector.instanceOf[AppConfig]
 

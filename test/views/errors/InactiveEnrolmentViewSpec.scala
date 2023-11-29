@@ -16,7 +16,7 @@
 
 package views.errors
 
-import base.ViewSpecBase
+import base.SpecBase
 import config.AppConfig
 import fixtures.messages.InactiveEnrolmentMessages
 import org.jsoup.Jsoup
@@ -27,17 +27,17 @@ import play.api.test.FakeRequest
 import views.{BaseSelectors, ViewBehaviours}
 import views.html.auth.errors.InactiveEnrolmentView
 
-class InactiveEnrolmentViewSpec extends ViewSpecBase with ViewBehaviours {
+class InactiveEnrolmentViewSpec extends SpecBase with ViewBehaviours {
 
   object Selectors extends BaseSelectors
 
   "InactiveEnrolmentView" - {
 
-    Seq(InactiveEnrolmentMessages.English, InactiveEnrolmentMessages.Welsh).foreach { messagesForLanguage =>
+    Seq(InactiveEnrolmentMessages.English).foreach { messagesForLanguage =>
 
       s"when being rendered in lang code of '${messagesForLanguage.lang.code}'" - {
 
-        implicit val msgs: Messages = messages(app, messagesForLanguage.lang)
+        implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
         implicit val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest()
         implicit val appConfig: AppConfig = app.injector.instanceOf[AppConfig]
 

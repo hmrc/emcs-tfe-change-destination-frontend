@@ -26,16 +26,11 @@ class KeepAliveControllerSpec extends SpecBase {
 
     "must return NO_CONTENT" in {
 
-      val application = applicationBuilder(None).build()
+      val controller = new KeepAliveController(messagesControllerComponents)
 
-      running(application) {
+      val result = controller.keepAlive()(FakeRequest())
 
-        val request = FakeRequest(GET, routes.KeepAliveController.keepAlive().url)
-
-        val result = route(application, request).value
-
-        status(result) mustEqual NO_CONTENT
-      }
+      status(result) mustEqual NO_CONTENT
     }
   }
 }

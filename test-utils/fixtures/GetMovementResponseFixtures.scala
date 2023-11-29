@@ -16,122 +16,345 @@
 
 package fixtures
 
-import models.DestinationType.TaxWarehouse
-import models.response.emcsTfe.{AddressModel, ConsignorTraderModel, GetMovementResponse}
+import models.movementScenario.{DestinationType, OriginType}
+import models.response.emcsTfe._
 import play.api.libs.json.{JsValue, Json}
 
-import java.time.LocalDate
-
-trait GetMovementResponseFixtures { _: BaseFixtures =>
+trait GetMovementResponseFixtures {
+  _: BaseFixtures =>
 
   val getMovementResponseModel: GetMovementResponse = GetMovementResponse(
-    arc = testArc,
+    arc = "ExciseMovementArc",
     sequenceNumber = 1,
-    destinationType = TaxWarehouse,
-    consigneeTrader = None,
-    deliveryPlaceTrader = None,
-    localReferenceNumber = "MyLrn",
-    eadStatus = "MyEadStatus",
-    consignorTrader = ConsignorTraderModel(
-      traderExciseNumber = "GB12345GTR144",
-      traderName = "MyConsignor",
-      address = AddressModel(
-        streetNumber = None,
-        street = Some("Main101"),
-        postcode = Some("ZZ78"),
-        city = Some("Zeebrugge")
+    destinationType = DestinationType.TemporaryCertifiedConsignee,
+    memberStateCode = Some("CCTMemberStateCode"),
+    serialNumberOfCertificateOfExemption = Some("CCTSerialNumber"),
+    consignorTrader = TraderModel(
+      traderExciseNumber = Some("ConsignorTraderExciseNumber"),
+      traderName = Some("ConsignorTraderName"),
+      address = Some(
+        AddressModel(
+          streetNumber = Some("ConsignorTraderStreetNumber"),
+          street = Some("ConsignorTraderStreetName"),
+          postcode = Some("ConsignorTraderPostcode"),
+          city = Some("ConsignorTraderCity")
+        )),
+      vatNumber = None,
+      eoriNumber = None
+    ),
+    consigneeTrader = Some(
+      TraderModel(
+        traderExciseNumber = Some("ConsigneeTraderId"),
+        traderName = Some("ConsigneeTraderName"),
+        address = Some(AddressModel(
+          streetNumber = Some("ConsigneeTraderStreetNumber"),
+          street = Some("ConsigneeTraderStreetName"),
+          postcode = Some("ConsigneeTraderPostcode"),
+          city = Some("ConsigneeTraderCity")
+        )),
+        vatNumber = None,
+        eoriNumber = Some("ConsigneeTraderEori")
+      )),
+    deliveryPlaceTrader = Some(
+      TraderModel(
+        traderExciseNumber = Some("DeliveryPlaceTraderId"),
+        traderName = Some("DeliveryPlaceTraderName"),
+        address = Some(AddressModel(
+          streetNumber = Some("DeliveryPlaceTraderStreetNumber"),
+          street = Some("DeliveryPlaceTraderStreetName"),
+          postcode = Some("DeliveryPlaceTraderPostcode"),
+          city = Some("DeliveryPlaceTraderCity")
+        )),
+        vatNumber = None,
+        eoriNumber = None
+      )),
+    placeOfDispatchTrader = Some(
+      TraderModel(
+        traderExciseNumber = Some("PlaceOfDispatchTraderReferenceOfTaxWarehouse"),
+        traderName = Some("PlaceOfDispatchTraderName"),
+        address = Some(AddressModel(
+          streetNumber = Some("PlaceOfDispatchTraderStreetNumber"),
+          street = Some("PlaceOfDispatchTraderStreetName"),
+          postcode = Some("PlaceOfDispatchTraderPostcode"),
+          city = Some("PlaceOfDispatchTraderCity")
+        )),
+        vatNumber = None,
+        eoriNumber = None
+      )),
+    transportArrangerTrader = Some(
+      TraderModel(
+        traderExciseNumber = None,
+        traderName = Some("TransportArrangerTraderName"),
+        address = Some(AddressModel(
+          streetNumber = Some("TransportArrangerTraderStreetNumber"),
+          street = Some("TransportArrangerTraderStreetName"),
+          postcode = Some("TransportArrangerTraderPostcode"),
+          city = Some("TransportArrangerTraderCity")
+        )),
+        vatNumber = Some("TransportArrangerTraderVatNumber"),
+        eoriNumber = None
+      )),
+    firstTransporterTrader = Some(
+      TraderModel(
+        traderExciseNumber = None,
+        traderName = Some("FirstTransporterTraderName"),
+        address = Some(AddressModel(
+          streetNumber = Some("FirstTransporterTraderStreetNumber"),
+          street = Some("FirstTransporterTraderStreetName"),
+          postcode = Some("FirstTransporterTraderPostcode"),
+          city = Some("FirstTransporterTraderCity")
+        )),
+        vatNumber = Some("FirstTransporterTraderVatNumber"),
+        eoriNumber = None
+      )),
+    dispatchImportOfficeReferenceNumber = Some("DispatchImportOfficeErn"),
+    deliveryPlaceCustomsOfficeReferenceNumber = Some("DeliveryPlaceCustomsOfficeErn"),
+    competentAuthorityDispatchOfficeReferenceNumber = Some("CompetentAuthorityDispatchOfficeErn"),
+    localReferenceNumber = "EadEsadLocalReferenceNumber",
+    eadStatus = "Beans",
+    dateAndTimeOfValidationOfEadEsad = "ExciseMovementDateTime",
+    dateOfDispatch = "EadEsadDateOfDispatch",
+    journeyTime = "10 hours",
+    documentCertificate = Some(
+      Seq(
+        DocumentCertificateModel(
+          documentType = Some("DocumentCertificateDocumentType1"),
+          documentReference = Some("DocumentCertificateDocumentReference1"),
+          documentDescription = Some("DocumentCertificateDocumentDescription1"),
+          referenceOfDocument = Some("DocumentCertificateReferenceOfDocument1")
+        ),
+        DocumentCertificateModel(
+          documentType = Some("DocumentCertificateDocumentType2"),
+          documentReference = Some("DocumentCertificateDocumentReference2"),
+          documentDescription = Some("DocumentCertificateDocumentDescription2"),
+          referenceOfDocument = Some("DocumentCertificateReferenceOfDocument2")
+        )
       )
     ),
-    dateOfDispatch = LocalDate.parse("2010-03-04"),
-    journeyTime = "MyJourneyTime",
-    numberOfItems = 2
+    eadEsad = EadEsadModel(
+      localReferenceNumber = "EadEsadLocalReferenceNumber",
+      invoiceNumber = "EadEsadInvoiceNumber",
+      invoiceDate = Some("EadEsadInvoiceDate"),
+      originTypeCode = OriginType.DutyPaid,
+      dateOfDispatch = "EadEsadDateOfDispatch",
+      timeOfDispatch = Some("EadEsadTimeOfDispatch"),
+      upstreamArc = Some("EadEsadUpstreamArc"),
+      importSadNumber = Some(Seq("ImportSadNumber1", "ImportSadNumber2"))
+    ),
+    headerEadEsad = HeaderEadEsadModel(
+      sequenceNumber = 1,
+      dateAndTimeOfUpdateValidation = "HeaderEadEsadDateTime",
+      destinationType = DestinationType.TemporaryCertifiedConsignee,
+      journeyTime = "10 hours",
+      transportArrangement = TransportArrangement.Consignee
+    ),
+    transportMode = TransportModeModel(
+      transportModeCode = "TransportModeTransportModeCode",
+      complementaryInformation = Some("TransportModeComplementaryInformation")
+    ),
+    movementGuarantee = MovementGuaranteeModel(
+      guarantorTypeCode = GuarantorType.ConsignorTransporterOwner,
+      guarantorTrader = Some(
+        Seq(
+          TraderModel(
+            traderExciseNumber = Some("GuarantorTraderErn1"),
+            traderName = Some("GuarantorTraderName1"),
+            address = Some(
+              AddressModel(
+                streetNumber = Some("GuarantorTraderStreetNumber1"),
+                street = Some("GuarantorTraderStreetName1"),
+                postcode = Some("GuarantorTraderPostcode1"),
+                city = Some("GuarantorTraderCity1")
+              )),
+            vatNumber = Some("GuarantorTraderVatNumber1"),
+            eoriNumber = None
+          ),
+          TraderModel(
+            traderExciseNumber = Some("GuarantorTraderErn2"),
+            traderName = Some("GuarantorTraderName2"),
+            address = Some(
+              AddressModel(
+                streetNumber = Some("GuarantorTraderStreetNumber2"),
+                street = Some("GuarantorTraderStreetName2"),
+                postcode = Some("GuarantorTraderPostcode2"),
+                city = Some("GuarantorTraderCity2")
+              )),
+            vatNumber = Some("GuarantorTraderVatNumber2"),
+            eoriNumber = None
+          )
+        )
+      )
+    ),
+    transportDetails = Seq(
+      TransportDetailsModel(
+        transportUnitCode = "TransportDetailsTransportUnitCode1",
+        identityOfTransportUnits = Some("TransportDetailsIdentityOfTransportUnits1"),
+        commercialSealIdentification = Some("TransportDetailsCommercialSealIdentification1"),
+        complementaryInformation = Some("TransportDetailsComplementaryInformation1"),
+        sealInformation = Some("TransportDetailsSealInformation1")
+      ),
+      TransportDetailsModel(
+        transportUnitCode = "TransportDetailsTransportUnitCode2",
+        identityOfTransportUnits = Some("TransportDetailsIdentityOfTransportUnits2"),
+        commercialSealIdentification = Some("TransportDetailsCommercialSealIdentification2"),
+        complementaryInformation = Some("TransportDetailsComplementaryInformation2"),
+        sealInformation = Some("TransportDetailsSealInformation2")
+      )
+    )
   )
 
   val getMovementResponseInputJson: JsValue = Json.obj(
-    "arc" -> testArc,
+    "arc" -> "ExciseMovementArc",
     "sequenceNumber" -> 1,
-    "destinationType" -> "1",
-    "localReferenceNumber" -> "MyLrn",
-    "eadStatus" -> "MyEadStatus",
-    "consignorTrader" -> Json.obj(fields =
-      "traderExciseNumber" -> "GB12345GTR144",
-      "traderName" -> "MyConsignor",
+    "destinationType" -> "10",
+    "memberStateCode" -> "CCTMemberStateCode",
+    "serialNumberOfCertificateOfExemption" -> "CCTSerialNumber",
+    "consignorTrader" -> Json.obj(
+      "traderExciseNumber" -> "ConsignorTraderExciseNumber",
+      "traderName" -> "ConsignorTraderName",
       "address" -> Json.obj(
-        "street" -> "Main101",
-        "postcode" -> "ZZ78",
-        "city" -> "Zeebrugge"
+        "streetNumber" -> "ConsignorTraderStreetNumber",
+        "street" -> "ConsignorTraderStreetName",
+        "postcode" -> "ConsignorTraderPostcode",
+        "city" -> "ConsignorTraderCity"
       )
     ),
-    "dateOfDispatch" -> "2010-03-04",
-    "journeyTime" -> "MyJourneyTime",
-    "items" -> Json.arr(
-      Json.obj(fields =
-        "itemUniqueReference" -> 1,
-        "productCode" -> "W200",
-        "cnCode" -> "22041011",
-        "quantity" -> 500,
-        "grossMass" -> 900,
-        "netMass" -> 375,
-        "alcoholicStrength" -> 12.7,
-        "degreePlato" -> 1.2,
-        "fiscalMark" -> "Mark 1",
-        "designationOfOrigin" -> "FR",
-        "sizeOfProducer" -> "Huge",
-        "density" -> 9000,
-        "commercialDescription" -> "description",
-        "brandNameOfProduct" -> "Big fancy brand name",
-        "maturationAge" -> "Lots",
-        "packaging" -> Json.arr(
-          Json.obj(fields =
-            "typeOfPackage" -> "BX",
-            "quantity" -> 165,
-            "shippingMarks" -> "marks",
-            "identityOfCommercialSeal" -> "identity",
-            "sealInformation" -> "seal info"
-          )
-        ),
-        "wineProduct" -> Json.obj(fields =
-          "wineProductCategory" -> "1",
-          "wineGrowingZoneCode" -> "2",
-          "thirdCountryOfOrigin" -> "FR",
-          "otherInformation" -> "Other info",
-          "wineOperations" -> Seq("4", "11", "9")
-        )
+    "consigneeTrader" -> Json.obj(
+      "traderExciseNumber" -> "ConsigneeTraderId",
+      "traderName" -> "ConsigneeTraderName",
+      "address" -> Json.obj(
+        "streetNumber" -> "ConsigneeTraderStreetNumber",
+        "street" -> "ConsigneeTraderStreetName",
+        "postcode" -> "ConsigneeTraderPostcode",
+        "city" -> "ConsigneeTraderCity"
       ),
-      Json.obj(fields =
-        "itemUniqueReference" -> 2,
-        "productCode" -> "W300",
-        "cnCode" -> "22041011",
-        "quantity" -> 550,
-        "grossMass" -> 910,
-        "netMass" -> 315,
-        "fiscalMark" -> "Mark 2",
-        "designationOfOrigin" -> "FR",
-        "sizeOfProducer" -> "Huge",
-        "commercialDescription" -> "description",
-        "brandNameOfProduct" -> "Big fancy brand name",
-        "packaging" -> Json.arr(
-          Json.obj(fields =
-            "typeOfPackage" -> "BX",
-            "quantity" -> 165,
-            "shippingMarks" -> "marks",
-            "identityOfCommercialSeal" -> "identity",
-            "sealInformation" -> "seal info"
+      "eoriNumber" -> "ConsigneeTraderEori"
+    ),
+    "deliveryPlaceTrader" -> Json.obj(
+      "traderExciseNumber" -> "DeliveryPlaceTraderId",
+      "traderName" -> "DeliveryPlaceTraderName",
+      "address" -> Json.obj(
+        "streetNumber" -> "DeliveryPlaceTraderStreetNumber",
+        "street" -> "DeliveryPlaceTraderStreetName",
+        "postcode" -> "DeliveryPlaceTraderPostcode",
+        "city" -> "DeliveryPlaceTraderCity"
+      )
+    ),
+    "placeOfDispatchTrader" -> Json.obj(
+      "traderExciseNumber" -> "PlaceOfDispatchTraderReferenceOfTaxWarehouse",
+      "traderName" -> "PlaceOfDispatchTraderName",
+      "address" -> Json.obj(
+        "streetNumber" -> "PlaceOfDispatchTraderStreetNumber",
+        "street" -> "PlaceOfDispatchTraderStreetName",
+        "postcode" -> "PlaceOfDispatchTraderPostcode",
+        "city" -> "PlaceOfDispatchTraderCity"
+      )
+    ),
+    "transportArrangerTrader" -> Json.obj(
+      "traderName" -> "TransportArrangerTraderName",
+      "address" -> Json.obj(
+        "streetNumber" -> "TransportArrangerTraderStreetNumber",
+        "street" -> "TransportArrangerTraderStreetName",
+        "postcode" -> "TransportArrangerTraderPostcode",
+        "city" -> "TransportArrangerTraderCity"
+      ),
+      "vatNumber" -> "TransportArrangerTraderVatNumber"
+    ),
+    "firstTransporterTrader" -> Json.obj(
+      "traderName" -> "FirstTransporterTraderName",
+      "address" -> Json.obj(
+        "streetNumber" -> "FirstTransporterTraderStreetNumber",
+        "street" -> "FirstTransporterTraderStreetName",
+        "postcode" -> "FirstTransporterTraderPostcode",
+        "city" -> "FirstTransporterTraderCity"
+      ),
+      "vatNumber" -> "FirstTransporterTraderVatNumber"
+    ),
+    "dispatchImportOfficeReferenceNumber" -> "DispatchImportOfficeErn",
+    "deliveryPlaceCustomsOfficeReferenceNumber" -> "DeliveryPlaceCustomsOfficeErn",
+    "competentAuthorityDispatchOfficeReferenceNumber" -> "CompetentAuthorityDispatchOfficeErn",
+    "localReferenceNumber" -> "EadEsadLocalReferenceNumber",
+    "eadStatus" -> "Beans",
+    "dateAndTimeOfValidationOfEadEsad" -> "ExciseMovementDateTime",
+    "dateOfDispatch" -> "EadEsadDateOfDispatch",
+    "journeyTime" -> "10 hours",
+    "documentCertificate" -> Json.arr(
+      Json.obj(
+        "documentType" -> "DocumentCertificateDocumentType1",
+        "documentReference" -> "DocumentCertificateDocumentReference1",
+        "documentDescription" -> "DocumentCertificateDocumentDescription1",
+        "referenceOfDocument" -> "DocumentCertificateReferenceOfDocument1"
+      ),
+      Json.obj(
+        "documentType" -> "DocumentCertificateDocumentType2",
+        "documentReference" -> "DocumentCertificateDocumentReference2",
+        "documentDescription" -> "DocumentCertificateDocumentDescription2",
+        "referenceOfDocument" -> "DocumentCertificateReferenceOfDocument2"
+      )
+    ),
+    "eadEsad" -> Json.obj(
+      "localReferenceNumber" -> "EadEsadLocalReferenceNumber",
+      "invoiceNumber" -> "EadEsadInvoiceNumber",
+      "invoiceDate" -> "EadEsadInvoiceDate",
+      "originTypeCode" -> "3",
+      "dateOfDispatch" -> "EadEsadDateOfDispatch",
+      "timeOfDispatch" -> "EadEsadTimeOfDispatch",
+      "upstreamArc" -> "EadEsadUpstreamArc",
+      "importSadNumber" -> Json.arr("ImportSadNumber1", "ImportSadNumber2")
+    ),
+    "headerEadEsad" -> Json.obj(
+      "sequenceNumber" -> 1,
+      "dateAndTimeOfUpdateValidation" -> "HeaderEadEsadDateTime",
+      "destinationType" -> "10",
+      "journeyTime" -> "10 hours",
+      "transportArrangement" -> "2"
+    ),
+    "transportMode" -> Json.obj(
+      "transportModeCode" -> "TransportModeTransportModeCode",
+      "complementaryInformation" -> "TransportModeComplementaryInformation"
+    ),
+    "movementGuarantee" -> Json.obj(
+      "guarantorTypeCode" -> "123",
+      "guarantorTrader" -> Json.arr(
+        Json.obj(
+          "traderExciseNumber" -> "GuarantorTraderErn1",
+          "traderName" -> "GuarantorTraderName1",
+          "address" -> Json.obj(
+            "streetNumber" -> "GuarantorTraderStreetNumber1",
+            "street" -> "GuarantorTraderStreetName1",
+            "postcode" -> "GuarantorTraderPostcode1",
+            "city" -> "GuarantorTraderCity1"
           ),
-          Json.obj(fields =
-            "typeOfPackage" -> "CR",
-            "quantity" -> 12
-          )
+          "vatNumber" -> "GuarantorTraderVatNumber1"
         ),
-        "wineProduct" -> Json.obj(fields =
-          "wineProductCategory" -> "1",
-          "wineGrowingZoneCode" -> "2",
-          "thirdCountryOfOrigin" -> "FR",
-          "otherInformation" -> "Other info",
-          "wineOperations" -> Seq("4", "11", "9")
+        Json.obj(
+          "traderExciseNumber" -> "GuarantorTraderErn2",
+          "traderName" -> "GuarantorTraderName2",
+          "address" -> Json.obj(
+            "streetNumber" -> "GuarantorTraderStreetNumber2",
+            "street" -> "GuarantorTraderStreetName2",
+            "postcode" -> "GuarantorTraderPostcode2",
+            "city" -> "GuarantorTraderCity2"
+          ),
+          "vatNumber" -> "GuarantorTraderVatNumber2"
         )
       )
     ),
-    "numberOfItems" -> 2
+    "transportDetails" -> Json.arr(
+      Json.obj(
+        "transportUnitCode" -> "TransportDetailsTransportUnitCode1",
+        "identityOfTransportUnits" -> "TransportDetailsIdentityOfTransportUnits1",
+        "commercialSealIdentification" -> "TransportDetailsCommercialSealIdentification1",
+        "complementaryInformation" -> "TransportDetailsComplementaryInformation1",
+        "sealInformation" -> "TransportDetailsSealInformation1"
+      ),
+      Json.obj(
+        "transportUnitCode" -> "TransportDetailsTransportUnitCode2",
+        "identityOfTransportUnits" -> "TransportDetailsIdentityOfTransportUnits2",
+        "commercialSealIdentification" -> "TransportDetailsCommercialSealIdentification2",
+        "complementaryInformation" -> "TransportDetailsComplementaryInformation2",
+        "sealInformation" -> "TransportDetailsSealInformation2"
+      )
+    )
   )
 }
