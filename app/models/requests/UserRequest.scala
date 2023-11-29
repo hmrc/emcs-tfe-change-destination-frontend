@@ -26,7 +26,6 @@ case class UserRequest[A](request: Request[A],
                           credId: String,
                           hasMultipleErns: Boolean) extends WrappedRequest[A](request) {
 
-  lazy val isNorthernIrelandErn: Boolean = ern.startsWith("XI")
 
   lazy val userTypeFromErn: UserType = UserType(ern)
 

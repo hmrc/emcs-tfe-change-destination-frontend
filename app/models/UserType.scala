@@ -16,23 +16,54 @@
 
 package models
 
-sealed trait UserType
+sealed trait UserType {
+  def isNorthernIrelandErn: Boolean
+  def isGreatBritainErn: Boolean
+}
 
 object UserType {
 
-  case object GreatBritainRegisteredConsignor extends UserType
+  case object GreatBritainRegisteredConsignor extends UserType {
+    override def isNorthernIrelandErn: Boolean = false
 
-  case object NorthernIrelandRegisteredConsignor extends UserType
+    override def isGreatBritainErn: Boolean = true
+  }
 
-  case object GreatBritainWarehouseKeeper extends UserType
+  case object NorthernIrelandRegisteredConsignor extends UserType {
+    override def isNorthernIrelandErn: Boolean = true
 
-  case object NorthernIrelandWarehouseKeeper extends UserType
+    override def isGreatBritainErn: Boolean = false
+  }
 
-  case object GreatBritainWarehouse extends UserType
+  case object GreatBritainWarehouseKeeper extends UserType {
+    override def isNorthernIrelandErn: Boolean = false
 
-  case object NorthernIrelandWarehouse extends UserType
+    override def isGreatBritainErn: Boolean = true
+  }
 
-  case object Unknown extends UserType
+  case object NorthernIrelandWarehouseKeeper extends UserType {
+    override def isNorthernIrelandErn: Boolean = true
+
+    override def isGreatBritainErn: Boolean = false
+  }
+
+  case object GreatBritainWarehouse extends UserType {
+    override def isNorthernIrelandErn: Boolean = false
+
+    override def isGreatBritainErn: Boolean = true
+  }
+
+  case object NorthernIrelandWarehouse extends UserType {
+    override def isNorthernIrelandErn: Boolean = true
+
+    override def isGreatBritainErn: Boolean = false
+  }
+
+  case object Unknown extends UserType {
+    override def isNorthernIrelandErn: Boolean = false
+
+    override def isGreatBritainErn: Boolean = false
+  }
 
   private val ERN_PREFIX_LENGTH = 4
 

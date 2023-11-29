@@ -74,7 +74,7 @@ class DestinationTypeFormProviderSpec extends OptionFieldBehaviours with SpecBas
           val form = new DestinationTypeFormProvider()()(dataRequest(FakeRequest(), ern = "GB00123"))
           form.bind(emptyForm).apply(fieldName)
         }
-        result.getMessage mustEqual s"[DestinationTypeFormProvider][apply] invalid UserType for CAM journey: $GreatBritainWarehouse"
+        result.getMessage mustEqual s"[DestinationTypeFormProvider][apply] invalid UserType for COD journey: $GreatBritainWarehouse"
       }
 
       "not bind blank values" in {
@@ -82,7 +82,7 @@ class DestinationTypeFormProviderSpec extends OptionFieldBehaviours with SpecBas
           val form = new DestinationTypeFormProvider()()(dataRequest(FakeRequest(), ern = "GB00123"))
           form.bind(Map(fieldName -> "")).apply(fieldName)
         }
-        result.getMessage mustEqual s"[DestinationTypeFormProvider][apply] invalid UserType for CAM journey: $GreatBritainWarehouse"
+        result.getMessage mustEqual s"[DestinationTypeFormProvider][apply] invalid UserType for COD journey: $GreatBritainWarehouse"
       }
     }
   }

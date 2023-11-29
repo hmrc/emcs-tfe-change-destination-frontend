@@ -25,8 +25,6 @@ case class MovementRequest[A](request: UserRequest[A], arc: String, movementDeta
   val internalId = request.internalId
   val ern = request.ern
 
-  lazy val isNorthernIrelandErn: Boolean = request.isNorthernIrelandErn
-
   lazy val userTypeFromErn: UserType = request.userTypeFromErn
 
   lazy val isWarehouseKeeper: Boolean = request.isWarehouseKeeper
