@@ -58,7 +58,7 @@ class ActiveTraderSpec extends ViewSpecBase {
           val link = doc.select(linkSelector).first
           doc.select(divSelector).size mustEqual 1
           doc.select(titleSelector).text mustEqual s"$traderName ($ern)"
-          link.attr("href") mustEqual "http://localhost:8310/emcs-tfe"
+          link.attr("href") mustEqual "http://localhost:8310/emcs/account"
           link.text mustEqual messagesForLanguage.changeTraderType
         }
 

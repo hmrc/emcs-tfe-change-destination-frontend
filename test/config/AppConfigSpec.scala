@@ -47,7 +47,7 @@ class AppConfigSpec extends SpecBase with FeatureSwitching {
 
         "must return to the new URL" in {
           disable(ReturnToLegacy)
-          config.emcsMovementDetailsUrl(testErn, testArc) mustBe s"http://localhost:8310/emcs-tfe/consignment/$testErn/$testArc"
+          config.emcsMovementDetailsUrl(testErn, testArc) mustBe s"http://localhost:8310/emcs/account/consignment/$testErn/$testArc"
         }
       }
     }
@@ -77,7 +77,7 @@ class AppConfigSpec extends SpecBase with FeatureSwitching {
 
         "must return to the new URL" in {
           disable(ReturnToLegacy)
-          config.emcsTfeHomeUrl(None) mustBe s"http://localhost:8310/emcs-tfe"
+          config.emcsTfeHomeUrl(None) mustBe s"http://localhost:8310/emcs/account"
         }
       }
     }
@@ -96,7 +96,7 @@ class AppConfigSpec extends SpecBase with FeatureSwitching {
 
         "must return to the new URL" in {
           disable(ReturnToLegacy)
-          config.emcsMovementsUrl(testErn) mustBe s"http://localhost:8310/emcs-tfe/movements-in/$testErn"
+          config.emcsMovementsUrl(testErn) mustBe s"http://localhost:8310/emcs/account/movements-in/$testErn"
         }
       }
     }
