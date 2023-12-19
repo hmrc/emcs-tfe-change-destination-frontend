@@ -19,8 +19,7 @@ package queries
 import play.api.libs.json.JsPath
 
 sealed trait Query {
-
-  def path: JsPath
+  val path: JsPath
 }
 
 trait Gettable[+A] extends Query

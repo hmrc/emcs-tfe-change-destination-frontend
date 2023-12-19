@@ -20,7 +20,7 @@ import models.{Mode, UserAnswers}
 import pages.Page
 import play.api.mvc.Call
 
-trait BaseNavigator {
+abstract class BaseNavigator {
 
   def nextPage(page: Page, mode: Mode, userAnswers: UserAnswers): Call
 

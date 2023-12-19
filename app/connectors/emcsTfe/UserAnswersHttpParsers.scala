@@ -17,7 +17,8 @@
 package connectors.emcsTfe
 
 import connectors.BaseConnectorUtils
-import models.{BadRequestError, ErrorResponse, JsonValidationError, UnexpectedDownstreamResponseError, UserAnswers}
+import models.UserAnswers
+import models.response.{BadRequestError, ErrorResponse, JsonValidationError, UnexpectedDownstreamResponseError}
 import play.api.http.Status.{BAD_REQUEST, NO_CONTENT, OK}
 import uk.gov.hmrc.http.{HttpClient, HttpReads, HttpResponse}
 

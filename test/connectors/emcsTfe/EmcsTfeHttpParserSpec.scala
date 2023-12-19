@@ -17,19 +17,17 @@
 package connectors.emcsTfe
 
 import base.SpecBase
-import fixtures.GetMovementResponseFixtures
-import mocks.MockHttpClient
-import models.response.emcsTfe.GetMovementResponse
-import models.{JsonValidationError, UnexpectedDownstreamResponseError}
+import mocks.connectors.MockHttpClient
+import models.response.{JsonValidationError, SubmitChangeDestinationResponse, UnexpectedDownstreamResponseError}
 import play.api.http.{HeaderNames, MimeTypes, Status}
 import play.api.libs.json.{Json, Reads}
 import uk.gov.hmrc.http.{HttpClient, HttpResponse}
 
 class EmcsTfeHttpParserSpec extends SpecBase
-  with Status with MimeTypes with HeaderNames with MockHttpClient with GetMovementResponseFixtures {
+  with Status with MimeTypes with HeaderNames with MockHttpClient {
 
-  lazy val httpParser = new EmcsTfeHttpParser[GetMovementResponse] {
-    override implicit val reads: Reads[GetMovementResponse] = GetMovementResponse.reads
+  lazy val httpParser = new EmcsTfeHttpParser[SubmitChangeDestinationResponse] {
+    override implicit val reads: Reads[SubmitChangeDestinationResponse] = SubmitChangeDestinationResponse.reads
     override def http: HttpClient = mockHttpClient
   }
 
@@ -39,9 +37,9 @@ class EmcsTfeHttpParserSpec extends SpecBase
 
       "when valid JSON is returned that can be parsed to the model" in {
 
-        val httpResponse = HttpResponse(Status.OK, getMovementResponseInputJson, Map())
+        val httpResponse = HttpResponse(Status.OK, successResponseEISJson, Map())
 
-        httpParser.EmcsTfeReads.read("POST", "/movement/ern/arc", httpResponse) mustBe Right(getMovementResponseModel)
+        httpParser.EmcsTfeReads.read("POST", "/change-destination/ern/arc", httpResponse) mustBe Right(submitChangeDestinationResponseEIS)
       }
     }
 
@@ -51,7 +49,7 @@ class EmcsTfeHttpParserSpec extends SpecBase
 
         val httpResponse = HttpResponse(Status.INTERNAL_SERVER_ERROR, Json.obj(), Map())
 
-        httpParser.EmcsTfeReads.read("POST", "/movement/ern/arc", httpResponse) mustBe Left(UnexpectedDownstreamResponseError)
+        httpParser.EmcsTfeReads.read("POST", "/change-destination/ern/arc", httpResponse) mustBe Left(UnexpectedDownstreamResponseError)
       }
     }
 
@@ -61,14 +59,14 @@ class EmcsTfeHttpParserSpec extends SpecBase
 
         val httpResponse = HttpResponse(Status.OK, "", Map())
 
-        httpParser.EmcsTfeReads.read("POST", "/movement/ern/arc", httpResponse) mustBe Left(JsonValidationError)
+        httpParser.EmcsTfeReads.read("POST", "/change-destination/ern/arc", httpResponse) mustBe Left(JsonValidationError)
       }
 
       s"when response contains JSON but can't be deserialized to model" in {
 
         val httpResponse = HttpResponse(Status.OK, Json.obj(), Map())
 
-        httpParser.EmcsTfeReads.read("POST", "/movement/ern/arc", httpResponse) mustBe Left(JsonValidationError)
+        httpParser.EmcsTfeReads.read("POST", "/change-destination/ern/arc", httpResponse) mustBe Left(JsonValidationError)
       }
     }
   }

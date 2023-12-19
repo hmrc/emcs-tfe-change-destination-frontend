@@ -16,7 +16,7 @@
 
 package mocks.services
 
-import models.response.referenceData.TraderKnownFacts
+import models.TraderKnownFacts
 import org.scalamock.handlers.CallHandler2
 import org.scalamock.scalatest.MockFactory
 import services.GetTraderKnownFactsService

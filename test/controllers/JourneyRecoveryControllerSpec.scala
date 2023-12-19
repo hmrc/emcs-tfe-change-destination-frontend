@@ -17,30 +17,49 @@
 package controllers
 
 import base.SpecBase
-import config.AppConfig
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import views.html.JourneyRecoveryStartAgainView
+import uk.gov.hmrc.play.bootstrap.binders.RedirectUrl
+import views.html.{JourneyRecoveryContinueView, JourneyRecoveryStartAgainView}
 
 class JourneyRecoveryControllerSpec extends SpecBase {
 
   "JourneyRecovery Controller" - {
+    val request = FakeRequest()
+    lazy val continueView = app.injector.instanceOf[JourneyRecoveryContinueView]
+    lazy val startAgainView = app.injector.instanceOf[JourneyRecoveryStartAgainView]
 
-    "must return OK and the start again view" in {
+    lazy val testController = new JourneyRecoveryController(messagesControllerComponents, continueView, startAgainView)
 
-      val application = applicationBuilder(userAnswers = None).build()
-
-      running(application) {
-        val request = userRequest(FakeRequest(GET, routes.JourneyRecoveryController.onPageLoad(testErn, testArc).url))
-
-        val result = route(application, request).value
-
-        val startAgainView = application.injector.instanceOf[JourneyRecoveryStartAgainView]
-        val config = application.injector.instanceOf[AppConfig]
+    "when a relative continue Url is supplied" - {
+      "must return OK and the continue view" in {
+        val continueUrl = RedirectUrl("/foo")
+        val result = testController.onPageLoad(Some(continueUrl))(request)
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual startAgainView()(request, messages(application), config).toString
+        contentAsString(result) mustEqual continueView(continueUrl.unsafeValue)(request, messages(request)).toString
+      }
+    }
+
+    "when an absolute continue Url is supplied" - {
+      "must return OK and the start again view" in {
+        val continueUrl = RedirectUrl("https://foo.com")
+        val result = testController.onPageLoad(Some(continueUrl))(request)
+
+
+        status(result) mustEqual OK
+        contentAsString(result) mustEqual startAgainView()(request, messages(request)).toString
+      }
+    }
+
+    "when no continue Url is supplied" - {
+      "must return OK and the start again view" in {
+        val result = testController.onPageLoad(None)(request)
+
+        status(result) mustEqual OK
+        contentAsString(result) mustEqual startAgainView()(request, messages(request)).toString
       }
     }
   }
+
 }

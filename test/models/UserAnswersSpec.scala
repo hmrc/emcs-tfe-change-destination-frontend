@@ -24,20 +24,19 @@ package models
 import base.SpecBase
 import pages.QuestionPage
 import play.api.libs.json._
+import queries.Derivable
 
 
 class UserAnswersSpec extends SpecBase {
 
   case class TestPage(jsPath: JsPath = JsPath) extends QuestionPage[String] {
-    override def path: JsPath = jsPath \ toString
-
-    override def toString: String = "TestPage"
+    override val toString: String = "TestPage"
+    override val path: JsPath = jsPath \ toString
   }
 
   case class TestPage2(jsPath: JsPath = JsPath) extends QuestionPage[String] {
-    override def path: JsPath = jsPath \ toString
-
-    override def toString: String = "TestPage2"
+    override val toString: String = "TestPage2"
+    override val path: JsPath = jsPath \ toString
   }
 
   case class TestModel(TestPage: String,
@@ -53,7 +52,7 @@ class UserAnswersSpec extends SpecBase {
 
       "when no data exists for that page" - {
 
-        "must set the answer for the first time" in {
+        "must set the answer for the first userEnteredTime" in {
           emptyUserAnswers.set(TestPage(), "foo") mustBe emptyUserAnswers.copy(data = Json.obj(
             "TestPage" -> "foo"
           ))
@@ -166,6 +165,29 @@ class UserAnswersSpec extends SpecBase {
           ))
           withData.get(TestPage(__ \ "items" \ 0 \ "subItems" \ 0)) mustBe Some("foo")
         }
+      }
+    }
+
+    "when calling .get(Derivable)" - {
+      object TestDerivable extends Derivable[Seq[JsObject], Int] {
+        override val path: JsPath = JsPath \ "items"
+
+        override val derive: Seq[JsObject] => Int = _.size
+      }
+
+      "must return None if the data for the page doesnt exist" in {
+        emptyUserAnswers.get(TestDerivable) mustBe None
+      }
+
+      "must perform the derive function if page exists" in {
+        val withData = emptyUserAnswers.copy(data = Json.obj(
+          "items" -> Json.arr(
+            Json.obj("TestPage" -> "foo"),
+            Json.obj("TestPage" -> "bar"),
+            Json.obj("TestPage" -> "wizz")
+          )
+        ))
+        withData.get(TestDerivable) mustBe Some(3)
       }
     }
 
@@ -323,5 +345,44 @@ class UserAnswersSpec extends SpecBase {
       }
     }
 
+    "when calling .filterForPages" - {
+
+      val page1 = new QuestionPage[String] {
+        override val toString: String = "page1"
+        override val path: JsPath = __ \ toString
+      }
+      val page2 = new QuestionPage[String] {
+        override val toString: String = "page2"
+        override val path: JsPath = __ \ toString
+      }
+      val page3 = new QuestionPage[String] {
+        override val toString: String = "page3"
+        override val path: JsPath = __ \ toString
+      }
+
+      val baseUserAnswers = UserAnswers(ern = "my ern", arc = "my arc")
+
+      "must only return pages in the supplied Seq" in {
+        val existingUserAnswers = baseUserAnswers
+          .set(page1, "foo")
+          .set(page2, "bar")
+          .set(page3, "wizz")
+
+        existingUserAnswers.filterForPages(Seq(page1, page2)) mustBe {
+          baseUserAnswers.copy(data = Json.obj(
+            page1.toString -> "foo",
+            page2.toString -> "bar"
+          ))
+        }
+      }
+
+      "must return an empty Seq if none of the supplied pages are in UserAnswers" in {
+        val existingUserAnswers = baseUserAnswers
+          .set(page1, "foo")
+          .set(page3, "wizz")
+
+        existingUserAnswers.filterForPages(Seq(page2)) mustBe baseUserAnswers
+      }
+    }
   }
 }

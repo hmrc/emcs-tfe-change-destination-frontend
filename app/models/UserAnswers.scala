@@ -16,26 +16,43 @@
 
 package models
 
+import pages.QuestionPage
+import pages.sections.Section
 import play.api.libs.json._
-import queries.{Gettable, Settable}
+import queries.{Derivable, Gettable, Settable}
 import uk.gov.hmrc.mongo.play.json.formats.MongoJavatimeFormats
 
 import java.time.Instant
+import scala.annotation.unused
 
 final case class UserAnswers(ern: String,
                              arc: String,
                              data: JsObject = Json.obj(),
                              lastUpdated: Instant = Instant.now) {
 
-  private[models] def handleResult: JsResult[JsObject] => UserAnswers = {
-    case JsSuccess(updatedAnswers, _) =>
-      copy(data = updatedAnswers)
-    case JsError(errors) =>
-      throw JsResultException(errors)
+  /**
+   * @param pages a Seq of pages you want to leave in UserAnswers
+   * @return this UserAnswers, where any pages not in the `pages` parameter are filtered out
+   */
+  def filterForPages(pages: Seq[QuestionPage[_]]): UserAnswers = {
+    val pagesWithAnswersInData: Seq[(String, Json.JsValueWrapper)] = pages.flatMap {
+      page =>
+        data \ page match {
+          case JsDefined(value) => Some(page.toString -> Json.toJsFieldJsValueWrapper(value))
+          case _: JsUndefined => None
+        }
+    }
+
+    val newAnswers = Json.obj(pagesWithAnswersInData: _*)
+
+    this.copy(data = newAnswers)
   }
 
   def get[A](page: Gettable[A])(implicit rds: Reads[A]): Option[A] =
     Reads.optionNoError(Reads.at(page.path)).reads(data).asOpt.flatten
+
+  def get[A, B](query: Derivable[A, B])(implicit rds: Reads[A]): Option[B] =
+    get(query.asInstanceOf[Gettable[A]]).map(query.derive)
 
   def set[A](page: Settable[A], value: A)(implicit writes: Writes[A]): UserAnswers =
     handleResult {
@@ -46,33 +63,50 @@ final case class UserAnswers(ern: String,
     handleResult {
       data.removeObject(page.path)
     }
+
+  /**
+   * @param section section to reset to an empty object
+   * @param index to ensure this method is used to reset indexed Sections
+   * @return UserAnswers with the supplied section reset to an empty JSON object
+   *         To be used to reset indexed Sections without deleting the index - e.g. clearing down an indexed Section in order to start it up again without losing its place in the Array
+   */
+  def resetIndexedSection(section: Section[JsObject], @unused index: Index): UserAnswers =
+    handleResult {
+      data.setObject(section.path, Json.obj())
+    }
+
+  private[models] def handleResult: JsResult[JsObject] => UserAnswers = {
+    case JsSuccess(updatedAnswers, _) =>
+      copy(data = updatedAnswers)
+    case JsError(errors) =>
+      throw JsResultException(errors)
+  }
 }
 
 object UserAnswers {
 
-  val reads: Reads[UserAnswers] = {
+  import play.api.libs.functional.syntax._
 
-    import play.api.libs.functional.syntax._
+  val ern = "ern"
+  val arc = "arc"
+  val data = "data"
+  val lastUpdated = "lastUpdated"
 
+  val reads: Reads[UserAnswers] =
     (
-        (__ \ "ern").read[String] and
-        (__ \ "arc").read[String] and
-        (__ \ "data").read[JsObject] and
-        (__ \ "lastUpdated").read(MongoJavatimeFormats.instantFormat)
+      (__ \ ern).read[String] and
+        (__ \ arc).read[String] and
+        (__ \ data).read[JsObject] and
+        (__ \ lastUpdated).read(MongoJavatimeFormats.instantFormat)
       )(UserAnswers.apply _)
-  }
 
-  val writes: OWrites[UserAnswers] = {
-
-    import play.api.libs.functional.syntax._
-
+  val writes: OWrites[UserAnswers] =
     (
-        (__ \ "ern").write[String] and
-        (__ \ "arc").write[String] and
-        (__ \ "data").write[JsObject] and
-        (__ \ "lastUpdated").write(MongoJavatimeFormats.instantFormat)
+      (__ \ ern).write[String] and
+        (__ \ arc).write[String] and
+        (__ \ data).write[JsObject] and
+        (__ \ lastUpdated).write(MongoJavatimeFormats.instantFormat)
       )(unlift(UserAnswers.unapply))
-  }
 
   implicit val format: OFormat[UserAnswers] = OFormat(reads, writes)
 }

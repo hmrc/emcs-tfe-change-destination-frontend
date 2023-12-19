@@ -17,7 +17,8 @@
 package services
 
 import connectors.emcsTfe.UserAnswersConnector
-import models.{UserAnswers, UserAnswersException}
+import models.UserAnswers
+import models.response.UserAnswersException
 import uk.gov.hmrc.http.HeaderCarrier
 
 import javax.inject.{Inject, Singleton}

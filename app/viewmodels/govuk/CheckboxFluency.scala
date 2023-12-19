@@ -54,7 +54,7 @@ trait CheckboxFluency {
       Checkboxes(
         fieldset     = Some(fieldset),
         name         = name,
-        errorMessage = errorMessage(form(name)),
+        errorMessage = errorMessage(form("value")),
         items        = items.map {
           item =>
             item copy (checked = form.data.exists(data => data._2 == item.value))

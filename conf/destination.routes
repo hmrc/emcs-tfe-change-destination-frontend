@@ -1,0 +1,41 @@
+GET         /trader/:ern/movement/:arc/destination                                             controllers.sections.destination.DestinationIndexController.onPageLoad(ern: String, arc: String)
+
+GET         /trader/:ern/movement/:arc/destination/warehouse-excise                            controllers.sections.destination.DestinationWarehouseExciseController.onPageLoad(ern: String, arc: String, mode: Mode = NormalMode)
+POST        /trader/:ern/movement/:arc/destination/warehouse-excise                            controllers.sections.destination.DestinationWarehouseExciseController.onSubmit(ern: String, arc: String, mode: Mode = NormalMode)
+GET         /trader/:ern/movement/:arc/Destination/warehouse-excise/change                     controllers.sections.destination.DestinationWarehouseExciseController.onPageLoad(ern: String, arc: String, mode: Mode = CheckMode)
+POST        /trader/:ern/movement/:arc/Destination/warehouse-excise/change                     controllers.sections.destination.DestinationWarehouseExciseController.onSubmit(ern: String, arc: String, mode: Mode = CheckMode)
+
+GET         /trader/:ern/movement/:arc/destination/warehouse-vat                               controllers.sections.destination.DestinationWarehouseVatController.onPageLoad(ern: String, arc: String, mode: Mode = NormalMode)
+POST        /trader/:ern/movement/:arc/destination/warehouse-vat                               controllers.sections.destination.DestinationWarehouseVatController.onSubmit(ern: String, arc: String, mode: Mode = NormalMode)
+GET         /trader/:ern/movement/:arc/destination/warehouse-vat/skipQuestion                  controllers.sections.destination.DestinationWarehouseVatController.skipThisQuestion(ern: String, arc: String, mode: Mode = NormalMode)
+GET         /trader/:ern/movement/:arc/destination/warehouse-vat/change                        controllers.sections.destination.DestinationWarehouseVatController.onPageLoad(ern: String, arc: String, mode: Mode = CheckMode)
+POST        /trader/:ern/movement/:arc/destination/warehouse-vat/change                        controllers.sections.destination.DestinationWarehouseVatController.onSubmit(ern: String, arc: String, mode: Mode = CheckMode)
+GET         /trader/:ern/movement/:arc/destination/warehouse-vat/skipQuestion/change           controllers.sections.destination.DestinationWarehouseVatController.skipThisQuestion(ern: String, arc: String, mode: Mode = CheckMode)
+
+GET         /trader/:ern/movement/:arc/destination/details-choice                              controllers.sections.destination.DestinationDetailsChoiceController.onPageLoad(ern: String, arc: String, mode: Mode = NormalMode)
+POST        /trader/:ern/movement/:arc/destination/details-choice                              controllers.sections.destination.DestinationDetailsChoiceController.onSubmit(ern: String, arc: String, mode: Mode = NormalMode)
+GET         /trader/:ern/movement/:arc/destination/details-choice/change                       controllers.sections.destination.DestinationDetailsChoiceController.onPageLoad(ern: String, arc: String, mode: Mode = CheckMode)
+POST        /trader/:ern/movement/:arc/destination/details-choice/change                       controllers.sections.destination.DestinationDetailsChoiceController.onSubmit(ern: String, arc: String, mode: Mode = CheckMode)
+
+# DES03
+GET         /trader/:ern/movement/:arc/destination/consignee-details                           controllers.sections.destination.DestinationConsigneeDetailsController.onPageLoad(ern: String, arc: String, mode: Mode = NormalMode)
+POST        /trader/:ern/movement/:arc/destination/consignee-details                           controllers.sections.destination.DestinationConsigneeDetailsController.onSubmit(ern: String, arc: String, mode: Mode = NormalMode)
+GET         /trader/:ern/movement/:arc/Destination/consignee-details/change                    controllers.sections.destination.DestinationConsigneeDetailsController.onPageLoad(ern: String, arc: String, mode: Mode = CheckMode)
+POST        /trader/:ern/movement/:arc/Destination/consignee-details/change                    controllers.sections.destination.DestinationConsigneeDetailsController.onSubmit(ern: String, arc: String, mode: Mode = CheckMode)
+
+# DES04
+GET         /trader/:ern/movement/:arc/destination/business-name                               controllers.sections.destination.DestinationBusinessNameController.onPageLoad(ern: String, arc: String, mode: Mode = NormalMode)
+POST        /trader/:ern/movement/:arc/destination/business-name                               controllers.sections.destination.DestinationBusinessNameController.onSubmit(ern: String, arc: String, mode: Mode = NormalMode)
+GET         /trader/:ern/movement/:arc/destination/business-name/skipQuestion                  controllers.sections.destination.DestinationBusinessNameController.skipThisQuestion(ern: String, arc: String, mode: Mode = NormalMode)
+GET         /trader/:ern/movement/:arc/destination/business-name/change                        controllers.sections.destination.DestinationBusinessNameController.onPageLoad(ern: String, arc: String, mode: Mode = CheckMode)
+POST        /trader/:ern/movement/:arc/destination/business-name/change                        controllers.sections.destination.DestinationBusinessNameController.onSubmit(ern: String, arc: String, mode: Mode = CheckMode)
+GET        /trader/:ern/movement/:arc/destination/business-name/skipQuestion/change            controllers.sections.destination.DestinationBusinessNameController.skipThisQuestion(ern: String, arc: String, mode: Mode = CheckMode)
+
+# DES05
+GET         /trader/:ern/movement/:arc/destination/address                                     controllers.sections.destination.DestinationAddressController.onPageLoad(ern: String, arc: String, mode: Mode = NormalMode)
+POST        /trader/:ern/movement/:arc/destination/address                                     controllers.sections.destination.DestinationAddressController.onSubmit(ern: String, arc: String, mode: Mode = NormalMode)
+GET         /trader/:ern/movement/:arc/destination/address/change                              controllers.sections.destination.DestinationAddressController.onPageLoad(ern: String, arc: String, mode: Mode = CheckMode)
+POST        /trader/:ern/movement/:arc/destination/address/change                              controllers.sections.destination.DestinationAddressController.onSubmit(ern: String, arc: String, mode: Mode = CheckMode)
+
+GET        /trader/:ern/draft/:lrn/destination/check-answers                                    controllers.sections.destination.DestinationCheckAnswersController.onPageLoad(ern: String, lrn: String)
+POST       /trader/:ern/draft/:lrn/destination/check-answers                                    controllers.sections.destination.DestinationCheckAnswersController.onSubmit(ern: String, lrn: String)

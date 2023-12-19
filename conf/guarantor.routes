@@ -1,0 +1,31 @@
+GET         /trader/:ern/movement/:arc/guarantor                              controllers.sections.guarantor.GuarantorIndexController.onPageLoad(ern: String, arc: String)
+
+GET         /trader/:ern/movement/:arc/guarantor/required                     controllers.sections.guarantor.GuarantorRequiredController.onPageLoad(ern: String, arc: String, mode: Mode = NormalMode)
+POST        /trader/:ern/movement/:arc/guarantor/required                     controllers.sections.guarantor.GuarantorRequiredController.onSubmit(ern: String, arc: String, mode: Mode = NormalMode)
+GET         /trader/:ern/movement/:arc/guarantor/required/change              controllers.sections.guarantor.GuarantorRequiredController.onPageLoad(ern: String, arc: String, mode: Mode = CheckMode)
+POST        /trader/:ern/movement/:arc/guarantor/required/change              controllers.sections.guarantor.GuarantorRequiredController.onSubmit(ern: String, arc: String, mode: Mode = CheckMode)
+
+GET         /trader/:ern/movement/:arc/guarantor/arranger                     controllers.sections.guarantor.GuarantorArrangerController.onPageLoad(ern: String, arc: String, mode: Mode = NormalMode)
+POST        /trader/:ern/movement/:arc/guarantor/arranger                     controllers.sections.guarantor.GuarantorArrangerController.onSubmit(ern: String, arc: String, mode: Mode = NormalMode)
+GET         /trader/:ern/movement/:arc/guarantor/arranger/change              controllers.sections.guarantor.GuarantorArrangerController.onPageLoad(ern: String, arc: String, mode: Mode = CheckMode)
+POST        /trader/:ern/movement/:arc/guarantor/arranger/change              controllers.sections.guarantor.GuarantorArrangerController.onSubmit(ern: String, arc: String, mode: Mode = CheckMode)
+
+GET         /trader/:ern/movement/:arc/guarantor/name                         controllers.sections.guarantor.GuarantorNameController.onPageLoad(ern: String, arc: String, mode: Mode = NormalMode)
+POST        /trader/:ern/movement/:arc/guarantor/name                         controllers.sections.guarantor.GuarantorNameController.onSubmit(ern: String, arc: String, mode: Mode = NormalMode)
+GET         /trader/:ern/movement/:arc/guarantor/name/change                  controllers.sections.guarantor.GuarantorNameController.onPageLoad(ern: String, arc: String, mode: Mode = CheckMode)
+POST        /trader/:ern/movement/:arc/guarantor/name/change                  controllers.sections.guarantor.GuarantorNameController.onSubmit(ern: String, arc: String, mode: Mode = CheckMode)
+
+GET         /trader/:ern/movement/:arc/guarantor/vat                          controllers.sections.guarantor.GuarantorVatController.onPageLoad(ern: String, arc: String, mode: Mode = NormalMode)
+POST        /trader/:ern/movement/:arc/guarantor/vat                          controllers.sections.guarantor.GuarantorVatController.onSubmit(ern: String, arc: String, mode: Mode = NormalMode)
+GET         /trader/:ern/movement/:arc/guarantor/vat/change                   controllers.sections.guarantor.GuarantorVatController.onPageLoad(ern: String, arc: String, mode: Mode = CheckMode)
+POST        /trader/:ern/movement/:arc/guarantor/vat/change                   controllers.sections.guarantor.GuarantorVatController.onSubmit(ern: String, arc: String, mode: Mode = CheckMode)
+GET         /trader/:ern/movement/:arc/guarantor/vat/non-gb-vat               controllers.sections.guarantor.GuarantorVatController.onNonGbVAT(ern: String, arc: String, mode: Mode = NormalMode)
+GET         /trader/:ern/movement/:arc/guarantor/vat/non-gb-vat/change        controllers.sections.guarantor.GuarantorVatController.onNonGbVAT(ern: String, arc: String, mode: Mode = CheckMode)
+
+GET         /trader/:ern/movement/:arc/guarantor/address                      controllers.sections.guarantor.GuarantorAddressController.onPageLoad(ern: String, arc: String, mode: Mode = NormalMode)
+POST        /trader/:ern/movement/:arc/guarantor/address                      controllers.sections.guarantor.GuarantorAddressController.onSubmit(ern: String, arc: String, mode: Mode = NormalMode)
+GET         /trader/:ern/movement/:arc/guarantor/address/change               controllers.sections.guarantor.GuarantorAddressController.onPageLoad(ern: String, arc: String, mode: Mode = CheckMode)
+POST        /trader/:ern/movement/:arc/guarantor/address/change               controllers.sections.guarantor.GuarantorAddressController.onSubmit(ern: String, arc: String, mode: Mode = CheckMode)
+
+GET         /trader/:ern/movement/:arc/guarantor/check-answers                controllers.sections.guarantor.GuarantorCheckAnswersController.onPageLoad(ern: String, arc: String)
+POST        /trader/:ern/movement/:arc/guarantor/check-answers                controllers.sections.guarantor.GuarantorCheckAnswersController.onSubmit(ern: String, arc: String)

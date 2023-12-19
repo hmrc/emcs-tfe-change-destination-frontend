@@ -16,7 +16,7 @@
 
 package controllers.actions
 
-import models.requests.{MovementRequest, OptionalDataRequest}
+import models.requests.{OptionalDataRequest, UserRequest}
 import play.api.mvc.ActionTransformer
 import services.{GetTraderKnownFactsService, UserAnswersService}
 import uk.gov.hmrc.http.HeaderCarrier
@@ -26,21 +26,27 @@ import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
 class DataRetrievalActionImpl @Inject()(val userAnswersService: UserAnswersService,
-                                        val getTraderKnownFactsService: GetTraderKnownFactsService)
-                                       (implicit val executionContext: ExecutionContext) extends DataRetrievalAction {
+                                        getTraderKnownFactsService: GetTraderKnownFactsService)
+                                       (implicit val ec: ExecutionContext) extends DataRetrievalAction {
 
-  override protected def transform[A](request: MovementRequest[A]): Future[OptionalDataRequest[A]] = {
+  def apply(arc: String): ActionTransformer[UserRequest, OptionalDataRequest] = new ActionTransformer[UserRequest, OptionalDataRequest] {
 
-    implicit val hc: HeaderCarrier = HeaderCarrierConverter.fromRequestAndSession(request, request.session)
+    override val executionContext = ec
 
-    for {
-      userAnswers <- userAnswersService.get(request.ern, request.arc)
-      traderKnownFacts <- getTraderKnownFactsService.getTraderKnownFacts(request.ern)
-    } yield {
-      OptionalDataRequest(request, userAnswers, traderKnownFacts)
+    override protected def transform[A](request: UserRequest[A]): Future[OptionalDataRequest[A]] = {
+
+      implicit val hc: HeaderCarrier = HeaderCarrierConverter.fromRequestAndSession(request, request.session)
+
+      for {
+        userAnswers <- userAnswersService.get(request.ern, arc)
+        traderKnownFacts <- getTraderKnownFactsService.getTraderKnownFacts(request.ern)
+      } yield {
+        OptionalDataRequest(request, arc, userAnswers, traderKnownFacts)
+      }
     }
   }
-
 }
 
-trait DataRetrievalAction extends ActionTransformer[MovementRequest, OptionalDataRequest]
+trait DataRetrievalAction {
+  def apply(arc: String): ActionTransformer[UserRequest, OptionalDataRequest]
+}

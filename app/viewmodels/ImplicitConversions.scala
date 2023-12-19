@@ -31,5 +31,4 @@ trait ImplicitConversions {
 
   implicit def stringToKey(string: String)(implicit messages: Messages): Key =
     Key(content = Text(messages(string)))
-
 }

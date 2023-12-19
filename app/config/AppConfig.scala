@@ -16,9 +16,9 @@
 
 package config
 
-import featureswitch.core.config.{FeatureSwitching, ReturnToLegacy, WelshLanguage, StubGetTraderKnownFacts}
+import featureswitch.core.config._
+import models.requests.DataRequest
 import play.api.Configuration
-import play.api.i18n.Lang
 import play.api.mvc.RequestHeader
 import uk.gov.hmrc.play.bootstrap.binders.SafeRedirectUrl
 import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
@@ -28,94 +28,96 @@ import javax.inject.{Inject, Singleton}
 @Singleton
 class AppConfig @Inject()(servicesConfig: ServicesConfig, configuration: Configuration) extends FeatureSwitching {
 
-  override lazy val config: AppConfig = this
+  override val config: AppConfig = this
 
-  private lazy val host: String = configuration.get[String]("host")
-
+  lazy val host: String = configuration.get[String]("host")
   lazy val appName: String = configuration.get[String]("appName")
-
-  lazy val selfUrl: String = servicesConfig.baseUrl("emcs-tfe-change-destination-frontend")
-
-  lazy val timeout: Int = configuration.get[Int]("timeout-dialog.timeout")
-
-  lazy val countdown: Int = configuration.get[Int]("timeout-dialog.countdown")
-
-  lazy val signOutUrl: String = configuration.get[String]("urls.signOut")
-
   lazy val deskproName: String = configuration.get[String]("deskproName")
 
-  lazy val loginGuidance: String = configuration.get[String]("urls.loginGuidance")
-
-  private lazy val feedbackFrontendHost: String = configuration.get[String]("feedback-frontend.host")
-
-  lazy val feedbackFrontendSurveyUrl: String = s"$feedbackFrontendHost/feedback/$deskproName/beta"
-
   private lazy val contactHost = configuration.get[String]("contact-frontend.host")
-
-  lazy val loginUrl: String = configuration.get[String]("urls.login")
-
-  lazy val registerGuidance: String = configuration.get[String]("urls.registerGuidance")
-
-  lazy val signUpBetaFormUrl: String = configuration.get[String]("urls.signupBetaForm")
-
-  lazy val fallbackProceduresUrl: String = configuration.get[String]("urls.fallbackProcedures")
-
-  lazy val contactEMCSHelpdeskUrl: String = configuration.get[String]("urls.contactEmcsHelpdesk")
-
-  def loginContinueUrl(ern: String, arc: String): String = configuration.get[String]("urls.loginContinue") + s"/trader/$ern/movement/$arc"
-
-  def languageTranslationEnabled: Boolean = isEnabled(WelshLanguage)
-
-  def emcsTfeService: String = servicesConfig.baseUrl("emcs-tfe")
-
-  def emcsTfeBaseUrl: String = s"$emcsTfeService/emcs-tfe"
-
-  def getFeatureSwitchValue(feature: String): Boolean = configuration.get[Boolean](feature)
-
-  def emcsTfeHomeUrl(ern: Option[String]): String = {
-    if (isEnabled(ReturnToLegacy)) {
-      configuration.get[String]("urls.legacy.atAGlance") + ern.fold("")(s"/" + _)
-    } else {
-      configuration.get[String]("urls.emcsTfeHome")
-    }
-  }
-
-  def emcsMovementDetailsUrl(ern: String, arc: String): String =
-    if (isEnabled(ReturnToLegacy)) {
-      configuration.get[String]("urls.legacy.movementHistory").replace(":ern", ern).replace(":arc", arc)
-    } else {
-      configuration.get[String]("urls.emcsTfeMovementDetails") + s"/$ern/$arc"
-    }
-
-  def emcsMovementsUrl(ern: String): String =
-    if (isEnabled(ReturnToLegacy)) {
-      configuration.get[String]("urls.legacy.movements").replace(":ern", ern)
-    } else {
-      configuration.get[String]("urls.emcsTfeMovementsIn") + s"/$ern"
-    }
-
-  def languageMap: Map[String, Lang] = Map(
-    "en" -> Lang("en"),
-    "cy" -> Lang("cy")
-  )
-
-  private def traderKnownFactsReferenceDataService: String =
-    if (isEnabled(StubGetTraderKnownFacts)) {
-      servicesConfig.baseUrl("emcs-tfe-reference-data-stub")
-    } else {
-      servicesConfig.baseUrl("emcs-tfe-reference-data")
-    }
 
   def betaBannerFeedbackUrl(implicit request: RequestHeader): String =
     s"$contactHost/contact/beta-feedback?service=$deskproName&backUrl=${SafeRedirectUrl(host + request.uri).encodedUrl}"
 
-  def internalAuthToken: String = configuration.get[String]("internal-auth.token")
+  lazy val loginUrl: String = configuration.get[String]("urls.login")
+
+  def loginContinueUrl(ern: String): String = configuration.get[String]("urls.loginContinue") + s"/trader/$ern"
+
+  def signOutUrl()(request: RequestHeader): String = {
+    val savablePage = request.uri.matches(".*/trader/.*/draft/.*")
+
+    (redirectToFeedbackSurvey, savablePage) match {
+      case (true, _) => controllers.auth.routes.SignedOutController.signOutWithSurvey().url
+      case (false, true) => controllers.auth.routes.SignedOutController.signOutSaved().url
+      case (false, false) => controllers.auth.routes.SignedOutController.signOutNotSaved().url
+    }
+  }
+
+  lazy val loginGuidance: String = configuration.get[String]("urls.loginGuidance")
+  lazy val registerGuidance: String = configuration.get[String]("urls.registerGuidance")
+  lazy val exciseGuidance: String = configuration.get[String]("urls.exciseGuidance")
+  lazy val signUpBetaFormUrl: String = configuration.get[String]("urls.signupBetaForm")
+
+  lazy val findCommodityCodeUrl: String = configuration.get[String]("urls.findCommodityCode")
+
+  private lazy val feedbackFrontendHost: String = configuration.get[String]("feedback-frontend.host")
+  lazy val feedbackFrontendSurveyUrl: String = s"$feedbackFrontendHost/feedback/$deskproName/beta"
+
+  def emcsTfeHomeUrl: String =
+    if (isEnabled(ReturnToLegacy)) {
+      configuration.get[String]("urls.legacy.atAGlance")
+    } else {
+      configuration.get[String]("urls.emcsTfeHome")
+    }
+
+  def returnToDraft(implicit request: DataRequest[_]): String = controllers.routes.DraftMovementController.onPageLoad(request.ern, request.arc).url
+
+  private def redirectToFeedbackSurvey: Boolean = isEnabled(RedirectToFeedbackSurvey)
+
+  lazy val timeout: Int = configuration.get[Int]("timeout-dialog.timeout")
+  lazy val countdown: Int = configuration.get[Int]("timeout-dialog.countdown")
+
+  private def emcsTfeService: String = servicesConfig.baseUrl("emcs-tfe")
 
   private def userAllowListService: String = servicesConfig.baseUrl("user-allow-list")
 
+  def emcsTfeBaseUrl: String = s"$emcsTfeService/emcs-tfe"
+
   def userAllowListBaseUrl: String = s"$userAllowListService/user-allow-list"
 
+  def allowListEnabled: Boolean = isEnabled(AllowListEnabled)
+
+  def internalAuthToken: String = configuration.get[String]("internal-auth.token")
+
+  private def traderKnownFactsReferenceDataService: String =
+    if (isEnabled(StubGetTraderKnownFacts)) {
+      servicesConfig.baseUrl("emcs-tfe-reference-data-stub")
+    }
+    else {
+      servicesConfig.baseUrl("emcs-tfe-reference-data")
+    }
+
   def traderKnownFactsReferenceDataBaseUrl: String = s"$traderKnownFactsReferenceDataService/emcs-tfe-reference-data"
+
+  def referenceDataBaseUrl: String = servicesConfig.baseUrl("emcs-tfe-reference-data") + "/emcs-tfe-reference-data"
+
+
+  def selfUrl: String = servicesConfig.baseUrl("emcs-tfe-change-destination-frontend")
+
+  lazy val accessibilityStatementUrl: String = {
+    val baseUrl = servicesConfig.getString("accessibility-statement.host")
+    val servicePath = servicesConfig.getString("accessibility-statement.service-path")
+    baseUrl + servicePath
+  }
+
+  def getFeatureSwitchValue(feature: String): Boolean = configuration.get[Boolean](feature)
+
+  lazy val euCustomsOfficeCodesUrl = "https://ec.europa.eu/taxation_customs/dds2/rd/rd_home.jsp?Lang=en"
+  lazy val gbCustomsOfficeCodesUrl = "https://www.gov.uk/government/publications/uk-customs-office-codes-for-data-element-512-of-the-customs-declaration-service"
+
+  lazy val wineGrowingZoneHintUrl: String = configuration.get[String]("urls.wineGrowingZoneHint")
+
+  lazy val cacheTtl: Int = configuration.get[Int]("mongodb.timeToLiveInSeconds")
+
+  def destinationOfficeSuffix: String = configuration.get[String]("constants.destinationOfficeSuffix")
 }
-
-

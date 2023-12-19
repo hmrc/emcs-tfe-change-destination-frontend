@@ -16,19 +16,31 @@
 
 package controllers.auth
 
+import config.AppConfig
 import play.api.i18n.I18nSupport
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
+import utils.Logging
 import views.html.auth.SignedOutView
 
 import javax.inject.Inject
 
 class SignedOutController @Inject()(
                                      val controllerComponents: MessagesControllerComponents,
+                                     appConfig: AppConfig,
                                      view: SignedOutView
-                                   ) extends FrontendBaseController with I18nSupport {
+                                   ) extends FrontendBaseController with I18nSupport with Logging {
 
-  def onPageLoad: Action[AnyContent] = Action { implicit request =>
-    Ok(view())
+  def signOutSaved: Action[AnyContent] = Action { implicit request =>
+    Ok(view("signedOut.guidance.saved")).withNewSession
   }
+
+  def signOutNotSaved: Action[AnyContent] = Action { implicit request =>
+    Ok(view("signedOut.guidance.notSaved")).withNewSession
+  }
+
+  def signOutWithSurvey(): Action[AnyContent] = Action {
+    Redirect(appConfig.feedbackFrontendSurveyUrl).withNewSession
+  }
+
 }

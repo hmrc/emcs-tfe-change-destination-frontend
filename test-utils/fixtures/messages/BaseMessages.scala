@@ -16,57 +16,46 @@
 
 package fixtures.messages
 
-import fixtures.{CY, EN, i18n}
-import play.api.i18n.Lang
 
+trait BaseMessages { _: i18n =>
+  def titleHelper(heading: String) = s"$heading - Excise Movement and Control System - GOV.UK"
+  val opensInNewTab: String = "(opens in new tab)"
+  val hiddenSectionContent: String = "This section is"
+  val movementInformationSection: String = "Movement information"
+  val consigneeInformationSection = "Consignee information"
+  val transportArrangerSection: String = "Transport arranger"
+  val transportUnitsSection: String = "Transport units"
+  val dispatchSection: String = "Place of dispatch information"
+  val exportInformationSection: String = "Export information"
+  val importInformationSection: String = "Import information"
+  val itemInformationSection: String = s"$hiddenSectionContent Item information"
+  val destinationSection: String = "Place of destination information"
+  val sadSection: String = "Single Administrative Document"
+  val documentsSection: String = s"$hiddenSectionContent Documents"
+  val itemSection: String = s"$hiddenSectionContent Item information"
+  val draftMovementSection: String = s"$hiddenSectionContent Draft movement"
 
-sealed trait BaseMessages { _: i18n =>
-  def titleHelper(heading: String): String
-  val opensInNewTab: String
-  def arcSubheading(arc: String): String
-  val lang: Lang
-  val continue: String
-  val saveAndContinue: String
-  val savePreviousAnswersAndExit: String
-  val day: String
-  val month: String
-  val year: String
-  val yes: String
-  val no: String
-  val change: String
-  val remove: String
+  def lrnSubheading(lrn: String): String = s"Change destination for $lrn"
+  val continue = "Continue"
+  val confirmAnswers = "Confirm answers"
+  val notProvided = "Not provided"
+  val saveAndContinue = "Save and continue"
+  val returnToDraft = "Return to draft"
+  val skipThisQuestion = "Skip this question for now"
+  val skipQuestion = "Skip this question"
+  val saveAndReturnToMovement = "Save and return to movement"
+  val day: String = "Day"
+  val month: String = "Month"
+  val year: String = "Year"
+  val yes: String = "Yes"
+  val no: String = "No"
+  val none: String = "None"
+  val change: String = "Change"
+  val remove: String = "Remove"
+  val continueEditing: String = "Continue editing"
+  val sectionNotComplete: String => String = section => s"$section section not complete"
+  val incomplete: String = "Incomplete"
 }
 
-trait BaseEnglish extends BaseMessages with EN {
-  override def titleHelper(heading: String) = s"$heading - Excise Movement and Control System - GOV.UK"
-  override val opensInNewTab: String = "(opens in new tab)"
-  override def arcSubheading(arc: String): String = s"Explanation for delay to $arc"
-  override val continue = "Continue"
-  override val saveAndContinue = "Save and continue"
-  override val savePreviousAnswersAndExit = "Save previous answers and exit"
-  override val day: String = "Day"
-  override val month: String = "Month"
-  override val year: String = "Year"
-  override val yes: String = "Yes"
-  override val no: String = "No"
-  override val change: String = "Change"
-  override val remove: String = "Remove"
-}
+trait BaseEnglish extends BaseMessages with EN
 object BaseEnglish extends BaseEnglish
-
-trait BaseWelsh extends BaseMessages with CY {
-  override def titleHelper(heading: String) = s"$heading - Excise Movement and Control System - GOV.UK"
-  override val opensInNewTab: String = "(opens in new tab)"
-  override def arcSubheading(arc: String): String = s"Explanation for delay to $arc"
-  override val continue = "Continue"
-  override val saveAndContinue = "Save and continue"
-  override val savePreviousAnswersAndExit = "Save previous answers and exit"
-  override val day: String = "Day"
-  override val month: String = "Month"
-  override val year: String = "Year"
-  override val yes: String = "Yes"
-  override val no: String = "No"
-  override val change: String = "Change"
-  override val remove: String = "Remove"
-}
-object BaseWelsh extends BaseWelsh

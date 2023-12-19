@@ -16,7 +16,7 @@
 
 package connectors.userAllowList
 
-import models.{ErrorResponse, UnexpectedDownstreamResponseError}
+import models.response.{ErrorResponse, UnexpectedDownstreamResponseError}
 import play.api.http.Status.{NOT_FOUND, OK}
 import uk.gov.hmrc.http.{HttpReads, HttpResponse}
 import utils.Logging

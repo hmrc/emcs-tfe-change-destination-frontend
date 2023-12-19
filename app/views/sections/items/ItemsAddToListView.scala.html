@@ -1,0 +1,75 @@
+@*
+ * Copyright 2023 HM Revenue & Customs
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *@
+
+@import models.requests.DataRequest
+@import viewmodels.LegendSize
+@import models.sections.items.ItemsAddToList
+
+@this(
+    layout: templates.Layout,
+    formHelper: FormWithCSRF,
+    govukErrorSummary: GovukErrorSummary,
+    govukRadios: GovukRadios,
+    govukSummaryList: GovukSummaryList,
+    govukButton: GovukButton,
+    h1: components.h1,
+    h2: components.h2,
+    continueOrExit: components.continueOrExit
+)
+
+@(formOpt: Option[Form[_]], onSubmitCall: Call, items: Seq[SummaryList], showNoOption: Boolean)(implicit request: DataRequest[_], messages: Messages)
+
+@layout(
+    pageTitle = formOpt.fold(titleNoForm(pluralSingular("itemsAddToList.title", items.length))){
+        form => title(form, pluralSingular("itemsAddToList.title", items.length))
+    },
+    maybeShowActiveTrader = maybeShowActiveTrader(request)
+) {
+
+    @formHelper(action = onSubmitCall, 'autoComplete -> "off") {
+
+        @formOpt.map{ form =>
+            @if(form.errors.nonEmpty) {
+                @govukErrorSummary(ErrorSummaryViewModel(form,  errorLinkOverrides = Map("value" -> "value_0")))
+            }
+        }
+
+
+        @h2(messages("items.subHeading"), "govuk-caption-xl", hiddenContent = Some(messages("subHeading.hidden")))
+        @h1(pluralSingular("itemsAddToList.heading", items.length), classes = "govuk-heading-l")
+
+        @items.map { document =>
+            @govukSummaryList(document)
+        }
+
+        @formOpt.map { form =>
+            @govukRadios(
+                RadiosViewModel(
+                    field  = form("value"),
+                    legend = LegendViewModel(Text(messages("itemsAddToList.h2"))).withCssClass(LegendSize.Medium.toString),
+                    items  = ItemsAddToList.options(items.length, showNoOption)
+                )
+            )
+        }
+
+        @continueOrExit()
+
+    }
+}
+
+@{
+    //$COVERAGE-OFF$
+}

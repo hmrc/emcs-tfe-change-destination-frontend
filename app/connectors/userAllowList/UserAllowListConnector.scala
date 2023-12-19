@@ -18,22 +18,27 @@ package connectors.userAllowList
 
 import config.AppConfig
 import models.requests.CheckUserAllowListRequest
-import models.{ErrorResponse, UnexpectedDownstreamResponseError}
+import models.response.{ErrorResponse, UnexpectedDownstreamResponseError}
 import uk.gov.hmrc.http.{Authorization, HeaderCarrier, HttpClient}
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
+trait UserAllowListConnector {
+  def check(checkRequest: CheckUserAllowListRequest)
+           (implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Either[ErrorResponse, Boolean]]
+}
+
 @Singleton
-class UserAllowListConnector @Inject()(http: HttpClient,
-                                       config: AppConfig) extends UserAllowListHttpParser {
+class UserAllowListConnectorImpl @Inject()(http: HttpClient,
+                                       config: AppConfig) extends UserAllowListHttpParser with UserAllowListConnector {
 
   def check(checkRequest: CheckUserAllowListRequest)
            (implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Either[ErrorResponse, Boolean]] = {
     val headerCarrierWithInternalAuthToken = hc.copy(authorization = Some(Authorization(config.internalAuthToken)))
 
     http.POST[CheckUserAllowListRequest, Either[ErrorResponse, Boolean]](
-      url = config.userAllowListBaseUrl + "/emcs-tfe/changeDestination/check",
+      url = config.userAllowListBaseUrl + "/emcs-tfe/createMovement/check",
       body = checkRequest
     )(CheckUserAllowListRequest.writes, UserAllowListReads, headerCarrierWithInternalAuthToken, ec)
   }.recover {

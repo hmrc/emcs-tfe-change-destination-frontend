@@ -17,11 +17,15 @@
 package config
 
 import base.SpecBase
-import featureswitch.core.config.{FeatureSwitching, ReturnToLegacy, StubGetTraderKnownFacts}
+import featureswitch.core.config.{FeatureSwitching, RedirectToFeedbackSurvey, ReturnToLegacy}
+import org.scalamock.scalatest.MockFactory
+import org.scalatest.BeforeAndAfterEach
+import play.api.test.FakeRequest
+import play.api.test.Helpers.GET
 
-class AppConfigSpec extends SpecBase with FeatureSwitching {
+class AppConfigSpec extends SpecBase with BeforeAndAfterEach with FeatureSwitching with MockFactory {
 
-  override lazy val config = applicationBuilder().build().injector.instanceOf[AppConfig]
+  override val config: AppConfig = appConfig
 
   "AppConfig" - {
 
@@ -33,96 +37,43 @@ class AppConfigSpec extends SpecBase with FeatureSwitching {
       config.feedbackFrontendSurveyUrl mustBe s"http://localhost:9514/feedback/${config.deskproName}/beta"
     }
 
-    ".emcsMovementDetailsUrl()" - {
+    ".signOutUrl()" - {
 
-      "when ReturnToLegacy is enabled" - {
+      ".signOutUrl() must return the survey page when enabled" in {
+        implicit val fakeRequest = FakeRequest(GET, "/emcs/cam/trader/123/draft/456/some/page")
+        enable(RedirectToFeedbackSurvey)
+        config.signOutUrl()(fakeRequest) mustBe controllers.auth.routes.SignedOutController.signOutWithSurvey().url
+      }
 
-        "must return to the legacy URL" in {
+      ".signOutUrl() must return the saved sign out URL when on a page that is savable" in {
+        implicit val fakeRequest = FakeRequest(GET, "/emcs/cam/trader/123/draft/456/some/page")
+        disable(RedirectToFeedbackSurvey)
+        config.signOutUrl()(fakeRequest) mustBe controllers.auth.routes.SignedOutController.signOutSaved().url
+      }
+
+      ".signOutUrl() must return the none saved sign out URL when on a page that is not savable" in {
+        implicit val fakeRequest = FakeRequest(GET, "/emcs/cam/trader/123/info/456/some/page")
+        disable(RedirectToFeedbackSurvey)
+        config.signOutUrl()(fakeRequest) mustBe controllers.auth.routes.SignedOutController.signOutNotSaved().url
+      }
+
+    }
+
+    ".emcsTfeHomeUrl" - {
+      "should generate the correct url" - {
+        s"when the $ReturnToLegacy feature switch is enabled" in {
           enable(ReturnToLegacy)
-          config.emcsMovementDetailsUrl(testErn, testArc) mustBe s"http://localhost:8080/emcs/trader/$testErn/movement/$testArc/history"
+
+          appConfig.emcsTfeHomeUrl mustBe "http://localhost:8080/emcs/trader"
         }
-      }
 
-      "when ReturnToLegacy is disabled" - {
-
-        "must return to the new URL" in {
+        s"when the $ReturnToLegacy feature switch is disabled" in {
           disable(ReturnToLegacy)
-          config.emcsMovementDetailsUrl(testErn, testArc) mustBe s"http://localhost:8310/emcs/account/consignment/$testErn/$testArc"
+
+          appConfig.emcsTfeHomeUrl mustBe "http://localhost:8310/emcs/account"
         }
       }
     }
-
-    ".emcsTfeHomeUrl()" - {
-
-      "when ReturnToLegacy is enabled" - {
-
-        "when an ERN is supplied" - {
-
-          "must return to the legacy URL including the ERN" in {
-            enable(ReturnToLegacy)
-            config.emcsTfeHomeUrl(Some(testErn)) mustBe s"http://localhost:8080/emcs/trader/$testErn"
-          }
-        }
-
-        "when an ERN is NOT supplied" - {
-
-          "must return to the legacy URL without the ERN" in {
-            enable(ReturnToLegacy)
-            config.emcsTfeHomeUrl(None) mustBe s"http://localhost:8080/emcs/trader"
-          }
-        }
-      }
-
-      "when ReturnToLegacy is disabled" - {
-
-        "must return to the new URL" in {
-          disable(ReturnToLegacy)
-          config.emcsTfeHomeUrl(None) mustBe s"http://localhost:8310/emcs/account"
-        }
-      }
-    }
-
-    ".emcsMovementsUrl()" - {
-
-      "when ReturnToLegacy is enabled" - {
-
-        "must return to the legacy URL" in {
-          enable(ReturnToLegacy)
-          config.emcsMovementsUrl(testErn) mustBe s"http://localhost:8080/emcs/trader/$testErn/movements?movementtype=all"
-        }
-      }
-
-      "when ReturnToLegacy is disabled" - {
-
-        "must return to the new URL" in {
-          disable(ReturnToLegacy)
-          config.emcsMovementsUrl(testErn) mustBe s"http://localhost:8310/emcs/account/movements-in/$testErn"
-        }
-      }
-    }
-
-    ".languageMap()" in {
-      config.languageMap.size mustBe 2
-    }
-
-    ".traderKnownFactsReferenceDataBaseUrl" - {
-
-      "when StubGetTraderKnownFacts is enabled" - {
-
-        "must return the stub URL" in {
-          enable(StubGetTraderKnownFacts)
-          config.traderKnownFactsReferenceDataBaseUrl mustBe "http://localhost:8309/emcs-tfe-reference-data"
-        }
-      }
-
-      "when StubGetTraderKnownFacts is disabled" - {
-
-        "must return the real URL" in {
-          disable(StubGetTraderKnownFacts)
-          config.traderKnownFactsReferenceDataBaseUrl mustBe "http://localhost:8312/emcs-tfe-reference-data"
-        }
-      }
-    }
-
   }
+
 }

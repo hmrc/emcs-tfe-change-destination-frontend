@@ -15,50 +15,27 @@
  *@
 
 @import config.AppConfig
-@import models.requests.UserRequest
 
 @this(
-        layout: templates.Layout,
-        govukButton: GovukButton,
-        appConfig: AppConfig,
-        h1: components.h1,
-        p: components.p,
-        bullets: components.bullets,
-        link: components.link
+    layout: templates.Layout,
+    govukButton: GovukButton,
+    appConfig: AppConfig
 )
 
-@()(implicit request: UserRequest[_], messages: Messages, config: AppConfig)
+@()(implicit request: Request[_], messages: Messages)
 
-@layout(pageTitle = titleNoForm(messages("journeyRecovery.title")), maybeShowActiveTrader = None) {
+@layout(pageTitle = titleNoForm(messages("journeyRecovery.startAgain.title")), maybeShowActiveTrader = None) {
 
-    @h1("journeyRecovery.heading", classes = "govuk-heading-xl")
+    <h1 class="govuk-heading-xl">@messages("journeyRecovery.startAgain.heading")</h1>
 
-    @p() {
-        @messages("journeyRecovery.p1")
-    }
+    <p class="govuk-body">@messages("journeyRecovery.startAgain.guidance")</p>
 
-    @p() {
-        @messages("journeyRecovery.p2")
-    }
-
-    @bullets(Seq(
-        HtmlFormat.fill(Seq(
-            Html(messages("journeyRecovery.numbered1.preLink")),
-            link(config.emcsMovementsUrl(request.ern), "journeyRecovery.numbered1.link", withSingleQuotes = true),
-            Html(messages("journeyRecovery.numbered1.afterLink"))
-        )),
-        Html(messages("journeyRecovery.numbered2")),
-        Html(messages("journeyRecovery.numbered3"))
-    ), numbered = true)
-
-    @p() {
-        @HtmlFormat.fill(Seq(
-            Html(messages("journeyRecovery.p3")),
-            link(config.emcsTfeHomeUrl(Some(request.ern)), "journeyRecovery.p3.viewAccountLink", withEndingComma = true),
-            Html(messages("journeyRecovery.p3.or")),
-            link(controllers.auth.routes.AuthController.signOut().url, "journeyRecovery.p3.signOutLink", withFullStop = true)
-        ))
-    }
+    <p class="govuk-body">
+        @govukButton(
+            ButtonViewModel(messages("site.startAgain"))
+                .asLink(appConfig.emcsTfeHomeUrl)
+        )
+    </p>
 }
 
 @{

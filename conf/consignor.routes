@@ -1,0 +1,9 @@
+GET         /trader/:ern/movement/:arc/consignor                                 controllers.sections.consignor.ConsignorIndexController.onPageLoad(ern: String, arc: String)
+
+GET         /trader/:ern/movement/:arc/consignor/consignor-address               controllers.sections.consignor.ConsignorAddressController.onPageLoad(ern: String, arc: String, mode: Mode = NormalMode)
+POST        /trader/:ern/movement/:arc/consignor/consignor-address               controllers.sections.consignor.ConsignorAddressController.onSubmit(ern: String, arc: String, mode: Mode = NormalMode)
+GET         /trader/:ern/movement/:arc/consignor/consignor-address/change        controllers.sections.consignor.ConsignorAddressController.onPageLoad(ern: String, arc: String, mode: Mode = CheckMode)
+POST        /trader/:ern/movement/:arc/consignor/consignor-address/change        controllers.sections.consignor.ConsignorAddressController.onSubmit(ern: String, arc: String, mode: Mode = CheckMode)
+
+GET         /trader/:ern/movement/:arc/consignor/check-answers-consignor         controllers.sections.consignor.CheckYourAnswersConsignorController.onPageLoad(ern: String, arc: String)
+POST        /trader/:ern/movement/:arc/consignor/check-answers-consignor         controllers.sections.consignor.CheckYourAnswersConsignorController.onSubmit(ern: String, arc: String)

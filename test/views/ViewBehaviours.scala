@@ -16,24 +16,36 @@
 
 package views
 
-import base.ViewSpecBase
+import base.SpecBase
 import org.jsoup.nodes.Document
 import utils.Logging
 
-trait ViewBehaviours extends Logging { _: ViewSpecBase =>
+trait ViewBehaviours extends Logging { _: SpecBase =>
 
   def pageWithExpectedElementsAndMessages(checks: Seq[(String, String)])(implicit document: Document): Unit = checks foreach {
     case (selector, message) =>
       s"element with selector '$selector'" - {
-        s"must include the message '$message'" in {
+        s"must have the message '$message'" in {
           document.select(selector) match {
             case elements if elements.size() == 0 =>
               fail(s"Could not find element with CSS selector: '$selector'")
             case elements =>
               if (elements.size() > 1) logger.warn(s"More than one element found with selector '$selector', will check first element found - count of them was: '${elements.size()}'")
-              elements.first().text() must include(message)
+              elements.first().text() mustBe message
           }
         }
+      }
+  }
+
+  def pageWithElementsNotPresent(checks: Seq[String])(implicit document: Document): Unit = checks foreach {
+    case (selector) =>
+      s"element with selector '$selector' must not be found" - {
+          document.select(selector) match {
+            case elements if elements.size() == 0 =>
+
+            case elements =>
+              fail(s"Found element with CSS selector: '$selector'")
+          }
       }
   }
 }

@@ -16,10 +16,22 @@
 
 package models.requests
 
+import models._
 import play.api.mvc.{Request, WrappedRequest}
+import utils.Logging
 
 case class UserRequest[A](request: Request[A],
                           ern: String,
                           internalId: String,
                           credId: String,
-                          hasMultipleErns: Boolean) extends WrappedRequest[A](request)
+                          sessionId: String,
+                          hasMultipleErns: Boolean) extends WrappedRequest[A](request) with Logging {
+
+  lazy val isNorthernIrelandErn: Boolean = ern.startsWith("XI")
+
+  lazy val userTypeFromErn: UserType = UserType(ern)
+
+  lazy val isWarehouseKeeper: Boolean = (userTypeFromErn == GreatBritainWarehouseKeeper) || (userTypeFromErn == NorthernIrelandWarehouseKeeper)
+  lazy val isRegisteredConsignor: Boolean = (userTypeFromErn == GreatBritainRegisteredConsignor) || (userTypeFromErn == NorthernIrelandRegisteredConsignor)
+
+}

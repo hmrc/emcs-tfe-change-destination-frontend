@@ -1,0 +1,104 @@
+@*
+ * Copyright 2023 HM Revenue & Customs
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *@
+
+@import models.requests.DataRequest
+@import viewmodels.InputWidth._
+@import controllers.sections.items.routes
+@import models.GoodsType
+@import uk.gov.hmrc.govukfrontend.views.Implicits.RichSelect
+@import uk.gov.hmrc.hmrcfrontend.views.viewmodels.accessibleautocomplete.AccessibleAutocomplete
+@import models.response.referenceData.CnCodeInformation
+@import pages.sections.items.ItemCommodityCodePage
+@import views.html.helper.CSPNonce
+@import config.AppConfig
+
+@this(
+        layout: templates.Layout,
+        formHelper: FormWithCSRF,
+        govukErrorSummary: GovukErrorSummary,
+        govukSelect: GovukSelect,
+        govukButton: GovukButton,
+        h1: components.h1,
+        h2: components.h2,
+        p: components.p,
+        link: components.link,
+        appConfig: AppConfig,
+        continueOrExit: components.continueOrExit,
+        autocompleteCss: HmrcAccessibleAutocompleteCss,
+        autocompleteJavascript: HmrcAccessibleAutocompleteJavascript
+)
+
+@(form: Form[_], action: Call, goodsType: GoodsType, commodityCodes: Seq[CnCodeInformation])(implicit request: DataRequest[_], messages: Messages)
+
+@scripts = {
+  @autocompleteJavascript()
+  <script @CSPNonce.attr src='@controllers.routes.Assets.versioned("javascripts/autocomplete.min.js")'></script>
+}
+
+@layout(pageTitle = title(form = form, title = messages("itemCommodityCode.title", goodsType.toSingularOutput())), additionalCss = autocompleteCss(), additionalScripts = scripts, maybeShowActiveTrader = maybeShowActiveTrader(request)) {
+
+    @formHelper(action) {
+        @if(form.errors.nonEmpty) {
+            @govukErrorSummary(ErrorSummaryViewModel(form))
+        }
+
+        @h2(messages("items.subHeading"), "govuk-caption-xl", hiddenContent = Some(messages("subHeading.hidden")))
+        @h1(
+          headingMsg = messages("itemCommodityCode.heading", goodsType.toSingularOutput())
+        )
+
+        @p(id = Some("commodity-code-guidance")) {
+          @messages("itemCommodityCode.hint.text")
+          @link(appConfig.findCommodityCodeUrl, messages("itemCommodityCode.hint.link"), opensInNewTab = true)
+        }
+
+        @govukSelect(
+            Select(
+                id = "item-commodity-code",
+                name = "item-commodity-code",
+                label = LabelViewModel(
+                    content = Text(messages("itemCommodityCode.heading", goodsType.toSingularOutput()))
+                ).withCssClass("govuk-label--l").hidden,
+                items = Seq(
+                    SelectItem(text = messages("itemCommodityCode.defaultItem"), selected = form.value.isEmpty, disabled = true)
+                ) ++ commodityCodes.map(commodityCode =>
+                    SelectItem(
+                        value = Some(commodityCode.cnCode),
+                        text = s"${commodityCode.cnCode}: ${commodityCode.cnCodeDescription}",
+                        selected = form.value.contains(commodityCode.cnCode)
+                    )
+                ),
+                errorMessage = form.errors("item-commodity-code") match {
+                    case Nil => None
+                    case errors => Some(ErrorMessage(content = HtmlContent(errors.map(err => messages(err.message)).mkString("<br>"))))
+                }
+            ).asAccessibleAutocomplete(
+                Some(
+                    AccessibleAutocomplete(
+                        defaultValue = Some(""),
+                        showAllValues = true
+                    )
+                )
+            )
+        )
+
+        @continueOrExit()
+    }
+}
+
+@{
+    //$COVERAGE-OFF$
+}

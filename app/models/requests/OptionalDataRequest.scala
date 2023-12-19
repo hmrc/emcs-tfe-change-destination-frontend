@@ -16,14 +16,13 @@
 
 package models.requests
 
-import models.UserAnswers
-import models.response.referenceData.TraderKnownFacts
+import models.{TraderKnownFacts, UserAnswers}
 import play.api.mvc.WrappedRequest
 
-case class OptionalDataRequest[A](request: MovementRequest[A],
+case class OptionalDataRequest[A](request: UserRequest[A],
+                                  arc: String,
                                   userAnswers: Option[UserAnswers],
                                   traderKnownFacts: Option[TraderKnownFacts]) extends WrappedRequest[A](request) {
   val internalId = request.internalId
   val ern = request.ern
-  val arc = request.arc
 }

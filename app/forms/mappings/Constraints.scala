@@ -19,6 +19,7 @@ package forms.mappings
 import play.api.data.validation.{Constraint, Invalid, Valid}
 
 import java.time.LocalDate
+import scala.util.Try
 
 trait Constraints {
 
@@ -88,6 +89,14 @@ trait Constraints {
         Invalid(errorKey, regex)
     }
 
+  protected def fixedLength(length: Int, errorKey: String): Constraint[String] =
+    Constraint {
+      case str if str.length == length =>
+        Valid
+      case _ =>
+        Invalid(errorKey, length)
+    }
+
   protected def maxLength(maximum: Int, errorKey: String): Constraint[String] =
     Constraint {
       case str if str.length <= maximum =>
@@ -96,12 +105,53 @@ trait Constraints {
         Invalid(errorKey, maximum)
     }
 
+  protected def valueInList(list: Seq[String], errorKey: String, args: Any*): Constraint[String] =
+    Constraint {
+      case value if list.contains(value) =>
+        Valid
+      case _ =>
+        Invalid(errorKey, args: _*)
+    }
+
   protected def decimalMaxLength(maximum: Int, errorKey: String): Constraint[String] =
     Constraint {
       case str if str.replace(".", "").length <= maximum =>
         Valid
       case _ =>
         Invalid(errorKey, maximum)
+    }
+
+
+  protected def isDecimal(errorKey: String): Constraint[String] =
+    Constraint {
+      case answer if Try(BigDecimal(answer)).isSuccess =>
+        Valid
+      case _ =>
+        Invalid(errorKey)
+    }
+
+  protected def isInt(errorKey: String): Constraint[String] =
+    Constraint {
+      case answer if Try(BigInt(answer)).isSuccess =>
+        Valid
+      case _ =>
+        Invalid(errorKey)
+    }
+
+  protected def decimalRange(min: BigDecimal, max: BigDecimal, errorKey: String): Constraint[BigDecimal] =
+    Constraint {
+      case answer if answer <= max && answer >= min =>
+        Valid
+      case _ =>
+        Invalid(errorKey, min, max)
+    }
+
+  protected def maxDecimalPlaces(max: Int, errorKey: String): Constraint[BigDecimal] =
+    Constraint {
+      case answer if answer.scale <= max =>
+        Valid
+      case _ =>
+        Invalid(errorKey, max)
     }
 
   protected def decimalMaxAmount(maximum: BigDecimal, errorKey: String): Constraint[BigDecimal] =
@@ -135,4 +185,18 @@ trait Constraints {
       case _ =>
         Invalid(errorKey)
     }
+
+  protected def exclusiveItemInSet(errorKey: String, itemName: String): Constraint[Set[_]] =
+    Constraint {
+      case set if set.map(_.toString).contains(itemName) & set.size == 1 =>
+        Valid
+      case set if !set.map(_.toString).contains(itemName) =>
+        Valid
+      case _ =>
+        Invalid(errorKey)
+    }
+
+  def fourDigitYear(errorKey: String): Constraint[LocalDate] = Constraint { date =>
+    if (date.getYear < 1000 | date.getYear > 9999) Invalid(errorKey) else Valid
+  }
 }

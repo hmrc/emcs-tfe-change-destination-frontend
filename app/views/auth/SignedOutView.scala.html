@@ -22,7 +22,7 @@
     appConfig: AppConfig
 )
 
-@()(implicit request: Request[_], messages: Messages)
+@(guidance: String)(implicit request: Request[_], messages: Messages)
 
 @layout(
     pageTitle = titleNoForm(messages("signedOut.title")),
@@ -34,12 +34,12 @@
 
     <h1 class="govuk-heading-xl">@messages("signedOut.heading")</h1>
 
-    <p class="govuk-body">@messages("signedOut.guidance")</p>
+    <p class="govuk-body">@messages(guidance)</p>
 
     <p class="govuk-body">
         @govukButton(
             ButtonViewModel(messages("site.signIn"))
-                .asLink(appConfig.emcsTfeHomeUrl(None))
+                .asLink(appConfig.emcsTfeHomeUrl)
         )
     </p>
 }

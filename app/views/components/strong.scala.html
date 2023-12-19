@@ -16,6 +16,6 @@
 
 @this()
 
-@(content: Html)(implicit messages: Messages)
+@(content: Html, withFullStop: Boolean = false)(implicit messages: Messages)
 
-<span class="govuk-!-font-weight-bold">@content</span>
+<span class="govuk-!-font-weight-bold">@content</span>@if(withFullStop){.}

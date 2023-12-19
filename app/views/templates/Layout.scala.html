@@ -39,12 +39,14 @@
 )
 
 @(
-    pageTitle: String,
-    maybeShowActiveTrader: Option[TraderInfo],
-    showBackLink: Boolean = true,
-    timeout: Boolean = true,
-    showSignOut: Boolean = true,
-    fullWidthContent: Boolean = false
+        pageTitle: String,
+        maybeShowActiveTrader: Option[TraderInfo],
+        showBackLink: Boolean = true,
+        timeout: Boolean = true,
+        showSignOut: Boolean = true,
+        fullWidthContent: Boolean = false,
+        additionalCss: Html = Html(""),
+        additionalScripts: Html = Html("")
 )(contentBlock: Html)(implicit request: Request[_], messages: Messages)
 
 @head = {
@@ -56,8 +58,7 @@
                 countdown           = Some(appConfig.countdown),
                 keepAliveUrl        = Some(routes.KeepAliveController.keepAlive.url),
                 keepAliveButtonText = Some(messages("timeout.keepAlive")),
-                signOutUrl          = Some(controllers.auth.routes.AuthController.signOut.url),
-                timeoutUrl          = Some(controllers.routes.TimeoutController.onPageLoad().url),
+                signOutUrl          = Some(appConfig.signOutUrl()(request)),
                 signOutButtonText   = Some(messages("timeout.signOut")),
                 title               = Some(messages("timeout.title")),
                 message             = Some(messages("timeout.message"))
@@ -65,25 +66,17 @@
         } else None
     )
 
+    @additionalCss
     <link href="@routes.Assets.versioned("stylesheets/application.css")" media="all" rel="stylesheet" type="text/css"@CSPNonce.get.map {n=> nonce="@n"} />
 }
 
-@additionalScripts = {
+@scripts = {
     <script @CSPNonce.attr src='@controllers.routes.Assets.versioned("javascripts/application.min.js")'></script>
+    @additionalScripts
 }
 
 @beforeContent = {
-
     @{ activeTrader(maybeShowActiveTrader, appConfig) }
-
-    @if(appConfig.languageTranslationEnabled) {
-        @hmrcLanguageSelect(LanguageSelect(
-            if (messages.lang.code == "cy") Cy else En,
-            (En, routes.LanguageSwitchController.switchToLanguage("en").url),
-            (Cy, routes.LanguageSwitchController.switchToLanguage("cy").url)
-        ))
-    }
-
     @if(showBackLink) {
         @govukBackLink(BackLinkViewModel(href = "#").withCssClass("js-visible"))
     }
@@ -92,23 +85,24 @@
 @content = {
     @contentBlock
 
-    <div class="govuk-!-margin-top-8 no-print">
+    <div class="govuk-!-margin-top-8">
         @hmrcReportTechnicalIssueHelper()
     </div>
 }
+
 
 @govukLayout(
     pageTitle   = Some(pageTitle),
     headBlock   = Some(head),
     headerBlock = Some(hmrcStandardHeader(
-        serviceUrl  = Some(appConfig.emcsTfeHomeUrl(None)),
-        signOutUrl  = if(showSignOut) Some(controllers.auth.routes.AuthController.signOut.url) else None,
+        serviceUrl  = Some(appConfig.emcsTfeHomeUrl),
+        signOutUrl  = if(showSignOut) Some(appConfig.signOutUrl()(request)) else None,
         phaseBanner = Some(betaBanner(appConfig.betaBannerFeedbackUrl))
     )),
     beforeContentBlock = Some(beforeContent),
     footerBlock        = Some(hmrcStandardFooter()),
     scriptsBlock       = Some(hmrcScripts(
-        scriptsBlock = Some(additionalScripts)
+        scriptsBlock = Some(scripts)
     )),
     mainContentLayout = if(fullWidthContent) Some(fullWidthMainContent(_)) else Some(defaultMainContent(_))
 )(content)

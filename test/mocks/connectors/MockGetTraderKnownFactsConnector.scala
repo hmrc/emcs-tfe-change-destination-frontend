@@ -17,8 +17,8 @@
 package mocks.connectors
 
 import connectors.referenceData.GetTraderKnownFactsConnector
-import models.ErrorResponse
-import models.response.referenceData.TraderKnownFacts
+import models.TraderKnownFacts
+import models.response.ErrorResponse
 import org.scalamock.handlers.CallHandler3
 import org.scalamock.scalatest.MockFactory
 import uk.gov.hmrc.http.HeaderCarrier

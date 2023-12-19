@@ -1,0 +1,37 @@
+GET         /trader/:ern/movement/:arc/transport-units                                                                controllers.sections.transportUnit.TransportUnitIndexController.onPageLoad(ern: String, arc: String)
+
+GET         /trader/:ern/movement/:arc/transport-units/transport-unit/:idx/type                                       controllers.sections.transportUnit.TransportUnitTypeController.onPageLoad(ern: String, arc: String, idx: Index, mode: Mode = NormalMode)
+POST        /trader/:ern/movement/:arc/transport-units/transport-unit/:idx/type                                       controllers.sections.transportUnit.TransportUnitTypeController.onSubmit(ern: String, arc: String, idx: Index, mode: Mode = NormalMode)
+GET         /trader/:ern/movement/:arc/transport-units/transport-unit/:idx/type/change                                controllers.sections.transportUnit.TransportUnitTypeController.onPageLoad(ern: String, arc: String, idx: Index, mode: Mode = CheckMode)
+POST        /trader/:ern/movement/:arc/transport-units/transport-unit/:idx/type/change                                controllers.sections.transportUnit.TransportUnitTypeController.onSubmit(ern: String, arc: String, idx: Index, mode: Mode = CheckMode)
+
+GET         /trader/:ern/movement/:arc/transport-units/transport-unit/:idx/transport-identity                         controllers.sections.transportUnit.TransportUnitIdentityController.onPageLoad(ern: String, arc: String, idx: Index, mode: Mode = NormalMode)
+POST        /trader/:ern/movement/:arc/transport-units/transport-unit/:idx/transport-identity                         controllers.sections.transportUnit.TransportUnitIdentityController.onSubmit(ern: String, arc: String, idx: Index, mode: Mode = NormalMode)
+GET         /trader/:ern/movement/:arc/transport-units/transport-unit/:idx/transport-identity/change                  controllers.sections.transportUnit.TransportUnitIdentityController.onPageLoad(ern: String, arc: String, idx: Index, mode: Mode = CheckMode)
+POST        /trader/:ern/movement/:arc/transport-units/transport-unit/:idx/transport-identity/change                  controllers.sections.transportUnit.TransportUnitIdentityController.onSubmit(ern: String, arc: String, idx: Index, mode: Mode = CheckMode)
+
+GET         /trader/:ern/movement/:arc/transport-units/transport-unit/:idx/transport-seal-choice                      controllers.sections.transportUnit.TransportSealChoiceController.onPageLoad(ern: String, arc: String, idx: Index, mode: Mode = NormalMode)
+POST        /trader/:ern/movement/:arc/transport-units/transport-unit/:idx/transport-seal-choice                      controllers.sections.transportUnit.TransportSealChoiceController.onSubmit(ern: String, arc: String, idx: Index, mode: Mode = NormalMode)
+GET         /trader/:ern/movement/:arc/transport-units/transport-unit/:idx/transport-seal-choice/change               controllers.sections.transportUnit.TransportSealChoiceController.onPageLoad(ern: String, arc: String, idx: Index, mode: Mode = CheckMode)
+POST        /trader/:ern/movement/:arc/transport-units/transport-unit/:idx/transport-seal-choice/change               controllers.sections.transportUnit.TransportSealChoiceController.onSubmit(ern: String, arc: String, idx: Index, mode: Mode = CheckMode)
+
+GET         /trader/:ern/movement/:arc/transport-units/transport-unit/:idx/transport-seal-type                        controllers.sections.transportUnit.TransportSealTypeController.onPageLoad(ern: String, arc: String, idx: Index, mode: Mode = NormalMode)
+POST        /trader/:ern/movement/:arc/transport-units/transport-unit/:idx/transport-seal-type                        controllers.sections.transportUnit.TransportSealTypeController.onSubmit(ern: String, arc: String, idx: Index, mode: Mode = NormalMode)
+GET         /trader/:ern/movement/:arc/transport-units/transport-unit/:idx/transport-seal-type/change                 controllers.sections.transportUnit.TransportSealTypeController.onPageLoad(ern: String, arc: String, idx: Index, mode: Mode = CheckMode)
+POST        /trader/:ern/movement/:arc/transport-units/transport-unit/:idx/transport-seal-type/change                 controllers.sections.transportUnit.TransportSealTypeController.onSubmit(ern: String, arc: String, idx: Index, mode: Mode = CheckMode)
+
+GET         /trader/:ern/movement/:arc/transport-units/transport-unit/:idx/choose-give-more-information               controllers.sections.transportUnit.TransportUnitGiveMoreInformationChoiceController.onPageLoad(ern: String, arc: String, idx: Index, mode: Mode = NormalMode)
+POST        /trader/:ern/movement/:arc/transport-units/transport-unit/:idx/choose-give-more-information               controllers.sections.transportUnit.TransportUnitGiveMoreInformationChoiceController.onSubmit(ern: String, arc: String, idx: Index, mode: Mode = NormalMode)
+GET         /trader/:ern/movement/:arc/transport-units/transport-unit/:idx/choose-give-more-information/change        controllers.sections.transportUnit.TransportUnitGiveMoreInformationChoiceController.onPageLoad(ern: String, arc: String, idx: Index, mode: Mode = CheckMode)
+POST        /trader/:ern/movement/:arc/transport-units/transport-unit/:idx/choose-give-more-information/change        controllers.sections.transportUnit.TransportUnitGiveMoreInformationChoiceController.onSubmit(ern: String, arc: String, idx: Index, mode: Mode = CheckMode)
+
+GET        /trader/:ern/movement/:arc/transport-units/transport-unit/:idx/give-more-information                   controllers.sections.transportUnit.TransportUnitGiveMoreInformationController.onPageLoad(ern: String, arc: String, idx: Index, mode: Mode = NormalMode)
+POST       /trader/:ern/movement/:arc/transport-units/transport-unit/:idx/give-more-information                   controllers.sections.transportUnit.TransportUnitGiveMoreInformationController.onSubmit(ern: String, arc: String, idx: Index, mode: Mode = NormalMode)
+GET        /trader/:ern/movement/:arc/transport-units/transport-unit/:idx/give-more-information/change            controllers.sections.transportUnit.TransportUnitGiveMoreInformationController.onPageLoad(ern: String, arc: String, idx: Index, mode: Mode = CheckMode)
+POST       /trader/:ern/movement/:arc/transport-units/transport-unit/:idx/give-more-information/change            controllers.sections.transportUnit.TransportUnitGiveMoreInformationController.onSubmit(ern: String, arc: String, idx: Index, mode: Mode = CheckMode)
+
+GET        /trader/:ern/movement/:arc/transport-units/add-to-list                        controllers.sections.transportUnit.TransportUnitsAddToListController.onPageLoad(ern: String, arc: String)
+POST       /trader/:ern/movement/:arc/transport-units/add-to-list                        controllers.sections.transportUnit.TransportUnitsAddToListController.onSubmit(ern: String, arc: String)
+
+GET        /trader/:ern/movement/:arc/transport-units/transport-unit/:idx/remove                                      controllers.sections.transportUnit.TransportUnitRemoveUnitController.onPageLoad(ern: String, arc: String, idx: Index)
+POST       /trader/:ern/movement/:arc/transport-units/transport-unit/:idx/remove                                      controllers.sections.transportUnit.TransportUnitRemoveUnitController.onSubmit(ern: String, arc: String, idx: Index)

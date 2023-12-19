@@ -16,8 +16,6 @@
 
 package fixtures.messages
 
-import fixtures.i18n
-
 object ActiveTraderMessages {
 
   sealed trait ViewMessages { _: i18n =>

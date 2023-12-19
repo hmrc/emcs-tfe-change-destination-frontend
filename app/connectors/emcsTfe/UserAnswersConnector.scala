@@ -17,16 +17,28 @@
 package connectors.emcsTfe
 
 import config.AppConfig
-import models.{ErrorResponse, UserAnswers}
+import models.UserAnswers
+import models.response.ErrorResponse
 import play.api.libs.json.Reads
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
+trait UserAnswersConnector {
+  def get(ern: String, arc: String)
+         (implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Either[ErrorResponse, Option[UserAnswers]]]
+
+  def put(userAnswers: UserAnswers)
+         (implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Either[ErrorResponse, UserAnswers]]
+
+  def delete(ern: String, arc: String)
+            (implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Either[ErrorResponse, Boolean]]
+}
+
 @Singleton
-class UserAnswersConnector @Inject()(val http: HttpClient,
-                                     config: AppConfig) extends UserAnswersHttpParsers {
+class UserAnswersConnectorImpl @Inject()(val http: HttpClient,
+                                     config: AppConfig) extends UserAnswersHttpParsers with UserAnswersConnector {
 
   override implicit val reads: Reads[UserAnswers] = UserAnswers.format
 
