@@ -1,21 +1,43 @@
 # microservice specific routes
 
-->         /hmrc-frontend                               hmrcfrontend.Routes
+->          /hmrc-frontend                                    hmrcfrontend.Routes
 
-->         /error                                       error.Routes
+->          /error                                            error.Routes
 
-GET        /refresh-session                             controllers.KeepAliveController.keepAlive()
+GET         /assets/*file                                     controllers.Assets.versioned(path="/public", file: Asset)
 
-GET        /language/:lang                              controllers.LanguageSwitchController.switchToLanguage(lang: String)
+GET         /refresh-session                                  controllers.KeepAliveController.keepAlive()
 
-GET        /assets/*file                                controllers.Assets.versioned(path = "/public", file: Asset)
+GET         /there-is-a-problem                               controllers.JourneyRecoveryController.onPageLoad(continueUrl: Option[RedirectUrl] ?= None)
 
-GET        /account/sign-out-survey                     controllers.auth.AuthController.signOut()
-GET        /account/sign-out                            controllers.auth.AuthController.signOutNoSurvey()
-GET        /account/signed-out                          controllers.auth.SignedOutController.onPageLoad()
-GET        /account/timeout                             controllers.TimeoutController.onPageLoad()
+GET         /account/signed-out                               controllers.auth.SignedOutController.signOutNotSaved()
+GET         /account/signed-out-saved                         controllers.auth.SignedOutController.signOutSaved()
+GET         /account/sign-out-survey                          controllers.auth.SignedOutController.signOutWithSurvey()
 
-GET        /trader/:ern/movement/:arc                                   controllers.IndexController.onPageLoad(ern: String, arc: String)
+GET         /trader/:ern                                      controllers.IndexController.onPageLoad(ern: String)
 
-GET        /trader/:ern/movement/:arc/no-information-delay              controllers.JourneyRecoveryController.onPageLoad(ern: String, arc: String)
+GET         /trader/:ern/movement/:arc/draft-movement        controllers.DraftMovementController.onPageLoad(ern: String, arc: String)
 
+GET         /trader/:ern/movement/:arc/check-answers         controllers.CheckYourAnswersController.onPageLoad(ern: String, arc: String)
+POST        /trader/:ern/movement/:arc/check-answers         controllers.CheckYourAnswersController.onSubmit(ern: String, arc: String)
+
+GET         /trader/:ern/movement/:arc/confirmation          controllers.ConfirmationController.onPageLoad(ern: String, arc: String)
+
+GET         /trader/:ern/movement/:arc/declaration           controllers.DeclarationController.onPageLoad(ern: String, arc: String)
+POST        /trader/:ern/movement/:arc/declaration           controllers.DeclarationController.onSubmit(ern: String, arc: String)
+
+->          /                                                 info.Routes
+->          /                                                 consignor.Routes
+->          /                                                 consignee.Routes
+->          /                                                 journeyType.Routes
+->          /                                                 transportArranger.Routes
+->          /                                                 transportUnit.Routes
+->          /                                                 firstTransporter.Routes
+->          /                                                 dispatch.Routes
+->          /                                                 exportInformation.Routes
+->          /                                                 destination.Routes
+->          /                                                 guarantor.Routes
+->          /                                                 importInformation.Routes
+->          /                                                 items.Routes
+->          /                                                 documents.Routes
+->          /                                                 sad.Routes

@@ -30,17 +30,48 @@ class NavigatorSpec extends SpecBase {
     "in Normal mode" - {
 
       "must go from a page that doesn't exist in the route map to Index" in {
-        case object UnknownPage extends Page
 
+        case object UnknownPage extends Page
         navigator.nextPage(UnknownPage, NormalMode, emptyUserAnswers) mustBe
-          routes.IndexController.onPageLoad(testErn, testArc)
+          routes.IndexController.onPageLoad(testErn)
       }
 
+      "for the CheckYourAnswers page" - {
+
+        "must go to the Confirmation page" in {
+
+          navigator.nextPage(CheckAnswersPage, NormalMode, emptyUserAnswers) mustBe
+            routes.ConfirmationController.onPageLoad(testErn, testDraftId)
+        }
+      }
+      "for the Declaration page" - {
+
+        "must go to the Confirmation page" in {
+
+          navigator.nextPage(DeclarationPage, NormalMode, emptyUserAnswers) mustBe
+            routes.ConfirmationController.onPageLoad(testErn, testDraftId)
+        }
+      }
     }
 
     "in Check mode" - {
 
+      "must go from a page that doesn't exist in the edit route map to CheckYourAnswers" in {
 
+        case object UnknownPage extends Page
+        navigator.nextPage(UnknownPage, CheckMode, emptyUserAnswers) mustBe
+          routes.CheckYourAnswersController.onPageLoad(testErn, testDraftId)
+      }
+    }
+
+    "in review mode" - {
+
+      "must go from a page that doesn't exist in the edit route map to CheckYourAnswers" in {
+
+        case object UnknownPage extends Page
+        navigator.nextPage(UnknownPage, ReviewMode, emptyUserAnswers) mustBe
+          routes.CheckYourAnswersController.onPageLoad(testErn, testDraftId)
+      }
     }
   }
 }

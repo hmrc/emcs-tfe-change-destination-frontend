@@ -18,21 +18,21 @@ package controllers.actions
 
 import config.{AppConfig, EnrolmentKeys}
 import models.requests.UserRequest
-import play.api.Logging
 import play.api.mvc.Results._
 import play.api.mvc._
 import uk.gov.hmrc.auth.core.AffinityGroup.Organisation
 import uk.gov.hmrc.auth.core._
 import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals
 import uk.gov.hmrc.auth.core.retrieve.~
-import uk.gov.hmrc.http.HeaderCarrier
+import uk.gov.hmrc.http.{HeaderCarrier, SessionId}
 import uk.gov.hmrc.play.http.HeaderCarrierConverter
+import utils.Logging
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 trait AuthAction {
-  def apply(ern: String, arc: String): ActionBuilder[UserRequest, AnyContent] with ActionFunction[Request, UserRequest]
+  def apply(ern: String): ActionBuilder[UserRequest, AnyContent] with ActionFunction[Request, UserRequest]
 }
 
 @Singleton
@@ -41,7 +41,7 @@ class AuthActionImpl @Inject()(override val authConnector: AuthConnector,
                                val bodyParser: BodyParsers.Default
                               )(implicit val ec: ExecutionContext) extends AuthAction with AuthorisedFunctions with Logging {
 
-  def apply(ern: String, arc: String): ActionBuilder[UserRequest, AnyContent] with ActionFunction[Request, UserRequest] =
+  def apply(ern: String): ActionBuilder[UserRequest, AnyContent] with ActionFunction[Request, UserRequest] =
     new ActionBuilder[UserRequest, AnyContent] with ActionFunction[Request, UserRequest] {
 
       override val parser = bodyParser
@@ -55,7 +55,7 @@ class AuthActionImpl @Inject()(override val authConnector: AuthConnector,
         authorised().retrieve(Retrievals.affinityGroup and Retrievals.allEnrolments and Retrievals.internalId and Retrievals.credentials) {
 
           case Some(Organisation) ~ enrolments ~ Some(internalId) ~ Some(credentials) =>
-            checkOrganisationEMCSEnrolment(ern, enrolments, internalId, credentials.providerId)(block)
+            checkOrganisationEMCSEnrolment(ern, enrolments, internalId, credentials.providerId, hc.sessionId)(block)
 
           case Some(Organisation) ~ _ ~ None ~ _ =>
             logger.warn("[invokeBlock] InternalId could not be retrieved from Auth")
@@ -75,7 +75,7 @@ class AuthActionImpl @Inject()(override val authConnector: AuthConnector,
 
         } recover {
           case _: NoActiveSession =>
-            Redirect(config.loginUrl, Map("continue" -> Seq(config.loginContinueUrl(ern, arc))))
+            Redirect(config.loginUrl, Map("continue" -> Seq(config.loginContinueUrl(ern))))
           case x: AuthorisationException =>
             logger.debug(s"[invokeBlock] Authorisation Exception ${x.reason}")
             Redirect(controllers.error.routes.ErrorController.unauthorised())
@@ -86,7 +86,8 @@ class AuthActionImpl @Inject()(override val authConnector: AuthConnector,
   private def checkOrganisationEMCSEnrolment[A](ernFromUrl: String,
                                                 enrolments: Enrolments,
                                                 internalId: String,
-                                                credId: String
+                                                credId: String,
+                                                sessionId: Option[SessionId]
                                                )(block: UserRequest[A] => Future[Result])
                                                (implicit request: Request[A]): Future[Result] =
     enrolments.enrolments.filter(enrolment => enrolment.key == EnrolmentKeys.EMCS_ENROLMENT) match {
@@ -96,7 +97,7 @@ class AuthActionImpl @Inject()(override val authConnector: AuthConnector,
       case emcsEnrolments =>
         emcsEnrolments.find(_.identifiers.exists(ident => ident.key == EnrolmentKeys.ERN && ident.value == ernFromUrl)) match {
           case Some(enrolment) if enrolment.isActivated =>
-            block(UserRequest(request, ernFromUrl, internalId, credId, emcsEnrolments.size > 1))
+            block(UserRequest(request, ernFromUrl, internalId, credId, sessionId.get.value, emcsEnrolments.size > 1))
           case Some(_) =>
             logger.debug(s"[checkOrganisationEMCSEnrolment] ${EnrolmentKeys.EMCS_ENROLMENT} enrolment found but not activated")
             Future.successful(Redirect(controllers.error.routes.ErrorController.inactiveEnrolment()))

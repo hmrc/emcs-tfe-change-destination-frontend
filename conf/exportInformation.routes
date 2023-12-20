@@ -1,0 +1,9 @@
+GET         /trader/:ern/movement/:arc/export-information                              controllers.sections.exportInformation.ExportInformationIndexController.onPageLoad(ern: String, arc: String)
+
+GET         /trader/:ern/movement/:arc/export-information/customs-office               controllers.sections.exportInformation.ExportCustomsOfficeController.onPageLoad(ern: String, arc: String, mode: Mode = NormalMode)
+POST        /trader/:ern/movement/:arc/export-information/customs-office               controllers.sections.exportInformation.ExportCustomsOfficeController.onSubmit(ern: String, arc: String, mode: Mode = NormalMode)
+GET         /trader/:ern/movement/:arc/export-information/customs-office/change        controllers.sections.exportInformation.ExportCustomsOfficeController.onPageLoad(ern: String, arc: String, mode: Mode = CheckMode)
+POST        /trader/:ern/movement/:arc/export-information/customs-office/change        controllers.sections.exportInformation.ExportCustomsOfficeController.onSubmit(ern: String, arc: String, mode: Mode = CheckMode)
+
+GET         /trader/:ern/movement/:arc/export-information/check-answers                controllers.sections.exportInformation.ExportInformationCheckAnswersController.onPageLoad(ern: String, arc: String)
+POST        /trader/:ern/movement/:arc/export-information/check-answers                controllers.sections.exportInformation.ExportInformationCheckAnswersController.onSubmit(ern: String, arc: String)

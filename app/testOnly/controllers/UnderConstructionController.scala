@@ -18,8 +18,8 @@ package testOnly.controllers
 
 import play.api.i18n.MessagesApi
 import play.api.mvc.MessagesControllerComponents
-import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import testOnly.views.html.UnderConstructionView
+import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 
 import javax.inject.Inject
 

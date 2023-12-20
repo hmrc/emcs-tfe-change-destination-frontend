@@ -1,0 +1,58 @@
+@*
+ * Copyright 2023 HM Revenue & Customs
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *@
+
+@import models.requests.DataRequest
+@import models.sections.transportUnit.TransportUnitType
+@import viewmodels.LegendSize
+
+@this(
+    layout: templates.Layout,
+    formHelper: FormWithCSRF,
+    govukErrorSummary: GovukErrorSummary,
+    govukRadios: GovukRadios,
+    govukButton: GovukButton,
+    h1: components.h1,
+    h2: components.h2,
+    continueOrExit: components.continueOrExit
+)
+
+@(form: Form[TransportUnitType], idx: Index, mode: Mode)(implicit request: DataRequest[_], messages: Messages)
+
+@layout(pageTitle = title(form, messages("transportUnitType.title")), maybeShowActiveTrader = maybeShowActiveTrader(request)) {
+
+    @formHelper(action = controllers.sections.transportUnit.routes.TransportUnitTypeController.onSubmit(request.ern, request.arc, idx, mode), 'autoComplete -> "off") {
+
+        @if(form.errors.nonEmpty) {
+            @govukErrorSummary(ErrorSummaryViewModel(form, errorLinkOverrides = Map("value" -> "value_0")))
+        }
+
+        @h2(messages("transportUnit.subHeading", request.arc),"govuk-caption-xl")
+
+        @govukRadios(
+            RadiosViewModel(
+                field  = form("value"),
+                legend = LegendViewModel(Text(messages("transportUnitType.heading"))).asPageHeading(LegendSize.Large),
+                items  = TransportUnitType.options
+            ).withHint(HintViewModel(messages("transportUnitType.hint")))
+        )
+
+        @continueOrExit()
+    }
+}
+
+@{
+    //$COVERAGE-OFF$
+}

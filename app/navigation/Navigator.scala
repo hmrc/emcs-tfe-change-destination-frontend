@@ -17,26 +17,40 @@
 package navigation
 
 import controllers.routes
-import models.{Mode, NormalMode, UserAnswers}
+import models._
 import pages._
 import play.api.mvc.Call
 
-import javax.inject.Inject
+import javax.inject.{Inject, Singleton}
 
+@Singleton
 class Navigator @Inject()() extends BaseNavigator {
 
   private val normalRoutes: Page => UserAnswers => Call = {
-    case _ => (userAnswers: UserAnswers) =>
-      routes.IndexController.onPageLoad(userAnswers.ern, userAnswers.arc)
+    case CheckAnswersPage =>
+      (userAnswers: UserAnswers) => routes.ConfirmationController.onPageLoad(userAnswers.ern, userAnswers.arc)
+    case DeclarationPage =>
+      (userAnswers: UserAnswers) => routes.ConfirmationController.onPageLoad(userAnswers.ern, userAnswers.arc)
+    case _ =>
+      (userAnswers: UserAnswers) => routes.IndexController.onPageLoad(userAnswers.ern)
   }
 
-  private val checkRoutes: Page => UserAnswers => Call = {
-    case _ => (userAnswers: UserAnswers) =>
-      routes.IndexController.onPageLoad(userAnswers.ern, userAnswers.arc)
+  private[navigation] val checkRouteMap: Page => UserAnswers => Call = {
+    case _ =>
+      (userAnswers: UserAnswers) => routes.CheckYourAnswersController.onPageLoad(userAnswers.ern, userAnswers.arc)
+  }
+
+  private[navigation] val reviewRouteMap: Page => UserAnswers => Call = {
+    case _ =>
+      (userAnswers: UserAnswers) => routes.CheckYourAnswersController.onPageLoad(userAnswers.ern, userAnswers.arc)
   }
 
   override def nextPage(page: Page, mode: Mode, userAnswers: UserAnswers): Call = mode match {
-    case NormalMode => normalRoutes(page)(userAnswers)
-    case _ => checkRoutes(page)(userAnswers)
+    case NormalMode =>
+      normalRoutes(page)(userAnswers)
+    case CheckMode =>
+      checkRouteMap(page)(userAnswers)
+    case ReviewMode =>
+      reviewRouteMap(page)(userAnswers)
   }
 }

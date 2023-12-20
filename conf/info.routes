@@ -1,0 +1,52 @@
+GET         /trader/:ern/info                                                     controllers.sections.info.InfoIndexController.onPreDraftPageLoad(ern: String)
+GET         /trader/:ern/movement/:arc/info                                      controllers.sections.info.InfoIndexController.onPageLoad(ern: String, arc: String)
+
+# INFO01
+GET         /trader/:ern/info/dispatch-place                                      controllers.sections.info.DispatchPlaceController.onPreDraftPageLoad(ern: String, mode: Mode = NormalMode)
+POST        /trader/:ern/info/dispatch-place                                      controllers.sections.info.DispatchPlaceController.onPreDraftSubmit(ern: String, mode: Mode = NormalMode)
+GET         /trader/:ern/info/dispatch-place/change                               controllers.sections.info.DispatchPlaceController.onPreDraftPageLoad(ern: String, mode: Mode = CheckMode)
+POST        /trader/:ern/info/dispatch-place/change                               controllers.sections.info.DispatchPlaceController.onPreDraftSubmit(ern: String, mode: Mode = CheckMode)
+
+# INFO08
+GET         /trader/:ern/info/destination-type                                    controllers.sections.info.DestinationTypeController.onPreDraftPageLoad(ern: String, mode: Mode = NormalMode)
+POST        /trader/:ern/info/destination-type                                    controllers.sections.info.DestinationTypeController.onPreDraftSubmit(ern: String, mode: Mode = NormalMode)
+GET         /trader/:ern/info/destination-type/change                             controllers.sections.info.DestinationTypeController.onPreDraftPageLoad(ern: String, mode: Mode = CheckMode)
+POST        /trader/:ern/info/destination-type/change                             controllers.sections.info.DestinationTypeController.onPreDraftSubmit(ern: String, mode: Mode = CheckMode)
+
+# INFO05
+GET         /trader/:ern/info/deferred-movement                                   controllers.sections.info.DeferredMovementController.onPreDraftPageLoad(ern: String, mode: Mode = NormalMode)
+POST        /trader/:ern/info/deferred-movement                                   controllers.sections.info.DeferredMovementController.onPreDraftSubmit(ern: String, mode: Mode = NormalMode)
+GET         /trader/:ern/info/deferred-movement/change                            controllers.sections.info.DeferredMovementController.onPreDraftPageLoad(ern: String, mode: Mode = CheckMode)
+POST        /trader/:ern/info/deferred-movement/change                            controllers.sections.info.DeferredMovementController.onPreDraftSubmit(ern: String, mode: Mode = CheckMode)
+GET         /trader/:ern/movement/:arc/info/deferred-movement/change             controllers.sections.info.DeferredMovementController.onPageLoad(ern: String, arc: String)
+POST        /trader/:ern/movement/:arc/info/deferred-movement/change             controllers.sections.info.DeferredMovementController.onSubmit(ern: String, arc: String)
+
+# INFO02
+GET         /trader/:ern/info/local-reference-number                              controllers.sections.info.LocalReferenceNumberController.onPreDraftPageLoad(ern: String, mode: Mode = NormalMode)
+POST        /trader/:ern/info/local-reference-number                              controllers.sections.info.LocalReferenceNumberController.onPreDraftSubmit(ern: String, mode: Mode = NormalMode)
+GET         /trader/:ern/info/local-reference-number/change                       controllers.sections.info.LocalReferenceNumberController.onPreDraftPageLoad(ern: String, mode: Mode = CheckMode)
+POST        /trader/:ern/info/local-reference-number/change                       controllers.sections.info.LocalReferenceNumberController.onPreDraftSubmit(ern: String, mode: Mode = CheckMode)
+GET         /trader/:ern/movement/:arc/info/local-reference-number/change        controllers.sections.info.LocalReferenceNumberController.onPageLoad(ern: String, arc: String)
+POST        /trader/:ern/movement/:arc/info/local-reference-number/change        controllers.sections.info.LocalReferenceNumberController.onSubmit(ern: String, arc: String)
+
+# INF004
+GET         /trader/:ern/info/invoice-details                                     controllers.sections.info.InvoiceDetailsController.onPreDraftPageLoad(ern: String, mode: Mode = NormalMode)
+POST        /trader/:ern/info/invoice-details                                     controllers.sections.info.InvoiceDetailsController.onPreDraftSubmit(ern: String, mode: Mode = NormalMode)
+GET         /trader/:ern/info/invoice-details/change                              controllers.sections.info.InvoiceDetailsController.onPreDraftPageLoad(ern: String, mode: Mode = CheckMode)
+POST        /trader/:ern/info/invoice-details/change                              controllers.sections.info.InvoiceDetailsController.onPreDraftSubmit(ern: String, mode: Mode = CheckMode)
+GET         /trader/:ern/movement/:arc/info/invoice-details/change               controllers.sections.info.InvoiceDetailsController.onPageLoad(ern: String, arc: String)
+POST        /trader/:ern/movement/:arc/info/invoice-details/change               controllers.sections.info.InvoiceDetailsController.onSubmit(ern: String, arc: String)
+
+# INFO06
+GET         /trader/:ern/info/dispatch-details                                    controllers.sections.info.DispatchDetailsController.onPreDraftPageLoad(ern: String, mode: Mode = NormalMode)
+POST        /trader/:ern/info/dispatch-details                                    controllers.sections.info.DispatchDetailsController.onPreDraftSubmit(ern: String, mode: Mode = NormalMode)
+GET         /trader/:ern/info/dispatch-details/change                             controllers.sections.info.DispatchDetailsController.onPreDraftPageLoad(ern: String, mode: Mode = CheckMode)
+POST        /trader/:ern/info/dispatch-details/change                             controllers.sections.info.DispatchDetailsController.onPreDraftSubmit(ern: String, mode: Mode = CheckMode)
+GET         /trader/:ern/movement/:arc/info/dispatch-details/change              controllers.sections.info.DispatchDetailsController.onPageLoad(ern: String, arc: String)
+POST        /trader/:ern/movement/:arc/info/dispatch-details/change              controllers.sections.info.DispatchDetailsController.onSubmit(ern: String, arc: String)
+
+# INFO07
+GET         /trader/:ern/info/check-answers                                       controllers.sections.info.InformationCheckAnswersController.onPreDraftPageLoad(ern: String)
+POST        /trader/:ern/info/check-answers                                       controllers.sections.info.InformationCheckAnswersController.onPreDraftSubmit(ern: String)
+GET         /trader/:ern/movement/:arc/info/check-answers                        controllers.sections.info.InformationCheckAnswersController.onPageLoad(ern: String, arc: String)
+POST        /trader/:ern/movement/:arc/info/check-answers                        controllers.sections.info.InformationCheckAnswersController.onSubmit(ern: String, arc: String)

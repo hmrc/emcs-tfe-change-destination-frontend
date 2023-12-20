@@ -1,0 +1,90 @@
+@*
+ * Copyright 2023 HM Revenue & Customs
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *@
+
+@import models.requests.DataRequest
+@import viewmodels.InputWidth._
+@import models.NormalMode
+@import pages.QuestionPage
+
+@this(
+    layout: templates.Layout,
+    formHelper: FormWithCSRF,
+    govukErrorSummary: GovukErrorSummary,
+    govukInput: GovukInput,
+    govukButton: GovukButton,
+    h1: components.h1,
+    continueOrExit: components.continueOrExit
+)
+
+@(form: Form[_], addressPage: QuestionPage[UserAddress], call: Call, headingKey: Option[String] = None)(implicit request: DataRequest[_], messages: Messages)
+
+@defining(headingKey.getOrElse(addressPage.toString)) { msgKey =>
+
+    @layout(pageTitle = title(form, messages(s"address.$msgKey.title")), maybeShowActiveTrader = maybeShowActiveTrader(request)) {
+
+        @formHelper(action = call) {
+
+            @if(form.errors.nonEmpty) {
+                @govukErrorSummary(ErrorSummaryViewModel(form))
+            }
+
+            @h1(s"address.$msgKey.heading", Some(messages(s"address.$addressPage.subheading")), "govuk-heading-l")
+
+            @govukInput(
+                InputViewModel(
+                    field = form("property"),
+                    label = LabelViewModel(Text(messages("address.property")))
+                )
+                        .withWidth(Full)
+                        .withAutocomplete("address-line1")
+            )
+
+            @govukInput(
+                InputViewModel(
+                    field = form("street"),
+                    label = LabelViewModel(Text(messages("address.street")))
+                )
+                        .withWidth(Full)
+                        .withAutocomplete("address-line2")
+            )
+
+            @govukInput(
+                InputViewModel(
+                    field = form("town"),
+                    label = LabelViewModel(Text(messages("address.town")))
+                )
+                        .withWidth(TwoThirds)
+                        .withAutocomplete("address-level1")
+            )
+
+            @govukInput(
+                InputViewModel(
+                    field = form("postcode"),
+                    label = LabelViewModel(Text(messages("address.postcode")))
+                )
+                        .withWidth(OneThird)
+                        .withAutocomplete("postal-code")
+            )
+
+            @continueOrExit()
+
+        }
+    }
+}
+
+@{
+    //$COVERAGE-OFF$
+}

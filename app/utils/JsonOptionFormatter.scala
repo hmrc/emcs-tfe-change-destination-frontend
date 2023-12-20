@@ -16,7 +16,7 @@
 
 package utils
 
-import play.api.libs.json.{Format, JsNull, JsResult, JsValue, Writes}
+import play.api.libs.json._
 
 trait JsonOptionFormatter {
 

@@ -31,11 +31,11 @@
 )(implicit messages: Messages)
 
 @if(withSingleQuotes){&lsquo;}<a href="@link"
-   class="@classes@if(button){ govuk-button}@if(buttonSecondary){ govuk-button--secondary}"
-   @id.map(x => s" id=$x")
-   @if(opensInNewTab){target="_blank" rel="noopener noreferrer"}
-   @if(button){role="button" data-module="govuk-button"}>@messages(messageKey)@if(opensInNewTab)(" " + messages("site.opensInNewTab"))@hiddenContent.map { content=>
-        <span class="govuk-visually-hidden"> @content</span>
+class="@classes@if(button){ govuk-button}@if(buttonSecondary){ govuk-button--secondary}"
+    @id.map(x => s" id=$x")
+    @if(opensInNewTab){target="_blank" rel="noopener noreferrer"}
+    @if(button){role="button" data-module="govuk-button"}>@messages(messageKey)@if(opensInNewTab)(" " + messages("site.opensInNewTab"))@hiddenContent.map { content=>
+    <span class="govuk-visually-hidden"> @content</span>
     }</a>@if(withSingleQuotes){&rsquo;}@if(withEndingComma){,}@if(withFullStop){.}
 
 @{

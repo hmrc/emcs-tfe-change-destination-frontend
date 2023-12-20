@@ -3,8 +3,8 @@ package connectors
 import com.github.tomakehurst.wiremock.client.WireMock.{aResponse, get, urlEqualTo}
 import com.github.tomakehurst.wiremock.http.Fault
 import connectors.referenceData.GetTraderKnownFactsConnector
-import models.UnexpectedDownstreamResponseError
-import models.response.referenceData.TraderKnownFacts
+import models.TraderKnownFacts
+import models.response.UnexpectedDownstreamResponseError
 import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
 import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.must.Matchers
@@ -94,59 +94,59 @@ class GetTraderKnownFactsConnectorISpec extends AnyFreeSpec
         connector.getTraderKnownFacts(testErn).futureValue mustBe Left(UnexpectedDownstreamResponseError)
       }
     }
+  }
 
-    "when the feature switch is enabled" - {
+  "when the feature switch is enabled" - {
 
-      def app: Application =
-        new GuiceApplicationBuilder()
-          .configure("microservice.services.emcs-tfe-reference-data-stub.port" -> server.port)
-          .configure("features.stub-get-trader-known-facts" -> "true")
-          .build()
+    def app: Application =
+      new GuiceApplicationBuilder()
+        .configure("microservice.services.emcs-tfe-reference-data-stub.port" -> server.port)
+        .configure("features.stub-get-trader-known-facts" -> "true")
+        .build()
 
-      lazy val connector: GetTraderKnownFactsConnector = app.injector.instanceOf[GetTraderKnownFactsConnector]
+    lazy val connector: GetTraderKnownFactsConnector = app.injector.instanceOf[GetTraderKnownFactsConnector]
 
-      "must return true when the server responds OK" in {
+    "must return true when the server responds OK" in {
 
-        server.stubFor(
-          get(urlEqualTo(url(testErn)))
-            .willReturn(
-              aResponse()
-                .withStatus(OK)
-                .withBody(Json.stringify(Json.obj("traderName" -> "testTraderName"))))
-        )
+      server.stubFor(
+        get(urlEqualTo(url(testErn)))
+          .willReturn(
+            aResponse()
+              .withStatus(OK)
+              .withBody(Json.stringify(Json.obj("traderName" -> "testTraderName"))))
+      )
 
-        connector.getTraderKnownFacts(testErn).futureValue mustBe Right(Some(testMinTraderKnownFacts))
-      }
+      connector.getTraderKnownFacts(testErn).futureValue mustBe Right(Some(testMinTraderKnownFacts))
+    }
 
-      "must return false when the server responds NO_CONTENT" in {
+    "must return false when the server responds NO_CONTENT" in {
 
-        server.stubFor(
-          get(urlEqualTo(url(testErn)))
-            .willReturn(aResponse().withStatus(NO_CONTENT))
-        )
+      server.stubFor(
+        get(urlEqualTo(url(testErn)))
+          .willReturn(aResponse().withStatus(NO_CONTENT))
+      )
 
-        connector.getTraderKnownFacts(testErn).futureValue mustBe Right(None)
-      }
+      connector.getTraderKnownFacts(testErn).futureValue mustBe Right(None)
+    }
 
-      "must fail when the server responds with any other status" in {
+    "must fail when the server responds with any other status" in {
 
-        server.stubFor(
-          get(urlEqualTo(url(testErn)))
-            .willReturn(aResponse().withStatus(INTERNAL_SERVER_ERROR))
-        )
+      server.stubFor(
+        get(urlEqualTo(url(testErn)))
+          .willReturn(aResponse().withStatus(INTERNAL_SERVER_ERROR))
+      )
 
-        connector.getTraderKnownFacts(testErn).futureValue mustBe Left(UnexpectedDownstreamResponseError)
-      }
+      connector.getTraderKnownFacts(testErn).futureValue mustBe Left(UnexpectedDownstreamResponseError)
+    }
 
-      "must fail when the connection fails" in {
+    "must fail when the connection fails" in {
 
-        server.stubFor(
-          get(urlEqualTo(url(testErn)))
-            .willReturn(aResponse().withFault(Fault.RANDOM_DATA_THEN_CLOSE))
-        )
+      server.stubFor(
+        get(urlEqualTo(url(testErn)))
+          .willReturn(aResponse().withFault(Fault.RANDOM_DATA_THEN_CLOSE))
+      )
 
-        connector.getTraderKnownFacts(testErn).futureValue mustBe Left(UnexpectedDownstreamResponseError)
-      }
+      connector.getTraderKnownFacts(testErn).futureValue mustBe Left(UnexpectedDownstreamResponseError)
     }
   }
 }

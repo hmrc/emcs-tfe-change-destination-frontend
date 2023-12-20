@@ -20,18 +20,18 @@ import config.AppConfig
 import play.api.i18n.I18nSupport
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
-import views.html.auth.errors.{InactiveEnrolmentView, NoEnrolmentView, NotAnOrganisationView, NotOnPrivateBetaView, UnauthorisedView}
+import views.html.auth.errors._
 
 import javax.inject.Inject
 
 class ErrorController @Inject()(
-                                        val controllerComponents: MessagesControllerComponents,
-                                        view: UnauthorisedView,
-                                        notAnOrgView: NotAnOrganisationView,
-                                        noEnrolmentView: NoEnrolmentView,
-                                        inactiveEnrolmentView: InactiveEnrolmentView,
-                                        notOnPrivateBetaView: NotOnPrivateBetaView
-                                      )(implicit val config: AppConfig) extends FrontendBaseController with I18nSupport {
+                                 val controllerComponents: MessagesControllerComponents,
+                                 view: UnauthorisedView,
+                                 notAnOrgView: NotAnOrganisationView,
+                                 noEnrolmentView: NoEnrolmentView,
+                                 inactiveEnrolmentView: InactiveEnrolmentView,
+                                 notOnPrivateBetaView: NotOnPrivateBetaView
+                               )(implicit val config: AppConfig) extends FrontendBaseController with I18nSupport {
 
   def unauthorised(): Action[AnyContent] = Action { implicit request =>
     Ok(view())

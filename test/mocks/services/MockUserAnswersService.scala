@@ -36,8 +36,9 @@ trait MockUserAnswersService extends MockFactory {
 
     def set(userAnswers: UserAnswers): CallHandler2[UserAnswers, HeaderCarrier, Future[UserAnswers]] =
       (mockUserAnswersService.set(_: UserAnswers)(_: HeaderCarrier))
-        .expects(where {
-          (answersBeingSet: UserAnswers, _: HeaderCarrier) => answersBeingSet.data == userAnswers.data
+        .expects(where { (actualAnswers, _) =>
+          actualAnswers.ern == userAnswers.ern &&
+            actualAnswers.data == userAnswers.data
         })
 
     def set(): CallHandler2[UserAnswers, HeaderCarrier, Future[UserAnswers]] =

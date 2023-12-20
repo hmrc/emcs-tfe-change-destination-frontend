@@ -1,0 +1,63 @@
+@*
+ * Copyright 2023 HM Revenue & Customs
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *@
+
+@import models.requests.DataRequest
+@import viewmodels.helpers.CheckAnswersHelper
+
+@this(layout: templates.Layout,
+        govukSummaryList: GovukSummaryList,
+        formHelper: FormWithCSRF,
+        h1: components.h1,
+        h2: components.h2,
+        saveAndContinue: components.saveAndContinue,
+        checkAnswersHelper: CheckAnswersHelper)
+
+@(submitAction: Call, ern: String, lrn: String, consignorAddress: UserAddress, traderKnownFacts: TraderKnownFacts)(implicit request: DataRequest[_], messages: Messages)
+
+
+@summaryList = @{
+    val traderNameRow = checkAnswersHelper.buildSummaryRow(
+        key = "checkYourAnswersConsignor.traderName",
+        value = Text(traderKnownFacts.traderName))
+    val ernRow = checkAnswersHelper.buildSummaryRow(
+        key = "checkYourAnswersConsignor.ern",
+        value = Text(ern))
+    val consignorAddressRow = checkAnswersHelper.buildSummaryRow(
+        key = "checkYourAnswersConsignor.address",
+        value = consignorAddress.toCheckYourAnswersFormat,
+        optChangeLink = Some(controllers.sections.consignor.routes.ConsignorAddressController.onPageLoad(ern, lrn, CheckMode)),
+        id = "change-address")
+
+    checkAnswersHelper.summaryList(Seq(traderNameRow, ernRow, consignorAddressRow))
+}
+
+
+@layout(pageTitle = titleNoForm(messages("checkYourAnswersConsignor.title")), maybeShowActiveTrader = maybeShowActiveTrader(request)) {
+
+    @formHelper(submitAction) {
+
+        @h1("checkYourAnswersConsignor.heading", Some(messages("checkYourAnswersConsignor.caption")), "govuk-heading-l")
+
+        @govukSummaryList(summaryList)
+
+        @saveAndContinue("site.confirmAnswers")
+
+    }
+}
+
+@{
+    //$COVERAGE-OFF$
+}

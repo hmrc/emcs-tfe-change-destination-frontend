@@ -32,7 +32,7 @@ class FeatureSwitchFrontendController @Inject()(featureSwitchService: FeatureSwi
                                                 featureSwitchView: feature_switch,
                                                 mcc: MessagesControllerComponents
                                                )(implicit ec: ExecutionContext,
-                                                 override val config: AppConfig) extends FrontendController(mcc) with FeatureSwitching with I18nSupport {
+                                                 val config: AppConfig) extends FrontendController(mcc) with FeatureSwitching with I18nSupport {
 
 
   def show(): Action[AnyContent] = Action.async {

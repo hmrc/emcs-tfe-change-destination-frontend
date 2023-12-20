@@ -17,8 +17,9 @@
 package connectors.emcsTfe
 
 import base.SpecBase
-import mocks.MockHttpClient
-import models.{BadRequestError, JsonValidationError, UnexpectedDownstreamResponseError, UserAnswers}
+import mocks.connectors.MockHttpClient
+import models.UserAnswers
+import models.response.{BadRequestError, JsonValidationError, UnexpectedDownstreamResponseError}
 import play.api.http.{HeaderNames, MimeTypes, Status}
 import play.api.libs.json.{Json, Reads}
 import uk.gov.hmrc.http.{HttpClient, HttpResponse}
@@ -27,6 +28,7 @@ class UserAnswersHttpParsersSpec extends SpecBase with Status with MimeTypes wit
 
   lazy val httpParser = new UserAnswersHttpParsers {
     override implicit val reads: Reads[UserAnswers] = UserAnswers.format
+
     override def http: HttpClient = mockHttpClient
   }
 

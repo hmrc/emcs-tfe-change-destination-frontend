@@ -16,68 +16,42 @@
 
 package base
 
-import controllers.action.{FakeAuthAction, FakeDataRetrievalAction, FakeMovementAction, FakeUserAllowListAction}
-import controllers.actions.{AuthAction, DataRetrievalAction, MovementAction, UserAllowListAction}
-import fixtures.{BaseFixtures, GetMovementResponseFixtures}
+import config.AppConfig
+import controllers.actions._
+import controllers.actions.predraft.PreDraftDataRequiredAction
+import fixtures.BaseFixtures
+import handlers.ErrorHandler
 import models.UserAnswers
-import models.requests.{DataRequest, MovementRequest, OptionalDataRequest, UserRequest}
-import models.response.referenceData.TraderKnownFacts
-import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
+import models.requests.{DataRequest, UserRequest}
+import org.scalatest.OptionValues
+import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.must.Matchers
-import org.scalatest.{OptionValues, TryValues}
-import play.api.Application
+import org.scalatestplus.play.guice.GuiceOneAppPerSuite
+import play.api.Play.materializer
 import play.api.i18n.{Lang, Messages, MessagesApi}
-import play.api.inject.bind
-import play.api.inject.guice.GuiceApplicationBuilder
-import play.api.mvc.{Request, Result}
-import play.api.test.FakeRequest
+import play.api.mvc.{MessagesControllerComponents, Request}
+import play.api.test.Helpers.stubPlayBodyParsers
 
-import scala.concurrent.Future
-import play.api.test.Helpers.{cookies, defaultAwaitTimeout}
+trait SpecBase extends AnyFreeSpec with Matchers with OptionValues with ScalaFutures with BaseFixtures with GuiceOneAppPerSuite {
 
-trait SpecBase
-  extends AnyFreeSpec
-    with Matchers
-    with TryValues
-    with OptionValues
-    with ScalaFutures
-    with IntegrationPatience
-    with BaseFixtures
-    with GetMovementResponseFixtures {
+  lazy val appConfig: AppConfig = app.injector.instanceOf[AppConfig]
+  lazy val messagesApi: MessagesApi = app.injector.instanceOf[MessagesApi]
+  lazy val messagesControllerComponents: MessagesControllerComponents = app.injector.instanceOf[MessagesControllerComponents]
+  lazy val preDraftDataRequiredAction: PreDraftDataRequiredAction = app.injector.instanceOf[PreDraftDataRequiredAction]
+  lazy val dataRequiredAction: DataRequiredAction = app.injector.instanceOf[DataRequiredAction]
+  lazy val errorHandler: ErrorHandler = app.injector.instanceOf[ErrorHandler]
 
-  def messagesApi(app: Application): MessagesApi = app.injector.instanceOf[MessagesApi]
-  def messages(app: Application): Messages = messagesApi(app).preferred(FakeRequest())
-  def messages(app: Application, lang: Lang): Messages = messagesApi(app).preferred(Seq(lang))
+  def messages(request: Request[_]): Messages = app.injector.instanceOf[MessagesApi].preferred(request)
 
-  def getLanguageCookies(of: Future[Result]): String = {
-    cookies(of).get("PLAY_LANG").get.value
-  }
+  def messages(candidates: Seq[Lang]): Messages = app.injector.instanceOf[MessagesApi].preferred(candidates)
 
-  protected def applicationBuilder(userAnswers: Option[UserAnswers] = None,
-                                   optTraderKnownFacts: Option[TraderKnownFacts] = Some(testMinTraderKnownFacts)): GuiceApplicationBuilder =
-    new GuiceApplicationBuilder()
-      .configure(
-        "play.filters.csp.nonce.enabled" -> false
-      )
-      .overrides(
-        bind[AuthAction].to[FakeAuthAction],
-        bind[UserAllowListAction].to[FakeUserAllowListAction],
-        bind[DataRetrievalAction].toInstance(new FakeDataRetrievalAction(userAnswers, optTraderKnownFacts)),
-        bind[MovementAction].toInstance(new FakeMovementAction(getMovementResponseModel))
-      )
+  val fakeAuthAction = new FakeAuthAction(stubPlayBodyParsers)
+  val fakeUserAllowListAction = new FakeUserAllowListAction()
 
-  def userRequest[A](request: Request[A]): UserRequest[A] = UserRequest(request, testErn, testInternalId, testCredId, false)
+  def userRequest[A](request: Request[A], ern: String = testErn): UserRequest[A] =
+    UserRequest(request, ern, testInternalId, testCredId, testSessionId, hasMultipleErns = false)
 
-  def movementRequest[A](request: Request[A]): MovementRequest[A] = MovementRequest(userRequest(request), testArc, getMovementResponseModel)
-
-  def dataRequest[A](request: Request[A],
-                     answers: UserAnswers = emptyUserAnswers,
-                     traderKnownFacts: TraderKnownFacts = testMinTraderKnownFacts): DataRequest[A] =
-    DataRequest(movementRequest(request), answers, traderKnownFacts)
-
-  def optionalDataRequest[A](request: Request[A],
-                     answers: Option[UserAnswers] = Some(emptyUserAnswers),
-                     traderKnownFacts: Option[TraderKnownFacts] = Some(testMinTraderKnownFacts)): OptionalDataRequest[A] =
-    OptionalDataRequest(movementRequest(request), answers, traderKnownFacts)
+  def dataRequest[A](request: Request[A], answers: UserAnswers = emptyUserAnswers, ern: String = testErn): DataRequest[A] =
+    DataRequest(userRequest(request, ern), testDraftId, answers, testMinTraderKnownFacts)
 }

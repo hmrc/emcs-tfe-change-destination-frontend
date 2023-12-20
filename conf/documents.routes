@@ -1,0 +1,35 @@
+GET        /trader/:ern/movement/:arc/documents                                                controllers.sections.documents.DocumentsIndexController.onPageLoad(ern: String, arc: String)
+
+GET        /trader/:ern/movement/:arc/documents/document-certificates                          controllers.sections.documents.DocumentsCertificatesController.onPageLoad(ern: String, arc: String, mode: Mode = NormalMode)
+POST       /trader/:ern/movement/:arc/documents/document-certificates                          controllers.sections.documents.DocumentsCertificatesController.onSubmit(ern: String, arc: String, mode: Mode = NormalMode)
+GET        /trader/:ern/movement/:arc/documents/document-certificates/change                   controllers.sections.documents.DocumentsCertificatesController.onPageLoad(ern: String, arc: String, mode: Mode = CheckMode)
+POST       /trader/:ern/movement/:arc/documents/document-certificates/change                   controllers.sections.documents.DocumentsCertificatesController.onSubmit(ern: String, arc: String, mode: Mode = CheckMode)
+
+GET        /trader/:ern/movement/:arc/documents/:idx/document-type                             controllers.sections.documents.DocumentTypeController.onPageLoad(ern: String, arc: String, idx: Index, mode: Mode = NormalMode)
+POST       /trader/:ern/movement/:arc/documents/:idx/document-type                             controllers.sections.documents.DocumentTypeController.onSubmit(ern: String, arc: String, idx: Index, mode: Mode = NormalMode)
+GET        /trader/:ern/movement/:arc/documents/:idx/document-type/change                      controllers.sections.documents.DocumentTypeController.onPageLoad(ern: String, arc: String, idx: Index, mode: Mode = CheckMode)
+POST       /trader/:ern/movement/:arc/documents/:idx/document-type/change                      controllers.sections.documents.DocumentTypeController.onSubmit(ern: String, arc: String, idx: Index, mode: Mode = CheckMode)
+
+GET        /trader/:ern/movement/:arc/documents/:idx/reference-available                       controllers.sections.documents.ReferenceAvailableController.onPageLoad(ern: String, arc: String, idx: Index, mode: Mode = NormalMode)
+POST       /trader/:ern/movement/:arc/documents/:idx/reference-available                       controllers.sections.documents.ReferenceAvailableController.onSubmit(ern: String, arc: String, idx: Index, mode: Mode = NormalMode)
+GET        /trader/:ern/movement/:arc/documents/:idx/reference-available/change                controllers.sections.documents.ReferenceAvailableController.onPageLoad(ern: String, arc: String, idx: Index, mode: Mode = CheckMode)
+POST       /trader/:ern/movement/:arc/documents/:idx/reference-available/change                controllers.sections.documents.ReferenceAvailableController.onSubmit(ern: String, arc: String, idx: Index, mode: Mode = CheckMode)
+
+GET        /trader/:ern/movement/:arc/documents/:idx/document-description                      controllers.sections.documents.DocumentDescriptionController.onPageLoad(ern: String, arc: String, idx: Index, mode: Mode = NormalMode)
+POST       /trader/:ern/movement/:arc/documents/:idx/document-description                      controllers.sections.documents.DocumentDescriptionController.onSubmit(ern: String, arc: String, idx: Index, mode: Mode = NormalMode)
+GET        /trader/:ern/movement/:arc/documents/:idx/document-description/change               controllers.sections.documents.DocumentDescriptionController.onPageLoad(ern: String, arc: String, idx: Index, mode: Mode = CheckMode)
+POST       /trader/:ern/movement/:arc/documents/:idx/document-description/change               controllers.sections.documents.DocumentDescriptionController.onSubmit(ern: String, arc: String, idx: Index, mode: Mode = CheckMode)
+
+GET        /trader/:ern/movement/:arc/documents/:idx/document-reference                        controllers.sections.documents.DocumentReferenceController.onPageLoad(ern: String, arc: String, idx: Index, mode: Mode = NormalMode)
+POST       /trader/:ern/movement/:arc/documents/:idx/document-reference                        controllers.sections.documents.DocumentReferenceController.onSubmit(ern: String, arc: String, idx: Index, mode: Mode = NormalMode)
+GET        /trader/:ern/movement/:arc/documents/:idx/document-reference/change                 controllers.sections.documents.DocumentReferenceController.onPageLoad(ern: String, arc: String, idx: Index, mode: Mode = CheckMode)
+POST       /trader/:ern/movement/:arc/documents/:idx/document-reference/change                 controllers.sections.documents.DocumentReferenceController.onSubmit(ern: String, arc: String, idx: Index, mode: Mode = CheckMode)
+
+GET        /trader/:ern/movement/:arc/documents/add-to-list                                    controllers.sections.documents.DocumentsAddToListController.onPageLoad(ern: String, arc: String)
+POST       /trader/:ern/movement/:arc/documents/add-to-list                                    controllers.sections.documents.DocumentsAddToListController.onSubmit(ern: String, arc: String)
+
+GET        /trader/:ern/movement/:arc/documents/check-answers                                  controllers.sections.documents.DocumentsCheckAnswersController.onPageLoad(ern: String, arc: String)
+POST       /trader/:ern/movement/:arc/documents/check-answers                                  controllers.sections.documents.DocumentsCheckAnswersController.onSubmit(ern: String, arc: String)
+
+GET        /trader/:ern/movement/:arc/documents/:idx/remove-from-list                          controllers.sections.documents.DocumentsRemoveFromListController.onPageLoad(ern: String, arc: String, idx: Index)
+POST       /trader/:ern/movement/:arc/documents/:idx/remove-from-list                          controllers.sections.documents.DocumentsRemoveFromListController.onSubmit(ern: String, arc: String, idx: Index)

@@ -16,20 +16,20 @@
 
 package views.components
 
-import base.ViewSpecBase
+import base.SpecBase
 import config.AppConfig
 import fixtures.messages.ActiveTraderMessages
 import org.jsoup.Jsoup
 import play.api.i18n.Messages
 import viewmodels.traderInfo.TraderInfo
 
-class ActiveTraderSpec extends ViewSpecBase {
+class ActiveTraderSpec extends SpecBase {
 
   "ActiveTrader" - {
 
     Seq(ActiveTraderMessages.English).foreach { messagesForLanguage =>
 
-      implicit val msgs: Messages = messages(app, messagesForLanguage.lang)
+      implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
 
       val activeTrader = app.injector.instanceOf[views.html.components.activeTrader]
 
@@ -52,14 +52,28 @@ class ActiveTraderSpec extends ViewSpecBase {
         val ern = "GB123K0950459403"
         val traderInfo = TraderInfo(traderName, ern)
 
-        "render the correct HTML" in {
+        "trader info div must exist" in {
+
           val html = activeTrader(Some(traderInfo), appConfig)
           val doc = Jsoup.parse(html.toString())
-          val link = doc.select(linkSelector).first
+
           doc.select(divSelector).size mustEqual 1
+        }
+
+        "title must exist" in {
+          val html = activeTrader(Some(traderInfo), appConfig)
+          val doc = Jsoup.parse(html.toString())
+
           doc.select(titleSelector).text mustEqual s"$traderName ($ern)"
-          link.attr("href") mustEqual "http://localhost:8310/emcs/account"
-          link.text mustEqual messagesForLanguage.changeTraderType
+        }
+
+        "link must exist" in {
+          val html = activeTrader(Some(traderInfo), appConfig)
+          val doc = Jsoup.parse(html.toString())
+
+          val link =  doc.select(linkSelector).first
+
+          (link.attr("href"), link.text) mustEqual ("http://localhost:8310/emcs/account", messagesForLanguage.changeTraderType)
         }
 
       }

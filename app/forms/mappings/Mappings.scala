@@ -20,18 +20,39 @@ import models.Enumerable
 import play.api.data.FieldMapping
 import play.api.data.Forms.of
 
-import java.time.LocalDate
+import java.time.{LocalDate, LocalTime}
 
 trait Mappings extends Formatters with Constraints {
 
   protected def text(errorKey: String = "error.required", args: Seq[String] = Seq.empty): FieldMapping[String] =
     of(stringFormatter(errorKey, args))
 
+  protected def normalisedSpaceText(errorKey: String = "error.required", args: Seq[String] = Seq.empty)  =
+    text(errorKey, args)
+      .transform[String](
+        _.replace("\n", " ")
+          .replace("\r", " ")
+          .replaceAll(" +", " ")
+          .trim,
+        identity
+      )
+
   protected def int(requiredKey: String = "error.required",
                     wholeNumberKey: String = "error.wholeNumber",
                     nonNumericKey: String = "error.nonNumeric",
                     args: Seq[String] = Seq.empty): FieldMapping[Int] =
     of(intFormatter(requiredKey, wholeNumberKey, nonNumericKey, args))
+
+  protected def bigInt(requiredKey: String = "error.required",
+                    wholeNumberKey: String = "error.wholeNumber",
+                    nonNumericKey: String = "error.nonNumeric",
+                    args: Seq[String] = Seq.empty): FieldMapping[BigInt] =
+    of(bigIntFormatter(requiredKey, wholeNumberKey, nonNumericKey, args))
+
+  protected def bigDecimal(requiredKey: String = "error.required",
+                       nonNumericKey: String = "error.nonNumeric",
+                       args: Seq[String] = Seq.empty): FieldMapping[BigDecimal] =
+    of(bigDecimalFormatter(requiredKey, nonNumericKey, args))
 
   protected def boolean(requiredKey: String = "error.required",
                         invalidKey: String = "error.boolean",
@@ -51,4 +72,11 @@ trait Mappings extends Formatters with Constraints {
                            requiredKey: String,
                            args: Seq[String] = Seq.empty): FieldMapping[LocalDate] =
     of(new LocalDateFormatter(invalidKey, allRequiredKey, twoRequiredKey, requiredKey, args))
+
+
+  protected def localTime(
+                           invalidKey: String,
+                           requiredKey: String,
+                           args: Seq[String] = Seq.empty): FieldMapping[LocalTime] =
+    of(new LocalTimeFormatter(invalidKey, requiredKey, args))
 }

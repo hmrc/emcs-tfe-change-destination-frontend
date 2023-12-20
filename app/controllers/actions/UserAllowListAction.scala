@@ -18,7 +18,6 @@ package controllers.actions
 
 import config.AppConfig
 import connectors.userAllowList.UserAllowListConnector
-import featureswitch.core.config.{FeatureSwitching, UserAllowList}
 import handlers.ErrorHandler
 import models.requests.{CheckUserAllowListRequest, UserRequest}
 import play.api.mvc.Results.{InternalServerError, Redirect}
@@ -32,14 +31,14 @@ import scala.concurrent.{ExecutionContext, Future}
 
 class UserAllowListActionImpl @Inject()(userAllowListConnector: UserAllowListConnector,
                                         errorHandler: ErrorHandler,
-                                        override val config: AppConfig)
-                                      (implicit val executionContext: ExecutionContext) extends UserAllowListAction with FeatureSwitching {
+                                        config: AppConfig)
+                                       (implicit val executionContext: ExecutionContext) extends UserAllowListAction {
 
   override protected def refine[A](request: UserRequest[A]): Future[Either[Result, UserRequest[A]]] = {
 
     implicit val hc: HeaderCarrier = HeaderCarrierConverter.fromRequestAndSession(request, request.session)
 
-    if(isEnabled(UserAllowList)) {
+    if (config.allowListEnabled) {
       userAllowListConnector.check(CheckUserAllowListRequest(request.ern)) map {
         case Right(true) => Right(request)
         case Right(false) =>

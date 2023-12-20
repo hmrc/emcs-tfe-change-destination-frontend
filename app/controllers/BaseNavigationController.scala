@@ -16,30 +16,26 @@
 
 package controllers
 
+import forms.BaseTextareaFormProvider
+import models._
 import models.requests.DataRequest
-import models.{Mode, UserAnswers}
 import navigation.BaseNavigator
 import pages.QuestionPage
+import play.api.data.{Form, FormError}
 import play.api.libs.json.{Format, Reads}
-import play.api.mvc.Result
+import play.api.mvc.{AnyContentAsFormUrlEncoded, Result}
+import queries.Derivable
 import services.UserAnswersService
 import uk.gov.hmrc.http.HeaderCarrier
 import utils.Logging
 
 import scala.concurrent.Future
+import scala.util.{Failure, Success, Try}
 
 trait BaseNavigationController extends BaseController with Logging {
 
   val userAnswersService: UserAnswersService
   val navigator: BaseNavigator
-
-  def withAnswer[A](page: QuestionPage[A])(f: A => Future[Result])(implicit request: DataRequest[_], reads: Reads[A]): Future[Result] =
-    request.userAnswers.get(page) match {
-      case Some(value) => f(value)
-      case None =>
-        logger.warn(s"Failed to retrieve expected answer for page: $page on uri: ${request.uri}")
-        Future.successful(Redirect(routes.JourneyRecoveryController.onPageLoad(request.ern, request.arc)))
-    }
 
   def saveAndRedirect[A](page: QuestionPage[A], answer: A, currentAnswers: UserAnswers, mode: Mode)
                         (implicit hc: HeaderCarrier, format: Format[A]): Future[Result] =
@@ -66,4 +62,58 @@ trait BaseNavigationController extends BaseController with Logging {
   private def save[A](page: QuestionPage[A], answer: A)
                      (implicit request: DataRequest[_], format: Format[A]): Future[UserAnswers] =
     save(page, answer, request.userAnswers)
+
+
+  def submitAndTrimWhitespaceFromTextarea[PageType](page: QuestionPage[PageType],
+                                                    formProvider: BaseTextareaFormProvider[PageType]
+                                                   )(formWithErrorsView: Form[PageType] => Future[Result])
+                                                   (successFunction: PageType => Future[Result])
+                                                   (implicit request: DataRequest[_]): Future[Result] = {
+    Try {
+      val trimmedFormValues: Map[String, Seq[String]] = request.body.asInstanceOf[AnyContentAsFormUrlEncoded].data.map {
+        case (k, v) => (k, v.map(_.trim))
+      }
+
+      formProvider().bindFromRequest(trimmedFormValues).fold(
+        formWithErrors =>
+          formWithErrorsView(formWithErrors),
+        value =>
+          successFunction(value)
+      )
+    } match {
+      case Failure(exception) =>
+        logger.warn(exception.getMessage)
+        val requiredText = s"$page.error.required"
+        formWithErrorsView(formProvider().withError(FormError("more-information", requiredText)))
+      case Success(value) => value
+    }
+  }
+
+  def cleanseUserAnswersIfValueHasChanged[T](page: QuestionPage[T],
+                                             newAnswer: T,
+                                             cleansingFunction: => UserAnswers)(implicit request: DataRequest[_], reads: Reads[T]): UserAnswers = {
+    request.userAnswers.get(page) match {
+      case Some(answer) if answer != newAnswer => cleansingFunction
+      case _ => request.userAnswers
+    }
+  }
+
+  def validateIndexForJourneyEntry[T, A](
+                                          itemCount: Derivable[T, Int], idx: Index, max: Int = Int.MaxValue
+                                        )(onSuccess: => A, onFailure: => A)(implicit request: DataRequest[_], reads: Reads[T]): A = {
+    request.userAnswers.get(itemCount) match {
+      case Some(value) if (idx.position >= 0 && idx.position <= value) && idx.position < max => onSuccess
+      case None if idx.position == 0 => onSuccess
+      case _ => onFailure
+    }
+  }
+
+  def validateIndex[T, A](
+                           itemCount: Derivable[T, Int], idx: Index
+                         )(onSuccess: => A, onFailure: => A)(implicit request: DataRequest[_], reads: Reads[T]): A = {
+    request.userAnswers.get(itemCount) match {
+      case Some(value) if (idx.position >= 0 && idx.position < value) => onSuccess
+      case _ => onFailure
+    }
+  }
 }

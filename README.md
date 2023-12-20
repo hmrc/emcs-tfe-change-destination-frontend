@@ -32,13 +32,20 @@ Contains the frontend journey for EMCS TFE to change a destination for a movemen
 6) Run the script `./migrate.sh` to run the migrations _(this creates the messages entries and the routes entries - along with a few other things)_
 
 
-7) Your page is ready to be refactored and enhanced with business rules, content changes and anything else.
+7) Run the script `./move2section.sh SECTION_NAME` to move the files to the right section (replace SECTION_NAME with a section from controllers/sections).
+   You'll need to manually add `.sections.SECTION_NAME` to package names and import paths in the routes, html files, viewmodels, and controllers.
 
 
-8) **IMPORTANT:**
-    1) Using the scaffolds to generate tests is not a replacement for writing good tests. Please refactor and enhance the default tests with tests which cover extra logic and business rules
-    2) Scaffold are here to help us get a head start with simple pages, but do refactor the generated code to improve quality where appropriate
-    3) If you find an improvement that could be applied to the Scaffolds update the `g8` template so that this can be used by future Engineers
+8) Manually move routes from `app.routes` to the `conf/SECTION_NAME.routes` file.
+
+
+9) Your page is ready to be refactored and enhanced with business rules, content changes and anything else.
+
+
+10) **IMPORTANT:**
+   1) Using the scaffolds to generate tests is not a replacement for writing good tests. Please refactor and enhance the default tests with tests which cover extra logic and business rules
+   2) Scaffold are here to help us get a head start with simple pages, but do refactor the generated code to improve quality where appropriate
+   3) If you find an improvement that could be applied to the Scaffolds update the `g8` template so that this can be used by future Engineers
 
 ### License
 

@@ -1,0 +1,94 @@
+@*
+ * Copyright 2023 HM Revenue & Customs
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *@
+
+@import models.requests.DataRequest
+@import models.response.referenceData.ItemPackaging
+@import uk.gov.hmrc.govukfrontend.views.viewmodels.charactercount.CharacterCount
+@import viewmodels.InputWidth.Fixed40
+
+
+@this(
+        layout: templates.Layout,
+        formHelper: FormWithCSRF,
+        govukErrorSummary: GovukErrorSummary,
+        govukInput: GovukInput,
+        govukCharacterCount: GovukCharacterCount,
+        govukButton: GovukButton,
+        h1: components.h1,
+        h2: components.h2,
+        p: components.p,
+        strong: components.strong,
+        continueOrExit: components.continueOrExit
+)
+
+@(form: Form[_], action: Call, packagingTypeDescription: String)(implicit request: DataRequest[_], messages: Messages)
+
+@layout(pageTitle = title(form, messages("itemPackagingSealType.title")), maybeShowActiveTrader = maybeShowActiveTrader(request)) {
+
+    @formHelper(action, Symbol("autoComplete") -> "off") {
+
+        @if(form.errors.nonEmpty) {
+            @govukErrorSummary(ErrorSummaryViewModel(form))
+        }
+
+        @h2(messages("items.subHeading", request.arc), "govuk-caption-xl", hiddenContent = Some(messages("subHeading.hidden")))
+
+        @h1(headingMsg = messages("itemPackagingSealType.heading"), classes = "govuk-heading-l")
+
+        @p() {
+            @{
+                Html(messages("itemPackagingSealType.p", strong(Html(packagingTypeDescription.trim), withFullStop = true)))
+            }
+        }
+
+        @govukInput(
+            InputViewModel(
+                field = form("packaging-seal-type"),
+                label = LabelViewModel(Text(messages("itemPackagingSealType.heading"))).hidden
+            ).withWidth(Fixed40)
+        )
+
+        @p() {
+            @{
+                Html(messages("itemPackagingSealType.p2"))
+            }
+        }
+
+        @{
+            govukCharacterCount(
+                CharacterCount(
+                    id = "packaging-seal-information",
+                    name = "packaging-seal-information",
+                    maxLength = Some(350),
+                    hint = Some(Hint(content = Text(messages("itemPackagingSealType.hint")))),
+                    label = LabelViewModel(Text(messages("itemPackagingSealType.p2"))).hidden,
+                    value = form("packaging-seal-information").value,
+                    errorMessage = form.errors("packaging-seal-information") match {
+                        case Nil => None
+                        case errors => Some(ErrorMessage(content = HtmlContent(errors.map(err => messages(err.message, err.args:_*)).mkString("<br>"))))
+                    }
+                )
+            )
+        }
+
+        @continueOrExit()
+    }
+}
+
+
+@{
+    //$COVERAGE-OFF$
+}

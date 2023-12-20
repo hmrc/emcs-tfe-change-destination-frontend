@@ -1,0 +1,24 @@
+GET         /trader/:ern/movement/:arc/journey-type                                                controllers.sections.journeyType.JourneyTypeIndexController.onPageLoad(ern: String, arc: String)
+
+GET         /trader/:ern/movement/:arc/journey-type/how-movement-transported                       controllers.sections.journeyType.HowMovementTransportedController.onPageLoad(ern: String, arc: String, mode: Mode = NormalMode)
+POST        /trader/:ern/movement/:arc/journey-type/how-movement-transported                       controllers.sections.journeyType.HowMovementTransportedController.onSubmit(ern: String, arc: String, mode: Mode = NormalMode)
+GET         /trader/:ern/movement/:arc/journey-type/how-movement-transported/change                controllers.sections.journeyType.HowMovementTransportedController.onPageLoad(ern: String, arc: String, mode: Mode = CheckMode)
+POST        /trader/:ern/movement/:arc/journey-type/how-movement-transported/change                controllers.sections.journeyType.HowMovementTransportedController.onSubmit(ern: String, arc: String, mode: Mode = CheckMode)
+
+GET         /trader/:ern/movement/:arc/journey-type/give-information-other-transport               controllers.sections.journeyType.GiveInformationOtherTransportController.onPageLoad(ern: String, arc: String, mode: Mode = NormalMode)
+POST        /trader/:ern/movement/:arc/journey-type/give-information-other-transport               controllers.sections.journeyType.GiveInformationOtherTransportController.onSubmit(ern: String, arc: String, mode: Mode = NormalMode)
+GET         /trader/:ern/movement/:arc/journey-type/give-information-other-transport/change        controllers.sections.journeyType.GiveInformationOtherTransportController.onPageLoad(ern: String, arc: String, mode: Mode = CheckMode)
+POST        /trader/:ern/movement/:arc/journey-type/give-information-other-transport/change        controllers.sections.journeyType.GiveInformationOtherTransportController.onSubmit(ern: String, arc: String, mode: Mode = CheckMode)
+
+GET         /trader/:ern/movement/:arc/journey-type/time/days                                      controllers.sections.journeyType.JourneyTimeDaysController.onPageLoad(ern: String, arc: String, mode: Mode = NormalMode)
+POST        /trader/:ern/movement/:arc/journey-type/time/days                                      controllers.sections.journeyType.JourneyTimeDaysController.onSubmit(ern: String, arc: String, mode: Mode = NormalMode)
+GET         /trader/:ern/movement/:arc/journey-type/time/days/change                               controllers.sections.journeyType.JourneyTimeDaysController.onPageLoad(ern: String, arc: String, mode: Mode = CheckMode)
+POST        /trader/:ern/movement/:arc/journey-type/time/days/change                               controllers.sections.journeyType.JourneyTimeDaysController.onSubmit(ern: String, arc: String, mode: Mode = CheckMode)
+
+GET         /trader/:ern/movement/:arc/journey-type/time/hours                                     controllers.sections.journeyType.JourneyTimeHoursController.onPageLoad(ern: String, arc: String, mode: Mode = NormalMode)
+POST        /trader/:ern/movement/:arc/journey-type/time/hours                                     controllers.sections.journeyType.JourneyTimeHoursController.onSubmit(ern: String, arc: String, mode: Mode = NormalMode)
+GET         /trader/:ern/movement/:arc/journey-type/time/hours/change                              controllers.sections.journeyType.JourneyTimeHoursController.onPageLoad(ern: String, arc: String, mode: Mode = CheckMode)
+POST        /trader/:ern/movement/:arc/journey-type/time/hours/change                              controllers.sections.journeyType.JourneyTimeHoursController.onSubmit(ern: String, arc: String, mode: Mode = CheckMode)
+
+GET         /trader/:ern/movement/:arc/journey-type/journey-check-answers                          controllers.sections.journeyType.CheckYourAnswersJourneyTypeController.onPageLoad(ern: String, arc: String)
+POST        /trader/:ern/movement/:arc/journey-type/journey-check-answers                          controllers.sections.journeyType.CheckYourAnswersJourneyTypeController.onSubmit(ern: String, arc: String)

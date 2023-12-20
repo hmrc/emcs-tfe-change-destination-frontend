@@ -17,8 +17,8 @@
 package mocks.connectors
 
 import connectors.userAllowList.UserAllowListConnector
-import models.ErrorResponse
 import models.requests.CheckUserAllowListRequest
+import models.response.ErrorResponse
 import org.scalamock.handlers.CallHandler3
 import org.scalamock.scalatest.MockFactory
 import uk.gov.hmrc.http.HeaderCarrier

@@ -17,8 +17,8 @@
 package connectors.referenceData
 
 import connectors.BaseConnectorUtils
-import models.{ErrorResponse, JsonValidationError, UnexpectedDownstreamResponseError}
-import models.response.referenceData.TraderKnownFacts
+import models.TraderKnownFacts
+import models.response.{ErrorResponse, JsonValidationError, UnexpectedDownstreamResponseError}
 import play.api.http.Status.{NO_CONTENT, OK}
 import play.api.libs.json.Reads
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpReads, HttpResponse}

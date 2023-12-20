@@ -54,6 +54,52 @@ trait Formatters {
       def unbind(key: String, value: Boolean) = Map(key -> value.toString)
     }
 
+  private[mappings] def bigIntFormatter(requiredKey: String, wholeNumberKey: String, nonNumericKey: String,
+                                            args: Seq[String] = Seq.empty): Formatter[BigInt] =
+    new Formatter[BigInt] {
+
+      val decimalRegexp = """^-?(\d*\.\d*)$"""
+
+      private val baseFormatter = stringFormatter(requiredKey, args)
+
+      override def bind(key: String, data: Map[String, String]) =
+        baseFormatter
+          .bind(key, data)
+          .right.map(_.replace(",", "").replaceAll(" ", ""))
+          .right.flatMap {
+          case s if s.matches(decimalRegexp) =>
+            Left(Seq(FormError(key, wholeNumberKey, args)))
+          case s =>
+            nonFatalCatch
+              .either(BigInt(s))
+              .left.map(_ => Seq(FormError(key, nonNumericKey, args)))
+        }
+
+      override def unbind(key: String, value: BigInt) =
+        baseFormatter.unbind(key, value.toString)
+    }
+
+  private[mappings] def bigDecimalFormatter(requiredKey: String, nonNumericKey: String,
+                                        args: Seq[String] = Seq.empty): Formatter[BigDecimal] =
+    new Formatter[BigDecimal] {
+
+      private val baseFormatter = stringFormatter(requiredKey, args)
+
+      override def bind(key: String, data: Map[String, String]): Either[Seq[FormError], BigDecimal] =
+        baseFormatter
+          .bind(key, data)
+          .map(_.replace(",", "").replaceAll(" ", ""))
+          .flatMap {
+            s =>
+              nonFatalCatch
+                .either(BigDecimal(s))
+                .left.map(_ => Seq(FormError(key, nonNumericKey, args)))
+          }
+
+      override def unbind(key: String, value: BigDecimal): Map[String, String] =
+        baseFormatter.unbind(key, value.toString)
+    }
+
   private[mappings] def intFormatter(requiredKey: String, wholeNumberKey: String, nonNumericKey: String, args: Seq[String] = Seq.empty): Formatter[Int] =
     new Formatter[Int] {
 
@@ -64,15 +110,15 @@ trait Formatters {
       override def bind(key: String, data: Map[String, String]) =
         baseFormatter
           .bind(key, data)
-          .right.map(_.replace(",", ""))
+          .right.map(_.replace(",", "").replaceAll(" ", ""))
           .right.flatMap {
-          case s if s.matches(decimalRegexp) =>
-            Left(Seq(FormError(key, wholeNumberKey, args)))
-          case s =>
-            nonFatalCatch
-              .either(s.toInt)
-              .left.map(_ => Seq(FormError(key, nonNumericKey, args)))
-        }
+            case s if s.matches(decimalRegexp) =>
+              Left(Seq(FormError(key, wholeNumberKey, args)))
+            case s =>
+              nonFatalCatch
+                .either(s.toInt)
+                .left.map(_ => Seq(FormError(key, nonNumericKey, args)))
+          }
 
       override def unbind(key: String, value: Int) =
         baseFormatter.unbind(key, value.toString)

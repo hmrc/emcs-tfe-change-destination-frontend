@@ -1,0 +1,63 @@
+@*
+ * Copyright 2023 HM Revenue & Customs
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *@
+
+@import models.requests.DataRequest
+@import viewmodels.InputWidth._
+@import viewmodels.LabelSize
+
+@this(
+    layout: templates.Layout,
+    formHelper: FormWithCSRF,
+    govukErrorSummary: GovukErrorSummary,
+    govukInput: GovukInput,
+    govukButton: GovukButton,
+    h1: components.h1,
+    h2: components.h2,
+    p: components.p,
+    link: components.link,
+    continueOrExit: components.continueOrExit
+)
+
+@(form: Form[_], mode: Mode)(implicit request: DataRequest[_], messages: Messages)
+
+@layout(pageTitle = title(form, messages("journeyTimeDays.title")), maybeShowActiveTrader = maybeShowActiveTrader(request)) {
+
+    @formHelper(action = controllers.sections.journeyType.routes.JourneyTimeDaysController.onSubmit(request.ern, request.arc, mode), 'autoComplete -> "off") {
+
+        @if(form.errors.nonEmpty) {
+            @govukErrorSummary(ErrorSummaryViewModel(form))
+        }
+
+        @h2(messages("journeyType.subHeading"), "govuk-caption-xl")
+        @govukInput(
+            InputViewModel(
+                field = form("value"),
+                label = LabelViewModel(Text(messages("journeyTimeDays.heading"))).asPageHeading(LabelSize.Large)
+            )
+            .asNumeric()
+            .withWidth(Fixed2)
+            .withSuffix(PrefixOrSuffix(classes = "days-suffix", content = Text(messages("journeyTimeDays.input.suffix"))))
+        )
+
+        @p()(link(controllers.sections.journeyType.routes.JourneyTimeHoursController.onPageLoad(request.ern, request.arc, NormalMode).url, messages("journeyTimeDays.switchToHours")))
+
+        @continueOrExit()
+    }
+}
+
+@{
+    //$COVERAGE-OFF$
+}

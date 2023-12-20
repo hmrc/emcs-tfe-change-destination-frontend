@@ -4,6 +4,8 @@ $hmrc-assets-path: "/emcs/change-destination/assets/lib/hmrc-frontend/hmrc/asset
 @import "lib/govuk-frontend/govuk/all";
 @import "lib/hmrc-frontend/hmrc/all";
 
+@import "taskList.scss";
+
 .js-visible {
   display: none !important;
 }
@@ -11,17 +13,9 @@ $hmrc-assets-path: "/emcs/change-destination/assets/lib/hmrc-frontend/hmrc/asset
   display: inline-block !important;
 }
 
-.white-space-nowrap {
-  white-space: nowrap;
+.float-none {
+  float: none !important;
 }
 
-@media print {
-  header, nav, footer {
-    display: none;
-  }
-  .no-print, .no-print * {
-    display: none !important;
-  }
-}
-
+@import "accessible-autocomplete";
 @import "active-trader-info";

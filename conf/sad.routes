@@ -1,0 +1,13 @@
+GET        /trader/:ern/movement/:arc/sad        controllers.sections.sad.SadIndexController.onPageLoad(ern: String, arc: String)
+
+GET        /trader/:ern/movement/:arc/sad/:idx/import-number                        controllers.sections.sad.ImportNumberController.onPageLoad(ern: String, arc: String, idx: Index, mode: Mode = NormalMode)
+POST       /trader/:ern/movement/:arc/sad/:idx/import-number                        controllers.sections.sad.ImportNumberController.onSubmit(ern: String, arc: String, idx: Index, mode: Mode = NormalMode)
+GET        /trader/:ern/movement/:arc/sad/:idx/import-number/change                  controllers.sections.sad.ImportNumberController.onPageLoad(ern: String, arc: String, idx: Index, mode: Mode = CheckMode)
+POST       /trader/:ern/movement/:arc/sad/:idx/import-number/change                  controllers.sections.sad.ImportNumberController.onSubmit(ern: String, arc: String, idx: Index, mode: Mode = CheckMode)
+
+GET        /trader/:ern/movement/:arc/sad/add-to-list                        controllers.sections.sad.SadAddToListController.onPageLoad(ern: String, arc: String)
+POST       /trader/:ern/movement/:arc/sad/add-to-list                        controllers.sections.sad.SadAddToListController.onSubmit(ern: String, arc: String)
+
+GET        /trader/:ern/movement/:arc/sad/:idx/remove-from-list                        controllers.sections.sad.SadRemoveDocumentController.onPageLoad(ern: String, arc: String, idx: Index)
+POST       /trader/:ern/movement/:arc/sad/:idx/remove-from-list                        controllers.sections.sad.SadRemoveDocumentController.onSubmit(ern: String, arc: String, idx: Index)
+

@@ -17,45 +17,33 @@
 package controllers
 
 import base.SpecBase
-import mocks.services.MockUserAnswersService
-import play.api.http.Status.SEE_OTHER
-import play.api.inject.bind
+import mocks.services.{MockPreDraftService, MockUserAnswersService}
+import models.UserAnswers
 import play.api.test.FakeRequest
-import play.api.test.Helpers.{GET, defaultAwaitTimeout, redirectLocation, route, running, status, writeableOf_AnyContentAsEmpty}
-import services.UserAnswersService
+import play.api.test.Helpers._
 
 import scala.concurrent.Future
 
-class IndexControllerSpec extends SpecBase with MockUserAnswersService {
+class IndexControllerSpec extends SpecBase with MockPreDraftService with MockUserAnswersService {
 
-  "IndexController Controller" - {
+  "Index Controller" - {
+    "must redirect to the info Index controller" in {
+      lazy val testController = new IndexController(
+        messagesApi,
+        mockPreDraftService,
+        mockUserAnswersService,
+        fakeAuthAction,
+        fakeUserAllowListAction,
+        messagesControllerComponents
+      )
 
-    "when calling .onPageLoad()" - {
+      MockPreDraftService.set(UserAnswers(testNorthernIrelandErn, testSessionId)).returns(Future.successful(true))
 
-      "when existing UserAnswers don't exist" - {
+      val request = FakeRequest()
+      val result = testController.onPageLoad(testNorthernIrelandErn)(request)
 
-        "must Initialise the UserAnswers and redirect to the IndexController" in {
-
-          MockUserAnswersService.set(emptyUserAnswers).returns(Future.successful(emptyUserAnswers))
-
-          val application = applicationBuilder(userAnswers = None).overrides(
-            bind[UserAnswersService].toInstance(mockUserAnswersService)
-          ).build()
-
-          running(application) {
-            val request = FakeRequest(GET, routes.IndexController.onPageLoad(testErn, testArc).url)
-
-            val result = route(application, request).value
-
-            status(result) mustEqual SEE_OTHER
-            redirectLocation(result) mustBe Some(routes.IndexController.onPageLoad(testErn, testArc).url)
-          }
-        }
-      }
-
-
+      status(result) mustEqual SEE_OTHER
+      redirectLocation(result) mustBe Some(controllers.sections.info.routes.InfoIndexController.onPreDraftPageLoad(testNorthernIrelandErn).url)
     }
-
   }
-
 }

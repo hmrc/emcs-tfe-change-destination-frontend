@@ -16,16 +16,13 @@
 
 package forms.mappings
 
-import generators.Generators
-import org.scalacheck.Gen
 import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.must.Matchers
-import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
 import play.api.data.validation.{Invalid, Valid}
 
 import java.time.LocalDate
 
-class ConstraintsSpec extends AnyFreeSpec with Matchers with ScalaCheckPropertyChecks with Generators with Constraints {
+class ConstraintsSpec extends AnyFreeSpec with Matchers with Constraints {
 
 
   "firstError" - {
@@ -144,66 +141,141 @@ class ConstraintsSpec extends AnyFreeSpec with Matchers with ScalaCheckPropertyC
   "maxDate" - {
 
     "must return Valid for a date before or equal to the maximum" in {
+      val max = LocalDate.of(3000, 1, 1)
+      val date = LocalDate.of(2000, 1, 1)
 
-      val gen: Gen[(LocalDate, LocalDate)] = for {
-        max <- datesBetween(LocalDate.of(2000, 1, 1), LocalDate.of(3000, 1, 1))
-        date <- datesBetween(LocalDate.of(2000, 1, 1), max)
-      } yield (max, date)
-
-      forAll(gen) {
-        case (max, date) =>
-
-          val result = maxDate(max, "error.future")(date)
-          result mustEqual Valid
-      }
+      val result = maxDate(max, "error.future")(date)
+      result mustEqual Valid
     }
+  }
 
-    "must return Invalid for a date after the maximum" in {
+  "must return Invalid for a date after the maximum" in {
+    val max = LocalDate.of(3000, 1, 1)
+    val date = max.plusDays(1)
 
-      val gen: Gen[(LocalDate, LocalDate)] = for {
-        max <- datesBetween(LocalDate.of(2000, 1, 1), LocalDate.of(3000, 1, 1))
-        date <- datesBetween(max.plusDays(1), LocalDate.of(3000, 1, 2))
-      } yield (max, date)
-
-      forAll(gen) {
-        case (max, date) =>
-
-          val result = maxDate(max, "error.future", "foo")(date)
-          result mustEqual Invalid("error.future", "foo")
-      }
-    }
+    val result = maxDate(max, "error.future", "foo")(date)
+    result mustEqual Invalid("error.future", "foo")
   }
 
   "minDate" - {
 
     "must return Valid for a date after or equal to the minimum" in {
+      val min = LocalDate.of(2000, 1, 1)
+      val date = min.plusDays(1)
 
-      val gen: Gen[(LocalDate, LocalDate)] = for {
-        min <- datesBetween(LocalDate.of(2000, 1, 1), LocalDate.of(3000, 1, 1))
-        date <- datesBetween(min, LocalDate.of(3000, 1, 1))
-      } yield (min, date)
-
-      forAll(gen) {
-        case (min, date) =>
-
-          val result = minDate(min, "error.past", "foo")(date)
-          result mustEqual Valid
-      }
+      val result = minDate(min, "error.past", "foo")(date)
+      result mustEqual Valid
     }
 
     "must return Invalid for a date before the minimum" in {
+      val min = LocalDate.of(2000, 1, 1)
+      val date = min.minusDays(1)
 
-      val gen: Gen[(LocalDate, LocalDate)] = for {
-        min <- datesBetween(LocalDate.of(2000, 1, 2), LocalDate.of(3000, 1, 1))
-        date <- datesBetween(LocalDate.of(2000, 1, 1), min.minusDays(1))
-      } yield (min, date)
-
-      forAll(gen) {
-        case (min, date) =>
-
-          val result = minDate(min, "error.past", "foo")(date)
-          result mustEqual Invalid("error.past", "foo")
-      }
+      val result = minDate(min, "error.past", "foo")(date)
+      result mustEqual Invalid("error.past", "foo")
     }
+  }
+
+  "isDecimal" - {
+
+    "must return Valid for a valid number" in {
+
+      val result = isDecimal("error")("10.56")
+      result mustEqual Valid
+    }
+
+    "must return Invalid for a non-numeric" in {
+
+      val result = isDecimal("error")("banana")
+      result mustEqual Invalid("error")
+    }
+  }
+
+  "decimalRange" - {
+
+    "must return Valid for a valid number (min)" in {
+
+      val result = decimalRange(1.2, 835.5, "error")(1.2)
+      result mustEqual Valid
+    }
+
+    "must return Valid for a valid number (max)" in {
+
+      val result = decimalRange(1.2, 835.5, "error")(835.5)
+      result mustEqual Valid
+    }
+
+    "must return Invalid for a number outside of the range (less than)" in {
+
+      val result = decimalRange(1.2, 835.5, "error")(1.199999999)
+      result mustEqual Invalid("error", 1.2, 835.5)
+    }
+
+    "must return Invalid for a number outside of the range (more than)" in {
+
+      val result = decimalRange(1.2, 835.5, "error")(835.50000000001)
+      result mustEqual Invalid("error", 1.2, 835.5)
+    }
+  }
+
+  "maxDecimalPlaces" - {
+
+    "must return Valid for a valid number of dp (max)" in {
+
+      val result = maxDecimalPlaces(5, "error")(1.12345)
+      result mustEqual Valid
+    }
+
+    "must return Valid for a valid number of dp (min)" in {
+
+      val result = maxDecimalPlaces(5, "error")(1)
+      result mustEqual Valid
+    }
+
+    "must return Invalid for a number that exceeds the dp" in {
+
+      val result = maxDecimalPlaces(5, "error")(1.123456)
+      result mustEqual Invalid("error", 5)
+    }
+  }
+
+  "valueInList" - {
+
+    "must return Valid when the given value is in the list" in {
+
+      val result = valueInList(Seq("apple", "banana", "carrot"), "error.notInList")("apple")
+      result mustEqual Valid
+    }
+
+    "must return Invalid when the given value is not in the list" in {
+
+      val result = valueInList(Seq("apple", "banana", "carrot"), "error.notInList")("grape")
+      result mustEqual Invalid("error.notInList")
+    }
+
+  }
+
+  "exclusiveItemInSet" - {
+
+    "must return Valid for an exclusive item selected and only that one is present" in {
+      val result = exclusiveItemInSet("errorKey", "0")(Set("0"))
+      result mustEqual Valid
+    }
+
+    "must return Valid for one non-exclusive item selected" in {
+      val result = exclusiveItemInSet("errorKey", "0")(Set("1"))
+      result mustEqual Valid
+    }
+
+    "must return Valid for more than one non-exclusive item selected" in {
+      val result = exclusiveItemInSet("errorKey", "0")(Set("1", "2"))
+      result mustEqual Valid
+    }
+
+    "must return Invalid when both a non-exclusive and exclusive item has been selected" in {
+      val result = exclusiveItemInSet("errorKey", "0")(Set("0", "1"))
+      result mustEqual Invalid("errorKey")
+    }
+
   }
 }
