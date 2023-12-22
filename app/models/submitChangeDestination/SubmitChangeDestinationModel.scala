@@ -23,7 +23,6 @@ import models.sections.info.movementScenario.{MovementScenario, MovementType}
 import models.{NorthernIrelandRegisteredConsignor, NorthernIrelandWarehouseKeeper, UserType}
 import pages.sections.exportInformation.ExportCustomsOfficePage
 import pages.sections.info.{DestinationTypePage, DispatchPlacePage}
-import play.api.i18n.Messages
 import play.api.libs.json.{Json, OFormat}
 import utils.ModelConstructorHelpers
 
@@ -35,7 +34,6 @@ case class SubmitChangeDestinationModel(
                                 attributes: AttributesModel,
                                 consigneeTrader: Option[TraderModel],
                                 consignorTrader: TraderModel,
-                                placeOfDispatchTrader: Option[TraderModel],
                                 complementConsigneeTrader: Option[ComplementConsigneeTraderModel],
                                 deliveryPlaceTrader: Option[TraderModel],
                                 deliveryPlaceCustomsOffice: Option[OfficeModel],
@@ -77,7 +75,6 @@ object SubmitChangeDestinationModel extends ModelConstructorHelpers {
       attributes = AttributesModel.apply(movementScenario.destinationType),
       consigneeTrader = TraderModel.applyConsignee,
       consignorTrader = TraderModel.applyConsignor,
-      placeOfDispatchTrader = TraderModel.applyPlaceOfDispatch,
       complementConsigneeTrader = ComplementConsigneeTraderModel.apply,
       deliveryPlaceTrader = TraderModel.applyDeliveryPlace(movementScenario),
       deliveryPlaceCustomsOffice = request.userAnswers.get(ExportCustomsOfficePage).map(OfficeModel(_)),

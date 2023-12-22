@@ -160,7 +160,6 @@ trait BaseFixtures {
       vatNumber = None,
       eoriNumber = None
     ),
-    placeOfDispatchTrader = None,
     complementConsigneeTrader = None,
     deliveryPlaceTrader = None,
     deliveryPlaceCustomsOffice = None,

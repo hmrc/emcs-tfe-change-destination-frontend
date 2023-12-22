@@ -24,7 +24,6 @@ import models.sections.transportArranger.TransportArranger
 import pages.sections.consignee._
 import pages.sections.consignor._
 import pages.sections.destination._
-import pages.sections.dispatch._
 import pages.sections.firstTransporter._
 import pages.sections.guarantor._
 import pages.sections.transportArranger._
@@ -70,27 +69,6 @@ object TraderModel extends ModelConstructorHelpers {
       vatNumber = None,
       eoriNumber = None
     )
-  }
-
-  def applyPlaceOfDispatch(implicit request: DataRequest[_]): Option[TraderModel] = {
-    if (DispatchSection.canBeCompletedForTraderAndDestinationType) {
-      val useConsignorDetails: Boolean = mandatoryPage(DispatchUseConsignorDetailsPage)
-
-      if (useConsignorDetails) {
-        Some(applyConsignor.copy(traderExciseNumber = request.userAnswers.get(DispatchWarehouseExcisePage)))
-      } else {
-        val placeOfDispatchAddress: UserAddress = mandatoryPage(DispatchAddressPage)
-        Some(TraderModel(
-          traderExciseNumber = request.userAnswers.get(DispatchWarehouseExcisePage),
-          traderName = request.userAnswers.get(DispatchBusinessNamePage),
-          address = Some(AddressModel.fromUserAddress(placeOfDispatchAddress)),
-          vatNumber = None,
-          eoriNumber = None
-        ))
-      }
-    } else {
-      None
-    }
   }
 
   //noinspection ScalaStyle

@@ -29,7 +29,6 @@ import pages.sections.Section
 import pages.sections.consignee.ConsigneeSection
 import pages.sections.consignor.ConsignorSection
 import pages.sections.destination.DestinationSection
-import pages.sections.dispatch.DispatchSection
 import pages.sections.exportInformation.ExportInformationSection
 import pages.sections.firstTransporter.FirstTransporterSection
 import pages.sections.guarantor.GuarantorSection
@@ -177,14 +176,6 @@ class DraftMovementHelperSpec extends SpecBase {
 
       "deliverySection" - {
 
-        def dispatchRow(ern: String) = TaskListSectionRow(
-          messagesForLanguage.dispatch,
-          "dispatch",
-          Some(controllers.sections.dispatch.routes.DispatchIndexController.onPageLoad(ern, testDraftId).url),
-          Some(DispatchSection),
-          Some(NotStarted)
-        )
-
         def consigneeRow(ern: String) = TaskListSectionRow(
           messagesForLanguage.consignee,
           "consignee",
@@ -222,24 +213,6 @@ class DraftMovementHelperSpec extends SpecBase {
             Some(ConsignorSection),
             Some(NotStarted)
           ))
-        }
-        "should render the dispatch row" - {
-          "when UserType is valid" in {
-            Seq("GBWK123", "XIWK123").foreach {
-              ern =>
-                implicit val request: DataRequest[_] = dataRequest(ern = ern, userAnswers = emptyUserAnswers)
-                helper.deliverySection.rows must contain(dispatchRow(ern))
-            }
-          }
-        }
-        "should not render the dispatch row" - {
-          "when UserType is invalid" in {
-            Seq("GBRC123", "XIRC123").foreach {
-              ern =>
-                implicit val request: DataRequest[_] = dataRequest(ern = ern, userAnswers = emptyUserAnswers)
-                helper.deliverySection.rows must not contain dispatchRow(ern)
-            }
-          }
         }
         "should render the consignee row" - {
           "when MovementScenario is valid" in {

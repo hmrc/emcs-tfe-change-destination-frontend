@@ -23,7 +23,6 @@ import models.sections.info.movementScenario.MovementScenario._
 import pages.sections.consignee.ConsigneeSection
 import pages.sections.consignor.ConsignorSection
 import pages.sections.destination.DestinationSection
-import pages.sections.dispatch.DispatchSection
 import pages.sections.exportInformation.ExportInformationSection
 import pages.sections.firstTransporter.FirstTransporterSection
 import pages.sections.guarantor.GuarantorSection
@@ -91,17 +90,6 @@ class DraftMovementHelper @Inject()() extends Logging {
           section = Some(ConsignorSection),
           status = Some(ConsignorSection.status)
         )),
-        if (DispatchSection.canBeCompletedForTraderAndDestinationType) {
-          Some(TaskListSectionRow(
-            taskName = messages("draftMovement.section.delivery.dispatch"),
-            id = "dispatch",
-            link = Some(controllers.sections.dispatch.routes.DispatchIndexController.onPageLoad(request.ern, request.arc).url),
-            section = Some(DispatchSection),
-            status = Some(DispatchSection.status)
-          ))
-        } else {
-          None
-        },
         if (ConsigneeSection.canBeCompletedForTraderAndDestinationType) {
           Some(TaskListSectionRow(
             taskName = messages("draftMovement.section.delivery.consignee"),

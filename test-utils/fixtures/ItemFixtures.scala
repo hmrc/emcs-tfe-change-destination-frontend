@@ -31,7 +31,6 @@ import models.{ExciseProductCode, ExemptOrganisationDetailsModel, GoodsType, Use
 import pages.sections.consignee._
 import pages.sections.consignor._
 import pages.sections.destination._
-import pages.sections.dispatch._
 import pages.sections.exportInformation._
 import pages.sections.firstTransporter._
 import pages.sections.guarantor._
@@ -334,11 +333,6 @@ trait ItemFixtures {
     .set(ConsigneeAddressPage, testUserAddress.copy(street = "consignee street"))
     // consignor
     .set(ConsignorAddressPage, testUserAddress.copy(street = "consignor street"))
-    // placeOfDispatch
-    .set(DispatchUseConsignorDetailsPage, false)
-    .set(DispatchBusinessNamePage, "dispatch name")
-    .set(DispatchAddressPage, testUserAddress.copy(street = "dispatch street"))
-    .set(DispatchWarehouseExcisePage, "dispatch ern")
     // complementConsigneeTrader
     .set(ConsigneeExemptOrganisationPage, ExemptOrganisationDetailsModel("state", "number"))
     // deliveryPlaceTrader
@@ -397,7 +391,6 @@ trait ItemFixtures {
       vatNumber = None,
       eoriNumber = None
     ),
-    placeOfDispatchTrader = None,
     complementConsigneeTrader = Some(ComplementConsigneeTraderModel("state", Some("number"))),
     deliveryPlaceTrader = Some(TraderModel(
       traderExciseNumber = None,
@@ -477,13 +470,6 @@ trait ItemFixtures {
       vatNumber = None,
       eoriNumber = None
     ),
-    placeOfDispatchTrader = Some(TraderModel(
-      traderExciseNumber = Some("dispatch ern"),
-      traderName = Some("dispatch name"),
-      address = Some(AddressModel.fromUserAddress(testUserAddress.copy(street = "dispatch street"))),
-      vatNumber = None,
-      eoriNumber = None
-    )),
     complementConsigneeTrader = Some(ComplementConsigneeTraderModel("state", Some("number"))),
     deliveryPlaceTrader = Some(TraderModel(
       traderExciseNumber = None,
@@ -563,7 +549,6 @@ trait ItemFixtures {
       vatNumber = None,
       eoriNumber = None
     ),
-    placeOfDispatchTrader = None,
     complementConsigneeTrader = Some(ComplementConsigneeTraderModel("state", Some("number"))),
     deliveryPlaceTrader = Some(TraderModel(
       traderExciseNumber = None,
@@ -643,13 +628,6 @@ trait ItemFixtures {
       vatNumber = None,
       eoriNumber = None
     ),
-    placeOfDispatchTrader = Some(TraderModel(
-      traderExciseNumber = Some("dispatch ern"),
-      traderName = Some("dispatch name"),
-      address = Some(AddressModel.fromUserAddress(testUserAddress.copy(street = "dispatch street"))),
-      vatNumber = None,
-      eoriNumber = None
-    )),
     complementConsigneeTrader = Some(ComplementConsigneeTraderModel("state", Some("number"))),
     deliveryPlaceTrader = Some(TraderModel(
       traderExciseNumber = None,

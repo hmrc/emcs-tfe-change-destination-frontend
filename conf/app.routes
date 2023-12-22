@@ -33,7 +33,6 @@ POST        /trader/:ern/movement/:arc/declaration           controllers.Declara
 ->          /                                                 transportArranger.Routes
 ->          /                                                 transportUnit.Routes
 ->          /                                                 firstTransporter.Routes
-->          /                                                 dispatch.Routes
 ->          /                                                 exportInformation.Routes
 ->          /                                                 destination.Routes
 ->          /                                                 guarantor.Routes

@@ -26,7 +26,6 @@ import models.sections.transportArranger.TransportArranger
 import pages.sections.consignee._
 import pages.sections.consignor._
 import pages.sections.destination._
-import pages.sections.dispatch._
 import pages.sections.firstTransporter._
 import pages.sections.guarantor._
 import pages.sections.info.DestinationTypePage
@@ -185,59 +184,6 @@ class TraderModelSpec extends SpecBase {
       implicit val dr: DataRequest[_] = dataRequest(fakeRequest, emptyUserAnswers.set(ConsignorAddressPage, testUserAddress.copy(street = "consignor street")))
 
       TraderModel.applyConsignor mustBe consignorTrader
-    }
-  }
-
-  "applyPlaceOfDispatch" - {
-    "must return a TraderModel" - {
-      "when __WK and use consignor details = true" in {
-        Seq("GBWK123", "XIWK123").foreach {
-          ern =>
-            implicit val dr: DataRequest[_] = dataRequest(
-              fakeRequest,
-              emptyUserAnswers
-                .set(DispatchUseConsignorDetailsPage, true)
-                .set(ConsignorAddressPage, testUserAddress.copy(street = "consignor street"))
-                .set(DispatchWarehouseExcisePage, "dispatch ern"),
-              ern
-            )
-
-            TraderModel.applyPlaceOfDispatch mustBe Some(consignorTrader.copy(traderExciseNumber = Some("dispatch ern")))
-        }
-      }
-      "when __WK and use consignor details = false" in {
-        Seq("GBWK123", "XIWK123").foreach {
-          ern =>
-            implicit val dr: DataRequest[_] = dataRequest(
-              fakeRequest,
-              emptyUserAnswers
-                .set(DispatchUseConsignorDetailsPage, false)
-                .set(DispatchBusinessNamePage, "dispatch name")
-                .set(DispatchAddressPage, testUserAddress.copy(street = "dispatch street"))
-                .set(DispatchWarehouseExcisePage, "dispatch ern"),
-              ern
-            )
-
-            TraderModel.applyPlaceOfDispatch mustBe Some(placeOfDispatchTrader)
-        }
-      }
-    }
-    "must return None" - {
-      "when __RC" in {
-        Seq("GBRC123", "XIRC123").foreach {
-          ern =>
-            implicit val dr: DataRequest[_] = dataRequest(
-              fakeRequest,
-              emptyUserAnswers
-                .set(DispatchUseConsignorDetailsPage, true)
-                .set(ConsignorAddressPage, testUserAddress.copy(street = "consignor street"))
-                .set(DispatchWarehouseExcisePage, "dispatch ern"),
-              ern
-            )
-
-            TraderModel.applyPlaceOfDispatch mustBe None
-        }
-      }
     }
   }
 
