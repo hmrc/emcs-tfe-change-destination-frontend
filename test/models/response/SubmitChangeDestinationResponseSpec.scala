@@ -14,12 +14,18 @@
  * limitations under the License.
  */
 
-package models.sections.items
+package models.response
 
-import play.api.libs.json.{Json, OFormat}
+import base.SpecBase
+import fixtures.SubmitChangeDestinationFixtures
 
-case class ItemPackagingSealTypeModel(sealType: String, optSealInformation: Option[String])
-
-object ItemPackagingSealTypeModel {
-  implicit val format: OFormat[ItemPackagingSealTypeModel] = Json.format[ItemPackagingSealTypeModel]
+class SubmitChangeDestinationResponseSpec extends SpecBase with SubmitChangeDestinationFixtures {
+  "reads" - {
+    "should read from EIS" in {
+      successResponseEISJson.as[SubmitChangeDestinationResponse] mustBe submitChangeDestinationResponseEIS
+    }
+    "should read from ChRIS" in {
+      successResponseChRISJson.as[SubmitChangeDestinationResponse] mustBe submitChangeDestinationResponseChRIS
+    }
+  }
 }

@@ -3,7 +3,7 @@ package connectors
 import com.github.tomakehurst.wiremock.client.WireMock._
 import com.github.tomakehurst.wiremock.http.Fault
 import connectors.emcsTfe.SubmitChangeDestinationConnector
-import fixtures.BaseFixtures
+import fixtures.{BaseFixtures, SubmitChangeDestinationFixtures}
 import models.requests.{DataRequest, UserRequest}
 import models.response.UnexpectedDownstreamResponseError
 import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
@@ -27,7 +27,8 @@ class SubmitChangeDestinationConnectorISpec extends AnyFreeSpec
   with IntegrationPatience
   with EitherValues
   with OptionValues
-  with BaseFixtures {
+  with BaseFixtures
+  with SubmitChangeDestinationFixtures {
 
   implicit private lazy val hc: HeaderCarrier = HeaderCarrier()
 

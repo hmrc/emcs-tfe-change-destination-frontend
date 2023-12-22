@@ -21,7 +21,6 @@ import models.requests.DataRequest
 import models.response.{InvalidUserTypeException, MissingMandatoryPage}
 import models.sections.info.movementScenario.MovementScenario._
 import pages.sections.consignee.ConsigneeSection
-import pages.sections.consignor.ConsignorSection
 import pages.sections.destination.DestinationSection
 import pages.sections.exportInformation.ExportInformationSection
 import pages.sections.firstTransporter.FirstTransporterSection
@@ -83,13 +82,6 @@ class DraftMovementHelper @Inject()() extends Logging {
     TaskListSection(
       sectionHeading = messages("draftMovement.section.delivery"),
       rows = Seq(
-        Some(TaskListSectionRow(
-          taskName = messages("draftMovement.section.delivery.consignor"),
-          id = "consignor",
-          link = Some(controllers.sections.consignor.routes.ConsignorIndexController.onPageLoad(request.ern, request.arc).url),
-          section = Some(ConsignorSection),
-          status = Some(ConsignorSection.status)
-        )),
         if (ConsigneeSection.canBeCompletedForTraderAndDestinationType) {
           Some(TaskListSectionRow(
             taskName = messages("draftMovement.section.delivery.consignee"),

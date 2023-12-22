@@ -57,8 +57,8 @@ class AddressViewSpec extends SpecBase with ViewBehaviours {
           implicit val doc: Document = Jsoup.parse(view(
             form = form,
             addressPage = addressPage,
-            call = controllers.sections.consignor.routes.ConsignorAddressController.onSubmit(request.ern, request.arc, NormalMode)).toString()
-          )
+            call = testOnwardRoute
+          ).toString())
 
           behave like pageWithExpectedElementsAndMessages(Seq(
             Selectors.title -> messagesForLanguage.title(addressPage),
@@ -81,7 +81,7 @@ class AddressViewSpec extends SpecBase with ViewBehaviours {
           implicit val doc: Document = Jsoup.parse(view(
             form = form,
             addressPage = TransportArrangerAddressPage,
-            call = controllers.sections.consignor.routes.ConsignorAddressController.onSubmit(request.ern, request.arc, NormalMode),
+            call = testOnwardRoute,
             headingKey = Some(s"$TransportArrangerAddressPage.$GoodsOwner")
           ).toString())
 
@@ -103,7 +103,7 @@ class AddressViewSpec extends SpecBase with ViewBehaviours {
           implicit val doc: Document = Jsoup.parse(view(
             form = form,
             addressPage = TransportArrangerAddressPage,
-            call = controllers.sections.consignor.routes.ConsignorAddressController.onSubmit(request.ern, request.arc, NormalMode),
+            call = testOnwardRoute,
             headingKey = Some(s"$TransportArrangerAddressPage.$Other")
           ).toString())
 

@@ -17,6 +17,7 @@
 package connectors.emcsTfe
 
 import base.SpecBase
+import fixtures.SubmitChangeDestinationFixtures
 import mocks.connectors.MockHttpClient
 import models.requests.DataRequest
 import models.response.JsonValidationError
@@ -27,7 +28,7 @@ import uk.gov.hmrc.http.HeaderCarrier
 import scala.concurrent.{ExecutionContext, Future}
 
 class SubmitChangeDestinationConnectorSpec extends SpecBase
-  with Status with MimeTypes with HeaderNames with MockHttpClient {
+  with Status with MimeTypes with HeaderNames with MockHttpClient with SubmitChangeDestinationFixtures {
 
   implicit lazy val hc: HeaderCarrier = HeaderCarrier()
   implicit lazy val ec: ExecutionContext = app.injector.instanceOf[ExecutionContext]

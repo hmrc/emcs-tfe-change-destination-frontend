@@ -27,7 +27,6 @@ import models.sections.info.movementScenario.MovementScenario
 import models.sections.info.movementScenario.MovementScenario._
 import pages.sections.Section
 import pages.sections.consignee.ConsigneeSection
-import pages.sections.consignor.ConsignorSection
 import pages.sections.destination.DestinationSection
 import pages.sections.exportInformation.ExportInformationSection
 import pages.sections.firstTransporter.FirstTransporterSection
@@ -203,16 +202,6 @@ class DraftMovementHelperSpec extends SpecBase {
         "should have the correct heading" in {
           implicit val request: DataRequest[_] = dataRequest(ern = testErn, userAnswers = emptyUserAnswers)
           helper.deliverySection.sectionHeading mustBe messagesForLanguage.deliverySectionHeading
-        }
-        "should render the consignor row" in {
-          implicit val request: DataRequest[_] = dataRequest(ern = testErn, userAnswers = emptyUserAnswers)
-          helper.deliverySection.rows must contain(TaskListSectionRow(
-            messagesForLanguage.consignor,
-            "consignor",
-            Some(controllers.sections.consignor.routes.ConsignorIndexController.onPageLoad(testErn, testDraftId).url),
-            Some(ConsignorSection),
-            Some(NotStarted)
-          ))
         }
         "should render the consignee row" - {
           "when MovementScenario is valid" in {

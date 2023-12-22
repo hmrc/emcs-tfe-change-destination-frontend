@@ -17,6 +17,7 @@
 package services
 
 import base.SpecBase
+import fixtures.SubmitChangeDestinationFixtures
 import mocks.connectors.MockSubmitChangeDestinationConnector
 import models.response.UnexpectedDownstreamResponseError
 import models.response.SubmitChangeDestinationException
@@ -26,7 +27,7 @@ import uk.gov.hmrc.http.HeaderCarrier
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class SubmitChangeDestinationServiceSpec extends SpecBase with MockSubmitChangeDestinationConnector {
+class SubmitChangeDestinationServiceSpec extends SpecBase with MockSubmitChangeDestinationConnector with SubmitChangeDestinationFixtures {
 
   implicit val hc = HeaderCarrier()
   implicit val ec = ExecutionContext.global

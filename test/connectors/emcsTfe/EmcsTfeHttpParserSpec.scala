@@ -17,6 +17,7 @@
 package connectors.emcsTfe
 
 import base.SpecBase
+import fixtures.SubmitChangeDestinationFixtures
 import mocks.connectors.MockHttpClient
 import models.response.{JsonValidationError, SubmitChangeDestinationResponse, UnexpectedDownstreamResponseError}
 import play.api.http.{HeaderNames, MimeTypes, Status}
@@ -24,7 +25,7 @@ import play.api.libs.json.{Json, Reads}
 import uk.gov.hmrc.http.{HttpClient, HttpResponse}
 
 class EmcsTfeHttpParserSpec extends SpecBase
-  with Status with MimeTypes with HeaderNames with MockHttpClient {
+  with Status with MimeTypes with HeaderNames with MockHttpClient with SubmitChangeDestinationFixtures {
 
   lazy val httpParser = new EmcsTfeHttpParser[SubmitChangeDestinationResponse] {
     override implicit val reads: Reads[SubmitChangeDestinationResponse] = SubmitChangeDestinationResponse.reads

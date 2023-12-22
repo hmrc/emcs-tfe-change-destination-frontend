@@ -18,7 +18,7 @@ package models.submitChangeDestination
 
 import base.SpecBase
 import config.AppConfig
-import fixtures.ItemFixtures
+import fixtures.SubmitChangeDestinationFixtures
 import models.requests.DataRequest
 import models.sections.info._
 import pages.sections.info._
@@ -27,7 +27,7 @@ import play.api.test.FakeRequest
 
 //TODO: This has been coped over from CaM. Was originally the `SubmitCreateMovementModel`
 //      This will need to be refactored and udpated to accurately reflect the submission for CoD
-class SubmitChangeDestinationModelSpec extends SpecBase with ItemFixtures {
+class SubmitChangeDestinationModelSpec extends SpecBase with SubmitChangeDestinationFixtures {
   implicit val ac: AppConfig = appConfig
 
   val fakeRequest: FakeRequest[AnyContentAsEmpty.type] = FakeRequest()
