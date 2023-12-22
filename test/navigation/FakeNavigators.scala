@@ -37,11 +37,6 @@ object FakeNavigators {
       desiredRoute
   }
 
-  class FakeItemsNavigator(desiredRoute: Call) extends ItemsNavigator {
-    override def nextPage(page: Page, mode: Mode, userAnswers: UserAnswers): Call =
-      desiredRoute
-  }
-
   class FakeInfoNavigator(desiredRoute: Call) extends InformationNavigator {
     override def nextPage(page: Page, mode: Mode, userAnswers: UserAnswers): Call =
       desiredRoute
@@ -83,21 +78,6 @@ object FakeNavigators {
   }
 
   class FakeExportInformationNavigator(desiredRoute: Call) extends ExportInformationNavigator {
-    override def nextPage(page: Page, mode: Mode, userAnswers: UserAnswers): Call =
-      desiredRoute
-  }
-
-  class FakeImportInformationNavigator(desiredRoute: Call) extends ImportInformationNavigator {
-    override def nextPage(page: Page, mode: Mode, userAnswers: UserAnswers): Call =
-      desiredRoute
-  }
-
-  class FakeDocumentsNavigator(desiredRoute: Call) extends DocumentsNavigator {
-    override def nextPage(page: Page, mode: Mode, userAnswers: UserAnswers): Call =
-      desiredRoute
-  }
-
-  class FakeSadNavigator(desiredRoute: Call) extends SadNavigator {
     override def nextPage(page: Page, mode: Mode, userAnswers: UserAnswers): Call =
       desiredRoute
   }

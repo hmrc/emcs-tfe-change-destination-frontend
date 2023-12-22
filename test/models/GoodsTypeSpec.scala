@@ -17,7 +17,7 @@
 package models
 
 import base.SpecBase
-import fixtures.messages.sections.documents.DocumentsCertificatesMessages
+import fixtures.messages.BaseEnglish
 import models.GoodsType._
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.i18n.Messages
@@ -41,7 +41,7 @@ class GoodsTypeSpec extends SpecBase with GuiceOneAppPerSuite {
         s"Invalid argument of 'O' received which can not be mapped to a GoodsType"
     }
 
-    Seq(DocumentsCertificatesMessages.English).foreach { messagesForLanguage =>
+    Seq(BaseEnglish).foreach { messagesForLanguage =>
 
       s"when being rendered in lang code of '${messagesForLanguage.lang.code}'" - {
 

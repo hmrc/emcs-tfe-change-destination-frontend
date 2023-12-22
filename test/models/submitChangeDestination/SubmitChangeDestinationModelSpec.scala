@@ -19,19 +19,16 @@ package models.submitChangeDestination
 import base.SpecBase
 import config.AppConfig
 import fixtures.ItemFixtures
-import fixtures.messages.sections.items.ItemSmallIndependentProducerMessages
 import models.requests.DataRequest
 import models.sections.info._
 import pages.sections.info._
-import play.api.i18n.Messages
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 
+//TODO: This has been coped over from CaM. Was originally the `SubmitCreateMovementModel`
+//      This will need to be refactored and udpated to accurately reflect the submission for CoD
 class SubmitChangeDestinationModelSpec extends SpecBase with ItemFixtures {
   implicit val ac: AppConfig = appConfig
-
-  val messagesForLanguage = ItemSmallIndependentProducerMessages.English
-  implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
 
   val fakeRequest: FakeRequest[AnyContentAsEmpty.type] = FakeRequest()
 

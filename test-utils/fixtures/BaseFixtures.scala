@@ -161,14 +161,12 @@ trait BaseFixtures {
       eoriNumber = None
     ),
     placeOfDispatchTrader = None,
-    dispatchImportOffice = None,
     complementConsigneeTrader = None,
     deliveryPlaceTrader = None,
     deliveryPlaceCustomsOffice = None,
     competentAuthorityDispatchOffice = OfficeModel("office"),
     transportArrangerTrader = None,
     firstTransporterTrader = None,
-    documentCertificate = None,
     headerEadEsad = HeaderEadEsadModel(
       destinationType = DestinationType.DirectDelivery,
       journeyTime = "2 hours",
@@ -182,15 +180,13 @@ trait BaseFixtures {
       guarantorTypeCode = GuarantorArranger.GoodsOwner,
       guarantorTrader = None
     ),
-    bodyEadEsad = Seq(),
     eadEsadDraft = EadEsadDraftModel(
       localReferenceNumber = testLrn,
       invoiceNumber = "inv ref",
       invoiceDate = None,
       originTypeCode = OriginType.Imports,
       dateOfDispatch = "2020-10-31",
-      timeOfDispatch = None,
-      importSad = None
+      timeOfDispatch = None
     ),
     transportDetails = Seq()
   )
