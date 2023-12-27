@@ -21,18 +21,12 @@ import models.requests.DataRequest
 import models.response.{InvalidUserTypeException, MissingMandatoryPage}
 import models.sections.info.movementScenario.MovementScenario._
 import pages.sections.consignee.ConsigneeSection
-import pages.sections.consignor.ConsignorSection
 import pages.sections.destination.DestinationSection
-import pages.sections.dispatch.DispatchSection
-import pages.sections.documents.DocumentsSection
 import pages.sections.exportInformation.ExportInformationSection
 import pages.sections.firstTransporter.FirstTransporterSection
 import pages.sections.guarantor.GuarantorSection
-import pages.sections.importInformation.ImportInformationSection
 import pages.sections.info.{DestinationTypePage, DispatchPlacePage, InfoSection}
-import pages.sections.items.ItemsSection
 import pages.sections.journeyType.JourneyTypeSection
-import pages.sections.sad.SadSection
 import pages.sections.transportArranger.TransportArrangerSection
 import pages.sections.transportUnit.TransportUnitsSection
 import play.api.i18n.Messages
@@ -88,35 +82,6 @@ class DraftMovementHelper @Inject()() extends Logging {
     TaskListSection(
       sectionHeading = messages("draftMovement.section.delivery"),
       rows = Seq(
-        Some(TaskListSectionRow(
-          taskName = messages("draftMovement.section.delivery.consignor"),
-          id = "consignor",
-          link = Some(controllers.sections.consignor.routes.ConsignorIndexController.onPageLoad(request.ern, request.arc).url),
-          section = Some(ConsignorSection),
-          status = Some(ConsignorSection.status)
-        )),
-        if (ImportInformationSection.canBeCompletedForTraderAndDestinationType) {
-          Some(TaskListSectionRow(
-            taskName = messages("draftMovement.section.delivery.import"),
-            id = "import",
-            link = Some(controllers.sections.importInformation.routes.ImportInformationIndexController.onPageLoad(request.ern, request.arc).url),
-            section = Some(ImportInformationSection),
-            status = Some(ImportInformationSection.status)
-          ))
-        } else {
-          None
-        },
-        if (DispatchSection.canBeCompletedForTraderAndDestinationType) {
-          Some(TaskListSectionRow(
-            taskName = messages("draftMovement.section.delivery.dispatch"),
-            id = "dispatch",
-            link = Some(controllers.sections.dispatch.routes.DispatchIndexController.onPageLoad(request.ern, request.arc).url),
-            section = Some(DispatchSection),
-            status = Some(DispatchSection.status)
-          ))
-        } else {
-          None
-        },
         if (ConsigneeSection.canBeCompletedForTraderAndDestinationType) {
           Some(TaskListSectionRow(
             taskName = messages("draftMovement.section.delivery.consignee"),
@@ -205,55 +170,11 @@ class DraftMovementHelper @Inject()() extends Logging {
     )
   }
 
-  private[draftMovement] def itemsSection(implicit request: DataRequest[_], messages: Messages): TaskListSection = {
-    TaskListSection(
-      sectionHeading = messages("draftMovement.section.items"),
-      rows = Seq(
-        Some(TaskListSectionRow(
-          taskName = messages("draftMovement.section.items.items"),
-          id = "items",
-          link = Some(controllers.sections.items.routes.ItemsIndexController.onPageLoad(request.ern, request.arc).url),
-          section = Some(ItemsSection),
-          status = Some(ItemsSection.status)
-        ))
-      ).flatten
-    )
-  }
-
-
-  private[draftMovement] def documentsSection(implicit request: DataRequest[_], messages: Messages): TaskListSection = {
-    TaskListSection(
-      sectionHeading = messages("draftMovement.section.documents"),
-      rows = Seq(
-        if (SadSection.canBeCompletedForTraderAndDestinationType) {
-          Some(TaskListSectionRow(
-            taskName = messages("draftMovement.section.documents.sad"),
-            id = "sad",
-            link = Some(controllers.sections.sad.routes.SadIndexController.onPageLoad(request.ern, request.arc).url),
-            section = Some(SadSection),
-            status = Some(SadSection.status)
-          ))
-        } else {
-          None
-        },
-        Some(TaskListSectionRow(
-          taskName = messages("draftMovement.section.documents.documents"),
-          id = "documents",
-          link = Some(controllers.sections.documents.routes.DocumentsIndexController.onPageLoad(request.ern, request.arc).url),
-          section = Some(DocumentsSection),
-          status = Some(DocumentsSection.status)
-        ))
-      ).flatten
-    )
-  }
-
   private def sectionsExceptSubmit(implicit request: DataRequest[_], messages: Messages): Seq[TaskListSection] = Seq(
     movementSection,
     deliverySection,
     guarantorSection,
-    transportSection,
-    itemsSection,
-    documentsSection
+    transportSection
   )
 
   private[draftMovement] def submitSection(sectionsExceptSubmit: Seq[TaskListSection])

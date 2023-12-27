@@ -21,7 +21,6 @@ import models.requests.DataRequest
 import models.sections.info.movementScenario.{MovementScenario, OriginType}
 import models.sections.info.{DispatchDetailsModel, InvoiceDetailsModel}
 import pages.sections.info.{DestinationTypePage, DispatchDetailsPage, InvoiceDetailsPage, LocalReferenceNumberPage}
-import pages.sections.sad.ImportNumberPage
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 
@@ -43,9 +42,6 @@ class EadEsadDraftModelSpec extends SpecBase {
                 .set(InvoiceDetailsPage(), InvoiceDetailsModel("inv ref", LocalDate.parse("2020-12-25")))
                 .set(DispatchDetailsPage(), DispatchDetailsModel(LocalDate.parse("2020-10-31"), LocalTime.parse("23:59:59")))
                 .set(DestinationTypePage, MovementScenario.ExemptedOrganisation)
-                .set(ImportNumberPage(testIndex1), "sad 1")
-                .set(ImportNumberPage(testIndex2), "sad 2")
-                .set(ImportNumberPage(testIndex3), "sad 3")
               ,
               ern = ern
             )
@@ -56,8 +52,7 @@ class EadEsadDraftModelSpec extends SpecBase {
               invoiceDate = Some("2020-12-25"),
               originTypeCode = OriginType.Imports,
               dateOfDispatch = "2020-10-31",
-              timeOfDispatch = Some("23:59:59"),
-              importSad = Some(Seq(ImportSadModel("sad 1"), ImportSadModel("sad 2"), ImportSadModel("sad 3")))
+              timeOfDispatch = Some("23:59:59")
             )
         }
       }
@@ -74,9 +69,6 @@ class EadEsadDraftModelSpec extends SpecBase {
                 .set(InvoiceDetailsPage(), InvoiceDetailsModel("inv ref", LocalDate.parse("2020-12-25")))
                 .set(DispatchDetailsPage(), DispatchDetailsModel(LocalDate.parse("2020-10-31"), LocalTime.parse("23:59:59")))
                 .set(DestinationTypePage, MovementScenario.ExemptedOrganisation)
-                .set(ImportNumberPage(testIndex1), "sad 1")
-                .set(ImportNumberPage(testIndex2), "sad 2")
-                .set(ImportNumberPage(testIndex3), "sad 3")
               ,
               ern = ern
             )
@@ -87,8 +79,7 @@ class EadEsadDraftModelSpec extends SpecBase {
               invoiceDate = Some("2020-12-25"),
               originTypeCode = OriginType.TaxWarehouse,
               dateOfDispatch = "2020-10-31",
-              timeOfDispatch = Some("23:59:59"),
-              importSad = None
+              timeOfDispatch = Some("23:59:59")
             )
         }
       }
@@ -102,9 +93,6 @@ class EadEsadDraftModelSpec extends SpecBase {
           .set(InvoiceDetailsPage(), InvoiceDetailsModel("inv ref", LocalDate.parse("2020-12-25")))
           .set(DispatchDetailsPage(), DispatchDetailsModel(LocalDate.parse("2020-10-31"), LocalTime.parse("23:59")))
           .set(DestinationTypePage, MovementScenario.ExemptedOrganisation)
-          .set(ImportNumberPage(testIndex1), "sad 1")
-          .set(ImportNumberPage(testIndex2), "sad 2")
-          .set(ImportNumberPage(testIndex3), "sad 3")
       )
 
       EadEsadDraftModel.apply.timeOfDispatch mustBe Some("23:59:00")

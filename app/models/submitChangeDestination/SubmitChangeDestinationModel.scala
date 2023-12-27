@@ -17,14 +17,12 @@
 package models.submitChangeDestination
 
 import config.AppConfig
-import models.{NorthernIrelandRegisteredConsignor, NorthernIrelandWarehouseKeeper, UserType}
 import models.requests.DataRequest
 import models.sections.info.DispatchPlace
 import models.sections.info.movementScenario.{MovementScenario, MovementType}
+import models.{NorthernIrelandRegisteredConsignor, NorthernIrelandWarehouseKeeper, UserType}
 import pages.sections.exportInformation.ExportCustomsOfficePage
-import pages.sections.importInformation.ImportCustomsOfficeCodePage
 import pages.sections.info.{DestinationTypePage, DispatchPlacePage}
-import play.api.i18n.Messages
 import play.api.libs.json.{Json, OFormat}
 import utils.ModelConstructorHelpers
 
@@ -36,19 +34,15 @@ case class SubmitChangeDestinationModel(
                                 attributes: AttributesModel,
                                 consigneeTrader: Option[TraderModel],
                                 consignorTrader: TraderModel,
-                                placeOfDispatchTrader: Option[TraderModel],
-                                dispatchImportOffice: Option[OfficeModel],
                                 complementConsigneeTrader: Option[ComplementConsigneeTraderModel],
                                 deliveryPlaceTrader: Option[TraderModel],
                                 deliveryPlaceCustomsOffice: Option[OfficeModel],
                                 competentAuthorityDispatchOffice: OfficeModel,
                                 transportArrangerTrader: Option[TraderModel],
                                 firstTransporterTrader: Option[TraderModel],
-                                documentCertificate: Option[Seq[DocumentCertificateModel]],
                                 headerEadEsad: HeaderEadEsadModel,
                                 transportMode: TransportModeModel,
                                 movementGuarantee: MovementGuaranteeModel,
-                                bodyEadEsad: Seq[BodyEadEsadModel],
                                 eadEsadDraft: EadEsadDraftModel,
                                 transportDetails: Seq[TransportDetailsModel]
                               )
@@ -72,7 +66,7 @@ object SubmitChangeDestinationModel extends ModelConstructorHelpers {
     )
   }
 
-  def apply(implicit request: DataRequest[_], messages: Messages, appConfig: AppConfig): SubmitChangeDestinationModel = {
+  def apply(implicit request: DataRequest[_], appConfig: AppConfig): SubmitChangeDestinationModel = {
 
     val movementScenario: MovementScenario = mandatoryPage(DestinationTypePage)
 
@@ -81,19 +75,15 @@ object SubmitChangeDestinationModel extends ModelConstructorHelpers {
       attributes = AttributesModel.apply(movementScenario.destinationType),
       consigneeTrader = TraderModel.applyConsignee,
       consignorTrader = TraderModel.applyConsignor,
-      placeOfDispatchTrader = TraderModel.applyPlaceOfDispatch,
-      dispatchImportOffice = request.userAnswers.get(ImportCustomsOfficeCodePage).map(OfficeModel(_)),
       complementConsigneeTrader = ComplementConsigneeTraderModel.apply,
       deliveryPlaceTrader = TraderModel.applyDeliveryPlace(movementScenario),
       deliveryPlaceCustomsOffice = request.userAnswers.get(ExportCustomsOfficePage).map(OfficeModel(_)),
       competentAuthorityDispatchOffice = dispatchOffice,
       transportArrangerTrader = TraderModel.applyTransportArranger,
       firstTransporterTrader = TraderModel.applyFirstTransporter,
-      documentCertificate = DocumentCertificateModel.apply,
       headerEadEsad = HeaderEadEsadModel.apply(movementScenario.destinationType),
       transportMode = TransportModeModel.apply,
       movementGuarantee = MovementGuaranteeModel.apply,
-      bodyEadEsad = BodyEadEsadModel.apply,
       eadEsadDraft = EadEsadDraftModel.apply,
       transportDetails = TransportDetailsModel.apply
     )

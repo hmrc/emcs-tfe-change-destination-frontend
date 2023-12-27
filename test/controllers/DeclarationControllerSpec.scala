@@ -18,7 +18,7 @@ package controllers
 
 import base.SpecBase
 import controllers.actions.{DataRequiredAction, FakeDataRetrievalAction}
-import fixtures.ItemFixtures
+import fixtures.SubmitChangeDestinationFixtures
 import mocks.config.MockAppConfig
 import mocks.services.{MockSubmitChangeDestinationService, MockUserAnswersService}
 import models.UserAnswers
@@ -31,7 +31,7 @@ import views.html.DeclarationView
 import scala.concurrent.Future
 
 
-class DeclarationControllerSpec extends SpecBase with MockUserAnswersService with MockSubmitChangeDestinationService with MockAppConfig with ItemFixtures {
+class DeclarationControllerSpec extends SpecBase with MockUserAnswersService with MockSubmitChangeDestinationService with MockAppConfig with SubmitChangeDestinationFixtures {
 
   lazy val view: DeclarationView = app.injector.instanceOf[DeclarationView]
   val ern: String = "XIRC123"

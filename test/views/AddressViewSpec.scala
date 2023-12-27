@@ -27,7 +27,6 @@ import org.jsoup.nodes.Document
 import pages.sections.consignee.ConsigneeAddressPage
 import pages.sections.consignor.ConsignorAddressPage
 import pages.sections.destination.DestinationAddressPage
-import pages.sections.dispatch.DispatchAddressPage
 import pages.sections.firstTransporter.FirstTransporterAddressPage
 import pages.sections.guarantor.GuarantorAddressPage
 import pages.sections.transportArranger.TransportArrangerAddressPage
@@ -58,8 +57,8 @@ class AddressViewSpec extends SpecBase with ViewBehaviours {
           implicit val doc: Document = Jsoup.parse(view(
             form = form,
             addressPage = addressPage,
-            call = controllers.sections.consignor.routes.ConsignorAddressController.onSubmit(request.ern, request.arc, NormalMode)).toString()
-          )
+            call = testOnwardRoute
+          ).toString())
 
           behave like pageWithExpectedElementsAndMessages(Seq(
             Selectors.title -> messagesForLanguage.title(addressPage),
@@ -82,7 +81,7 @@ class AddressViewSpec extends SpecBase with ViewBehaviours {
           implicit val doc: Document = Jsoup.parse(view(
             form = form,
             addressPage = TransportArrangerAddressPage,
-            call = controllers.sections.consignor.routes.ConsignorAddressController.onSubmit(request.ern, request.arc, NormalMode),
+            call = testOnwardRoute,
             headingKey = Some(s"$TransportArrangerAddressPage.$GoodsOwner")
           ).toString())
 
@@ -104,7 +103,7 @@ class AddressViewSpec extends SpecBase with ViewBehaviours {
           implicit val doc: Document = Jsoup.parse(view(
             form = form,
             addressPage = TransportArrangerAddressPage,
-            call = controllers.sections.consignor.routes.ConsignorAddressController.onSubmit(request.ern, request.arc, NormalMode),
+            call = testOnwardRoute,
             headingKey = Some(s"$TransportArrangerAddressPage.$Other")
           ).toString())
 
@@ -129,28 +128,6 @@ class AddressViewSpec extends SpecBase with ViewBehaviours {
           Selectors.title -> messagesForLanguage.firstTransporterAddressTitle,
           Selectors.h1 -> messagesForLanguage.firstTransporterAddressHeading,
           Selectors.h2(1) -> messagesForLanguage.subheading(FirstTransporterAddressPage),
-          Selectors.label("property") -> messagesForLanguage.property,
-          Selectors.label("street") -> messagesForLanguage.street,
-          Selectors.label("town") -> messagesForLanguage.town,
-          Selectors.label("postcode") -> messagesForLanguage.postcode,
-          Selectors.button -> messagesForLanguage.saveAndContinue,
-          Selectors.link(1) -> messagesForLanguage.returnToDraft
-        ))
-      }
-
-      "when rendered for DispatchAddress page" - new Fixture(messagesForLanguage.lang) {
-
-        implicit val doc: Document = Jsoup.parse(view(
-          form = form,
-          addressPage = DispatchAddressPage,
-          call = controllers.sections.dispatch.routes.DispatchAddressController.onSubmit(request.ern, request.arc, NormalMode),
-          headingKey = Some("dispatchAddress")
-        ).toString())
-
-        behave like pageWithExpectedElementsAndMessages(Seq(
-          Selectors.title -> messagesForLanguage.dispatchAddressTitle,
-          Selectors.h1 -> messagesForLanguage.dispatchAddressHeading,
-          Selectors.h2(1) -> messagesForLanguage.subheading(DispatchAddressPage),
           Selectors.label("property") -> messagesForLanguage.property,
           Selectors.label("street") -> messagesForLanguage.street,
           Selectors.label("town") -> messagesForLanguage.town,

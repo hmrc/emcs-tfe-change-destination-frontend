@@ -27,17 +27,11 @@ GET         /trader/:ern/movement/:arc/declaration           controllers.Declara
 POST        /trader/:ern/movement/:arc/declaration           controllers.DeclarationController.onSubmit(ern: String, arc: String)
 
 ->          /                                                 info.Routes
-->          /                                                 consignor.Routes
 ->          /                                                 consignee.Routes
 ->          /                                                 journeyType.Routes
 ->          /                                                 transportArranger.Routes
 ->          /                                                 transportUnit.Routes
 ->          /                                                 firstTransporter.Routes
-->          /                                                 dispatch.Routes
 ->          /                                                 exportInformation.Routes
 ->          /                                                 destination.Routes
 ->          /                                                 guarantor.Routes
-->          /                                                 importInformation.Routes
-->          /                                                 items.Routes
-->          /                                                 documents.Routes
-->          /                                                 sad.Routes

@@ -22,7 +22,6 @@ import models.sections.guarantor.GuarantorArranger.{GoodsOwner, Transporter}
 import pages.QuestionPage
 import pages.sections.consignor.ConsignorAddressPage
 import pages.sections.destination.DestinationAddressPage
-import pages.sections.dispatch.DispatchAddressPage
 import pages.sections.firstTransporter.FirstTransporterAddressPage
 import pages.sections.guarantor.GuarantorAddressPage
 import pages.sections.transportArranger.TransportArrangerAddressPage
@@ -65,7 +64,6 @@ object AddressMessages {
       case ConsignorAddressPage => "Consignor information"
       case TransportArrangerAddressPage => "Transport arranger"
       case FirstTransporterAddressPage => "First transporter"
-      case DispatchAddressPage => "Place of dispatch information"
       case DestinationAddressPage => "Place of destination information"
       case GuarantorAddressPage => "Guarantor"
       case _ => "Consignee information"

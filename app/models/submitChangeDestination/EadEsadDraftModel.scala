@@ -30,8 +30,7 @@ case class EadEsadDraftModel(
                               invoiceDate: Option[String],
                               originTypeCode: OriginType,
                               dateOfDispatch: String,
-                              timeOfDispatch: Option[String],
-                              importSad: Option[Seq[ImportSadModel]]
+                              timeOfDispatch: Option[String]
                             )
 
 object EadEsadDraftModel extends ModelConstructorHelpers {
@@ -45,8 +44,7 @@ object EadEsadDraftModel extends ModelConstructorHelpers {
     invoiceDate = Some(mandatoryPage(InvoiceDetailsPage()).date.toString),
     originTypeCode = mandatoryPage(DestinationTypePage).originType,
     dateOfDispatch = mandatoryPage(DispatchDetailsPage()).date.toString,
-    timeOfDispatch = Some(mandatoryPage(DispatchDetailsPage()).time.format(timeFormatter)),
-    importSad = if(request.isWarehouseKeeper) None else Some(ImportSadModel.apply)
+    timeOfDispatch = Some(mandatoryPage(DispatchDetailsPage()).time.format(timeFormatter))
   )
 
   implicit val fmt: OFormat[EadEsadDraftModel] = Json.format
