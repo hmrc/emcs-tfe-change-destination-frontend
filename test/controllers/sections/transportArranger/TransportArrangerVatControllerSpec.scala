@@ -18,6 +18,7 @@ package controllers.sections.transportArranger
 
 import base.SpecBase
 import controllers.actions.FakeDataRetrievalAction
+import controllers.actions.FakeMovementAction
 import forms.sections.transportArranger.TransportArrangerVatFormProvider
 import mocks.services.MockUserAnswersService
 import models.sections.transportArranger.TransportArranger.GoodsOwner
@@ -40,7 +41,7 @@ class TransportArrangerVatControllerSpec extends SpecBase with MockUserAnswersSe
   lazy val form: Form[String] = formProvider()
   lazy val view: TransportArrangerVatView = app.injector.instanceOf[TransportArrangerVatView]
 
-  lazy val transportArrangerVatSubmitAction: Call = routes.TransportArrangerVatController.onSubmit(testErn, testDraftId, NormalMode)
+  lazy val transportArrangerVatSubmitAction: Call = routes.TransportArrangerVatController.onSubmit(testErn, testArc, NormalMode)
 
   class Fixture(val userAnswers: Option[UserAnswers] = Some(goodsOwnerUserAnswers)) {
     lazy val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest()
@@ -52,6 +53,7 @@ class TransportArrangerVatControllerSpec extends SpecBase with MockUserAnswersSe
       fakeAuthAction,
       new FakeDataRetrievalAction(userAnswers, Some(testMinTraderKnownFacts)),
       dataRequiredAction,
+      new FakeMovementAction(maxGetMovementResponse),
       fakeUserAllowListAction,
       formProvider,
       Helpers.stubMessagesControllerComponents(),
@@ -62,7 +64,7 @@ class TransportArrangerVatControllerSpec extends SpecBase with MockUserAnswersSe
   "TransportArrangerVat Controller" - {
 
     "must return OK and the correct view for a GET" in new Fixture() {
-      val result = controller.onPageLoad(testErn, testDraftId, NormalMode)(request)
+      val result = controller.onPageLoad(testErn, testArc, NormalMode)(request)
 
       status(result) mustEqual OK
       contentAsString(result) mustEqual
@@ -72,7 +74,7 @@ class TransportArrangerVatControllerSpec extends SpecBase with MockUserAnswersSe
     "must redirect for a GET onNonGbVAT" in new Fixture() {
       MockUserAnswersService.set().returns(Future.successful(goodsOwnerUserAnswers))
 
-      val result = controller.onNonGbVAT(testErn, testDraftId)(request)
+      val result = controller.onNonGbVAT(testErn, testArc)(request)
 
       status(result) mustEqual SEE_OTHER
       redirectLocation(result).value mustEqual testOnwardRoute.url
@@ -81,7 +83,7 @@ class TransportArrangerVatControllerSpec extends SpecBase with MockUserAnswersSe
     "must populate the view correctly on a GET when the question has previously been answered" in new Fixture(
       Some(goodsOwnerUserAnswers.set(TransportArrangerVatPage, "answer"))
     ) {
-      val result = controller.onPageLoad(testErn, testDraftId, NormalMode)(request)
+      val result = controller.onPageLoad(testErn, testArc, NormalMode)(request)
 
       status(result) mustEqual OK
       contentAsString(result) mustEqual
@@ -91,7 +93,7 @@ class TransportArrangerVatControllerSpec extends SpecBase with MockUserAnswersSe
     "must redirect to the next page when valid data is submitted" in new Fixture() {
       MockUserAnswersService.set().returns(Future.successful(goodsOwnerUserAnswers))
 
-      val result = controller.onSubmit(testErn, testDraftId, NormalMode)(request.withFormUrlEncodedBody(("value", "answer")))
+      val result = controller.onSubmit(testErn, testArc, NormalMode)(request.withFormUrlEncodedBody(("value", "answer")))
 
       status(result) mustEqual SEE_OTHER
       redirectLocation(result).value mustEqual testOnwardRoute.url
@@ -99,7 +101,7 @@ class TransportArrangerVatControllerSpec extends SpecBase with MockUserAnswersSe
 
     "must return a Bad Request and errors when invalid data is submitted" in new Fixture() {
       val boundForm = form.bind(Map("value" -> ""))
-      val result = controller.onSubmit(testErn, testDraftId, NormalMode)(request.withFormUrlEncodedBody(("value", "")))
+      val result = controller.onSubmit(testErn, testArc, NormalMode)(request.withFormUrlEncodedBody(("value", "")))
 
       status(result) mustEqual BAD_REQUEST
       contentAsString(result) mustEqual
@@ -107,14 +109,14 @@ class TransportArrangerVatControllerSpec extends SpecBase with MockUserAnswersSe
     }
 
     "must redirect to Journey Recovery for a GET if no existing data is found" in new Fixture(None) {
-      val result = controller.onPageLoad(testErn, testDraftId, NormalMode)(request)
+      val result = controller.onPageLoad(testErn, testArc, NormalMode)(request)
 
       status(result) mustEqual SEE_OTHER
       redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
     }
 
     "must redirect to Journey Recovery for a POST if no existing data is found" in new Fixture(None) {
-      val result = controller.onSubmit(testErn, testDraftId, NormalMode)(request.withFormUrlEncodedBody(("value", "answer")))
+      val result = controller.onSubmit(testErn, testArc, NormalMode)(request.withFormUrlEncodedBody(("value", "answer")))
 
       status(result) mustEqual SEE_OTHER
       redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url

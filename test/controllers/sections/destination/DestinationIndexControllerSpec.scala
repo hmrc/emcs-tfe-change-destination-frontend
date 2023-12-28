@@ -18,6 +18,7 @@ package controllers.sections.destination
 
 import base.SpecBase
 import controllers.actions.FakeDataRetrievalAction
+import controllers.actions.FakeMovementAction
 import mocks.services.MockUserAnswersService
 import models.sections.info.movementScenario.MovementScenario._
 import models.{NormalMode, UserAnswers}
@@ -31,7 +32,7 @@ import play.api.test.Helpers._
 class DestinationIndexControllerSpec extends SpecBase with MockUserAnswersService {
 
   class Fixture(optUserAnswers: Option[UserAnswers] = Some(emptyUserAnswers)) {
-    implicit val request = FakeRequest(GET, routes.DestinationIndexController.onPageLoad(testErn, testDraftId).url)
+    implicit val request = FakeRequest(GET, routes.DestinationIndexController.onPageLoad(testErn, testArc).url)
 
     lazy val testController = new DestinationIndexController(
       mockUserAnswersService,
@@ -39,6 +40,7 @@ class DestinationIndexControllerSpec extends SpecBase with MockUserAnswersServic
       fakeAuthAction,
       new FakeDataRetrievalAction(optUserAnswers, Some(testMinTraderKnownFacts)),
       dataRequiredAction,
+      new FakeMovementAction(maxGetMovementResponse),
       fakeUserAllowListAction,
       messagesControllerComponents
     )
@@ -52,10 +54,10 @@ class DestinationIndexControllerSpec extends SpecBase with MockUserAnswersServic
         .set(DestinationWarehouseVatPage, "vat")
         .set(DestinationDetailsChoicePage, false))) {
 
-        val result = testController.onPageLoad(testErn, testDraftId)(request)
+        val result = testController.onPageLoad(testErn, testArc)(request)
 
         status(result) mustEqual SEE_OTHER
-        redirectLocation(result) mustBe Some(routes.DestinationCheckAnswersController.onPageLoad(testErn, testDraftId).url)
+        redirectLocation(result) mustBe Some(routes.DestinationCheckAnswersController.onPageLoad(testErn, testArc).url)
       }
     }
 
@@ -65,11 +67,11 @@ class DestinationIndexControllerSpec extends SpecBase with MockUserAnswersServic
           s"when DestinationTypePage answer is $answer" in new Fixture(Some(emptyUserAnswers.set(DestinationTypePage, answer))) {
             Seq("GBWK123", "GBRC123", "XIWK123", "XIRC123").foreach {
               ern =>
-                val result = testController.onPageLoad(ern, testDraftId)(request)
+                val result = testController.onPageLoad(ern, testArc)(request)
 
                 status(result) mustEqual SEE_OTHER
                 redirectLocation(result) mustBe
-                  Some(routes.DestinationWarehouseExciseController.onPageLoad(ern, testDraftId, NormalMode).url)
+                  Some(routes.DestinationWarehouseExciseController.onPageLoad(ern, testArc, NormalMode).url)
             }
           }
       )
@@ -83,11 +85,11 @@ class DestinationIndexControllerSpec extends SpecBase with MockUserAnswersServic
           s"when DestinationTypePage answer is $answer" in new Fixture(Some(emptyUserAnswers.set(DestinationTypePage, answer))) {
             Seq("GBWK123", "GBRC123", "XIWK123", "XIRC123").foreach {
               ern =>
-                val result = testController.onPageLoad(ern, testDraftId)(request)
+                val result = testController.onPageLoad(ern, testArc)(request)
 
                 status(result) mustEqual SEE_OTHER
                 redirectLocation(result) mustBe
-                  Some(routes.DestinationWarehouseVatController.onPageLoad(ern, testDraftId, NormalMode).url)
+                  Some(routes.DestinationWarehouseVatController.onPageLoad(ern, testArc, NormalMode).url)
             }
           }
       )
@@ -99,11 +101,11 @@ class DestinationIndexControllerSpec extends SpecBase with MockUserAnswersServic
           s"when DestinationTypePage answer is $answer" in new Fixture(Some(emptyUserAnswers.set(DestinationTypePage, answer))) {
             Seq("GBWK123", "GBRC123", "XIWK123", "XIRC123").foreach {
               ern =>
-                val result = testController.onPageLoad(ern, testDraftId)(request)
+                val result = testController.onPageLoad(ern, testArc)(request)
 
                 status(result) mustEqual SEE_OTHER
                 redirectLocation(result) mustBe
-                  Some(routes.DestinationBusinessNameController.onPageLoad(ern, testDraftId, NormalMode).url)
+                  Some(routes.DestinationBusinessNameController.onPageLoad(ern, testArc, NormalMode).url)
             }
           }
       )
@@ -117,11 +119,11 @@ class DestinationIndexControllerSpec extends SpecBase with MockUserAnswersServic
           s"when DestinationTypePage answer is $answer" in new Fixture(Some(emptyUserAnswers.set(DestinationTypePage, answer))) {
             Seq("GBWK123", "GBRC123", "XIWK123", "XIRC123").foreach {
               ern =>
-                val result = testController.onPageLoad(ern, testDraftId)(request)
+                val result = testController.onPageLoad(ern, testArc)(request)
 
                 status(result) mustEqual SEE_OTHER
                 redirectLocation(result) mustBe
-                  Some(controllers.routes.DraftMovementController.onPageLoad(ern, testDraftId).url)
+                  Some(controllers.routes.DraftMovementController.onPageLoad(ern, testArc).url)
             }
           }
       )

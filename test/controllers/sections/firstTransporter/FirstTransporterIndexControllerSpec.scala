@@ -18,6 +18,7 @@ package controllers.sections.firstTransporter
 
 import base.SpecBase
 import controllers.actions.FakeDataRetrievalAction
+import controllers.actions.FakeMovementAction
 import mocks.services.MockUserAnswersService
 import models.{NormalMode, UserAddress, UserAnswers}
 import navigation.FakeNavigators.FakeFirstTransporterNavigator
@@ -30,7 +31,7 @@ class FirstTransporterIndexControllerSpec extends SpecBase with MockUserAnswersS
 
   class Fixture(optUserAnswers: Option[UserAnswers] = Some(emptyUserAnswers)) {
 
-    val request = FakeRequest(GET, controllers.sections.firstTransporter.routes.FirstTransporterIndexController.onPageLoad(testErn, testDraftId).url)
+    val request = FakeRequest(GET, controllers.sections.firstTransporter.routes.FirstTransporterIndexController.onPageLoad(testErn, testArc).url)
 
     lazy val testController = new FirstTransporterIndexController(
       mockUserAnswersService,
@@ -38,6 +39,7 @@ class FirstTransporterIndexControllerSpec extends SpecBase with MockUserAnswersS
       fakeAuthAction,
       new FakeDataRetrievalAction(optUserAnswers, Some(testMinTraderKnownFacts)),
       dataRequiredAction,
+      new FakeMovementAction(maxGetMovementResponse),
       fakeUserAllowListAction,
       messagesControllerComponents
     )
@@ -52,19 +54,19 @@ class FirstTransporterIndexControllerSpec extends SpecBase with MockUserAnswersS
           .set(FirstTransporterVatPage, "")
           .set(FirstTransporterAddressPage, UserAddress(None, "", "", "")))) {
 
-        val result = testController.onPageLoad(testErn, testDraftId)(request)
+        val result = testController.onPageLoad(testErn, testArc)(request)
 
         status(result) mustEqual SEE_OTHER
         redirectLocation(result) mustBe
-          Some(controllers.sections.firstTransporter.routes.FirstTransporterCheckAnswersController.onPageLoad(testErn, testDraftId).url)
+          Some(controllers.sections.firstTransporter.routes.FirstTransporterCheckAnswersController.onPageLoad(testErn, testArc).url)
       }
 
       "must redirect to the first transporter name controller" in new Fixture() {
-        val result = testController.onPageLoad(testErn, testDraftId)(request)
+        val result = testController.onPageLoad(testErn, testArc)(request)
 
         status(result) mustEqual SEE_OTHER
         redirectLocation(result) mustBe
-          Some(controllers.sections.firstTransporter.routes.FirstTransporterNameController.onPageLoad(testErn, testDraftId, NormalMode).url)
+          Some(controllers.sections.firstTransporter.routes.FirstTransporterNameController.onPageLoad(testErn, testArc, NormalMode).url)
       }
     }
   }

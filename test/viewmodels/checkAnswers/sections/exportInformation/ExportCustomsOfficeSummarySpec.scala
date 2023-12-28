@@ -63,7 +63,7 @@ class ExportCustomsOfficeSummarySpec extends SpecBase with Matchers {
                   actions = Seq(
                     ActionItemViewModel(
                       content = messagesForLanguage.change,
-                      href = controllers.sections.exportInformation.routes.ExportCustomsOfficeController.onPageLoad(testErn, testDraftId, CheckMode).url,
+                      href = controllers.sections.exportInformation.routes.ExportCustomsOfficeController.onPageLoad(testErn, testArc, CheckMode).url,
                       id = "changeExportCustomsOffice"
                     ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHidden)
                   )

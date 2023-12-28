@@ -61,13 +61,13 @@ class AuthActionSpec extends SpecBase with BaseFixtures with BeforeAndAfterAll {
     val authConnector: AuthConnector
     lazy val authAction = new AuthActionImpl(authConnector, appConfig, bodyParsers)
 
-    def onPageLoad(): Action[AnyContent] = authAction(testErn) { _ => Results.Ok }
+    def onPageLoad(): Action[AnyContent] = authAction(testErn, testArc) { _ => Results.Ok }
 
     lazy val result = onPageLoad()(fakeRequest)
 
     def testRequest(isOk: UserRequest[_] => Boolean): Boolean =
       Await.result(
-        authAction(testErn) { req =>
+        authAction(testErn, testArc) { req =>
           if (isOk(req)) Results.Ok else Results.BadRequest
         }(fakeRequest).map(_.header.status == OK),
         Duration.Inf

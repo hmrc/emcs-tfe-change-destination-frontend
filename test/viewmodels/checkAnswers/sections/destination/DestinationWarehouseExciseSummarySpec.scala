@@ -62,7 +62,7 @@ class DestinationWarehouseExciseSummarySpec extends SpecBase with Matchers {
                   actions = Seq(
                     ActionItemViewModel(
                       content = messagesForLanguage.change,
-                      href = controllers.sections.destination.routes.DestinationWarehouseExciseController.onPageLoad(testErn, testDraftId, CheckMode).url,
+                      href = controllers.sections.destination.routes.DestinationWarehouseExciseController.onPageLoad(testErn, testArc, CheckMode).url,
                       id = "changeDestinationWarehouseExcise"
                     ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHidden)
                   )
@@ -82,7 +82,7 @@ class DestinationWarehouseExciseSummarySpec extends SpecBase with Matchers {
                   actions = Seq(
                     ActionItemViewModel(
                       content = messagesForLanguage.change,
-                      href = controllers.sections.destination.routes.DestinationWarehouseExciseController.onPageLoad(testErn, testDraftId, CheckMode).url,
+                      href = controllers.sections.destination.routes.DestinationWarehouseExciseController.onPageLoad(testErn, testArc, CheckMode).url,
                       id = "changeDestinationWarehouseExcise"
                     ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHidden)
                   )

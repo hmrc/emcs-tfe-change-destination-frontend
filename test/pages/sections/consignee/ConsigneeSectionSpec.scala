@@ -17,11 +17,10 @@
 package pages.sections.consignee
 
 import base.SpecBase
-import models.{Enumerable, UserAddress}
 import models.requests.DataRequest
 import models.sections.ReviewAnswer
 import models.sections.consignee.{ConsigneeExportVat, ConsigneeExportVatType}
-import models.{ExemptOrganisationDetailsModel, UserAddress}
+import models.{Enumerable, ExemptOrganisationDetailsModel, UserAddress}
 import play.api.test.FakeRequest
 
 class ConsigneeSectionSpec extends SpecBase with Enumerable.Implicits {
@@ -84,7 +83,7 @@ class ConsigneeSectionSpec extends SpecBase with Enumerable.Implicits {
         implicit val dr: DataRequest[_] = dataRequest(
           FakeRequest(),
           emptyUserAnswers.set(ConsigneeReviewPage, ReviewAnswer.ChangeAnswers),
-          movementDetails = getMovementResponseModel.copy(consigneeTrader = None)
+          movementDetails = maxGetMovementResponse.copy(consigneeTrader = None)
         )
         ConsigneeSection.isCompleted mustBe false
       }
@@ -94,7 +93,7 @@ class ConsigneeSectionSpec extends SpecBase with Enumerable.Implicits {
           emptyUserAnswers
             .set(ConsigneeReviewPage, ReviewAnswer.ChangeAnswers)
             .set(ConsigneeExportPage, true),
-          movementDetails = getMovementResponseModel.copy(consigneeTrader = None)
+          movementDetails = maxGetMovementResponse.copy(consigneeTrader = None)
         )
         ConsigneeSection.isCompleted mustBe false
       }
@@ -104,7 +103,7 @@ class ConsigneeSectionSpec extends SpecBase with Enumerable.Implicits {
           emptyUserAnswers
             .set(ConsigneeReviewPage, ReviewAnswer.ChangeAnswers)
             .set(ConsigneeExcisePage, ""),
-          movementDetails = getMovementResponseModel.copy(consigneeTrader = None)
+          movementDetails = maxGetMovementResponse.copy(consigneeTrader = None)
         )
         ConsigneeSection.isCompleted mustBe false
       }
@@ -114,7 +113,7 @@ class ConsigneeSectionSpec extends SpecBase with Enumerable.Implicits {
           emptyUserAnswers
             .set(ConsigneeReviewPage, ReviewAnswer.ChangeAnswers)
             .set(ConsigneeExemptOrganisationPage, ExemptOrganisationDetailsModel("", "")),
-          movementDetails = getMovementResponseModel.copy(consigneeTrader = None)
+          movementDetails = maxGetMovementResponse.copy(consigneeTrader = None)
         )
         ConsigneeSection.isCompleted mustBe false
       }

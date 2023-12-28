@@ -18,6 +18,7 @@ package controllers.sections.journeyType
 
 import base.SpecBase
 import controllers.actions.FakeDataRetrievalAction
+import controllers.actions.FakeMovementAction
 import forms.sections.journeyType.JourneyTimeDaysFormProvider
 import mocks.services.MockUserAnswersService
 import models.sections.journeyType.HowMovementTransported
@@ -51,6 +52,7 @@ class JourneyTimeDaysControllerSpec extends SpecBase with MockUserAnswersService
       fakeAuthAction,
       new FakeDataRetrievalAction(userAnswers, Some(testMinTraderKnownFacts)),
       dataRequiredAction,
+      new FakeMovementAction(maxGetMovementResponse),
       formProvider,
       Helpers.stubMessagesControllerComponents(),
       view
@@ -63,7 +65,7 @@ class JourneyTimeDaysControllerSpec extends SpecBase with MockUserAnswersService
       emptyUserAnswers.set(HowMovementTransportedPage, HowMovementTransported.AirTransport)
     )) {
 
-      val result = controller.onPageLoad(testErn, testDraftId, NormalMode)(request)
+      val result = controller.onPageLoad(testErn, testArc, NormalMode)(request)
 
       status(result) mustEqual OK
       contentAsString(result) mustEqual view(form, NormalMode)(dataRequest(request), messages(request)).toString
@@ -74,7 +76,7 @@ class JourneyTimeDaysControllerSpec extends SpecBase with MockUserAnswersService
         .set(HowMovementTransportedPage, HowMovementTransported.AirTransport)
         .set(JourneyTimeDaysPage, validAnswer)
     )) {
-      val result = controller.onPageLoad(testErn, testDraftId, NormalMode)(request)
+      val result = controller.onPageLoad(testErn, testArc, NormalMode)(request)
 
       status(result) mustEqual OK
       contentAsString(result) mustEqual view(form.fill(validAnswer), NormalMode)(dataRequest(request, userAnswers.get), messages(request)).toString
@@ -86,7 +88,7 @@ class JourneyTimeDaysControllerSpec extends SpecBase with MockUserAnswersService
 
       MockUserAnswersService.set().returns(Future.successful(emptyUserAnswers))
 
-      val result = controller.onSubmit(testErn, testDraftId, NormalMode)(request.withFormUrlEncodedBody(("value", validAnswer.toString)))
+      val result = controller.onSubmit(testErn, testArc, NormalMode)(request.withFormUrlEncodedBody(("value", validAnswer.toString)))
 
       status(result) mustEqual SEE_OTHER
       redirectLocation(result).value mustEqual testOnwardRoute.url
@@ -97,21 +99,21 @@ class JourneyTimeDaysControllerSpec extends SpecBase with MockUserAnswersService
     )) {
       val boundForm = form.bind(Map("value" -> ""))
 
-      val result = controller.onSubmit(testErn, testDraftId, NormalMode)(request.withFormUrlEncodedBody(("value", "")))
+      val result = controller.onSubmit(testErn, testArc, NormalMode)(request.withFormUrlEncodedBody(("value", "")))
 
       status(result) mustEqual BAD_REQUEST
       contentAsString(result) mustEqual view(boundForm, NormalMode)(dataRequest(request), messages(request)).toString
     }
 
     "must redirect to Journey Recovery for a GET if no existing data is found" in new Test(None) {
-      val result = controller.onPageLoad(testErn, testDraftId, NormalMode)(request)
+      val result = controller.onPageLoad(testErn, testArc, NormalMode)(request)
 
       status(result) mustEqual SEE_OTHER
       redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
     }
 
     "must redirect to Journey Recovery for a POST if no existing data is found" in new Test(None) {
-      val result = controller.onSubmit(testErn, testDraftId, NormalMode)(request.withFormUrlEncodedBody(("value", validAnswer.toString)))
+      val result = controller.onSubmit(testErn, testArc, NormalMode)(request.withFormUrlEncodedBody(("value", validAnswer.toString)))
 
       status(result) mustEqual SEE_OTHER
       redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url

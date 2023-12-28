@@ -18,6 +18,7 @@ package controllers.sections.journeyType
 
 import base.SpecBase
 import controllers.actions.FakeDataRetrievalAction
+import controllers.actions.FakeMovementAction
 import mocks.services.MockUserAnswersService
 import models.sections.journeyType.HowMovementTransported.SeaTransport
 import models.{NormalMode, UserAnswers}
@@ -40,6 +41,7 @@ class JourneyTypeIndexControllerSpec extends SpecBase with MockUserAnswersServic
       fakeAuthAction,
       new FakeDataRetrievalAction(userAnswers, Some(testMinTraderKnownFacts)),
       dataRequiredAction,
+      new FakeMovementAction(maxGetMovementResponse),
       fakeUserAllowListAction,
       Helpers.stubMessagesControllerComponents()
     )
@@ -54,20 +56,20 @@ class JourneyTypeIndexControllerSpec extends SpecBase with MockUserAnswersServic
           .set(GiveInformationOtherTransportPage, "information")
           .set(JourneyTimeDaysPage, 1)
       )) {
-        val result = controller.onPageLoad(testErn, testDraftId)(request)
+        val result = controller.onPageLoad(testErn, testArc)(request)
 
         status(result) mustEqual SEE_OTHER
         redirectLocation(result) mustBe
-          Some(controllers.sections.journeyType.routes.CheckYourAnswersJourneyTypeController.onPageLoad(testErn, testDraftId).url)
+          Some(controllers.sections.journeyType.routes.CheckYourAnswersJourneyTypeController.onPageLoad(testErn, testArc).url)
       }
     }
 
     "must redirect to the how movement transported controller" in new Test(Some(emptyUserAnswers)) {
-      val result = controller.onPageLoad(testErn, testDraftId)(request)
+      val result = controller.onPageLoad(testErn, testArc)(request)
 
       status(result) mustEqual SEE_OTHER
       redirectLocation(result) mustBe
-        Some(controllers.sections.journeyType.routes.HowMovementTransportedController.onPageLoad(testErn, testDraftId, NormalMode).url)
+        Some(controllers.sections.journeyType.routes.HowMovementTransportedController.onPageLoad(testErn, testArc, NormalMode).url)
     }
   }
 }

@@ -22,7 +22,7 @@ import play.api.test.FakeRequest
 
 class ConsigneeBusinessNamePageSpec extends SpecBase {
 
-  val consignee: TraderModel = getMovementResponseModel.consigneeTrader.get
+  val consignee: TraderModel = maxGetMovementResponse.consigneeTrader.get
 
   "getValueFromIE801" - {
     "must return Some(_)" - {
@@ -34,13 +34,13 @@ class ConsigneeBusinessNamePageSpec extends SpecBase {
       "when Consignee exists and has no address" in {
         ConsigneeBusinessNamePage.getValueFromIE801(dataRequest(
           FakeRequest(),
-          movementDetails = getMovementResponseModel.copy(consigneeTrader = Some(consignee.copy(traderName = None)))
+          movementDetails = maxGetMovementResponse.copy(consigneeTrader = Some(consignee.copy(traderName = None)))
         )) mustBe None
       }
       "when Consignee doesn't exist" in {
         ConsigneeBusinessNamePage.getValueFromIE801(dataRequest(
           FakeRequest(),
-          movementDetails = getMovementResponseModel.copy(consigneeTrader = None)
+          movementDetails = maxGetMovementResponse.copy(consigneeTrader = None)
         )) mustBe None
       }
     }

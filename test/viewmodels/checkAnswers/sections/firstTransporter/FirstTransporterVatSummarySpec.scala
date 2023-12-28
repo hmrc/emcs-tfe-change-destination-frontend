@@ -49,7 +49,7 @@ class FirstTransporterVatSummarySpec extends SpecBase with Matchers {
                 actions = Seq(
                   ActionItemViewModel(
                     content = messagesForLanguage.change,
-                    href = controllers.sections.firstTransporter.routes.FirstTransporterVatController.onPageLoad(testErn, testDraftId, CheckMode).url,
+                    href = controllers.sections.firstTransporter.routes.FirstTransporterVatController.onPageLoad(testErn, testArc, CheckMode).url,
                     id = "changeFirstTransporterVat"
                   ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHidden)
                 )
@@ -65,7 +65,7 @@ class FirstTransporterVatSummarySpec extends SpecBase with Matchers {
               actions = Seq(
                 ActionItemViewModel(
                   content = messagesForLanguage.change,
-                  href = controllers.sections.firstTransporter.routes.FirstTransporterVatController.onPageLoad(testErn, testDraftId, CheckMode).url,
+                  href = controllers.sections.firstTransporter.routes.FirstTransporterVatController.onPageLoad(testErn, testArc, CheckMode).url,
                   id = "changeFirstTransporterVat"
                 ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHidden)
               )

@@ -30,6 +30,7 @@ trait Section[T <: JsValue] extends QuestionPage[T] {
   def canBeCompletedForTraderAndDestinationType(implicit request: DataRequest[_]): Boolean
 
   final def isCompleted(implicit request: DataRequest[_]): Boolean = status == Completed
+  final def needsReview(implicit request: DataRequest[_]): Boolean = status == Review
 
   override def getValueFromIE801(implicit request: DataRequest[_]): Option[T] = None
 

@@ -18,6 +18,7 @@ package controllers.sections.transportUnit
 
 import base.SpecBase
 import controllers.actions.FakeDataRetrievalAction
+import controllers.actions.FakeMovementAction
 import controllers.routes
 import forms.sections.transportUnit.TransportUnitGiveMoreInformationFormProvider
 import mocks.services.MockUserAnswersService
@@ -52,6 +53,7 @@ class TransportUnitGiveMoreInformationControllerSpec extends SpecBase with MockU
       fakeAuthAction,
       new FakeDataRetrievalAction(userAnswers, Some(testMinTraderKnownFacts)),
       dataRequiredAction,
+      new FakeMovementAction(maxGetMovementResponse),
       formProvider,
       Helpers.stubMessagesControllerComponents(),
       view
@@ -63,7 +65,7 @@ class TransportUnitGiveMoreInformationControllerSpec extends SpecBase with MockU
     "must return OK and the correct view for a GET" in new Test(Some(
       emptyUserAnswers.set(TransportUnitTypePage(testIndex1), Tractor)
     )) {
-      val result = controller.onPageLoad(testErn, testDraftId, testIndex1, NormalMode)(request)
+      val result = controller.onPageLoad(testErn, testArc, testIndex1, NormalMode)(request)
 
       status(result) mustEqual OK
       contentAsString(result) mustEqual view(form, testIndex1, NormalMode, Tractor)(dataRequest(request, userAnswers.get), messages(request)).toString
@@ -74,7 +76,7 @@ class TransportUnitGiveMoreInformationControllerSpec extends SpecBase with MockU
         .set(TransportUnitGiveMoreInformationPage(testIndex1), Some("answer"))
         .set(TransportUnitTypePage(testIndex1), Tractor)
     )) {
-      val result = controller.onPageLoad(testErn, testDraftId, testIndex1, NormalMode)(request)
+      val result = controller.onPageLoad(testErn, testArc, testIndex1, NormalMode)(request)
 
       status(result) mustEqual OK
       contentAsString(result) mustEqual
@@ -84,7 +86,7 @@ class TransportUnitGiveMoreInformationControllerSpec extends SpecBase with MockU
     "must redirect to journey recovery for a GET if there is not a transport unit type found in the users answers" in new Test(Some(
       emptyUserAnswers.set(TransportUnitIdentityPage(testIndex1), "answer")
     )) {
-      val result = controller.onPageLoad(testErn, testDraftId, testIndex1, NormalMode)(request)
+      val result = controller.onPageLoad(testErn, testArc, testIndex1, NormalMode)(request)
 
       status(result) mustEqual SEE_OTHER
       redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
@@ -106,7 +108,7 @@ class TransportUnitGiveMoreInformationControllerSpec extends SpecBase with MockU
                 .set(TransportUnitTypePage(testIndex1), Tractor)
                 .set(TransportUnitGiveMoreInformationPage(testIndex1), answer)))
 
-        val result = controller.onSubmit(testErn, testDraftId, testIndex1, NormalMode)(request.withFormUrlEncodedBody(("value", "answer")))
+        val result = controller.onSubmit(testErn, testArc, testIndex1, NormalMode)(request.withFormUrlEncodedBody(("value", "answer")))
 
         status(result) mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual testOnwardRoute.url
@@ -126,7 +128,7 @@ class TransportUnitGiveMoreInformationControllerSpec extends SpecBase with MockU
                 .set(TransportUnitTypePage(testIndex1), Tractor)
                 .set(TransportUnitGiveMoreInformationPage(testIndex1), answer)))
 
-        val result = controller.onSubmit(testErn, testDraftId, testIndex1, NormalMode)(request.withFormUrlEncodedBody(("value", "")))
+        val result = controller.onSubmit(testErn, testArc, testIndex1, NormalMode)(request.withFormUrlEncodedBody(("value", "")))
 
         status(result) mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual testOnwardRoute.url
@@ -146,7 +148,7 @@ class TransportUnitGiveMoreInformationControllerSpec extends SpecBase with MockU
                 .set(TransportUnitTypePage(testIndex1), Tractor)
                 .set(TransportUnitGiveMoreInformationPage(testIndex1), answer)))
 
-        val result = controller.onSubmit(testErn, testDraftId, testIndex1, NormalMode)(request.withFormUrlEncodedBody(("value",
+        val result = controller.onSubmit(testErn, testArc, testIndex1, NormalMode)(request.withFormUrlEncodedBody(("value",
           """
             |
             |
@@ -166,7 +168,7 @@ class TransportUnitGiveMoreInformationControllerSpec extends SpecBase with MockU
     )) {
       val boundForm = form.bind(Map("value" -> """<script>alert("hi")</script>"""))
 
-      val result = controller.onSubmit(testErn, testDraftId, testIndex1, NormalMode)(request.withFormUrlEncodedBody(("value", """<script>alert("hi")</script>""")))
+      val result = controller.onSubmit(testErn, testArc, testIndex1, NormalMode)(request.withFormUrlEncodedBody(("value", """<script>alert("hi")</script>""")))
 
       status(result) mustEqual BAD_REQUEST
       contentAsString(result) mustEqual view(boundForm, testIndex1, NormalMode, Tractor)(dataRequest(request, userAnswers.get), messages(request)).toString
@@ -175,7 +177,7 @@ class TransportUnitGiveMoreInformationControllerSpec extends SpecBase with MockU
     "must redirect to journey recovery for a POST if there is not a transport unit type found" in new Test(Some(
       emptyUserAnswers.set(TransportUnitIdentityPage(testIndex1), "answer")
     )) {
-      val result = controller.onSubmit(testErn, testDraftId, testIndex1, NormalMode)(request.withFormUrlEncodedBody(("value", "answer")))
+      val result = controller.onSubmit(testErn, testArc, testIndex1, NormalMode)(request.withFormUrlEncodedBody(("value", "answer")))
 
       status(result) mustEqual SEE_OTHER
       redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
@@ -186,10 +188,10 @@ class TransportUnitGiveMoreInformationControllerSpec extends SpecBase with MockU
         .set(TransportUnitGiveMoreInformationPage(testIndex1), Some("answer"))
         .set(TransportUnitTypePage(testIndex1), Tractor)
     )) {
-      val result = controller.onPageLoad(testErn, testDraftId, testIndex2, NormalMode)(request)
+      val result = controller.onPageLoad(testErn, testArc, testIndex2, NormalMode)(request)
 
       status(result) mustEqual SEE_OTHER
-      redirectLocation(result).value mustEqual controllers.sections.transportUnit.routes.TransportUnitIndexController.onPageLoad(testErn, testDraftId).url
+      redirectLocation(result).value mustEqual controllers.sections.transportUnit.routes.TransportUnitIndexController.onPageLoad(testErn, testArc).url
     }
 
     "must redirect to transport unit index controller for a POST if the index in the url is not valid" in new Test(Some(
@@ -197,21 +199,21 @@ class TransportUnitGiveMoreInformationControllerSpec extends SpecBase with MockU
         .set(TransportUnitGiveMoreInformationPage(testIndex1), Some("answer2"))
         .set(TransportUnitTypePage(testIndex1), Tractor)
     )) {
-      val result = controller.onSubmit(testErn, testDraftId, testIndex2, NormalMode)(request.withFormUrlEncodedBody("value" -> "true"))
+      val result = controller.onSubmit(testErn, testArc, testIndex2, NormalMode)(request.withFormUrlEncodedBody("value" -> "true"))
 
       status(result) mustEqual SEE_OTHER
-      redirectLocation(result).value mustEqual controllers.sections.transportUnit.routes.TransportUnitIndexController.onPageLoad(testErn, testDraftId).url
+      redirectLocation(result).value mustEqual controllers.sections.transportUnit.routes.TransportUnitIndexController.onPageLoad(testErn, testArc).url
     }
 
     "must redirect to Journey Recovery for a GET if no existing data is found" in new Test(None) {
-      val result = controller.onPageLoad(testErn, testDraftId, testIndex1, NormalMode)(request)
+      val result = controller.onPageLoad(testErn, testArc, testIndex1, NormalMode)(request)
 
       status(result) mustEqual SEE_OTHER
       redirectLocation(result).value mustEqual routes.JourneyRecoveryController.onPageLoad().url
     }
 
     "must redirect to Journey Recovery for a POST if no existing data is found" in new Test(None) {
-      val result = controller.onSubmit(testErn, testDraftId, testIndex1, NormalMode)(request.withFormUrlEncodedBody(("value", "answer")))
+      val result = controller.onSubmit(testErn, testArc, testIndex1, NormalMode)(request.withFormUrlEncodedBody(("value", "answer")))
 
       status(result) mustEqual SEE_OTHER
       redirectLocation(result).value mustEqual routes.JourneyRecoveryController.onPageLoad().url

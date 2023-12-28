@@ -43,7 +43,7 @@ class GuarantorNameSummarySpec extends SpecBase with Matchers {
           value = Value(Text(value)),
           actions = if (!showChangeLink) Seq() else Seq(ActionItemViewModel(
             content = Text(messagesForLanguage.change),
-            href = controllers.sections.guarantor.routes.GuarantorNameController.onPageLoad(testErn, testDraftId, mode).url,
+            href = controllers.sections.guarantor.routes.GuarantorNameController.onPageLoad(testErn, testArc, mode).url,
             id = "changeGuarantorName"
           ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHidden))
         )

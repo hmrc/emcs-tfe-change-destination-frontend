@@ -17,7 +17,7 @@
 package pages.sections.consignee
 
 import base.SpecBase
-import models.sections.consignee.ExemptOrganisationDetailsModel
+import models.ExemptOrganisationDetailsModel
 import play.api.test.FakeRequest
 
 class ConsigneeExemptOrganisationPageSpec extends SpecBase {
@@ -26,8 +26,8 @@ class ConsigneeExemptOrganisationPageSpec extends SpecBase {
     "must return Some(_)" - {
       "when Consignee exists and has ExemptOrganisationDetails" in {
         ConsigneeExemptOrganisationPage.getValueFromIE801(dataRequest(FakeRequest())) mustBe Some(ExemptOrganisationDetailsModel(
-          memberState = getMovementResponseModel.memberStateCode.get,
-          certificateSerialNumber = getMovementResponseModel.serialNumberOfCertificateOfExemption.get
+          memberState = maxGetMovementResponse.memberStateCode.get,
+          certificateSerialNumber = maxGetMovementResponse.serialNumberOfCertificateOfExemption.get
         ))
       }
     }
@@ -35,13 +35,13 @@ class ConsigneeExemptOrganisationPageSpec extends SpecBase {
       "when IE801 has no memberStateCode" in {
         ConsigneeExemptOrganisationPage.getValueFromIE801(dataRequest(
           FakeRequest(),
-          movementDetails = getMovementResponseModel.copy(memberStateCode = None)
+          movementDetails = maxGetMovementResponse.copy(memberStateCode = None)
         )) mustBe None
       }
       "when IE801 has no serialNumberOfCertificateOfExemption" in {
         ConsigneeExemptOrganisationPage.getValueFromIE801(dataRequest(
           FakeRequest(),
-          movementDetails = getMovementResponseModel.copy(serialNumberOfCertificateOfExemption = None)
+          movementDetails = maxGetMovementResponse.copy(serialNumberOfCertificateOfExemption = None)
         )) mustBe None
       }
     }

@@ -19,6 +19,7 @@ package controllers.sections.guarantor
 import controllers.actions._
 import models.NormalMode
 import navigation.GuarantorNavigator
+import pages.sections.firstTransporter.FirstTransporterSection
 import pages.sections.guarantor.GuarantorSection
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import services.UserAnswersService
@@ -38,7 +39,7 @@ class GuarantorIndexController @Inject()(
 
   def onPageLoad(ern: String, arc: String): Action[AnyContent] =
     authorisedDataRequestWithUpToDateMovement(ern, arc) { implicit request =>
-      if (GuarantorSection.isCompleted) {
+      if (GuarantorSection.isCompleted || GuarantorSection.needsReview) {
         Redirect(controllers.sections.guarantor.routes.GuarantorCheckAnswersController.onPageLoad(ern, arc))
       } else {
         Redirect(controllers.sections.guarantor.routes.GuarantorRequiredController.onPageLoad(ern, arc, NormalMode))

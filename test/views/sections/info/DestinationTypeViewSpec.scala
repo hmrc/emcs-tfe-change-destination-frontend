@@ -48,7 +48,7 @@ class DestinationTypeViewSpec extends SpecBase with ViewBehaviours {
              lazy val view = app.injector.instanceOf[DestinationTypeView]
               val form = app.injector.instanceOf[DestinationTypeFormProvider].apply()
 
-              implicit val doc: Document = Jsoup.parse(view(GreatBritain, form, controllers.sections.info.routes.DestinationTypeController.onPreDraftSubmit(request.ern, NormalMode)).toString())
+              implicit val doc: Document = Jsoup.parse(view(GreatBritain, form, controllers.sections.info.routes.DestinationTypeController.onPreDraftSubmit(request.ern, testArc, NormalMode)).toString())
 
               behave like pageWithExpectedElementsAndMessages(Seq(
                 Selectors.title -> messagesForLanguage.titleMovement,
@@ -67,7 +67,7 @@ class DestinationTypeViewSpec extends SpecBase with ViewBehaviours {
              lazy val view = app.injector.instanceOf[DestinationTypeView]
               val form = app.injector.instanceOf[DestinationTypeFormProvider].apply()
 
-              implicit val doc: Document = Jsoup.parse(view(GreatBritain, form, controllers.sections.info.routes.DestinationTypeController.onPreDraftSubmit(request.ern, NormalMode)).toString())
+              implicit val doc: Document = Jsoup.parse(view(GreatBritain, form, controllers.sections.info.routes.DestinationTypeController.onPreDraftSubmit(request.ern, testArc, NormalMode)).toString())
 
               behave like pageWithExpectedElementsAndMessages(Seq(
                 Selectors.title -> messagesForLanguage.titleImport,

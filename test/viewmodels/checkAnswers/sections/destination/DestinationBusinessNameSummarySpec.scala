@@ -50,7 +50,7 @@ class DestinationBusinessNameSummarySpec extends SpecBase with Matchers {
               actions = Seq(
                 ActionItemViewModel(
                   content = messagesForLanguage.change,
-                  href = controllers.sections.destination.routes.DestinationBusinessNameController.onPageLoad(testErn, testDraftId, CheckMode).url,
+                  href = controllers.sections.destination.routes.DestinationBusinessNameController.onPageLoad(testErn, testArc, CheckMode).url,
                   id = "changeDestinationBusinessName"
                 ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHidden)
               )
@@ -75,7 +75,7 @@ class DestinationBusinessNameSummarySpec extends SpecBase with Matchers {
                 actions = Seq(
                   ActionItemViewModel(
                     content = messagesForLanguage.change,
-                    href = controllers.sections.destination.routes.DestinationBusinessNameController.onPageLoad(testErn, testDraftId, CheckMode).url,
+                    href = controllers.sections.destination.routes.DestinationBusinessNameController.onPageLoad(testErn, testArc, CheckMode).url,
                     id = "changeDestinationBusinessName"
                   ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHidden)
                 )
@@ -99,7 +99,7 @@ class DestinationBusinessNameSummarySpec extends SpecBase with Matchers {
                   actions = Seq(
                     ActionItemViewModel(
                       content = messagesForLanguage.change,
-                      href = controllers.sections.destination.routes.DestinationBusinessNameController.onPageLoad(testErn, testDraftId, CheckMode).url,
+                      href = controllers.sections.destination.routes.DestinationBusinessNameController.onPageLoad(testErn, testArc, CheckMode).url,
                       id = "changeDestinationBusinessName"
                     ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHidden)
                   )

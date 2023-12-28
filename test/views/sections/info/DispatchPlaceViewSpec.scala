@@ -46,7 +46,7 @@ class DispatchPlaceViewSpec extends SpecBase with ViewBehaviours {
         val form = app.injector.instanceOf[DispatchPlaceFormProvider].apply()
 
         implicit val doc: Document =
-          Jsoup.parse(view(form, controllers.sections.info.routes.DispatchPlaceController.onPreDraftSubmit(request.ern, NormalMode)).toString())
+          Jsoup.parse(view(form, controllers.sections.info.routes.DispatchPlaceController.onPreDraftSubmit(request.ern, testArc, NormalMode)).toString())
 
         behave like pageWithExpectedElementsAndMessages(Seq(
           Selectors.title -> messagesForLanguage.title,

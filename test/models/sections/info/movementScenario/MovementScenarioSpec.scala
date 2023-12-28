@@ -18,7 +18,7 @@ package models.sections.info.movementScenario
 
 import base.SpecBase
 import models.requests.DataRequest
-import models.response.InvalidUserTypeException
+import models.response.{InvalidDestinationTypeException, InvalidUserTypeException}
 import models.sections.info.movementScenario.MovementScenario._
 import play.api.test.FakeRequest
 
@@ -30,27 +30,27 @@ class MovementScenarioSpec extends SpecBase {
 
   "getMovementScenarioFromMovement" - {
     def testDataRequestWithDeliveryPlaceCustomsOffice(value: Option[String], destinationType: DestinationType): DataRequest[_] =
-      dataRequest(FakeRequest(), movementDetails = getMovementResponseModel
+      dataRequest(FakeRequest(), movementDetails = maxGetMovementResponse
         .copy(
           deliveryPlaceCustomsOfficeReferenceNumber = value,
-          headerEadEsad = getMovementResponseModel.headerEadEsad.copy(destinationType = destinationType)
+          headerEadEsad = maxGetMovementResponse.headerEadEsad.copy(destinationType = destinationType)
         )
       )
 
     def testDataRequestWithDeliveryPlaceTrader(value: Option[String], destinationType: DestinationType): DataRequest[_] =
       dataRequest(FakeRequest(), movementDetails =
-        getMovementResponseModel
+        maxGetMovementResponse
           .copy(
-            deliveryPlaceTrader = getMovementResponseModel.deliveryPlaceTrader.map(_.copy(traderExciseNumber = value)),
-            headerEadEsad = getMovementResponseModel.headerEadEsad.copy(destinationType = destinationType)
+            deliveryPlaceTrader = maxGetMovementResponse.deliveryPlaceTrader.map(_.copy(traderExciseNumber = value)),
+            headerEadEsad = maxGetMovementResponse.headerEadEsad.copy(destinationType = destinationType)
           )
       )
 
     def testDataRequest(destinationType: DestinationType): DataRequest[_] =
       dataRequest(FakeRequest(), movementDetails =
-        getMovementResponseModel
+        maxGetMovementResponse
           .copy(
-            headerEadEsad = getMovementResponseModel.headerEadEsad.copy(destinationType = destinationType)
+            headerEadEsad = maxGetMovementResponse.headerEadEsad.copy(destinationType = destinationType)
           )
       )
 

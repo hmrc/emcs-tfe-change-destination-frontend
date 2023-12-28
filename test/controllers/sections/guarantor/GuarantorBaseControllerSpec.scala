@@ -59,7 +59,7 @@ class GuarantorBaseControllerSpec extends SpecBase with MockUserAnswersService w
         val result: Future[Result] = TestController.withGuarantorRequiredAnswer(Future.successful(Ok("beans")))
 
         status(result) mustBe SEE_OTHER
-        redirectLocation(result) mustBe Some(controllers.sections.guarantor.routes.GuarantorIndexController.onPageLoad(testErn, testDraftId).url)
+        redirectLocation(result) mustBe Some(controllers.sections.guarantor.routes.GuarantorIndexController.onPageLoad(testErn, testArc).url)
       }
     }
     "must redirect to guarantor CYA" - {
@@ -67,7 +67,7 @@ class GuarantorBaseControllerSpec extends SpecBase with MockUserAnswersService w
         val result: Future[Result] = TestController.withGuarantorRequiredAnswer(Future.successful(Ok("beans")))
 
         status(result) mustBe SEE_OTHER
-        redirectLocation(result) mustBe Some(controllers.sections.guarantor.routes.GuarantorCheckAnswersController.onPageLoad(testErn, testDraftId).url)
+        redirectLocation(result) mustBe Some(controllers.sections.guarantor.routes.GuarantorCheckAnswersController.onPageLoad(testErn, testArc).url)
       }
     }
   }
@@ -92,7 +92,7 @@ class GuarantorBaseControllerSpec extends SpecBase with MockUserAnswersService w
         val result: Future[Result] = TestController.withGuarantorArrangerAnswer(_ => Future.successful(Ok("beans")))
 
         status(result) mustBe SEE_OTHER
-        redirectLocation(result) mustBe Some(controllers.sections.guarantor.routes.GuarantorIndexController.onPageLoad(testErn, testDraftId).url)
+        redirectLocation(result) mustBe Some(controllers.sections.guarantor.routes.GuarantorIndexController.onPageLoad(testErn, testArc).url)
       }
     }
     "must redirect to guarantor CYA" - {
@@ -100,13 +100,13 @@ class GuarantorBaseControllerSpec extends SpecBase with MockUserAnswersService w
         val result: Future[Result] = TestController.withGuarantorArrangerAnswer(_ => Future.successful(Ok("beans")))
 
         status(result) mustBe SEE_OTHER
-        redirectLocation(result) mustBe Some(controllers.sections.guarantor.routes.GuarantorCheckAnswersController.onPageLoad(testErn, testDraftId).url)
+        redirectLocation(result) mustBe Some(controllers.sections.guarantor.routes.GuarantorCheckAnswersController.onPageLoad(testErn, testArc).url)
       }
       "when guarantor arranger is Consignee" in new Test(emptyUserAnswers.set(GuarantorArrangerPage, Consignee)) {
         val result: Future[Result] = TestController.withGuarantorArrangerAnswer(_ => Future.successful(Ok("beans")))
 
         status(result) mustBe SEE_OTHER
-        redirectLocation(result) mustBe Some(controllers.sections.guarantor.routes.GuarantorCheckAnswersController.onPageLoad(testErn, testDraftId).url)
+        redirectLocation(result) mustBe Some(controllers.sections.guarantor.routes.GuarantorCheckAnswersController.onPageLoad(testErn, testArc).url)
       }
     }
   }

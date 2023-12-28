@@ -25,7 +25,7 @@ class ConsigneeAddressPageSpec extends SpecBase {
   "getValueFromIE801" - {
     "must return Some(_)" - {
       "when Consignee exists and has an address" in {
-        val consigneeAddress: AddressModel = getMovementResponseModel.consigneeTrader.get.address.get
+        val consigneeAddress: AddressModel = maxGetMovementResponse.consigneeTrader.get.address.get
         ConsigneeAddressPage.getValueFromIE801(dataRequest(FakeRequest())) mustBe Some(UserAddress(
           property = Some(consigneeAddress.streetNumber.get),
           street = consigneeAddress.street.get,
@@ -38,13 +38,13 @@ class ConsigneeAddressPageSpec extends SpecBase {
       "when Consignee exists and has no address" in {
         ConsigneeAddressPage.getValueFromIE801(dataRequest(
           FakeRequest(),
-          movementDetails = getMovementResponseModel.copy(consigneeTrader = Some(getMovementResponseModel.consigneeTrader.get.copy(address = None)))
+          movementDetails = maxGetMovementResponse.copy(consigneeTrader = Some(maxGetMovementResponse.consigneeTrader.get.copy(address = None)))
         )) mustBe None
       }
       "when Consignee doesn't exist" in {
         ConsigneeAddressPage.getValueFromIE801(dataRequest(
           FakeRequest(),
-          movementDetails = getMovementResponseModel.copy(consigneeTrader = None)
+          movementDetails = maxGetMovementResponse.copy(consigneeTrader = None)
         )) mustBe None
       }
     }

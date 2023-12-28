@@ -66,7 +66,7 @@ class TransportUnitsAddToListHelperSpec extends SpecBase {
                 title = Some(CardTitle(Text(msg.transportUnit1))),
                 actions = Some(Actions(items = Seq(
                   ActionItem(
-                    href = transportUnitRoutes.TransportUnitRemoveUnitController.onPageLoad(testErn, testDraftId, testIndex1).url,
+                    href = transportUnitRoutes.TransportUnitRemoveUnitController.onPageLoad(testErn, testArc, testIndex1).url,
                     content = Text(msg.remove),
                     visuallyHiddenText = Some(msg.transportUnit1),
                     attributes = Map("id" -> "removeTransportUnit1")
@@ -105,7 +105,7 @@ class TransportUnitsAddToListHelperSpec extends SpecBase {
                 title = Some(CardTitle(Text(msg.transportUnit1))),
                 actions = Some(Actions(items = Seq(
                   ActionItem(
-                    href = transportUnitRoutes.TransportUnitRemoveUnitController.onPageLoad(testErn, testDraftId, testIndex1).url,
+                    href = transportUnitRoutes.TransportUnitRemoveUnitController.onPageLoad(testErn, testArc, testIndex1).url,
                     content = Text(msg.remove),
                     visuallyHiddenText = Some(msg.transportUnit1),
                     attributes = Map("id" -> "removeTransportUnit1")
@@ -125,7 +125,7 @@ class TransportUnitsAddToListHelperSpec extends SpecBase {
                 title = Some(CardTitle(Text(msg.transportUnit2))),
                 actions = Some(Actions(items = Seq(
                   ActionItem(
-                    href = transportUnitRoutes.TransportUnitRemoveUnitController.onPageLoad(testErn, testDraftId, testIndex2).url,
+                    href = transportUnitRoutes.TransportUnitRemoveUnitController.onPageLoad(testErn, testArc, testIndex2).url,
                     content = Text(msg.remove),
                     visuallyHiddenText = Some(msg.transportUnit2),
                     attributes = Map("id" -> "removeTransportUnit2")

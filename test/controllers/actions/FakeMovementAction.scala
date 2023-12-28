@@ -16,18 +16,20 @@
 
 package controllers.actions
 
-import models.requests.{MovementRequest, OptionalDataRequest}
-import models.{TraderKnownFacts, UserAnswers}
+import models.requests.{MovementRequest, UserRequest}
+import models.response.emcsTfe.GetMovementResponse
+import play.api.mvc.{ActionRefiner, Result}
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class FakeDataRetrievalAction(dataToReturn: Option[UserAnswers], optTraderKnownFacts: Option[TraderKnownFacts]) extends DataRetrievalAction {
+class FakeMovementAction(movementData: GetMovementResponse) extends MovementAction {
 
-  override def transform[A](request: MovementRequest[A]): Future[OptionalDataRequest[A]] =
-    Future(OptionalDataRequest(request, dataToReturn, optTraderKnownFacts))
+  override def apply(arc: String, forceFetchNew: Boolean): ActionRefiner[UserRequest, MovementRequest] = new ActionRefiner[UserRequest, MovementRequest] {
 
-  override protected implicit val executionContext: ExecutionContext =
-    scala.concurrent.ExecutionContext.Implicits.global
+    override def refine[A](request: UserRequest[A]): Future[Either[Result, MovementRequest[A]]] =
+      Future.successful(Right(MovementRequest(request, arc, movementData)))
+
+    override protected def executionContext: ExecutionContext =
+      scala.concurrent.ExecutionContext.Implicits.global
+  }
 }
-
-

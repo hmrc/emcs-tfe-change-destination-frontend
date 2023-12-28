@@ -17,37 +17,32 @@
 package connectors.emcsTfe
 
 import base.SpecBase
-import fixtures.SubmitChangeDestinationFixtures
+import config.AppConfig
+import fixtures.GetMovementResponseFixtures
 import mocks.connectors.MockHttpClient
-import models.requests.DataRequest
 import models.response.JsonValidationError
 import play.api.http.{HeaderNames, MimeTypes, Status}
-import play.api.test.FakeRequest
 import uk.gov.hmrc.http.HeaderCarrier
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class SubmitChangeDestinationConnectorSpec extends SpecBase
-  with Status with MimeTypes with HeaderNames with MockHttpClient with SubmitChangeDestinationFixtures {
+class GetMovementConnectorSpec extends SpecBase
+  with Status with MimeTypes with HeaderNames with MockHttpClient with GetMovementResponseFixtures {
 
   implicit lazy val hc: HeaderCarrier = HeaderCarrier()
   implicit lazy val ec: ExecutionContext = app.injector.instanceOf[ExecutionContext]
-  implicit lazy val dr: DataRequest[_] = dataRequest(FakeRequest())
 
-  lazy val connector = new SubmitChangeDestinationConnector(mockHttpClient, appConfig)
+  lazy val connector = new GetMovementConnector(mockHttpClient, appConfig)
 
-  "submit" - {
+  "getMovement" - {
 
     "should return a successful response" - {
 
       "when downstream call is successful" in {
 
-        MockHttpClient.post(
-          url = s"${appConfig.emcsTfeBaseUrl}/change-destination/$testErn/$testArc",
-          body = minimumSubmitChangeDestinationModel
-        ).returns(Future.successful(Right(submitChangeDestinationResponseEIS)))
+        MockHttpClient.get(s"${appConfig.emcsTfeBaseUrl}/movement/ern/arc?forceFetchNew=true").returns(Future.successful(Right(maxGetMovementResponse)))
 
-        connector.submit(minimumSubmitChangeDestinationModel).futureValue mustBe Right(submitChangeDestinationResponseEIS)
+        connector.getMovement(exciseRegistrationNumber = "ern", arc = "arc", forceFetchNew = true).futureValue mustBe Right(maxGetMovementResponse)
       }
     }
 
@@ -55,12 +50,9 @@ class SubmitChangeDestinationConnectorSpec extends SpecBase
 
       "when downstream call fails" in {
 
-        MockHttpClient.post(
-          url = s"${appConfig.emcsTfeBaseUrl}/change-destination/$testErn/$testArc",
-          body = minimumSubmitChangeDestinationModel
-        ).returns(Future.successful(Left(JsonValidationError)))
+        MockHttpClient.get(s"${appConfig.emcsTfeBaseUrl}/movement/ern/arc?forceFetchNew=false").returns(Future.successful(Left(JsonValidationError)))
 
-        connector.submit(minimumSubmitChangeDestinationModel).futureValue mustBe Left(JsonValidationError)
+        connector.getMovement(exciseRegistrationNumber = "ern", arc = "arc", forceFetchNew = false).futureValue mustBe Left(JsonValidationError)
       }
     }
   }

@@ -27,9 +27,13 @@ import play.api.libs.json.{JsValue, Json}
 
 trait SubmitChangeDestinationFixtures { _: BaseFixtures =>
 
+  //TODO: None of these models are valid. They are taken from the SubmitCreateMovementModeel in CaM
+  //      All of these models and tests data need refactoring once we play the story to actual construct
+  //      the CoD submission to emcs-tfe
+
   val xircSubmitChangeDestinationModel: SubmitChangeDestinationModel = SubmitChangeDestinationModel(
     movementType = MovementType.ImportEu,
-    attributes = AttributesModel(SubmissionMessageType.Standard, None),
+    attributes = AttributesModel(SubmissionMessageType.Standard),
     consigneeTrader = Some(TraderModel(
       traderExciseNumber = Some("consignee ern"),
       traderName = Some("consignee name"),
@@ -88,9 +92,6 @@ trait SubmitChangeDestinationFixtures { _: BaseFixtures =>
       )))
     ),
     eadEsadDraft = EadEsadDraftModel(
-      localReferenceNumber = testLrn,
-      invoiceNumber = "inv ref",
-      invoiceDate = Some("2020-12-25"),
       originTypeCode = OriginType.Imports,
       dateOfDispatch = "2020-10-31",
       timeOfDispatch = Some("23:59:59")
@@ -108,7 +109,7 @@ trait SubmitChangeDestinationFixtures { _: BaseFixtures =>
 
   val xiwkSubmitChangeDestinationModel: SubmitChangeDestinationModel = SubmitChangeDestinationModel(
     movementType = MovementType.UkToEu,
-    attributes = AttributesModel(SubmissionMessageType.Standard, None),
+    attributes = AttributesModel(SubmissionMessageType.Standard),
     consigneeTrader = Some(TraderModel(
       traderExciseNumber = Some("consignee ern"),
       traderName = Some("consignee name"),
@@ -167,9 +168,6 @@ trait SubmitChangeDestinationFixtures { _: BaseFixtures =>
       )))
     ),
     eadEsadDraft = EadEsadDraftModel(
-      localReferenceNumber = testLrn,
-      invoiceNumber = "inv ref",
-      invoiceDate = Some("2020-12-25"),
       originTypeCode = OriginType.TaxWarehouse,
       dateOfDispatch = "2020-10-31",
       timeOfDispatch = Some("23:59:59")
@@ -187,7 +185,7 @@ trait SubmitChangeDestinationFixtures { _: BaseFixtures =>
 
   val gbrcSubmitChangeDestinationModel: SubmitChangeDestinationModel = SubmitChangeDestinationModel(
     movementType = MovementType.ImportEu,
-    attributes = AttributesModel(SubmissionMessageType.Standard, None),
+    attributes = AttributesModel(SubmissionMessageType.Standard),
     consigneeTrader = Some(TraderModel(
       traderExciseNumber = Some("consignee ern"),
       traderName = Some("consignee name"),
@@ -246,9 +244,6 @@ trait SubmitChangeDestinationFixtures { _: BaseFixtures =>
       )))
     ),
     eadEsadDraft = EadEsadDraftModel(
-      localReferenceNumber = testLrn,
-      invoiceNumber = "inv ref",
-      invoiceDate = Some("2020-12-25"),
       originTypeCode = OriginType.Imports,
       dateOfDispatch = "2020-10-31",
       timeOfDispatch = Some("23:59:59")
@@ -266,7 +261,7 @@ trait SubmitChangeDestinationFixtures { _: BaseFixtures =>
 
   val gbwkSubmitChangeDestinationModel: SubmitChangeDestinationModel = SubmitChangeDestinationModel(
     movementType = MovementType.UkToEu,
-    attributes = AttributesModel(SubmissionMessageType.Standard, None),
+    attributes = AttributesModel(SubmissionMessageType.Standard),
     consigneeTrader = Some(TraderModel(
       traderExciseNumber = Some("consignee ern"),
       traderName = Some("consignee name"),
@@ -325,9 +320,6 @@ trait SubmitChangeDestinationFixtures { _: BaseFixtures =>
       )))
     ),
     eadEsadDraft = EadEsadDraftModel(
-      localReferenceNumber = testLrn,
-      invoiceNumber = "inv ref",
-      invoiceDate = Some("2020-12-25"),
       originTypeCode = OriginType.TaxWarehouse,
       dateOfDispatch = "2020-10-31",
       timeOfDispatch = Some("23:59:59")

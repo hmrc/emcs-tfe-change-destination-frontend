@@ -18,6 +18,7 @@ package controllers.sections.firstTransporter
 
 import base.SpecBase
 import controllers.actions.FakeDataRetrievalAction
+import controllers.actions.FakeMovementAction
 import forms.sections.firstTransporter.FirstTransporterNameFormProvider
 import mocks.services.MockUserAnswersService
 import models.{NormalMode, UserAnswers}
@@ -37,7 +38,7 @@ class FirstTransporterNameControllerSpec extends SpecBase with MockUserAnswersSe
   lazy val view: FirstTransporterNameView = app.injector.instanceOf[FirstTransporterNameView]
 
   lazy val firstTransporterNameRoute: String =
-    controllers.sections.firstTransporter.routes.FirstTransporterNameController.onPageLoad(testErn, testDraftId, NormalMode).url
+    controllers.sections.firstTransporter.routes.FirstTransporterNameController.onPageLoad(testErn, testArc, NormalMode).url
 
   class Fixture(optUserAnswers: Option[UserAnswers] = Some(emptyUserAnswers)) {
     val request = FakeRequest(GET, firstTransporterNameRoute)
@@ -49,6 +50,7 @@ class FirstTransporterNameControllerSpec extends SpecBase with MockUserAnswersSe
       fakeAuthAction,
       new FakeDataRetrievalAction(optUserAnswers, Some(testMinTraderKnownFacts)),
       dataRequiredAction,
+      new FakeMovementAction(maxGetMovementResponse),
       fakeUserAllowListAction,
       formProvider,
       messagesControllerComponents,
@@ -59,7 +61,7 @@ class FirstTransporterNameControllerSpec extends SpecBase with MockUserAnswersSe
 
   "FirstTransporterName Controller" - {
     "must return OK and the correct view for a GET" in new Fixture() {
-      val result = testController.onPageLoad(testErn, testDraftId, NormalMode)(request)
+      val result = testController.onPageLoad(testErn, testArc, NormalMode)(request)
 
       status(result) mustEqual OK
       contentAsString(result) mustEqual view(form, NormalMode)(dataRequest(request), messages(request)).toString
@@ -68,7 +70,7 @@ class FirstTransporterNameControllerSpec extends SpecBase with MockUserAnswersSe
     "must populate the view correctly on a GET when the question has previously been answered" in new Fixture(
       Some(emptyUserAnswers.set(FirstTransporterNamePage, "answer"))) {
 
-      val result = testController.onPageLoad(testErn, testDraftId, NormalMode)(request)
+      val result = testController.onPageLoad(testErn, testArc, NormalMode)(request)
 
       status(result) mustEqual OK
       contentAsString(result) mustEqual view(form.fill("answer"), NormalMode)(dataRequest(request), messages(request)).toString
@@ -79,7 +81,7 @@ class FirstTransporterNameControllerSpec extends SpecBase with MockUserAnswersSe
 
       val req = FakeRequest(POST, firstTransporterNameRoute).withFormUrlEncodedBody(("value", "answer"))
 
-      val result = testController.onSubmit(testErn, testDraftId, NormalMode)(req)
+      val result = testController.onSubmit(testErn, testArc, NormalMode)(req)
 
       status(result) mustEqual SEE_OTHER
       redirectLocation(result).value mustEqual testOnwardRoute.url
@@ -89,14 +91,14 @@ class FirstTransporterNameControllerSpec extends SpecBase with MockUserAnswersSe
       val req = FakeRequest(POST, firstTransporterNameRoute).withFormUrlEncodedBody(("value", ""))
       val boundForm = form.bind(Map("value" -> ""))
 
-      val result = testController.onSubmit(testErn, testDraftId, NormalMode)(req)
+      val result = testController.onSubmit(testErn, testArc, NormalMode)(req)
 
       status(result) mustEqual BAD_REQUEST
       contentAsString(result) mustEqual view(boundForm, NormalMode)(dataRequest(request), messages(request)).toString
     }
 
     "must redirect to Journey Recovery for a GET if no existing data is found" in new Fixture(None) {
-      val result = testController.onPageLoad(testErn, testDraftId, NormalMode)(request)
+      val result = testController.onPageLoad(testErn, testArc, NormalMode)(request)
 
       status(result) mustEqual SEE_OTHER
       redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
@@ -105,7 +107,7 @@ class FirstTransporterNameControllerSpec extends SpecBase with MockUserAnswersSe
     "must redirect to Journey Recovery for a POST if no existing data is found" in new Fixture(None) {
       val req = FakeRequest(POST, firstTransporterNameRoute).withFormUrlEncodedBody(("value", "answer"))
 
-      val result = testController.onSubmit(testErn, testDraftId, NormalMode)(req)
+      val result = testController.onSubmit(testErn, testArc, NormalMode)(req)
 
       status(result) mustEqual SEE_OTHER
       redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url

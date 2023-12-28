@@ -17,11 +17,7 @@
 package pages.behaviours
 
 import base.SpecBase
-import fixtures.BaseFixtures
 import models.requests.DataRequest
-import org.scalatest.freespec.AnyFreeSpec
-import org.scalatest.matchers.must.Matchers
-import org.scalatest.{OptionValues, TryValues}
 import pages.QuestionPage
 import play.api.libs.json._
 import play.api.test.FakeRequest

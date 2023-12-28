@@ -21,10 +21,13 @@ import controllers.routes
 import models.{CheckMode, NormalMode, ReviewMode}
 import pages.Page
 import pages.sections.exportInformation.{ExportCustomsOfficePage, ExportInformationCheckAnswersPage}
+import play.api.test.FakeRequest
 
 class ExportInformationNavigatorSpec extends SpecBase {
 
   val navigator = new ExportInformationNavigator
+
+  implicit val request = dataRequest(FakeRequest())
 
   "in Normal mode" - {
 
@@ -32,7 +35,7 @@ class ExportInformationNavigatorSpec extends SpecBase {
 
       case object UnknownPage extends Page
       navigator.nextPage(UnknownPage, NormalMode, emptyUserAnswers) mustBe
-        controllers.sections.exportInformation.routes.ExportInformationCheckAnswersController.onPageLoad(testErn, testDraftId)
+        controllers.sections.exportInformation.routes.ExportInformationCheckAnswersController.onPageLoad(testErn, testArc)
     }
 
     "for the ExportCustomsOfficePage" - {
@@ -42,7 +45,7 @@ class ExportInformationNavigatorSpec extends SpecBase {
         val userAnswers = emptyUserAnswers.set(ExportCustomsOfficePage, "AB123456")
 
         navigator.nextPage(ExportCustomsOfficePage, NormalMode, userAnswers) mustBe
-          controllers.sections.exportInformation.routes.ExportInformationCheckAnswersController.onPageLoad(testErn, testDraftId)
+          controllers.sections.exportInformation.routes.ExportInformationCheckAnswersController.onPageLoad(testErn, testArc)
       }
     }
 
@@ -51,7 +54,7 @@ class ExportInformationNavigatorSpec extends SpecBase {
       "must go to the next section" in {
 
         navigator.nextPage(ExportInformationCheckAnswersPage, NormalMode, emptyUserAnswers) mustBe
-          routes.DraftMovementController.onPageLoad(testErn, testDraftId)
+          routes.DraftMovementController.onPageLoad(testErn, testArc)
       }
     }
   }
@@ -60,7 +63,7 @@ class ExportInformationNavigatorSpec extends SpecBase {
     "must go to ExportInformationCheckAnswersPage" in {
       case object UnknownPage extends Page
       navigator.nextPage(UnknownPage, CheckMode, emptyUserAnswers) mustBe
-        controllers.sections.exportInformation.routes.ExportInformationCheckAnswersController.onPageLoad(testErn, testDraftId)
+        controllers.sections.exportInformation.routes.ExportInformationCheckAnswersController.onPageLoad(testErn, testArc)
     }
   }
 
@@ -68,7 +71,7 @@ class ExportInformationNavigatorSpec extends SpecBase {
     "must go to CheckYourAnswers" in {
       case object UnknownPage extends Page
       navigator.nextPage(UnknownPage, ReviewMode, emptyUserAnswers) mustBe
-        routes.CheckYourAnswersController.onPageLoad(testErn, testDraftId)
+        routes.CheckYourAnswersController.onPageLoad(testErn, testArc)
     }
   }
 }

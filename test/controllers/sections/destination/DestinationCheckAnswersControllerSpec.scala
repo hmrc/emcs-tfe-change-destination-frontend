@@ -18,6 +18,7 @@ package controllers.sections.destination
 
 import base.SpecBase
 import controllers.actions.FakeDataRetrievalAction
+import controllers.actions.FakeMovementAction
 import controllers.routes
 import mocks.services.MockUserAnswersService
 import mocks.viewmodels.MockDestinationCheckAnswersHelper
@@ -37,9 +38,9 @@ import views.html.sections.destination.DestinationCheckAnswersView
 class DestinationCheckAnswersControllerSpec extends SpecBase with MockUserAnswersService with MockDestinationCheckAnswersHelper {
 
   lazy val destinationCheckAnswersRoute: String =
-    controllers.sections.destination.routes.DestinationCheckAnswersController.onPageLoad(testErn, testDraftId).url
+    controllers.sections.destination.routes.DestinationCheckAnswersController.onPageLoad(testErn, testArc).url
   lazy val destinationCheckAnswersOnSubmit: Call =
-    controllers.sections.destination.routes.DestinationCheckAnswersController.onSubmit(testErn, testDraftId)
+    controllers.sections.destination.routes.DestinationCheckAnswersController.onSubmit(testErn, testArc)
 
   val list: SummaryList = SummaryListViewModel(Seq.empty).withCssClass("govuk-!-margin-bottom-9")
 
@@ -57,6 +58,7 @@ class DestinationCheckAnswersControllerSpec extends SpecBase with MockUserAnswer
       fakeAuthAction,
       new FakeDataRetrievalAction(optUserAnswers, Some(testMinTraderKnownFacts)),
       dataRequiredAction,
+      new FakeMovementAction(maxGetMovementResponse),
       mockDestinationCheckAnswersHelper,
       messagesControllerComponents,
       view
@@ -69,7 +71,7 @@ class DestinationCheckAnswersControllerSpec extends SpecBase with MockUserAnswer
       .set(DestinationTypePage, MovementScenario.DirectDelivery)
     )) {
       MockCheckAnswersJourneyTypeHelper.summaryList().returns(list)
-      val result = testController.onPageLoad(testErn, testDraftId)(request)
+      val result = testController.onPageLoad(testErn, testArc)(request)
 
       status(result) mustEqual OK
       contentAsString(result) mustEqual view(
@@ -79,7 +81,7 @@ class DestinationCheckAnswersControllerSpec extends SpecBase with MockUserAnswer
     }
 
     "must return OK and the correct view for a GET when destination type has NOT been answered" in new Test() {
-      val result = testController.onPageLoad(testErn, testDraftId)(request)
+      val result = testController.onPageLoad(testErn, testArc)(request)
 
       status(result) mustEqual SEE_OTHER
       redirectLocation(result).value mustEqual routes.JourneyRecoveryController.onPageLoad().url
@@ -90,7 +92,7 @@ class DestinationCheckAnswersControllerSpec extends SpecBase with MockUserAnswer
         FakeRequest(POST, destinationCheckAnswersRoute)
           .withFormUrlEncodedBody(("value", "true"))
 
-      val result = testController.onSubmit(testErn, testDraftId)(req)
+      val result = testController.onSubmit(testErn, testArc)(req)
 
 
       status(result) mustEqual SEE_OTHER
@@ -98,7 +100,7 @@ class DestinationCheckAnswersControllerSpec extends SpecBase with MockUserAnswer
     }
 
     "must redirect to Journey Recovery for a GET if no existing data is found" in new Test(None) {
-      val result = testController.onPageLoad(testErn, testDraftId)(request)
+      val result = testController.onPageLoad(testErn, testArc)(request)
 
       status(result) mustEqual SEE_OTHER
       redirectLocation(result).value mustEqual routes.JourneyRecoveryController.onPageLoad().url
@@ -109,7 +111,7 @@ class DestinationCheckAnswersControllerSpec extends SpecBase with MockUserAnswer
         FakeRequest(POST, destinationCheckAnswersRoute)
           .withFormUrlEncodedBody(("value", "true"))
 
-      val result = testController.onSubmit(testErn, testDraftId)(req)
+      val result = testController.onSubmit(testErn, testArc)(req)
 
       status(result) mustEqual SEE_OTHER
       redirectLocation(result).value mustEqual routes.JourneyRecoveryController.onPageLoad().url

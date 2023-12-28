@@ -56,7 +56,7 @@ class TransportArrangerAddressSummarySpec extends SpecBase {
                   actions = Seq(
                     ActionItemViewModel(
                       content = messagesForLanguage.change,
-                      href = controllers.sections.transportArranger.routes.TransportArrangerAddressController.onPageLoad(testErn, testDraftId, CheckMode).url,
+                      href = controllers.sections.transportArranger.routes.TransportArrangerAddressController.onPageLoad(testErn, testArc, CheckMode).url,
                       id = "changeTransportArrangerAddress"
                     ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHidden)
                   )
@@ -86,7 +86,7 @@ class TransportArrangerAddressSummarySpec extends SpecBase {
                   actions = Seq(
                     ActionItemViewModel(
                       content = messagesForLanguage.change,
-                      href = controllers.sections.transportArranger.routes.TransportArrangerAddressController.onPageLoad(testErn, testDraftId, CheckMode).url,
+                      href = controllers.sections.transportArranger.routes.TransportArrangerAddressController.onPageLoad(testErn, testArc, CheckMode).url,
                       id = "changeTransportArrangerAddress"
                     ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHidden)
                   )

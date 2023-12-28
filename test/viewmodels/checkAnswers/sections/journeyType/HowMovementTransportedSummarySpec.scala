@@ -63,7 +63,7 @@ class HowMovementTransportedSummarySpec extends SpecBase with Matchers {
                   actions = Seq(
                     ActionItemViewModel(
                       content = messagesForLanguage.change,
-                      href = controllers.sections.journeyType.routes.HowMovementTransportedController.onPageLoad(testErn, testDraftId, CheckMode).url,
+                      href = controllers.sections.journeyType.routes.HowMovementTransportedController.onPageLoad(testErn, testArc, CheckMode).url,
                       id = HowMovementTransportedPage
                     ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHidden)
                   )

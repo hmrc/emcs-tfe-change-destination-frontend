@@ -20,6 +20,7 @@ import controllers.BaseNavigationController
 import controllers.actions._
 import models.NormalMode
 import navigation.JourneyTypeNavigator
+import pages.sections.firstTransporter.FirstTransporterSection
 import pages.sections.journeyType.JourneyTypeSection
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import services.UserAnswersService
@@ -39,7 +40,7 @@ class JourneyTypeIndexController @Inject()(
 
   def onPageLoad(ern: String, arc: String): Action[AnyContent] =
     authorisedDataRequestWithUpToDateMovement(ern, arc) { implicit request =>
-      if (JourneyTypeSection.isCompleted) {
+      if (JourneyTypeSection.isCompleted || JourneyTypeSection.needsReview) {
         Redirect(controllers.sections.journeyType.routes.CheckYourAnswersJourneyTypeController.onPageLoad(ern, arc))
       } else {
         Redirect(controllers.sections.journeyType.routes.HowMovementTransportedController.onPageLoad(ern, arc, NormalMode))

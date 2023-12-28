@@ -21,9 +21,13 @@ import controllers.routes
 import models.{CheckMode, NormalMode, ReviewMode, UserAddress}
 import pages._
 import pages.sections.firstTransporter._
+import play.api.test.FakeRequest
 
 class FirstTransporterNavigatorSpec extends SpecBase {
+
   val navigator = new FirstTransporterNavigator
+
+  implicit val request = dataRequest(FakeRequest())
 
   "in Normal mode" - {
 
@@ -31,7 +35,7 @@ class FirstTransporterNavigatorSpec extends SpecBase {
 
       case object UnknownPage extends Page
       navigator.nextPage(UnknownPage, NormalMode, emptyUserAnswers) mustBe
-        controllers.sections.firstTransporter.routes.FirstTransporterCheckAnswersController.onPageLoad(testErn, testDraftId)
+        controllers.sections.firstTransporter.routes.FirstTransporterCheckAnswersController.onPageLoad(testErn, testArc)
     }
 
     "for the FirstTransporterNamePage (CAM-FT01)" - {
@@ -67,7 +71,7 @@ class FirstTransporterNavigatorSpec extends SpecBase {
 
       "must go to tasklist" in {
         navigator.nextPage(FirstTransporterCheckAnswersPage, NormalMode, emptyUserAnswers) mustBe
-          routes.DraftMovementController.onPageLoad(testErn, testDraftId)
+          routes.DraftMovementController.onPageLoad(testErn, testArc)
       }
 
     }
@@ -123,7 +127,7 @@ class FirstTransporterNavigatorSpec extends SpecBase {
     "must go to CheckYourAnswers" in {
       case object UnknownPage extends Page
       navigator.nextPage(UnknownPage, ReviewMode, emptyUserAnswers) mustBe
-        routes.CheckYourAnswersController.onPageLoad(testErn, testDraftId)
+        routes.CheckYourAnswersController.onPageLoad(testErn, testArc)
     }
   }
 }

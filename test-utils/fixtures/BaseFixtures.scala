@@ -31,7 +31,7 @@ import pages.sections.destination.{DestinationAddressPage, DestinationBusinessNa
 import pages.sections.exportInformation.ExportCustomsOfficePage
 import pages.sections.firstTransporter.{FirstTransporterAddressPage, FirstTransporterNamePage, FirstTransporterVatPage}
 import pages.sections.guarantor._
-import pages.sections.info.{DestinationTypePage, DispatchDetailsPage, InvoiceDetailsPage, LocalReferenceNumberPage}
+import pages.sections.info.{DestinationTypePage, DispatchDetailsPage}
 import pages.sections.journeyType.{GiveInformationOtherTransportPage, HowMovementTransportedPage, JourneyTimeHoursPage}
 import pages.sections.transportArranger.{TransportArrangerAddressPage, TransportArrangerNamePage, TransportArrangerPage, TransportArrangerVatPage}
 import pages.sections.transportUnit.{TransportSealTypePage, TransportUnitGiveMoreInformationPage, TransportUnitIdentityPage, TransportUnitTypePage}
@@ -49,8 +49,7 @@ trait BaseFixtures {
   val testErn: String = "XIRC123456789"
   val testNorthernIrelandErn = "XIWK123456789"
   val testGreatBritainErn = "GBRC123456789"
-  val testLrn: String = "1234567890"
-  val testDraftId: String = "arc"
+  val testArc: String = "arc"
   val testVatNumber: String = "123456789"
   val testExportCustomsOffice: String = "AA123456"
   val testDateOfArrival: LocalDate = LocalDate.now()
@@ -70,7 +69,7 @@ trait BaseFixtures {
 
   val emptyUserAnswers: UserAnswers = UserAnswers(
     ern = testErn,
-    arc = testDraftId,
+    arc = testArc,
     lastUpdated = Instant.now().truncatedTo(ChronoUnit.MILLIS)
   )
 
@@ -154,7 +153,7 @@ trait BaseFixtures {
 
   val minimumSubmitChangeDestinationModel: SubmitChangeDestinationModel = SubmitChangeDestinationModel(
     movementType = MovementType.ImportEu,
-    attributes = AttributesModel(SubmissionMessageType.Standard, None),
+    attributes = AttributesModel(SubmissionMessageType.Standard),
     consigneeTrader = None,
     consignorTrader = TraderModel(
       traderExciseNumber = Some("XIRC123"),
@@ -183,9 +182,6 @@ trait BaseFixtures {
       guarantorTrader = None
     ),
     eadEsadDraft = EadEsadDraftModel(
-      localReferenceNumber = testLrn,
-      invoiceNumber = "inv ref",
-      invoiceDate = None,
       originTypeCode = OriginType.Imports,
       dateOfDispatch = "2020-10-31",
       timeOfDispatch = None
@@ -237,8 +233,6 @@ trait BaseFixtures {
     .set(GuarantorAddressPage, testUserAddress.copy(street = "guarantor street"))
     .set(GuarantorVatPage, "guarantor vat")
     // eadEsadDraft
-    .set(LocalReferenceNumberPage(), testLrn)
-    .set(InvoiceDetailsPage(), InvoiceDetailsModel("inv ref", LocalDate.parse("2020-12-25")))
     .set(DispatchDetailsPage(), DispatchDetailsModel(LocalDate.parse("2020-10-31"), LocalTime.parse("23:59:59")))
     // transportDetails
     .set(TransportUnitTypePage(testIndex1), TransportUnitType.FixedTransport)

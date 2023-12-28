@@ -20,6 +20,7 @@ import controllers.BaseNavigationController
 import controllers.actions._
 import models.NormalMode
 import navigation.TransportArrangerNavigator
+import pages.sections.firstTransporter.FirstTransporterSection
 import pages.sections.transportArranger.TransportArrangerSection
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import services.UserAnswersService
@@ -39,7 +40,7 @@ class TransportArrangerIndexController @Inject()(
 
   def onPageLoad(ern: String, arc: String): Action[AnyContent] =
     authorisedDataRequestWithUpToDateMovement(ern, arc) { implicit request =>
-      if (TransportArrangerSection.isCompleted) {
+      if (TransportArrangerSection.isCompleted || TransportArrangerSection.needsReview) {
         Redirect(controllers.sections.transportArranger.routes.TransportArrangerCheckAnswersController.onPageLoad(ern, arc))
       } else {
         Redirect(controllers.sections.transportArranger.routes.TransportArrangerController.onPageLoad(ern, arc, NormalMode))

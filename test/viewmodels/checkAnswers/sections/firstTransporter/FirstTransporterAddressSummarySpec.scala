@@ -50,7 +50,7 @@ class FirstTransporterAddressSummarySpec extends SpecBase with Matchers {
                 actions = Seq(
                   ActionItemViewModel(
                     content = messagesForLanguage.change,
-                    href = controllers.sections.firstTransporter.routes.FirstTransporterAddressController.onPageLoad(testErn, testDraftId, CheckMode).url,
+                    href = controllers.sections.firstTransporter.routes.FirstTransporterAddressController.onPageLoad(testErn, testArc, CheckMode).url,
                     id = "changeFirstTransporterAddress"
                   ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHidden)
                 )
@@ -73,7 +73,7 @@ class FirstTransporterAddressSummarySpec extends SpecBase with Matchers {
                 actions = Seq(
                   ActionItemViewModel(
                     content = messagesForLanguage.change,
-                    href = controllers.sections.firstTransporter.routes.FirstTransporterAddressController.onPageLoad(testErn, testDraftId, CheckMode).url,
+                    href = controllers.sections.firstTransporter.routes.FirstTransporterAddressController.onPageLoad(testErn, testArc, CheckMode).url,
                     id = "changeFirstTransporterAddress"
                   ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHidden)
                 )

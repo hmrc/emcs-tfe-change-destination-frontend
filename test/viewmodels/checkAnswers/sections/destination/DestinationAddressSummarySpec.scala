@@ -89,7 +89,7 @@ class DestinationAddressSummarySpec extends SpecBase with Matchers with UserAddr
                   actions = Seq(
                     ActionItemViewModel(
                       content = messagesForLanguage.change,
-                      href = controllers.sections.destination.routes.DestinationAddressController.onPageLoad(testErn, testDraftId, CheckMode).url,
+                      href = controllers.sections.destination.routes.DestinationAddressController.onPageLoad(testErn, testArc, CheckMode).url,
                       id = "changeDestinationAddress"
                     ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHidden)
                   )

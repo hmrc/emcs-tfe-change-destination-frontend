@@ -62,7 +62,7 @@ class DestinationWarehouseVatSummarySpec extends SpecBase with Matchers with Jso
                       actions = Seq(
                         ActionItemViewModel(
                           content = messagesForLanguage.change,
-                          href = controllers.sections.destination.routes.DestinationWarehouseVatController.onPageLoad(testErn, testDraftId, CheckMode).url,
+                          href = controllers.sections.destination.routes.DestinationWarehouseVatController.onPageLoad(testErn, testArc, CheckMode).url,
                           id = "changeDestinationWarehouseVat"
                         ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHidden)
                       )
@@ -97,7 +97,7 @@ class DestinationWarehouseVatSummarySpec extends SpecBase with Matchers with Jso
                   actions = Seq(
                     ActionItemViewModel(
                       content = messagesForLanguage.change,
-                      href = controllers.sections.destination.routes.DestinationWarehouseVatController.onPageLoad(testErn, testDraftId, CheckMode).url,
+                      href = controllers.sections.destination.routes.DestinationWarehouseVatController.onPageLoad(testErn, testArc, CheckMode).url,
                       id = "changeDestinationWarehouseVat"
                     ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHidden)
                   )

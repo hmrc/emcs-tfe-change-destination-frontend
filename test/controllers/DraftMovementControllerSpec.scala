@@ -18,6 +18,7 @@ package controllers
 
 import base.SpecBase
 import controllers.actions.FakeDataRetrievalAction
+import controllers.actions.FakeMovementAction
 import models.sections.info.movementScenario.MovementScenario
 import pages.sections.info.DestinationTypePage
 import play.api.Play.materializer
@@ -37,14 +38,15 @@ class DraftMovementControllerSpec extends SpecBase {
       fakeUserAllowListAction,
       new FakeDataRetrievalAction(Some(userAnswers), Some(testMinTraderKnownFacts)),
       dataRequiredAction,
+      new FakeMovementAction(maxGetMovementResponse),
       messagesControllerComponents,
       view
     )
 
-    lazy val request = FakeRequest(GET, routes.DraftMovementController.onPageLoad(testErn, testDraftId).url)
+    lazy val request = FakeRequest(GET, routes.DraftMovementController.onPageLoad(testErn, testArc).url)
 
     "must render the page" in {
-      lazy val result = testController.onPageLoad(testErn, testDraftId)(request)
+      lazy val result = testController.onPageLoad(testErn, testArc)(request)
 
 
       status(result) mustEqual OK

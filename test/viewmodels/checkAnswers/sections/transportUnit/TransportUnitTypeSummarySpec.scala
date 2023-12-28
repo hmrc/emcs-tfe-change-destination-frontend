@@ -71,7 +71,7 @@ class TransportUnitTypeSummarySpec extends SpecBase with Matchers {
                       actions = Seq(
                         ActionItemViewModel(
                           content = messagesForLanguage.change,
-                          href = controllers.sections.transportUnit.routes.TransportUnitTypeController.onPageLoad(testErn, testDraftId, testIndex1, CheckMode).url,
+                          href = controllers.sections.transportUnit.routes.TransportUnitTypeController.onPageLoad(testErn, testArc, testIndex1, CheckMode).url,
                           id = "changeTransportUnitType1"
                         ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHidden)
                       )

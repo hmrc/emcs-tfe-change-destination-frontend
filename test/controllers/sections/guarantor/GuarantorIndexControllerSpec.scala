@@ -18,6 +18,7 @@ package controllers.sections.guarantor
 
 import base.SpecBase
 import controllers.actions.FakeDataRetrievalAction
+import controllers.actions.FakeMovementAction
 import mocks.services.MockUserAnswersService
 import models.sections.guarantor.GuarantorArranger.Consignor
 import models.{NormalMode, UserAddress, UserAnswers}
@@ -32,7 +33,7 @@ class GuarantorIndexControllerSpec extends SpecBase with MockUserAnswersService 
 
   class Fixture(optUserAnswers: Option[UserAnswers] = Some(emptyUserAnswers)) {
 
-    val request = FakeRequest(GET, controllers.sections.guarantor.routes.GuarantorIndexController.onPageLoad(testErn, testDraftId).url)
+    val request = FakeRequest(GET, controllers.sections.guarantor.routes.GuarantorIndexController.onPageLoad(testErn, testArc).url)
 
     lazy val testController = new GuarantorIndexController(
       mockUserAnswersService,
@@ -40,6 +41,7 @@ class GuarantorIndexControllerSpec extends SpecBase with MockUserAnswersService 
       fakeAuthAction,
       new FakeDataRetrievalAction(optUserAnswers, Some(testMinTraderKnownFacts)),
       dataRequiredAction,
+      new FakeMovementAction(maxGetMovementResponse),
       fakeUserAllowListAction,
       messagesControllerComponents
     )
@@ -55,17 +57,17 @@ class GuarantorIndexControllerSpec extends SpecBase with MockUserAnswersService 
           .set(GuarantorArrangerPage, Consignor)
           .set(ConsignorAddressPage, UserAddress(None, "", "", "")))) {
 
-        val result = testController.onPageLoad(testErn, testDraftId)(request)
+        val result = testController.onPageLoad(testErn, testArc)(request)
 
         status(result) mustEqual SEE_OTHER
-        redirectLocation(result) mustBe Some(controllers.sections.guarantor.routes.GuarantorCheckAnswersController.onPageLoad(testErn, testDraftId).url)
+        redirectLocation(result) mustBe Some(controllers.sections.guarantor.routes.GuarantorCheckAnswersController.onPageLoad(testErn, testArc).url)
       }
     }
     "must redirect to the guarantor required controller" in new Fixture() {
-      val result = testController.onPageLoad(testErn, testDraftId)(request)
+      val result = testController.onPageLoad(testErn, testArc)(request)
 
       status(result) mustEqual SEE_OTHER
-      redirectLocation(result) mustBe Some(controllers.sections.guarantor.routes.GuarantorRequiredController.onPageLoad(testErn, testDraftId, NormalMode).url)
+      redirectLocation(result) mustBe Some(controllers.sections.guarantor.routes.GuarantorRequiredController.onPageLoad(testErn, testArc, NormalMode).url)
     }
   }
 

@@ -50,7 +50,7 @@ class ConsigneeIndexController @Inject()(override val messagesApi: MessagesApi,
           destinationTypePageAnswer =>
             val ur: UserRequest[_] = dataRequest.request.request
 
-            if (ConsigneeSection.isCompleted) {
+            if (ConsigneeSection.isCompleted || ConsigneeSection.needsReview) {
               Redirect(controllers.sections.consignee.routes.CheckYourAnswersConsigneeController.onPageLoad(ern, arc))
             } else {
               if (shouldStartFlowFromConsigneeExemptOrganisation(destinationTypePageAnswer)) {

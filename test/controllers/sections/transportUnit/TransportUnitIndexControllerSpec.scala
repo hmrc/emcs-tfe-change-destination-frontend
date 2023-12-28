@@ -18,6 +18,7 @@ package controllers.sections.transportUnit
 
 import base.SpecBase
 import controllers.actions.FakeDataRetrievalAction
+import controllers.actions.FakeMovementAction
 import mocks.services.MockUserAnswersService
 import models.sections.transportUnit.TransportUnitType
 import models.{NormalMode, UserAnswers}
@@ -40,6 +41,7 @@ class TransportUnitIndexControllerSpec extends SpecBase with MockUserAnswersServ
       fakeAuthAction,
       new FakeDataRetrievalAction(userAnswers, Some(testMinTraderKnownFacts)),
       dataRequiredAction,
+      new FakeMovementAction(maxGetMovementResponse),
       fakeUserAllowListAction,
       Helpers.stubMessagesControllerComponents()
     )
@@ -49,32 +51,32 @@ class TransportUnitIndexControllerSpec extends SpecBase with MockUserAnswersServ
 
     "must redirect to the transport unit type page (CAM-TU01) when no transport units answered" in new Test(Some(emptyUserAnswers)) {
 
-      val result = controller.onPageLoad(testErn, testDraftId)(request)
+      val result = controller.onPageLoad(testErn, testArc)(request)
 
       status(result) mustEqual SEE_OTHER
       redirectLocation(result) mustBe
-        Some(routes.TransportUnitTypeController.onPageLoad(testErn, testDraftId, testIndex1, NormalMode).url)
+        Some(routes.TransportUnitTypeController.onPageLoad(testErn, testArc, testIndex1, NormalMode).url)
     }
 
     "must redirect to the transport unit type page (CAM-TU01) when there is an empty transport unit list" in new Test(Some(
       emptyUserAnswers.set(TransportUnitsCount, Seq.empty)
     )) {
 
-      val result = controller.onPageLoad(testErn, testDraftId)(request)
+      val result = controller.onPageLoad(testErn, testArc)(request)
 
       status(result) mustEqual SEE_OTHER
       redirectLocation(result).value mustBe
-        controllers.sections.transportUnit.routes.TransportUnitTypeController.onPageLoad(testErn, testDraftId, testIndex1, NormalMode).url
+        controllers.sections.transportUnit.routes.TransportUnitTypeController.onPageLoad(testErn, testArc, testIndex1, NormalMode).url
     }
 
     "must redirect to the add to list page (CAM-TU07) when any answer is present" in new Test(Some(
       emptyUserAnswers.set(TransportUnitTypePage(testIndex1), TransportUnitType.Vehicle)
     )) {
-      val result = controller.onPageLoad(testErn, testDraftId)(request)
+      val result = controller.onPageLoad(testErn, testArc)(request)
 
       status(result) mustEqual SEE_OTHER
       redirectLocation(result) mustBe
-        Some(routes.TransportUnitsAddToListController.onPageLoad(testErn, testDraftId).url)
+        Some(routes.TransportUnitsAddToListController.onPageLoad(testErn, testArc).url)
     }
   }
 }

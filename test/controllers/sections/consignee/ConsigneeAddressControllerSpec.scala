@@ -18,6 +18,7 @@ package controllers.sections.consignee
 
 import base.SpecBase
 import controllers.actions.FakeDataRetrievalAction
+import controllers.actions.FakeMovementAction
 import controllers.routes
 import fixtures.UserAddressFixtures
 import forms.AddressFormProvider
@@ -40,9 +41,9 @@ class ConsigneeAddressControllerSpec extends SpecBase with MockUserAnswersServic
   lazy val view: AddressView = app.injector.instanceOf[AddressView]
 
   lazy val consigneeAddressRoute: String =
-    controllers.sections.consignee.routes.ConsigneeAddressController.onPageLoad(testErn, testLrn, NormalMode).url
+    controllers.sections.consignee.routes.ConsigneeAddressController.onPageLoad(testErn, testArc, NormalMode).url
   lazy val consigneeAddressOnSubmit: Call =
-    controllers.sections.consignee.routes.ConsigneeAddressController.onSubmit(testErn, testDraftId, NormalMode)
+    controllers.sections.consignee.routes.ConsigneeAddressController.onSubmit(testErn, testArc, NormalMode)
 
 
   class Fixture(optUserAnswers: Option[UserAnswers] = Some(emptyUserAnswers)) {
@@ -56,6 +57,7 @@ class ConsigneeAddressControllerSpec extends SpecBase with MockUserAnswersServic
       fakeAuthAction,
       new FakeDataRetrievalAction(optUserAnswers, Some(testMinTraderKnownFacts)),
       dataRequiredAction,
+      new FakeMovementAction(maxGetMovementResponse),
       fakeUserAllowListAction,
       new AddressFormProvider(),
       messagesControllerComponents,
@@ -65,7 +67,7 @@ class ConsigneeAddressControllerSpec extends SpecBase with MockUserAnswersServic
 
   "ConsigneeAddress Controller" - {
     "must return OK and the correct view for a GET" in new Fixture() {
-      val result = testController.onPageLoad(testErn, testDraftId, NormalMode)(request)
+      val result = testController.onPageLoad(testErn, testArc, NormalMode)(request)
 
       status(result) mustEqual OK
       contentAsString(result) mustEqual view(
@@ -78,7 +80,7 @@ class ConsigneeAddressControllerSpec extends SpecBase with MockUserAnswersServic
     "must populate the view correctly on a GET when the question has previously been answered" in new Fixture(
       Some(emptyUserAnswers.set(ConsigneeAddressPage, userAddressModelMax))) {
 
-      val result = testController.onPageLoad(testErn, testDraftId, NormalMode)(request)
+      val result = testController.onPageLoad(testErn, testArc, NormalMode)(request)
 
       status(result) mustEqual OK
       contentAsString(result) mustEqual view(
@@ -98,7 +100,7 @@ class ConsigneeAddressControllerSpec extends SpecBase with MockUserAnswersServic
         ("postcode", userAddressModelMax.postcode)
       )
 
-      val result = testController.onSubmit(testErn, testDraftId, NormalMode)(req)
+      val result = testController.onSubmit(testErn, testArc, NormalMode)(req)
 
       status(result) mustEqual SEE_OTHER
       redirectLocation(result).value mustEqual testOnwardRoute.url
@@ -109,7 +111,7 @@ class ConsigneeAddressControllerSpec extends SpecBase with MockUserAnswersServic
 
       val boundForm = form.bind(Map("value" -> ""))
 
-      val result = testController.onSubmit(testErn, testDraftId, NormalMode)(req)
+      val result = testController.onSubmit(testErn, testArc, NormalMode)(req)
 
       status(result) mustEqual BAD_REQUEST
       contentAsString(result) mustEqual view(
@@ -120,7 +122,7 @@ class ConsigneeAddressControllerSpec extends SpecBase with MockUserAnswersServic
     }
 
     "must redirect to Journey Recovery for a GET if no existing data is found" in new Fixture(None) {
-      val result = testController.onPageLoad(testErn, testDraftId, NormalMode)(request)
+      val result = testController.onPageLoad(testErn, testArc, NormalMode)(request)
 
       status(result) mustEqual SEE_OTHER
       redirectLocation(result).value mustEqual routes.JourneyRecoveryController.onPageLoad().url
@@ -129,7 +131,7 @@ class ConsigneeAddressControllerSpec extends SpecBase with MockUserAnswersServic
     "must redirect to Journey Recovery for a POST if no existing data is found" in new Fixture(None) {
       val req = FakeRequest(POST, consigneeAddressOnSubmit.url).withFormUrlEncodedBody(("value", "answer"))
 
-      val result = testController.onSubmit(testErn, testDraftId, NormalMode)(req)
+      val result = testController.onSubmit(testErn, testArc, NormalMode)(req)
 
       status(result) mustEqual SEE_OTHER
       redirectLocation(result).value mustEqual routes.JourneyRecoveryController.onPageLoad().url

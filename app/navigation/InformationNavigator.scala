@@ -25,6 +25,10 @@ import play.api.mvc.Call
 
 import javax.inject.{Inject, Singleton}
 
+
+//TODO: This naviagtion is made up for now, it just allows you to get through a section to the draft movement page
+//      The draft movment page will actually become the Review Change of Destination Task List page and this section
+//      Will have new pages added to it to determine what type of Change of Destination is happening
 @Singleton
 class InformationNavigator @Inject()() extends BaseNavigator {
 

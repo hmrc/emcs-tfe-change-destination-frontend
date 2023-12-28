@@ -42,7 +42,7 @@ class GuarantorVatSummarySpec extends SpecBase with Matchers {
           value = Value(Text(value)),
           actions = if (!showChangeLink) Seq() else Seq(ActionItemViewModel(
             content = Text(messagesForLanguage.change),
-            href = controllers.sections.guarantor.routes.GuarantorVatController.onPageLoad(testErn, testDraftId, CheckMode).url,
+            href = controllers.sections.guarantor.routes.GuarantorVatController.onPageLoad(testErn, testArc, CheckMode).url,
             id = "changeGuarantorVat"
           ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHidden))
         )

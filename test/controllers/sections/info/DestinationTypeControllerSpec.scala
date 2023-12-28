@@ -34,6 +34,7 @@ package controllers.sections.info
 
 import base.SpecBase
 import controllers.actions.FakeDataRetrievalAction
+import controllers.actions.FakeMovementAction
 import controllers.actions.predraft.FakePreDraftRetrievalAction
 import forms.sections.info.DestinationTypeFormProvider
 import mocks.services.{MockPreDraftService, MockUserAnswersService}
@@ -68,8 +69,8 @@ class DestinationTypeControllerSpec extends SpecBase with MockUserAnswersService
       case None => emptyUserAnswers.copy(ern = ern)
     }
 
-    lazy val destinationTypeGetRoute: String = controllers.sections.info.routes.DestinationTypeController.onPreDraftPageLoad(ern, NormalMode).url
-    lazy val destinationTypePostRoute: String = controllers.sections.info.routes.DestinationTypeController.onPreDraftSubmit(ern, NormalMode).url
+    lazy val destinationTypeGetRoute: String = controllers.sections.info.routes.DestinationTypeController.onPreDraftPageLoad(ern, testArc, NormalMode).url
+    lazy val destinationTypePostRoute: String = controllers.sections.info.routes.DestinationTypeController.onPreDraftSubmit(ern, testArc, NormalMode).url
 
     implicit lazy val getRequest = dataRequest(FakeRequest(GET, destinationTypeGetRoute), ern = ern)
     implicit lazy val postRequest = dataRequest(FakeRequest(POST, destinationTypePostRoute).withFormUrlEncodedBody(("value", value)), ern = ern)
@@ -86,14 +87,15 @@ class DestinationTypeControllerSpec extends SpecBase with MockUserAnswersService
       preDraftDataRequiredAction,
       new FakeDataRetrievalAction(Some(userAnswersSoFar), Some(testMinTraderKnownFacts)),
       dataRequiredAction,
+      new FakeMovementAction(maxGetMovementResponse),
       formProvider,
       Helpers.stubMessagesControllerComponents(),
       view,
       fakeUserAllowListAction
     )
 
-    lazy val getResult: Future[Result] = controller.onPreDraftPageLoad(ern, NormalMode)(getRequest)
-    lazy val postResult: Future[Result] = controller.onPreDraftSubmit(ern, NormalMode)(postRequest)
+    lazy val getResult: Future[Result] = controller.onPreDraftPageLoad(ern, testArc, NormalMode)(getRequest)
+    lazy val postResult: Future[Result] = controller.onPreDraftSubmit(ern, testArc, NormalMode)(postRequest)
   }
 
   "DestinationTypeController" - {
@@ -105,7 +107,7 @@ class DestinationTypeControllerSpec extends SpecBase with MockUserAnswersService
             view(
               GreatBritain,
               form,
-              controllers.sections.info.routes.DestinationTypeController.onPreDraftSubmit("GBRC123", NormalMode)
+              controllers.sections.info.routes.DestinationTypeController.onPreDraftSubmit("GBRC123", testArc, NormalMode)
             )(getRequest, messages(getRequest)).toString
         }
         "when the request contains a GBWK ERN" in new Fixture(None, ern = "GBWK123") {
@@ -114,7 +116,7 @@ class DestinationTypeControllerSpec extends SpecBase with MockUserAnswersService
             view(
               GreatBritain,
               form,
-              controllers.sections.info.routes.DestinationTypeController.onPreDraftSubmit("GBWK123", NormalMode)
+              controllers.sections.info.routes.DestinationTypeController.onPreDraftSubmit("GBWK123", testArc, NormalMode)
             )(getRequest, messages(getRequest)).toString
         }
         "when the request contains a XIRC ERN" in new Fixture(None, ern = "XIRC123") {
@@ -123,7 +125,7 @@ class DestinationTypeControllerSpec extends SpecBase with MockUserAnswersService
             view(
               GreatBritain,
               form,
-              controllers.sections.info.routes.DestinationTypeController.onPreDraftSubmit("XIRC123", NormalMode)
+              controllers.sections.info.routes.DestinationTypeController.onPreDraftSubmit("XIRC123", testArc, NormalMode)
             )(getRequest, messages(getRequest)).toString
         }
         "when the request contains a XIWK ERN and dispatchPlace is GreatBritain" in new Fixture(dispatchPlace = Some(GreatBritain), ern = "XIWK123") {
@@ -132,7 +134,7 @@ class DestinationTypeControllerSpec extends SpecBase with MockUserAnswersService
             view(
               GreatBritain,
               form,
-              controllers.sections.info.routes.DestinationTypeController.onPreDraftSubmit("XIWK123", NormalMode)
+              controllers.sections.info.routes.DestinationTypeController.onPreDraftSubmit("XIWK123", testArc, NormalMode)
             )(getRequest, messages(getRequest)).toString
         }
         "when the request contains a XIWK ERN and dispatchPlace is NorthernIreland" in new Fixture(dispatchPlace = Some(NorthernIreland), ern = "XIWK123") {
@@ -141,14 +143,14 @@ class DestinationTypeControllerSpec extends SpecBase with MockUserAnswersService
             view(
               NorthernIreland,
               form,
-              controllers.sections.info.routes.DestinationTypeController.onPreDraftSubmit("XIWK123", NormalMode)
+              controllers.sections.info.routes.DestinationTypeController.onPreDraftSubmit("XIWK123", testArc, NormalMode)
             )(getRequest, messages(getRequest)).toString
         }
       }
       "must redirect to the DispatchPlace page" - {
         "when the request contains a XI ERN and dispatchPlace is not known" in new Fixture(None, ern = "XIWK123") {
           status(getResult) mustEqual SEE_OTHER
-          redirectLocation(getResult).value mustEqual controllers.sections.info.routes.DispatchPlaceController.onPreDraftPageLoad("XIWK123", NormalMode).url
+          redirectLocation(getResult).value mustEqual controllers.sections.info.routes.DispatchPlaceController.onPreDraftPageLoad("XIWK123", testArc, NormalMode).url
         }
       }
     }
@@ -170,7 +172,7 @@ class DestinationTypeControllerSpec extends SpecBase with MockUserAnswersService
           view(
             GreatBritain,
             boundForm,
-            controllers.sections.info.routes.DestinationTypeController.onPreDraftSubmit(testGreatBritainErn, NormalMode)
+            controllers.sections.info.routes.DestinationTypeController.onPreDraftSubmit(testGreatBritainErn, testArc, NormalMode)
           )(postRequest, messages(postRequest)).toString
       }
     }

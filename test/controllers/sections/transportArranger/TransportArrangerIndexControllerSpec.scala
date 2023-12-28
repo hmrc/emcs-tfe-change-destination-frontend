@@ -18,6 +18,7 @@ package controllers.sections.transportArranger
 
 import base.SpecBase
 import controllers.actions.FakeDataRetrievalAction
+import controllers.actions.FakeMovementAction
 import mocks.services.MockUserAnswersService
 import models.sections.transportArranger.TransportArranger.Consignor
 import models.{NormalMode, UserAddress, UserAnswers}
@@ -41,6 +42,7 @@ class TransportArrangerIndexControllerSpec extends SpecBase with MockUserAnswers
       fakeAuthAction,
       new FakeDataRetrievalAction(userAnswers, Some(testMinTraderKnownFacts)),
       dataRequiredAction,
+      new FakeMovementAction(maxGetMovementResponse),
       fakeUserAllowListAction,
       Helpers.stubMessagesControllerComponents()
     )
@@ -53,19 +55,19 @@ class TransportArrangerIndexControllerSpec extends SpecBase with MockUserAnswers
           .set(TransportArrangerPage, Consignor)
           .set(ConsignorAddressPage, UserAddress(None, "", "", ""))
       )) {
-        val result = controller.onPageLoad(testErn, testDraftId)(request)
+        val result = controller.onPageLoad(testErn, testArc)(request)
 
         status(result) mustEqual SEE_OTHER
         redirectLocation(result) mustBe
-          Some(controllers.sections.transportArranger.routes.TransportArrangerCheckAnswersController.onPageLoad(testErn, testDraftId).url)
+          Some(controllers.sections.transportArranger.routes.TransportArrangerCheckAnswersController.onPageLoad(testErn, testArc).url)
       }
     }
     "must redirect to the transportArranger controller" in new Test() {
-      val result = controller.onPageLoad(testErn, testDraftId)(request)
+      val result = controller.onPageLoad(testErn, testArc)(request)
 
       status(result) mustEqual SEE_OTHER
       redirectLocation(result) mustBe
-        Some(controllers.sections.transportArranger.routes.TransportArrangerController.onPageLoad(testErn, testDraftId, NormalMode).url)
+        Some(controllers.sections.transportArranger.routes.TransportArrangerController.onPageLoad(testErn, testArc, NormalMode).url)
     }
   }
 }

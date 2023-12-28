@@ -17,7 +17,7 @@
 package controllers.sections.consignee
 
 import base.SpecBase
-import controllers.actions.FakeDataRetrievalAction
+import controllers.actions.{FakeDataRetrievalAction, FakeMovementAction}
 import controllers.routes
 import mocks.services.MockUserAnswersService
 import mocks.viewmodels.MockConsigneeCheckYourAnswersHelper
@@ -41,7 +41,7 @@ class CheckYourAnswersConsigneeControllerSpec extends SpecBase with SummaryListF
   lazy val view: CheckYourAnswersConsigneeView = app.injector.instanceOf[CheckYourAnswersConsigneeView]
 
   implicit val testDataRequest: DataRequest[AnyContentAsEmpty.type] = dataRequest(
-    FakeRequest(GET, controllers.sections.consignee.routes.CheckYourAnswersConsigneeController.onPageLoad(testErn, testLrn).url)
+    FakeRequest(GET, controllers.sections.consignee.routes.CheckYourAnswersConsigneeController.onPageLoad(testErn, testArc).url)
   )
 
   implicit val msgs = messages(testDataRequest)
@@ -84,6 +84,7 @@ class CheckYourAnswersConsigneeControllerSpec extends SpecBase with SummaryListF
       fakeUserAllowListAction,
       new FakeDataRetrievalAction(optUserAnswers, Some(testMinTraderKnownFacts)),
       dataRequiredAction,
+      new FakeMovementAction(maxGetMovementResponse),
       messagesControllerComponents,
       new FakeConsigneeNavigator(testOnwardRoute),
       mockConsigneeCheckYourAnswersHelper,
@@ -107,12 +108,12 @@ class CheckYourAnswersConsigneeControllerSpec extends SpecBase with SummaryListF
         MockConsigneeCheckAnswersHelper.summaryList().returns(ernSummaryList)
 
 
-        val result = testController.onPageLoad(testErn, testDraftId)(testDataRequest)
+        val result = testController.onPageLoad(testErn, testArc)(testDataRequest)
 
         lazy val viewAsString = view(
-          controllers.sections.consignee.routes.CheckYourAnswersConsigneeController.onSubmit(testErn, testDraftId),
+          controllers.sections.consignee.routes.CheckYourAnswersConsigneeController.onSubmit(testErn, testArc),
           testErn,
-          testDraftId,
+          testArc,
           ernSummaryList
         )(testDataRequest, msgs).toString
 
@@ -132,12 +133,12 @@ class CheckYourAnswersConsigneeControllerSpec extends SpecBase with SummaryListF
         MockConsigneeCheckAnswersHelper.summaryList().returns(exemptSummaryList)
 
 
-        val result = testController.onPageLoad(testErn, testDraftId)(testDataRequest)
+        val result = testController.onPageLoad(testErn, testArc)(testDataRequest)
 
         lazy val viewAsString = view(
-          controllers.sections.consignee.routes.CheckYourAnswersConsigneeController.onSubmit(testErn, testDraftId),
+          controllers.sections.consignee.routes.CheckYourAnswersConsigneeController.onSubmit(testErn, testArc),
           testErn,
-          testDraftId,
+          testArc,
           exemptSummaryList
         )(testDataRequest, msgs).toString
 
@@ -157,12 +158,12 @@ class CheckYourAnswersConsigneeControllerSpec extends SpecBase with SummaryListF
         MockConsigneeCheckAnswersHelper.summaryList().returns(vatEoriSummaryList)
 
 
-        val result = testController.onPageLoad(testErn, testDraftId)(testDataRequest)
+        val result = testController.onPageLoad(testErn, testArc)(testDataRequest)
 
         lazy val viewAsString = view(
-          controllers.sections.consignee.routes.CheckYourAnswersConsigneeController.onSubmit(testErn, testDraftId),
+          controllers.sections.consignee.routes.CheckYourAnswersConsigneeController.onSubmit(testErn, testArc),
           testErn,
-          testDraftId,
+          testArc,
           vatEoriSummaryList
         )(testDataRequest, msgs).toString
 
@@ -182,12 +183,12 @@ class CheckYourAnswersConsigneeControllerSpec extends SpecBase with SummaryListF
         MockConsigneeCheckAnswersHelper.summaryList().returns(vatEoriSummaryList)
 
 
-        val result = testController.onPageLoad(testErn, testDraftId)(testDataRequest)
+        val result = testController.onPageLoad(testErn, testArc)(testDataRequest)
 
         lazy val viewAsString = view(
-          controllers.sections.consignee.routes.CheckYourAnswersConsigneeController.onSubmit(testErn, testDraftId),
+          controllers.sections.consignee.routes.CheckYourAnswersConsigneeController.onSubmit(testErn, testArc),
           testErn,
-          testDraftId,
+          testArc,
           vatEoriSummaryList
         )(testDataRequest, msgs).toString
 
@@ -196,7 +197,7 @@ class CheckYourAnswersConsigneeControllerSpec extends SpecBase with SummaryListF
       }
 
       "must redirect to Journey Recovery if no existing data is found" in new Fixture(None) {
-        val result = testController.onPageLoad(testErn, testDraftId)(testDataRequest)
+        val result = testController.onPageLoad(testErn, testArc)(testDataRequest)
 
         status(result) mustBe SEE_OTHER
         redirectLocation(result).value mustBe routes.JourneyRecoveryController.onPageLoad().url
@@ -206,7 +207,7 @@ class CheckYourAnswersConsigneeControllerSpec extends SpecBase with SummaryListF
 
   ".onSubmit" - {
     "must redirect to the onward route" in new Fixture(Some(emptyUserAnswers)) {
-      val result = testController.onSubmit(testErn, testDraftId)(FakeRequest())
+      val result = testController.onSubmit(testErn, testArc)(FakeRequest())
 
       status(result) mustBe SEE_OTHER
       redirectLocation(result).value mustBe testOnwardRoute.url

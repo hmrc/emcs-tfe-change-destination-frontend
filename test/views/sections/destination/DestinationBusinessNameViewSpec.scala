@@ -45,7 +45,7 @@ class DestinationBusinessNameViewSpec extends SpecBase with ViewBehaviours {
         lazy val view = app.injector.instanceOf[DestinationBusinessNameView]
         val form = app.injector.instanceOf[DestinationBusinessNameFormProvider].apply()
 
-        implicit val doc: Document = Jsoup.parse(view(form, testOnwardRoute, GbTaxWarehouse, controllers.sections.destination.routes.DestinationBusinessNameController.skipThisQuestion(testErn, testDraftId, NormalMode)).toString())
+        implicit val doc: Document = Jsoup.parse(view(form, testOnwardRoute, GbTaxWarehouse, controllers.sections.destination.routes.DestinationBusinessNameController.skipThisQuestion(testErn, testArc, NormalMode)).toString())
 
         behave like pageWithExpectedElementsAndMessages(Seq(
           Selectors.subHeadingCaptionSelector -> messagesForLanguage.destinationSection,
@@ -64,7 +64,7 @@ class DestinationBusinessNameViewSpec extends SpecBase with ViewBehaviours {
         lazy val view = app.injector.instanceOf[DestinationBusinessNameView]
         val form = app.injector.instanceOf[DestinationBusinessNameFormProvider].apply()
 
-        implicit val doc: Document = Jsoup.parse(view(form, testOnwardRoute, DirectDelivery, controllers.sections.destination.routes.DestinationBusinessNameController.skipThisQuestion(testErn, testDraftId, NormalMode)).toString())
+        implicit val doc: Document = Jsoup.parse(view(form, testOnwardRoute, DirectDelivery, controllers.sections.destination.routes.DestinationBusinessNameController.skipThisQuestion(testErn, testArc, NormalMode)).toString())
 
         behave like pageWithExpectedElementsAndMessages(Seq(
           Selectors.subHeadingCaptionSelector -> messagesForLanguage.destinationSection,

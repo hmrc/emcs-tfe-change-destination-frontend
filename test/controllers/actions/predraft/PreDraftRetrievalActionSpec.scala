@@ -18,7 +18,7 @@ package controllers.actions.predraft
 
 import base.SpecBase
 import mocks.services.{MockGetTraderKnownFactsService, MockPreDraftService}
-import models.requests.{OptionalDataRequest, UserRequest}
+import models.requests.{MovementRequest, OptionalDataRequest, UserRequest}
 import play.api.mvc.ActionTransformer
 import play.api.test.FakeRequest
 
@@ -27,7 +27,7 @@ import scala.concurrent.Future
 
 class PreDraftRetrievalActionSpec extends SpecBase with MockPreDraftService with MockGetTraderKnownFactsService {
 
-  lazy val dataRetrievalAction: ActionTransformer[UserRequest, OptionalDataRequest] =
+  lazy val dataRetrievalAction: ActionTransformer[MovementRequest, OptionalDataRequest] =
     new PreDraftDataRetrievalActionImpl(
       mockPreDraftService,
       mockGetTraderKnownFactsService
@@ -39,7 +39,7 @@ class PreDraftRetrievalActionSpec extends SpecBase with MockPreDraftService with
         MockPreDraftService.get(testErn, testSessionId).returns(Future.successful(None))
         MockGetTraderKnownFactsService.getTraderKnownFacts(testErn).returns(Future.successful(Some(testMinTraderKnownFacts)))
 
-        val result = dataRetrievalAction.refine(UserRequest(FakeRequest(), testErn, testInternalId, testCredId, testSessionId, false)).futureValue.value
+        val result = dataRetrievalAction.refine(movementRequest(FakeRequest())).futureValue.value
 
         result.userAnswers must not be defined
       }
@@ -47,7 +47,7 @@ class PreDraftRetrievalActionSpec extends SpecBase with MockPreDraftService with
         MockPreDraftService.get(testErn, testSessionId).returns(Future.successful(None))
         MockGetTraderKnownFactsService.getTraderKnownFacts(testErn).returns(Future.successful(None))
 
-        val result = dataRetrievalAction.refine(UserRequest(FakeRequest(), testErn, testInternalId, testCredId, testSessionId, false)).futureValue.value
+        val result = dataRetrievalAction.refine(movementRequest(FakeRequest())).futureValue.value
 
         result.traderKnownFacts must not be defined
       }
@@ -58,7 +58,7 @@ class PreDraftRetrievalActionSpec extends SpecBase with MockPreDraftService with
         MockPreDraftService.get(testErn, testSessionId).returns(Future(Some(emptyUserAnswers)))
         MockGetTraderKnownFactsService.getTraderKnownFacts(testErn).returns(Future.successful(Some(testMinTraderKnownFacts)))
 
-        val result = dataRetrievalAction.refine(UserRequest(FakeRequest(), testErn, testInternalId, testCredId, testSessionId, false)).futureValue.value
+        val result = dataRetrievalAction.refine(movementRequest(FakeRequest())).futureValue.value
 
         result.userAnswers mustBe defined
       }
@@ -67,7 +67,7 @@ class PreDraftRetrievalActionSpec extends SpecBase with MockPreDraftService with
         MockPreDraftService.get(testErn, testSessionId).returns(Future(Some(emptyUserAnswers)))
         MockGetTraderKnownFactsService.getTraderKnownFacts(testErn).returns(Future.successful(Some(testMinTraderKnownFacts)))
 
-        val result = dataRetrievalAction.refine(UserRequest(FakeRequest(), testErn, testInternalId, testCredId, testSessionId, false)).futureValue.value
+        val result = dataRetrievalAction.refine(movementRequest(FakeRequest())).futureValue.value
 
         result.traderKnownFacts mustBe defined
       }

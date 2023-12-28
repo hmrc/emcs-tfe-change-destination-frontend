@@ -19,26 +19,25 @@ package models.submitChangeDestination
 import base.SpecBase
 import models.requests.DataRequest
 import models.sections.info.movementScenario.DestinationType
-import pages.sections.info.DeferredMovementPage
 import play.api.test.FakeRequest
 
 class AttributesModelSpec extends SpecBase {
   "apply" - {
     "must return an AttributesModel" - {
       "when XIP ERN" in {
-        implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), emptyUserAnswers.set(DeferredMovementPage(), true), "XIPC123")
+        implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), ern = "XIPC123")
 
-        AttributesModel.apply(DestinationType.Export) mustBe AttributesModel(SubmissionMessageType.DutyPaidB2B, Some(true))
+        AttributesModel.apply(DestinationType.Export) mustBe AttributesModel(SubmissionMessageType.DutyPaidB2B)
       }
       "when not XIP ERN, but Export" in {
-        implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), emptyUserAnswers.set(DeferredMovementPage(), false))
+        implicit val dr: DataRequest[_] = dataRequest(FakeRequest())
 
-        AttributesModel.apply(DestinationType.Export) mustBe AttributesModel(SubmissionMessageType.Export, Some(false))
+        AttributesModel.apply(DestinationType.Export) mustBe AttributesModel(SubmissionMessageType.Export)
       }
       "when not XIP ERN and not Export" in {
         implicit val dr: DataRequest[_] = dataRequest(FakeRequest())
 
-        AttributesModel.apply(DestinationType.TaxWarehouse) mustBe AttributesModel(SubmissionMessageType.Standard, None)
+        AttributesModel.apply(DestinationType.TaxWarehouse) mustBe AttributesModel(SubmissionMessageType.Standard)
       }
     }
   }

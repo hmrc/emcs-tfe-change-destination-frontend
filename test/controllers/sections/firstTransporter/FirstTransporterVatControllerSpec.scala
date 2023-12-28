@@ -18,6 +18,7 @@ package controllers.sections.firstTransporter
 
 import base.SpecBase
 import controllers.actions.FakeDataRetrievalAction
+import controllers.actions.FakeMovementAction
 import forms.sections.firstTransporter.FirstTransporterVatFormProvider
 import mocks.services.MockUserAnswersService
 import models.{NormalMode, UserAnswers}
@@ -38,11 +39,11 @@ class FirstTransporterVatControllerSpec extends SpecBase with MockUserAnswersSer
   lazy val view: FirstTransporterVatView = app.injector.instanceOf[FirstTransporterVatView]
 
   lazy val firstTransporterVatRoute: String =
-    controllers.sections.firstTransporter.routes.FirstTransporterVatController.onPageLoad(testErn, testDraftId, NormalMode).url
+    controllers.sections.firstTransporter.routes.FirstTransporterVatController.onPageLoad(testErn, testArc, NormalMode).url
   lazy val firstTransporterVatSubmitAction: Call =
-    controllers.sections.firstTransporter.routes.FirstTransporterVatController.onSubmit(testErn, testDraftId, NormalMode)
+    controllers.sections.firstTransporter.routes.FirstTransporterVatController.onSubmit(testErn, testArc, NormalMode)
   lazy val firstTransporterVatNonGBVATRoute: String =
-    controllers.sections.firstTransporter.routes.FirstTransporterVatController.onNonGbVAT(testErn, testDraftId).url
+    controllers.sections.firstTransporter.routes.FirstTransporterVatController.onNonGbVAT(testErn, testArc).url
 
   class Fixture(optUserAnswers: Option[UserAnswers] = Some(emptyUserAnswers)) {
     val request = FakeRequest(GET, firstTransporterVatRoute)
@@ -54,6 +55,7 @@ class FirstTransporterVatControllerSpec extends SpecBase with MockUserAnswersSer
       fakeAuthAction,
       new FakeDataRetrievalAction(optUserAnswers, Some(testMinTraderKnownFacts)),
       dataRequiredAction,
+      new FakeMovementAction(maxGetMovementResponse),
       fakeUserAllowListAction,
       formProvider,
       messagesControllerComponents,
@@ -64,7 +66,7 @@ class FirstTransporterVatControllerSpec extends SpecBase with MockUserAnswersSer
 
   "FirstTransporterVat Controller" - {
     "must return OK and the correct view for a GET" in new Fixture() {
-      val result = testController.onPageLoad(testErn, testDraftId, NormalMode)(request)
+      val result = testController.onPageLoad(testErn, testArc, NormalMode)(request)
 
       status(result) mustEqual OK
       contentAsString(result) mustEqual view(form, firstTransporterVatSubmitAction)(dataRequest(request), messages(request)).toString
@@ -73,7 +75,7 @@ class FirstTransporterVatControllerSpec extends SpecBase with MockUserAnswersSer
     "must populate the view correctly on a GET when the question has previously been answered" in new Fixture(
       Some(emptyUserAnswers.set(FirstTransporterVatPage, "answer"))) {
 
-      val result = testController.onPageLoad(testErn, testDraftId, NormalMode)(request)
+      val result = testController.onPageLoad(testErn, testArc, NormalMode)(request)
 
       status(result) mustEqual OK
       contentAsString(result) mustEqual view(form.fill("answer"), firstTransporterVatSubmitAction)(dataRequest(request), messages(request)).toString
@@ -84,7 +86,7 @@ class FirstTransporterVatControllerSpec extends SpecBase with MockUserAnswersSer
 
       val req = FakeRequest(POST, firstTransporterVatRoute).withFormUrlEncodedBody(("value", "answer"))
 
-      val result = testController.onSubmit(testErn, testDraftId, NormalMode)(req)
+      val result = testController.onSubmit(testErn, testArc, NormalMode)(req)
 
       status(result) mustEqual SEE_OTHER
       redirectLocation(result).value mustEqual testOnwardRoute.url
@@ -95,7 +97,7 @@ class FirstTransporterVatControllerSpec extends SpecBase with MockUserAnswersSer
 
       val req = FakeRequest(GET, firstTransporterVatNonGBVATRoute)
 
-      val result = testController.onNonGbVAT(testErn, testDraftId)(req)
+      val result = testController.onNonGbVAT(testErn, testArc)(req)
 
       status(result) mustEqual SEE_OTHER
       redirectLocation(result).value mustEqual testOnwardRoute.url
@@ -105,7 +107,7 @@ class FirstTransporterVatControllerSpec extends SpecBase with MockUserAnswersSer
       val req = FakeRequest(POST, firstTransporterVatRoute).withFormUrlEncodedBody(("value", ""))
       val boundForm = form.bind(Map("value" -> ""))
 
-      val result = testController.onSubmit(testErn, testDraftId, NormalMode)(req)
+      val result = testController.onSubmit(testErn, testArc, NormalMode)(req)
 
       status(result) mustEqual BAD_REQUEST
       contentAsString(result) mustEqual view(boundForm, firstTransporterVatSubmitAction)(dataRequest(request), messages(request)).toString
@@ -113,7 +115,7 @@ class FirstTransporterVatControllerSpec extends SpecBase with MockUserAnswersSer
 
 
     "must redirect to Journey Recovery for a GET if no existing data is found" in new Fixture(None) {
-      val result = testController.onPageLoad(testErn, testDraftId, NormalMode)(request)
+      val result = testController.onPageLoad(testErn, testArc, NormalMode)(request)
 
       status(result) mustEqual SEE_OTHER
       redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
@@ -122,7 +124,7 @@ class FirstTransporterVatControllerSpec extends SpecBase with MockUserAnswersSer
     "must redirect to Journey Recovery for a POST if no existing data is found" in new Fixture(None) {
       val req = FakeRequest(POST, firstTransporterVatRoute).withFormUrlEncodedBody(("value", "answer"))
 
-      val result = testController.onSubmit(testErn, testDraftId, NormalMode)(req)
+      val result = testController.onSubmit(testErn, testArc, NormalMode)(req)
 
       status(result) mustEqual SEE_OTHER
       redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url

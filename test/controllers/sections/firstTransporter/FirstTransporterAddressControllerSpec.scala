@@ -18,6 +18,7 @@ package controllers.sections.firstTransporter
 
 import base.SpecBase
 import controllers.actions.FakeDataRetrievalAction
+import controllers.actions.FakeMovementAction
 import controllers.routes
 import fixtures.UserAddressFixtures
 import forms.AddressFormProvider
@@ -40,9 +41,9 @@ class FirstTransporterAddressControllerSpec extends SpecBase with MockUserAnswer
   lazy val view: AddressView = app.injector.instanceOf[AddressView]
 
   lazy val firstTransporterAddressRoute: String =
-    controllers.sections.firstTransporter.routes.FirstTransporterAddressController.onPageLoad(testErn, testDraftId, NormalMode).url
+    controllers.sections.firstTransporter.routes.FirstTransporterAddressController.onPageLoad(testErn, testArc, NormalMode).url
   lazy val firstTransporterAddressOnSubmit: Call =
-    controllers.sections.firstTransporter.routes.FirstTransporterAddressController.onSubmit(testErn, testDraftId, NormalMode)
+    controllers.sections.firstTransporter.routes.FirstTransporterAddressController.onSubmit(testErn, testArc, NormalMode)
 
   class Fixture(optUserAnswers: Option[UserAnswers] = Some(emptyUserAnswers)) {
     val request = FakeRequest(GET, firstTransporterAddressRoute)
@@ -54,6 +55,7 @@ class FirstTransporterAddressControllerSpec extends SpecBase with MockUserAnswer
       fakeAuthAction,
       new FakeDataRetrievalAction(optUserAnswers, Some(testMinTraderKnownFacts)),
       dataRequiredAction,
+      new FakeMovementAction(maxGetMovementResponse),
       fakeUserAllowListAction,
       new AddressFormProvider(),
       messagesControllerComponents,
@@ -63,7 +65,7 @@ class FirstTransporterAddressControllerSpec extends SpecBase with MockUserAnswer
 
   "FirstTransporterAddress Controller" - {
     "must return OK and the correct view for a GET" in new Fixture(Some(emptyUserAnswers)) {
-      val result = testController.onPageLoad(testErn, testDraftId, NormalMode)(request)
+      val result = testController.onPageLoad(testErn, testArc, NormalMode)(request)
 
       status(result) mustEqual OK
       contentAsString(result) mustEqual view(
@@ -84,7 +86,7 @@ class FirstTransporterAddressControllerSpec extends SpecBase with MockUserAnswer
         ("postcode", userAddressModelMax.postcode)
       )
 
-      val result = testController.onSubmit(testErn, testDraftId, NormalMode)(req)
+      val result = testController.onSubmit(testErn, testArc, NormalMode)(req)
 
       status(result) mustEqual SEE_OTHER
       redirectLocation(result).value mustEqual testOnwardRoute.url
@@ -94,7 +96,7 @@ class FirstTransporterAddressControllerSpec extends SpecBase with MockUserAnswer
       val req = FakeRequest(POST, firstTransporterAddressRoute).withFormUrlEncodedBody(("value", ""))
       val boundForm = form.bind(Map("value" -> ""))
 
-      val result = testController.onSubmit(testErn, testDraftId, NormalMode)(req)
+      val result = testController.onSubmit(testErn, testArc, NormalMode)(req)
 
       status(result) mustEqual BAD_REQUEST
       contentAsString(result) mustEqual view(
@@ -106,7 +108,7 @@ class FirstTransporterAddressControllerSpec extends SpecBase with MockUserAnswer
     }
 
     "must redirect to Journey Recovery for a GET if no existing data is found" in new Fixture(None) {
-      val result = testController.onPageLoad(testErn, testDraftId, NormalMode)(request)
+      val result = testController.onPageLoad(testErn, testArc, NormalMode)(request)
 
       status(result) mustEqual SEE_OTHER
       redirectLocation(result).value mustEqual routes.JourneyRecoveryController.onPageLoad().url
@@ -114,7 +116,7 @@ class FirstTransporterAddressControllerSpec extends SpecBase with MockUserAnswer
 
     "must redirect to Journey Recovery for a POST if no existing data is found" in new Fixture(None) {
       val req = FakeRequest(POST, firstTransporterAddressRoute).withFormUrlEncodedBody(("value", "answer"))
-      val result = testController.onSubmit(testErn, testDraftId, NormalMode)(req)
+      val result = testController.onSubmit(testErn, testArc, NormalMode)(req)
 
       status(result) mustEqual SEE_OTHER
       redirectLocation(result).value mustEqual routes.JourneyRecoveryController.onPageLoad().url

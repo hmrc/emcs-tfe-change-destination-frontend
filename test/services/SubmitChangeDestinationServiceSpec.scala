@@ -56,7 +56,7 @@ class SubmitChangeDestinationServiceSpec extends SpecBase with MockSubmitChangeD
 
         MockSubmitChangeDestinationConnector.submit(minimumSubmitChangeDestinationModel).returns(Future.successful(Left(UnexpectedDownstreamResponseError)))
         intercept[SubmitChangeDestinationException](await(testService.submit(minimumSubmitChangeDestinationModel)(request, hc))).getMessage mustBe
-          s"Failed to submit Change Destination to emcs-tfe for ern: '$testErn' & arc: '$testDraftId'"
+          s"Failed to submit Change Destination to emcs-tfe for ern: '$testErn' & arc: '$testArc'"
       }
     }
   }

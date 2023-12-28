@@ -18,6 +18,7 @@ package controllers.sections.exportInformation
 
 import base.SpecBase
 import controllers.actions.FakeDataRetrievalAction
+import controllers.actions.FakeMovementAction
 import mocks.services.MockUserAnswersService
 import mocks.viewmodels.MockCheckAnswersExportInformationHelper
 import models.UserAnswers
@@ -32,7 +33,7 @@ class ExportInformationCheckAnswersControllerSpec extends SpecBase with SummaryL
   with MockCheckAnswersExportInformationHelper with MockUserAnswersService {
 
   lazy val checkYourAnswersExportInformationRoute: String =
-    controllers.sections.exportInformation.routes.ExportInformationCheckAnswersController.onPageLoad(testErn, testDraftId).url
+    controllers.sections.exportInformation.routes.ExportInformationCheckAnswersController.onPageLoad(testErn, testArc).url
 
   lazy val view: ExportInformationCheckAnswersView = app.injector.instanceOf[ExportInformationCheckAnswersView]
 
@@ -48,6 +49,7 @@ class ExportInformationCheckAnswersControllerSpec extends SpecBase with SummaryL
       fakeAuthAction,
       new FakeDataRetrievalAction(optUserAnswers, Some(testMinTraderKnownFacts)),
       dataRequiredAction,
+      new FakeMovementAction(maxGetMovementResponse),
       fakeUserAllowListAction,
       mockExportInformationCheckAnswersHelper,
       messagesControllerComponents,
@@ -60,19 +62,19 @@ class ExportInformationCheckAnswersControllerSpec extends SpecBase with SummaryL
     "must return OK and the correct view for a GET" in new Fixtures(Some(emptyUserAnswers)) {
       MockCheckAnswersExportInformationHelper.summaryList().returns(list)
 
-      val result = testController.onPageLoad(testErn, testDraftId)(request)
+      val result = testController.onPageLoad(testErn, testArc)(request)
 
       status(result) mustEqual OK
       contentAsString(result) mustEqual view(
         list = list,
-        submitAction = controllers.sections.exportInformation.routes.ExportInformationCheckAnswersController.onSubmit(testErn, testDraftId)
+        submitAction = controllers.sections.exportInformation.routes.ExportInformationCheckAnswersController.onSubmit(testErn, testArc)
       )(dataRequest(request), messages(request)).toString
     }
 
     "must redirect to the next page when valid data is submitted" in new Fixtures(Some(emptyUserAnswers)) {
       val req = FakeRequest(POST, checkYourAnswersExportInformationRoute)
 
-      val result = testController.onSubmit(testErn, testDraftId)(req)
+      val result = testController.onSubmit(testErn, testArc)(req)
 
       status(result) mustEqual SEE_OTHER
       redirectLocation(result).value mustEqual testOnwardRoute.url
