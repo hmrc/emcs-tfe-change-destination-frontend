@@ -19,7 +19,7 @@ package pages.sections.journeyType
 import models.requests.DataRequest
 import models.sections.journeyType.JourneyTime
 import pages.QuestionPage
-import play.api.libs.json.{JsError, JsPath, JsResultException, JsString, JsSuccess}
+import play.api.libs.json._
 
 case object JourneyTimeDaysPage extends QuestionPage[Int] {
   override val toString: String = "journeyTimeDays"

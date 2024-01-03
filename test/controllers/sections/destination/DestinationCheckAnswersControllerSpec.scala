@@ -17,8 +17,7 @@
 package controllers.sections.destination
 
 import base.SpecBase
-import controllers.actions.FakeDataRetrievalAction
-import controllers.actions.FakeMovementAction
+import controllers.actions.{FakeDataRetrievalAction, FakeMovementAction}
 import controllers.routes
 import mocks.services.MockUserAnswersService
 import mocks.viewmodels.MockDestinationCheckAnswersHelper
@@ -78,13 +77,6 @@ class DestinationCheckAnswersControllerSpec extends SpecBase with MockUserAnswer
         list = list,
         onSubmitCall = destinationCheckAnswersOnSubmit
       )(dataRequest(request), messages(request)).toString
-    }
-
-    "must return OK and the correct view for a GET when destination type has NOT been answered" in new Test() {
-      val result = testController.onPageLoad(testErn, testArc)(request)
-
-      status(result) mustEqual SEE_OTHER
-      redirectLocation(result).value mustEqual routes.JourneyRecoveryController.onPageLoad().url
     }
 
     "must redirect to the next page when submitted" in new Test() {

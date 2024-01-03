@@ -17,8 +17,7 @@
 package controllers.sections.consignee
 
 import base.SpecBase
-import controllers.actions.FakeDataRetrievalAction
-import controllers.actions.FakeMovementAction
+import controllers.actions.{FakeDataRetrievalAction, FakeMovementAction}
 import controllers.routes
 import forms.sections.consignee.ConsigneeExportFormProvider
 import mocks.services.MockUserAnswersService

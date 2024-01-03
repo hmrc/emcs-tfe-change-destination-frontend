@@ -17,8 +17,7 @@
 package controllers.sections.journeyType
 
 import base.SpecBase
-import controllers.actions.FakeDataRetrievalAction
-import controllers.actions.FakeMovementAction
+import controllers.actions.{FakeDataRetrievalAction, FakeMovementAction}
 import forms.sections.journeyType.JourneyTimeDaysFormProvider
 import mocks.services.MockUserAnswersService
 import models.sections.journeyType.HowMovementTransported

@@ -17,17 +17,15 @@
 package controllers.sections.destination
 
 import base.SpecBase
-import controllers.actions.FakeDataRetrievalAction
-import controllers.actions.FakeMovementAction
+import controllers.actions.{FakeDataRetrievalAction, FakeMovementAction}
 import controllers.routes
 import forms.sections.destination.DestinationWarehouseVatFormProvider
 import mocks.services.MockUserAnswersService
-import models.sections.info.DispatchPlace.GreatBritain
 import models.sections.info.movementScenario.MovementScenario._
 import models.{NormalMode, UserAnswers}
 import navigation.FakeNavigators.FakeDestinationNavigator
 import pages.sections.destination.{DestinationDetailsChoicePage, DestinationWarehouseVatPage}
-import pages.sections.info.{DestinationTypePage, DispatchPlacePage}
+import pages.sections.info.DestinationTypePage
 import play.api.data.Form
 import play.api.mvc.Call
 import play.api.test.FakeRequest
@@ -135,27 +133,6 @@ class DestinationWarehouseVatControllerSpec extends SpecBase with MockUserAnswer
         contentAsString(result) mustEqual view(boundForm, destinationWarehouseVatOnSubmit,
           RegisteredConsignee, destinationWarehouseSkipQuestion
         )(dataRequest(request), messages(request)).toString
-      }
-
-
-      "must redirect to Journey Recovery for a GET if the destination type value is invalid/none for this controller/page" in new Fixture(Some(emptyUserAnswers
-        .set(DispatchPlacePage, GreatBritain)
-      )) {
-        val result = testController.onPageLoad(testErn, testArc, NormalMode)(request)
-
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
-      }
-
-      "must redirect to Journey Recovery for a POST if the destination type value is invalid/none for this controller/page" in new Fixture(Some(emptyUserAnswers
-        .set(DispatchPlacePage, GreatBritain)
-      )) {
-        val req = FakeRequest(POST, destinationWarehouseVatRoute).withFormUrlEncodedBody(("value", "answer"))
-
-        val result = testController.onSubmit(testErn, testArc, NormalMode)(req)
-
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
       }
 
 

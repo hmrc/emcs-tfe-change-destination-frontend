@@ -14,10 +14,9 @@
  * limitations under the License.
  */
 
-package TestControllers
+package controllers
 
 import base.SpecBase
-import controllers.{BaseController, BaseNavigationController}
 import mocks.services.MockUserAnswersService
 import models.requests.DataRequest
 import models.{Index, NormalMode, UserAnswers}
@@ -48,6 +47,10 @@ class BaseNavigationControllerSpec extends SpecBase with GuiceOneAppPerSuite wit
     val page2 = new QuestionPage[String] {
       override val path: JsPath = __ \ "page2"
       override def getValueFromIE801(implicit request: DataRequest[_]): Option[String] = Some("IE801 answer")
+    }
+    val page3 = new QuestionPage[String] {
+      override val path: JsPath = __ \ "page3"
+      override def getValueFromIE801(implicit request: DataRequest[_]): Option[String] = None
     }
     val value = "foo"
 
@@ -135,6 +138,17 @@ class BaseNavigationControllerSpec extends SpecBase with GuiceOneAppPerSuite wit
 
         result mustBe emptyUserAnswers
       }
+
+      "when current UserAnswers DOES NOT contain the input page but 801 does and it's different" in new Test {
+        val result: UserAnswers =
+          testController.cleanseUserAnswersIfValueHasChanged(
+            page = page2,
+            newAnswer = "bar",
+            cleansingFunction = cleansingFunction
+          )(dataRequest(FakeRequest(), emptyUserAnswers.set(page, value)), implicitly)
+
+        result mustBe emptyUserAnswers
+      }
     }
     "must not run the cleansing function" - {
       "when current UserAnswers contains the input page but the answer is the same" in new Test {
@@ -151,7 +165,7 @@ class BaseNavigationControllerSpec extends SpecBase with GuiceOneAppPerSuite wit
 
         val result: UserAnswers =
           testController.cleanseUserAnswersIfValueHasChanged(
-            page = page2,
+            page = page3,
             newAnswer = value,
             cleansingFunction = cleansingFunction
           )(dataRequest(FakeRequest(), emptyUserAnswers.set(page, value)), implicitly)

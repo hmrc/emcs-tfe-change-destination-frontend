@@ -17,10 +17,11 @@
 package controllers.sections.guarantor
 
 import base.SpecBase
-import controllers.actions.FakeDataRetrievalAction
-import controllers.actions.FakeMovementAction
+import controllers.actions.{FakeDataRetrievalAction, FakeMovementAction}
 import forms.sections.guarantor.GuarantorArrangerFormProvider
 import mocks.services.MockUserAnswersService
+import models.response.emcsTfe.GuarantorType.NoGuarantor
+import models.response.emcsTfe.MovementGuaranteeModel
 import models.sections.guarantor.GuarantorArranger
 import models.sections.guarantor.GuarantorArranger.{Consignee, Consignor, GoodsOwner, Transporter}
 import models.{CheckMode, NormalMode, UserAddress, UserAnswers}
@@ -53,7 +54,7 @@ class GuarantorArrangerControllerSpec extends SpecBase with MockUserAnswersServi
       fakeAuthAction,
       new FakeDataRetrievalAction(optUserAnswers, Some(testMinTraderKnownFacts)),
       dataRequiredAction,
-      new FakeMovementAction(maxGetMovementResponse),
+      new FakeMovementAction(maxGetMovementResponse.copy(movementGuarantee = MovementGuaranteeModel(NoGuarantor, None))),
       formProvider,
       messagesControllerComponents,
       view
@@ -99,13 +100,6 @@ class GuarantorArrangerControllerSpec extends SpecBase with MockUserAnswersServi
 
       status(result) mustEqual BAD_REQUEST
       contentAsString(result) mustEqual view(boundForm, NormalMode)(dataRequest(request), messages(request)).toString
-    }
-
-    "must redirect to guarantor index controller for a GET if no guarantor required is found" in new Fixture() {
-      val result = testController.onPageLoad(testErn, testArc, NormalMode)(request)
-
-      status(result) mustEqual SEE_OTHER
-      redirectLocation(result).value mustEqual controllers.sections.guarantor.routes.GuarantorIndexController.onPageLoad(testErn, testArc).url
     }
 
     "must redirect to Journey Recovery for a GET if no existing data is found" in new Fixture(None) {

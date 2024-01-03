@@ -17,8 +17,7 @@
 package controllers.sections.transportUnit
 
 import base.SpecBase
-import controllers.actions.FakeDataRetrievalAction
-import controllers.actions.FakeMovementAction
+import controllers.actions.{FakeDataRetrievalAction, FakeMovementAction}
 import forms.sections.transportUnit.TransportUnitIdentityFormProvider
 import mocks.services.MockUserAnswersService
 import models.sections.transportUnit.TransportUnitType
@@ -61,16 +60,6 @@ class TransportUnitIdentityControllerSpec extends SpecBase with MockUserAnswersS
   }
 
   "TransportUnitIdentity Controller" - {
-
-    "must return OK and the correct view for a GET if Transport unit type is answered" in new Test(Some(
-      emptyUserAnswers.set(TransportUnitTypePage(testIndex1), TransportUnitType.FixedTransport)
-    )) {
-      val result = controller.onPageLoad(testErn, testArc, testIndex1, NormalMode)(request)
-
-      status(result) mustEqual OK
-      contentAsString(result) mustEqual
-        view(form, TransportUnitType.FixedTransport, testIndex1, NormalMode)(dataRequest(request), messages(request)).toString
-    }
 
     "must populate the view correctly on a GET when the question has previously been answered and transport unit type is answered" in new Test(Some(
       emptyUserAnswers

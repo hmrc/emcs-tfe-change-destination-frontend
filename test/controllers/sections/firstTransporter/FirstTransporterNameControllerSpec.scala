@@ -17,8 +17,7 @@
 package controllers.sections.firstTransporter
 
 import base.SpecBase
-import controllers.actions.FakeDataRetrievalAction
-import controllers.actions.FakeMovementAction
+import controllers.actions.{FakeDataRetrievalAction, FakeMovementAction}
 import forms.sections.firstTransporter.FirstTransporterNameFormProvider
 import mocks.services.MockUserAnswersService
 import models.{NormalMode, UserAnswers}
@@ -50,7 +49,7 @@ class FirstTransporterNameControllerSpec extends SpecBase with MockUserAnswersSe
       fakeAuthAction,
       new FakeDataRetrievalAction(optUserAnswers, Some(testMinTraderKnownFacts)),
       dataRequiredAction,
-      new FakeMovementAction(maxGetMovementResponse),
+      new FakeMovementAction(maxGetMovementResponse.copy(firstTransporterTrader = None)),
       fakeUserAllowListAction,
       formProvider,
       messagesControllerComponents,

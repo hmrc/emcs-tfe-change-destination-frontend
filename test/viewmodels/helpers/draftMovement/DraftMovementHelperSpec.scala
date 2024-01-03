@@ -20,21 +20,25 @@ import base.SpecBase
 import fixtures.messages.DraftMovementMessages
 import models.UserType._
 import models.requests.DataRequest
+import models.response.emcsTfe.GuarantorType.NoGuarantor
+import models.response.emcsTfe.{HeaderEadEsadModel, MovementGuaranteeModel}
 import models.response.{InvalidUserTypeException, MissingMandatoryPage}
+import models.sections.ReviewAnswer.ChangeAnswers
 import models.sections.info.DispatchPlace
 import models.sections.info.DispatchPlace.{GreatBritain, NorthernIreland}
-import models.sections.info.movementScenario.MovementScenario
 import models.sections.info.movementScenario.MovementScenario._
+import models.sections.info.movementScenario.{DestinationType, MovementScenario}
+import models.sections.transportArranger.TransportArranger
 import pages.sections.Section
-import pages.sections.consignee.ConsigneeSection
-import pages.sections.destination.DestinationSection
-import pages.sections.exportInformation.ExportInformationSection
-import pages.sections.firstTransporter.FirstTransporterSection
-import pages.sections.guarantor.GuarantorSection
+import pages.sections.consignee.{ConsigneeReviewPage, ConsigneeSection}
+import pages.sections.destination.{DestinationReviewPage, DestinationSection}
+import pages.sections.exportInformation.{ExportInformationReviewPage, ExportInformationSection}
+import pages.sections.firstTransporter.{FirstTransporterReviewPage, FirstTransporterSection}
+import pages.sections.guarantor.{GuarantorReviewPage, GuarantorSection}
 import pages.sections.info.{DestinationTypePage, DispatchPlacePage, InfoSection}
-import pages.sections.journeyType.JourneyTypeSection
-import pages.sections.transportArranger.TransportArrangerSection
-import pages.sections.transportUnit.TransportUnitsSection
+import pages.sections.journeyType.{JourneyTypeReviewPage, JourneyTypeSection}
+import pages.sections.transportArranger.{TransportArrangerReviewPage, TransportArrangerSection}
+import pages.sections.transportUnit.{TransportUnitsReviewPage, TransportUnitsSection}
 import play.api.i18n.{Messages, MessagesApi}
 import play.api.libs.json.{JsObject, JsPath}
 import play.api.test.FakeRequest
@@ -133,7 +137,7 @@ class DraftMovementHelperSpec extends SpecBase {
 
             val response = intercept[InvalidUserTypeException](helper.heading)
 
-            response.message mustBe s"[DraftMovementHelper][heading] invalid UserType and destinationType combination for CAM journey: $GreatBritainWarehouse | $None"
+            response.message mustBe s"[DraftMovementHelper][heading] invalid UserType and destinationType combination for CAM journey: $GreatBritainWarehouse | ${Some(EuTaxWarehouse)}"
           }
           "must throw an error when the ERN/destinationType combo is invalid" in {
             implicit val request: DataRequest[_] = dataRequest(FakeRequest(), ern = "GBWK123", answers = emptyUserAnswers.set(DestinationTypePage, UnknownDestination))
@@ -163,7 +167,7 @@ class DraftMovementHelperSpec extends SpecBase {
                 "movementDetails",
                 Some(controllers.sections.info.routes.InfoIndexController.onPageLoad(testErn, testArc).url),
                 Some(InfoSection),
-                Some(NotStarted)
+                Some(InProgress)
               )
             )
           )
@@ -204,7 +208,11 @@ class DraftMovementHelperSpec extends SpecBase {
           "when MovementScenario is valid" in {
             MovementScenario.values.filterNot(_ == UnknownDestination).foreach {
               scenario =>
-                implicit val request: DataRequest[_] = dataRequest(FakeRequest(), ern = testErn, answers = emptyUserAnswers.set(DestinationTypePage, scenario))
+                implicit val request: DataRequest[_] = dataRequest(FakeRequest(), ern = testErn,
+                  answers = emptyUserAnswers.set(DestinationTypePage, scenario).set(ConsigneeReviewPage, ChangeAnswers),
+                  movementDetails = maxGetMovementResponse.copy(memberStateCode = None, serialNumberOfCertificateOfExemption = None,
+                    consigneeTrader = None
+                  ))
                 helper.deliverySection.rows must contain(consigneeRow(testErn))
             }
           }
@@ -233,7 +241,11 @@ class DraftMovementHelperSpec extends SpecBase {
               DirectDelivery
             ).foreach {
               scenario =>
-                implicit val request: DataRequest[_] = dataRequest(FakeRequest(), ern = testErn, answers = emptyUserAnswers.set(DestinationTypePage, scenario))
+                implicit val request: DataRequest[_] = dataRequest(FakeRequest(), ern = testErn,
+                  answers = emptyUserAnswers.set(DestinationTypePage, scenario).set(DestinationReviewPage, ChangeAnswers),
+                  movementDetails = maxGetMovementResponse.copy(memberStateCode = None, serialNumberOfCertificateOfExemption = None,
+                    deliveryPlaceTrader = None
+                ))
                 helper.deliverySection.rows must contain(destinationRow(testErn))
             }
           }
@@ -265,7 +277,10 @@ class DraftMovementHelperSpec extends SpecBase {
               ExportWithCustomsDeclarationLodgedInTheEu
             ).foreach {
               scenario =>
-                implicit val request: DataRequest[_] = dataRequest(FakeRequest(), ern = testErn, answers = emptyUserAnswers.set(DestinationTypePage, scenario))
+                implicit val request: DataRequest[_] = dataRequest(FakeRequest(), ern = testErn,
+                  answers = emptyUserAnswers.set(DestinationTypePage, scenario).set(ExportInformationReviewPage, ChangeAnswers),
+                  movementDetails = maxGetMovementResponse.copy(deliveryPlaceCustomsOfficeReferenceNumber = None)
+                )
                 helper.deliverySection.rows must contain(exportRow(testErn))
             }
           }
@@ -290,7 +305,10 @@ class DraftMovementHelperSpec extends SpecBase {
 
       "guarantorSection" - {
         "should render the Guarantor section" in {
-          implicit val request: DataRequest[_] = dataRequest(FakeRequest(), ern = testErn, answers = emptyUserAnswers)
+          implicit val request: DataRequest[_] = dataRequest(FakeRequest(), ern = testErn,
+            answers = emptyUserAnswers.set(GuarantorReviewPage, ChangeAnswers),
+            movementDetails = maxGetMovementResponse.copy(movementGuarantee = MovementGuaranteeModel(NoGuarantor, None))
+          )
           helper.guarantorSection mustBe TaskListSection(
             messagesForLanguage.guarantorSectionHeading,
             Seq(
@@ -299,7 +317,7 @@ class DraftMovementHelperSpec extends SpecBase {
                 "guarantor",
                 Some(controllers.sections.guarantor.routes.GuarantorIndexController.onPageLoad(testErn, testArc).url),
                 Some(GuarantorSection),
-                Some(NotStarted)
+                Some(InProgress) //Cannot be in 'Not started' state as a guarantor answer either is in the user answers or 801
               )
             )
           )
@@ -313,27 +331,35 @@ class DraftMovementHelperSpec extends SpecBase {
           helper.transportSection.sectionHeading mustBe messagesForLanguage.transportSectionHeading
         }
         "should render the journeyType row" in {
-          implicit val request: DataRequest[_] = dataRequest(FakeRequest(), ern = testErn, answers = emptyUserAnswers)
+          implicit val request: DataRequest[_] = dataRequest(FakeRequest(), ern = testErn, answers = emptyUserAnswers.set(JourneyTypeReviewPage, ChangeAnswers))
           helper.transportSection.rows must contain(TaskListSectionRow(
             messagesForLanguage.journeyType,
             "journeyType",
             Some(controllers.sections.journeyType.routes.JourneyTypeIndexController.onPageLoad(testErn, testArc).url),
             Some(JourneyTypeSection),
-            Some(NotStarted)
+            Some(InProgress) //Cannot be in 'Not started' state as a journey type answer either is in the user answers or 801
           ))
         }
         "should render the transportArranger row" in {
-          implicit val request: DataRequest[_] = dataRequest(FakeRequest(), ern = testErn, answers = emptyUserAnswers)
+          implicit val request: DataRequest[_] = dataRequest(FakeRequest(), ern = testErn, answers = emptyUserAnswers.set(TransportArrangerReviewPage, ChangeAnswers),
+            movementDetails = maxGetMovementResponse.copy(transportArrangerTrader = None, headerEadEsad = HeaderEadEsadModel(
+              sequenceNumber = 1,
+              dateAndTimeOfUpdateValidation = "HeaderEadEsadDateTime",
+              destinationType = DestinationType.TemporaryCertifiedConsignee,
+              journeyTime = "10 hours",
+              transportArrangement = TransportArranger.GoodsOwner
+            )))
           helper.transportSection.rows must contain(TaskListSectionRow(
             messagesForLanguage.transportArranger,
             "transportArranger",
             Some(controllers.sections.transportArranger.routes.TransportArrangerIndexController.onPageLoad(testErn, testArc).url),
             Some(TransportArrangerSection),
-            Some(NotStarted)
+            Some(InProgress) //Cannot be in 'Not started' state as a transport arranger answer either is in the user answers or 801
           ))
         }
         "should render the firstTransporter row" in {
-          implicit val request: DataRequest[_] = dataRequest(FakeRequest(), ern = testErn, answers = emptyUserAnswers)
+          implicit val request: DataRequest[_] = dataRequest(FakeRequest(), ern = testErn, answers = emptyUserAnswers.set(FirstTransporterReviewPage, ChangeAnswers),
+            movementDetails = maxGetMovementResponse.copy(firstTransporterTrader = None))
           helper.transportSection.rows must contain(TaskListSectionRow(
             messagesForLanguage.firstTransporter,
             "firstTransporter",
@@ -343,7 +369,7 @@ class DraftMovementHelperSpec extends SpecBase {
           ))
         }
         "should render the units row" in {
-          implicit val request: DataRequest[_] = dataRequest(FakeRequest(), ern = testErn, answers = emptyUserAnswers)
+          implicit val request: DataRequest[_] = dataRequest(FakeRequest(), ern = testErn, answers = emptyUserAnswers.set(TransportUnitsReviewPage, ChangeAnswers))
           helper.transportSection.rows must contain(TaskListSectionRow(
             messagesForLanguage.units,
             "units",

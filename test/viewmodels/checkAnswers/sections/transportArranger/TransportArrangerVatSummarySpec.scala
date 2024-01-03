@@ -40,7 +40,7 @@ class TransportArrangerVatSummarySpec extends SpecBase with Matchers {
 
         "when TransportArranger is NOT GoodsOwner or Other" - {
 
-          "must output None" in {
+          "must output no row" in {
 
             implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(TransportArrangerPage, Consignor))
 
@@ -50,13 +50,26 @@ class TransportArrangerVatSummarySpec extends SpecBase with Matchers {
 
         "when TransportArranger is GoodsOwner or Other" - {
 
-          "when there's no answer" - {
+          "when there's no answer in the user answers (defaulting to 801)" - {
 
             "must output the expected data" in {
 
               implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(TransportArrangerPage, GoodsOwner))
 
-              TransportArrangerVatSummary.row() mustBe None
+              TransportArrangerVatSummary.row() mustBe
+                Some(
+                  SummaryListRowViewModel(
+                    key = messagesForLanguage.cyaLabel,
+                    value = Value(Text("TransportArrangerTraderVatNumber")),
+                    actions = Seq(
+                      ActionItemViewModel(
+                        content = messagesForLanguage.change,
+                        href = controllers.sections.transportArranger.routes.TransportArrangerVatController.onPageLoad(testErn, testArc, CheckMode).url,
+                        id = "changeTransportArrangerVat"
+                      ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHidden)
+                    )
+                  )
+                )
             }
           }
 

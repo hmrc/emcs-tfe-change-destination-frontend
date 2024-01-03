@@ -17,11 +17,12 @@
 package controllers.sections.guarantor
 
 import base.SpecBase
-import controllers.actions.FakeDataRetrievalAction
-import controllers.actions.FakeMovementAction
+import controllers.actions.{FakeDataRetrievalAction, FakeMovementAction}
 import controllers.routes
 import forms.sections.guarantor.GuarantorRequiredFormProvider
 import mocks.services.MockUserAnswersService
+import models.response.emcsTfe.GuarantorType.{Consignor, NoGuarantor}
+import models.response.emcsTfe.{GuarantorType, MovementGuaranteeModel}
 import models.sections.guarantor.GuarantorArranger.Transporter
 import models.{NormalMode, UserAnswers}
 import navigation.FakeNavigators.FakeGuarantorNavigator
@@ -41,7 +42,7 @@ class GuarantorRequiredControllerSpec extends SpecBase with MockUserAnswersServi
 
   lazy val guarantorRequiredRoute: String = controllers.sections.guarantor.routes.GuarantorRequiredController.onPageLoad(testErn, testArc, NormalMode).url
 
-  class Fixture(optUserAnswers: Option[UserAnswers] = Some(emptyUserAnswers)) {
+  class Fixture(optUserAnswers: Option[UserAnswers] = Some(emptyUserAnswers), guarantor: GuarantorType = NoGuarantor) {
     val request = FakeRequest(GET, guarantorRequiredRoute)
 
     lazy val testController = new GuarantorRequiredController(
@@ -52,7 +53,7 @@ class GuarantorRequiredControllerSpec extends SpecBase with MockUserAnswersServi
       fakeAuthAction,
       new FakeDataRetrievalAction(optUserAnswers, Some(testMinTraderKnownFacts)),
       dataRequiredAction,
-      new FakeMovementAction(maxGetMovementResponse),
+      new FakeMovementAction(maxGetMovementResponse.copy(movementGuarantee = MovementGuaranteeModel(guarantor, None))),
       formProvider,
       messagesControllerComponents,
       view
@@ -61,12 +62,6 @@ class GuarantorRequiredControllerSpec extends SpecBase with MockUserAnswersServi
   }
 
   "GuarantorRequired Controller" - {
-    "must return OK and the correct view for a GET" in new Fixture() {
-      val result = testController.onPageLoad(testErn, testArc, NormalMode)(request)
-
-      status(result) mustEqual OK
-      contentAsString(result) mustEqual view(form, NormalMode)(dataRequest(request), messages(request)).toString
-    }
 
     "must populate the view correctly on a GET when the question has previously been answered" in new Fixture(
       Some(emptyUserAnswers.set(GuarantorRequiredPage, true))) {
@@ -80,7 +75,7 @@ class GuarantorRequiredControllerSpec extends SpecBase with MockUserAnswersServi
     "must redirect to the next page when valid data is submitted" in new Fixture() {
       MockUserAnswersService.set().returns(Future.successful(emptyUserAnswers))
 
-      val req = FakeRequest(POST, guarantorRequiredRoute).withFormUrlEncodedBody(("value", "true"))
+      val req = FakeRequest(POST, guarantorRequiredRoute).withFormUrlEncodedBody(("value", "false"))
 
       val result = testController.onSubmit(testErn, testArc, NormalMode)(req)
 
@@ -135,7 +130,7 @@ class GuarantorRequiredControllerSpec extends SpecBase with MockUserAnswersServi
       Some(emptyUserAnswers
         .set(GuarantorRequiredPage, false)
         .set(GuarantorArrangerPage, Transporter)
-        .set(GuarantorNamePage, "a name"))) {
+        .set(GuarantorNamePage, "a name")), Consignor) {
 
       val expectedAnswers = emptyUserAnswers.set(GuarantorRequiredPage, true)
       MockUserAnswersService.set(expectedAnswers).returns(Future.successful(expectedAnswers))

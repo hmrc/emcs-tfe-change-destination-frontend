@@ -19,6 +19,8 @@ package controllers.sections.guarantor
 import base.SpecBase
 import mocks.services.MockUserAnswersService
 import models.UserAnswers
+import models.response.emcsTfe.GuarantorType.NoGuarantor
+import models.response.emcsTfe.MovementGuaranteeModel
 import models.sections.guarantor.GuarantorArranger._
 import navigation.BaseNavigator
 import navigation.FakeNavigators.FakeNavigator
@@ -42,7 +44,7 @@ class GuarantorBaseControllerSpec extends SpecBase with MockUserAnswersService w
   }
 
   class Test(ua: UserAnswers) {
-    implicit val dr = dataRequest(FakeRequest(), ua)
+    implicit val dr = dataRequest(FakeRequest(), ua, movementDetails = maxGetMovementResponse.copy(movementGuarantee = MovementGuaranteeModel(NoGuarantor, None)))
   }
 
   "withGuarantorRequiredAnswer" - {
@@ -52,14 +54,6 @@ class GuarantorBaseControllerSpec extends SpecBase with MockUserAnswersService w
 
         status(result) mustBe OK
         contentAsString(result) mustBe "beans"
-      }
-    }
-    "must redirect to GuarantorIndexController" - {
-      "when GuarantorRequiredPage is not present in UserAnswers" in new Test(emptyUserAnswers) {
-        val result: Future[Result] = TestController.withGuarantorRequiredAnswer(Future.successful(Ok("beans")))
-
-        status(result) mustBe SEE_OTHER
-        redirectLocation(result) mustBe Some(controllers.sections.guarantor.routes.GuarantorIndexController.onPageLoad(testErn, testArc).url)
       }
     }
     "must redirect to guarantor CYA" - {

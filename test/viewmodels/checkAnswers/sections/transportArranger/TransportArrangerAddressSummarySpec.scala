@@ -18,8 +18,8 @@ package viewmodels.checkAnswers.sections.transportArranger
 
 import base.SpecBase
 import fixtures.messages.sections.transportArranger.TransportArrangerAddressMessages
-import models.CheckMode
 import models.sections.transportArranger.TransportArranger.{Consignee, Consignor, GoodsOwner, Other}
+import models.{CheckMode, UserAddress}
 import pages.sections.consignee.ConsigneeAddressPage
 import pages.sections.consignor.ConsignorAddressPage
 import pages.sections.transportArranger.{TransportArrangerAddressPage, TransportArrangerPage}
@@ -43,16 +43,24 @@ class TransportArrangerAddressSummarySpec extends SpecBase {
 
         "when the TransportArranger is GoodsOwner or Other" - {
 
-          "when there's no answer" - {
+          "when there's no answer in the user answers (defaulting to 801)" - {
 
             "must output the expected data" in {
 
               implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(TransportArrangerPage, GoodsOwner))
 
+              val userAddressFrom801 = UserAddress(Some("TransportArrangerTraderStreetNumber"), "TransportArrangerTraderStreetName", "TransportArrangerTraderCity", "TransportArrangerTraderPostcode")
+
               TransportArrangerAddressSummary.row() mustBe
                 SummaryListRowViewModel(
                   key = messagesForLanguage.cyaLabel,
-                  value = Value(Text(messagesForLanguage.notProvided)),
+                  value = Value(HtmlContent(
+                    HtmlFormat.fill(Seq(
+                      Html(userAddressFrom801.property.fold("")(_ + " ") + userAddressFrom801.street + "<br>"),
+                      Html(userAddressFrom801.town + "<br>"),
+                      Html(userAddressFrom801.postcode),
+                    ))
+                  )),
                   actions = Seq(
                     ActionItemViewModel(
                       content = messagesForLanguage.change,
@@ -139,11 +147,15 @@ class TransportArrangerAddressSummarySpec extends SpecBase {
 
         "when the TransportArranger is Consignee" - {
 
-          "when there's no answer for the ConsigneeAddressPage" - {
+          "when there's no answer for the ConsigneeAddressPage in 801 or user answers" - {
 
             "must output the expected data" in {
 
-              implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(TransportArrangerPage, Consignee))
+              implicit lazy val request = dataRequest(
+                FakeRequest(),
+                emptyUserAnswers.set(TransportArrangerPage, Consignee),
+                movementDetails = maxGetMovementResponse.copy(consigneeTrader = None)
+              )
 
               TransportArrangerAddressSummary.row() mustBe
                 SummaryListRowViewModel(

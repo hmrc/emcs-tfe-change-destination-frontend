@@ -17,10 +17,10 @@
 package controllers.sections.guarantor
 
 import base.SpecBase
-import controllers.actions.FakeDataRetrievalAction
-import controllers.actions.FakeMovementAction
+import controllers.actions.{FakeDataRetrievalAction, FakeMovementAction}
 import forms.sections.guarantor.GuarantorNameFormProvider
 import mocks.services.MockUserAnswersService
+import models.response.emcsTfe.{GuarantorType, MovementGuaranteeModel}
 import models.sections.guarantor.GuarantorArranger.{Consignee, GoodsOwner}
 import models.{NormalMode, UserAnswers}
 import navigation.FakeNavigators.FakeGuarantorNavigator
@@ -50,7 +50,7 @@ class GuarantorNameControllerSpec extends SpecBase with MockUserAnswersService {
       fakeAuthAction,
       new FakeDataRetrievalAction(optUserAnswers, Some(testMinTraderKnownFacts)),
       dataRequiredAction,
-      new FakeMovementAction(maxGetMovementResponse),
+      new FakeMovementAction(maxGetMovementResponse.copy(movementGuarantee = MovementGuaranteeModel(GuarantorType.NoGuarantor, None))),
       fakeUserAllowListAction,
       formProvider,
       messagesControllerComponents,

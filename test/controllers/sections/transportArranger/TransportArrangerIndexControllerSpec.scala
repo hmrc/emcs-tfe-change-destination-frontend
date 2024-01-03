@@ -17,11 +17,11 @@
 package controllers.sections.transportArranger
 
 import base.SpecBase
-import controllers.actions.FakeDataRetrievalAction
-import controllers.actions.FakeMovementAction
+import controllers.actions.{FakeDataRetrievalAction, FakeMovementAction}
 import mocks.services.MockUserAnswersService
+import models.sections.ReviewAnswer.KeepAnswers
 import models.sections.transportArranger.TransportArranger.Consignor
-import models.{NormalMode, UserAddress, UserAnswers}
+import models.{UserAddress, UserAnswers}
 import navigation.FakeNavigators.FakeTransportArrangerNavigator
 import pages.sections.consignor.ConsignorAddressPage
 import pages.sections.transportArranger._
@@ -54,6 +54,7 @@ class TransportArrangerIndexControllerSpec extends SpecBase with MockUserAnswers
         emptyUserAnswers
           .set(TransportArrangerPage, Consignor)
           .set(ConsignorAddressPage, UserAddress(None, "", "", ""))
+          .set(TransportArrangerReviewPage, KeepAnswers)
       )) {
         val result = controller.onPageLoad(testErn, testArc)(request)
 
@@ -62,12 +63,19 @@ class TransportArrangerIndexControllerSpec extends SpecBase with MockUserAnswers
           Some(controllers.sections.transportArranger.routes.TransportArrangerCheckAnswersController.onPageLoad(testErn, testArc).url)
       }
     }
-    "must redirect to the transportArranger controller" in new Test() {
-      val result = controller.onPageLoad(testErn, testArc)(request)
 
-      status(result) mustEqual SEE_OTHER
-      redirectLocation(result) mustBe
-        Some(controllers.sections.transportArranger.routes.TransportArrangerController.onPageLoad(testErn, testArc, NormalMode).url)
+    "when TransportArrangerSection.needsReview" - {
+      "must redirect to the CYA controller" in new Test(Some(
+        emptyUserAnswers
+          .set(TransportArrangerPage, Consignor)
+          .set(ConsignorAddressPage, UserAddress(None, "", "", ""))
+      )) {
+        val result = controller.onPageLoad(testErn, testArc)(request)
+
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result) mustBe
+          Some(controllers.sections.transportArranger.routes.TransportArrangerCheckAnswersController.onPageLoad(testErn, testArc).url)
+      }
     }
   }
 }

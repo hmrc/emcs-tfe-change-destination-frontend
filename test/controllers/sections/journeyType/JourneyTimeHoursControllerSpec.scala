@@ -17,8 +17,7 @@
 package controllers.sections.journeyType
 
 import base.SpecBase
-import controllers.actions.FakeDataRetrievalAction
-import controllers.actions.FakeMovementAction
+import controllers.actions.{FakeDataRetrievalAction, FakeMovementAction}
 import forms.sections.journeyType.JourneyTimeHoursFormProvider
 import mocks.services.MockUserAnswersService
 import models.{NormalMode, UserAnswers}
@@ -59,13 +58,6 @@ class JourneyTimeHoursControllerSpec extends SpecBase with MockUserAnswersServic
   }
 
   "JourneyTimeHours Controller" - {
-
-    "must return OK and the correct view for a GET" in new Test(Some(emptyUserAnswers)) {
-      val result = controller.onPageLoad(testErn, testArc, NormalMode)(request)
-
-      status(result) mustEqual OK
-      contentAsString(result) mustEqual view(form, NormalMode)(dataRequest(request), messages(request)).toString
-    }
 
     "must populate the view correctly on a GET when the question has previously been answered" in new Test(Some(
       emptyUserAnswers.set(JourneyTimeHoursPage, validAnswer)

@@ -17,8 +17,7 @@
 package controllers.sections.destination
 
 import base.SpecBase
-import controllers.actions.FakeDataRetrievalAction
-import controllers.actions.FakeMovementAction
+import controllers.actions.{FakeDataRetrievalAction, FakeMovementAction}
 import fixtures.UserAddressFixtures
 import forms.sections.destination.DestinationConsigneeDetailsFormProvider
 import mocks.services.MockUserAnswersService

@@ -20,7 +20,7 @@ import models.{Enumerable, WithName}
 
 sealed trait ReviewAnswer
 
-object ReviewAnswer {
+object ReviewAnswer extends Enumerable.Implicits {
   case object ChangeAnswers extends WithName("yes") with ReviewAnswer
   case object KeepAnswers extends WithName("no") with ReviewAnswer
 

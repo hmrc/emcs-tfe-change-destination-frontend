@@ -20,7 +20,6 @@ import controllers.BaseNavigationController
 import controllers.actions._
 import models.NormalMode
 import navigation.JourneyTypeNavigator
-import pages.sections.firstTransporter.FirstTransporterSection
 import pages.sections.journeyType.JourneyTypeSection
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import services.UserAnswersService

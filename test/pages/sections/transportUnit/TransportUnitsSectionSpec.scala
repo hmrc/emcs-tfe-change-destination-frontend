@@ -19,6 +19,7 @@ package pages.sections.transportUnit
 import base.SpecBase
 import models.Index
 import models.requests.DataRequest
+import models.sections.ReviewAnswer.{ChangeAnswers, KeepAnswers}
 import models.sections.transportUnit.TransportUnitType.{Container, Tractor}
 import models.sections.transportUnit.TransportUnitsAddToListModel.{MoreToCome, NoMoreToCome}
 import play.api.libs.json.{JsArray, Json}
@@ -41,6 +42,7 @@ class TransportUnitsSectionSpec extends SpecBase {
               .set(TransportSealChoicePage(testIndex2), false)
               .set(TransportUnitGiveMoreInformationChoicePage(testIndex2), false)
               .set(TransportUnitsAddToListPage, NoMoreToCome)
+              .set(TransportUnitsReviewPage, KeepAnswers)
           )
         TransportUnitsSection.isCompleted mustBe true
       }
@@ -88,6 +90,7 @@ class TransportUnitsSectionSpec extends SpecBase {
               .set(TransportSealChoicePage(testIndex2), false)
               .set(TransportUnitGiveMoreInformationChoicePage(testIndex2), false)
               .set(TransportUnitsAddToListPage, NoMoreToCome)
+              .set(TransportUnitsReviewPage, KeepAnswers)
           )
 
         TransportUnitsSection.status mustBe Completed
@@ -99,6 +102,7 @@ class TransportUnitsSectionSpec extends SpecBase {
           .set(TransportUnitIdentityPage(Index(int)), "")
           .set(TransportSealChoicePage(Index(int)), false)
           .set(TransportUnitGiveMoreInformationChoicePage(Index(int)), false)
+          .set(TransportUnitsReviewPage, KeepAnswers)
         )
 
         implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), fullUserAnswers)
@@ -120,6 +124,7 @@ class TransportUnitsSectionSpec extends SpecBase {
               .set(TransportSealChoicePage(testIndex2), false)
               .set(TransportUnitGiveMoreInformationChoicePage(testIndex2), false)
               .set(TransportUnitsAddToListPage, MoreToCome)
+              .set(TransportUnitsReviewPage, ChangeAnswers)
           )
 
         TransportUnitsSection.status mustBe InProgress
@@ -134,6 +139,7 @@ class TransportUnitsSectionSpec extends SpecBase {
               .set(TransportUnitGiveMoreInformationChoicePage(testIndex1), false)
               .set(TransportUnitTypePage(testIndex2), Container)
               .set(TransportUnitIdentityPage(testIndex2), "")
+              .set(TransportUnitsReviewPage, ChangeAnswers)
           )
 
         TransportUnitsSection.status mustBe InProgress
@@ -149,6 +155,7 @@ class TransportUnitsSectionSpec extends SpecBase {
               .set(TransportUnitTypePage(testIndex2), Container)
               .set(TransportUnitIdentityPage(testIndex2), "")
               .set(TransportUnitsAddToListPage, NoMoreToCome)
+              .set(TransportUnitsReviewPage, ChangeAnswers)
           )
 
         TransportUnitsSection.status mustBe InProgress
@@ -157,7 +164,7 @@ class TransportUnitsSectionSpec extends SpecBase {
 
     "must return not started" - {
       "when empty user answers" in {
-        implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), emptyUserAnswers)
+        implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), emptyUserAnswers.set(TransportUnitsReviewPage, ChangeAnswers))
 
         TransportUnitsSection.status mustBe NotStarted
       }

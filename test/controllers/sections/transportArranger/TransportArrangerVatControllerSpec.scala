@@ -17,8 +17,7 @@
 package controllers.sections.transportArranger
 
 import base.SpecBase
-import controllers.actions.FakeDataRetrievalAction
-import controllers.actions.FakeMovementAction
+import controllers.actions.{FakeDataRetrievalAction, FakeMovementAction}
 import forms.sections.transportArranger.TransportArrangerVatFormProvider
 import mocks.services.MockUserAnswersService
 import models.sections.transportArranger.TransportArranger.GoodsOwner
@@ -53,7 +52,7 @@ class TransportArrangerVatControllerSpec extends SpecBase with MockUserAnswersSe
       fakeAuthAction,
       new FakeDataRetrievalAction(userAnswers, Some(testMinTraderKnownFacts)),
       dataRequiredAction,
-      new FakeMovementAction(maxGetMovementResponse),
+      new FakeMovementAction(maxGetMovementResponse.copy(transportArrangerTrader = None)),
       fakeUserAllowListAction,
       formProvider,
       Helpers.stubMessagesControllerComponents(),

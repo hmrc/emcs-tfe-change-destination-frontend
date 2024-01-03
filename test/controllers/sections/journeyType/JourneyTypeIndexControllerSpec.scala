@@ -17,13 +17,13 @@
 package controllers.sections.journeyType
 
 import base.SpecBase
-import controllers.actions.FakeDataRetrievalAction
-import controllers.actions.FakeMovementAction
+import controllers.actions.{FakeDataRetrievalAction, FakeMovementAction}
 import mocks.services.MockUserAnswersService
+import models.sections.ReviewAnswer.{ChangeAnswers, KeepAnswers}
 import models.sections.journeyType.HowMovementTransported.SeaTransport
 import models.{NormalMode, UserAnswers}
 import navigation.JourneyTypeNavigator
-import pages.sections.journeyType.{GiveInformationOtherTransportPage, HowMovementTransportedPage, JourneyTimeDaysPage}
+import pages.sections.journeyType.{GiveInformationOtherTransportPage, HowMovementTransportedPage, JourneyTimeDaysPage, JourneyTypeReviewPage}
 import play.api.http.Status.SEE_OTHER
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.Helpers._
@@ -55,6 +55,7 @@ class JourneyTypeIndexControllerSpec extends SpecBase with MockUserAnswersServic
           .set(HowMovementTransportedPage, SeaTransport)
           .set(GiveInformationOtherTransportPage, "information")
           .set(JourneyTimeDaysPage, 1)
+          .set(JourneyTypeReviewPage, KeepAnswers)
       )) {
         val result = controller.onPageLoad(testErn, testArc)(request)
 
@@ -64,12 +65,32 @@ class JourneyTypeIndexControllerSpec extends SpecBase with MockUserAnswersServic
       }
     }
 
-    "must redirect to the how movement transported controller" in new Test(Some(emptyUserAnswers)) {
-      val result = controller.onPageLoad(testErn, testArc)(request)
+    "when JourneyTypeSection.needsReview" - {
+      "must redirect to the CYA controller" in new Test(Some(
+        emptyUserAnswers
+          .set(HowMovementTransportedPage, SeaTransport)
+          .set(GiveInformationOtherTransportPage, "information")
+          .set(JourneyTimeDaysPage, 1)
+      )) {
+        val result = controller.onPageLoad(testErn, testArc)(request)
 
-      status(result) mustEqual SEE_OTHER
-      redirectLocation(result) mustBe
-        Some(controllers.sections.journeyType.routes.HowMovementTransportedController.onPageLoad(testErn, testArc, NormalMode).url)
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result) mustBe
+          Some(controllers.sections.journeyType.routes.CheckYourAnswersJourneyTypeController.onPageLoad(testErn, testArc).url)
+      }
+    }
+
+    "when there the section is not completed or needs review" - {
+
+      "must redirect to the how movement transported controller" in new Test(Some(
+        emptyUserAnswers.set(JourneyTypeReviewPage, ChangeAnswers)
+      )) {
+        val result = controller.onPageLoad(testErn, testArc)(request)
+
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result) mustBe
+          Some(controllers.sections.journeyType.routes.HowMovementTransportedController.onPageLoad(testErn, testArc, NormalMode).url)
+      }
     }
   }
 }

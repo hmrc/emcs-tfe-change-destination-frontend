@@ -17,8 +17,8 @@
 package controllers.sections.info
 
 import base.SpecBase
-import controllers.actions.{FakeDataRetrievalAction, FakeMovementAction}
 import controllers.actions.predraft.FakePreDraftRetrievalAction
+import controllers.actions.{FakeDataRetrievalAction, FakeMovementAction}
 import forms.sections.info.DispatchDetailsFormProvider
 import mocks.services.{MockPreDraftService, MockUserAnswersService}
 import models.sections.info.DispatchDetailsModel
@@ -92,6 +92,7 @@ class DispatchDetailsControllerSpec extends SpecBase with MockUserAnswersService
         )
 
         MockPreDraftService.set(emptyUserAnswers.set(DispatchDetailsPage(), dispatchDetailsModel)).returns(Future.successful(true))
+        MockUserAnswersService.set(emptyUserAnswers).returns(Future.successful(emptyUserAnswers))
 
         val result = controller.onPreDraftSubmit(testErn, testArc, NormalMode)(request.withFormUrlEncodedBody(
           ("value.day", "31"),

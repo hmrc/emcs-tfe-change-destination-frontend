@@ -17,11 +17,11 @@
 package controllers.sections.journeyType
 
 import base.SpecBase
-import controllers.actions.FakeDataRetrievalAction
-import controllers.actions.FakeMovementAction
+import controllers.actions.{FakeDataRetrievalAction, FakeMovementAction}
 import controllers.routes
 import forms.sections.journeyType.GiveInformationOtherTransportFormProvider
 import mocks.services.MockUserAnswersService
+import models.response.emcsTfe.TransportModeModel
 import models.{NormalMode, UserAnswers}
 import navigation.FakeNavigators.FakeJourneyTypeNavigator
 import pages.sections.journeyType.GiveInformationOtherTransportPage
@@ -49,7 +49,7 @@ class GiveInformationOtherTransportControllerSpec extends SpecBase with MockUser
       fakeAuthAction,
       new FakeDataRetrievalAction(userAnswers, Some(testMinTraderKnownFacts)),
       dataRequiredAction,
-      new FakeMovementAction(maxGetMovementResponse),
+      new FakeMovementAction(maxGetMovementResponse.copy(transportMode = TransportModeModel("modeCode", None))),
       formProvider,
       Helpers.stubMessagesControllerComponents(),
       view,

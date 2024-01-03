@@ -32,7 +32,7 @@ class CheckAnswersConsigneeHelperSpec extends SpecBase {
   class Setup(ern: String = testErn, data: JsObject = Json.obj()) {
     lazy val checkAnswersConsigneeHelper = new CheckYourAnswersConsigneeHelper()
     val userAnswers: UserAnswers = UserAnswers(ern, testArc, data)
-    implicit val fakeDataRequest: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), userAnswers)
+    implicit val fakeDataRequest: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), userAnswers, movementDetails = maxGetMovementResponse.copy(consigneeTrader = None, memberStateCode = None, serialNumberOfCertificateOfExemption = None))
     implicit val testUserRequest = userRequest(fakeDataRequest)
     implicit val msgs: Messages = stubMessagesApi().preferred(fakeDataRequest)
   }

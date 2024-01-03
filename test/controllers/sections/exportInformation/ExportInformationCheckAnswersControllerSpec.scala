@@ -17,8 +17,7 @@
 package controllers.sections.exportInformation
 
 import base.SpecBase
-import controllers.actions.FakeDataRetrievalAction
-import controllers.actions.FakeMovementAction
+import controllers.actions.{FakeDataRetrievalAction, FakeMovementAction}
 import mocks.services.MockUserAnswersService
 import mocks.viewmodels.MockCheckAnswersExportInformationHelper
 import models.UserAnswers

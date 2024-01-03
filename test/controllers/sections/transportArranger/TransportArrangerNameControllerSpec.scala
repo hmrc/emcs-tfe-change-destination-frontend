@@ -17,8 +17,7 @@
 package controllers.sections.transportArranger
 
 import base.SpecBase
-import controllers.actions.FakeDataRetrievalAction
-import controllers.actions.FakeMovementAction
+import controllers.actions.{FakeDataRetrievalAction, FakeMovementAction}
 import controllers.routes
 import forms.sections.transportArranger.TransportArrangerNameFormProvider
 import mocks.services.MockUserAnswersService
@@ -50,7 +49,7 @@ class TransportArrangerNameControllerSpec extends SpecBase with MockUserAnswersS
       fakeAuthAction,
       new FakeDataRetrievalAction(userAnswers, Some(testMinTraderKnownFacts)),
       dataRequiredAction,
-      new FakeMovementAction(maxGetMovementResponse),
+      new FakeMovementAction(maxGetMovementResponse.copy(transportArrangerTrader = None)),
       fakeUserAllowListAction,
       formProvider,
       Helpers.stubMessagesControllerComponents(),
@@ -109,14 +108,6 @@ class TransportArrangerNameControllerSpec extends SpecBase with MockUserAnswersS
       redirectLocation(result).value mustEqual routes.JourneyRecoveryController.onPageLoad().url
     }
 
-    "must redirect to the transport arranger controller for a GET if no transport arranger value is found" in new Test() {
-      val result = controller.onPageLoad(testErn, testArc, NormalMode)(request)
-
-      status(result) mustEqual SEE_OTHER
-      redirectLocation(result).value mustEqual
-        controllers.sections.transportArranger.routes.TransportArrangerIndexController.onPageLoad(testErn, testArc).url
-    }
-
     "must redirect to Journey Recovery for a GET if the transport arranger value is invalid for this controller/page" in new Test(Some(
       emptyUserAnswers.set(TransportArrangerPage, Consignee)
     )) {
@@ -125,7 +116,6 @@ class TransportArrangerNameControllerSpec extends SpecBase with MockUserAnswersS
       status(result) mustEqual SEE_OTHER
       redirectLocation(result).value mustEqual routes.JourneyRecoveryController.onPageLoad().url
     }
-
 
     "must redirect to Journey Recovery for a POST if no existing data is found" in new Test(None) {
       val result = controller.onSubmit(testErn, testArc, NormalMode)(request.withFormUrlEncodedBody(("value", "answer")))

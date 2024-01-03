@@ -17,8 +17,7 @@
 package controllers.sections.transportUnit
 
 import base.SpecBase
-import controllers.actions.FakeDataRetrievalAction
-import controllers.actions.FakeMovementAction
+import controllers.actions.{FakeDataRetrievalAction, FakeMovementAction}
 import controllers.routes
 import forms.sections.transportUnit.TransportUnitGiveMoreInformationFormProvider
 import mocks.services.MockUserAnswersService
@@ -63,7 +62,9 @@ class TransportUnitGiveMoreInformationControllerSpec extends SpecBase with MockU
   "TransportUnitGiveMoreInformation Controller" - {
 
     "must return OK and the correct view for a GET" in new Test(Some(
-      emptyUserAnswers.set(TransportUnitTypePage(testIndex1), Tractor)
+      emptyUserAnswers
+        .set(TransportUnitTypePage(testIndex1), Tractor)
+        .set(TransportUnitGiveMoreInformationPage(testIndex1), None)
     )) {
       val result = controller.onPageLoad(testErn, testArc, testIndex1, NormalMode)(request)
 

@@ -19,6 +19,7 @@ package viewmodels.checkAnswers.sections.journeyType
 import base.SpecBase
 import fixtures.messages.sections.journeyType.GiveInformationOtherTransportMessages
 import models.CheckMode
+import models.response.emcsTfe.TransportModeModel
 import org.scalatest.matchers.must.Matchers
 import pages.sections.journeyType.GiveInformationOtherTransportPage
 import play.api.i18n.Messages
@@ -38,13 +39,36 @@ class GiveInformationOtherTransportSummarySpec extends SpecBase with Matchers {
 
         implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
 
-        "when there's no answer" - {
+        "when there's no answer in the user answers or in 801" - {
+
+          "must output the expected data" in {
+
+            implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers, movementDetails = maxGetMovementResponse.copy(transportMode = TransportModeModel("ModeCode", None)))
+
+            GiveInformationOtherTransportSummary.row() mustBe None
+          }
+        }
+
+        "when there's no answer in the user answers (defaulting to 801)" - {
 
           "must output the expected data" in {
 
             implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers)
 
-            GiveInformationOtherTransportSummary.row() mustBe None
+            GiveInformationOtherTransportSummary.row() mustBe
+              Some(
+                SummaryListRowViewModel(
+                  key = messagesForLanguage.cyaLabel,
+                  value = Value(Text("TransportModeComplementaryInformation")),
+                  actions = Seq(
+                    ActionItemViewModel(
+                      content = messagesForLanguage.change,
+                      href = controllers.sections.journeyType.routes.GiveInformationOtherTransportController.onPageLoad(testErn, testArc, CheckMode).url,
+                      id = GiveInformationOtherTransportPage
+                    ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHidden)
+                  )
+                )
+              )
           }
         }
 

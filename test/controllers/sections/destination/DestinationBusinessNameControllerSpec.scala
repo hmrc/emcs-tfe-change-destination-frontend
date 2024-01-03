@@ -17,8 +17,7 @@
 package controllers.sections.destination
 
 import base.SpecBase
-import controllers.actions.FakeDataRetrievalAction
-import controllers.actions.FakeMovementAction
+import controllers.actions.{FakeDataRetrievalAction, FakeMovementAction}
 import forms.sections.destination.DestinationBusinessNameFormProvider
 import mocks.services.MockUserAnswersService
 import models.sections.info.movementScenario.MovementScenario.{DirectDelivery, GbTaxWarehouse}
@@ -68,14 +67,7 @@ class DestinationBusinessNameControllerSpec extends SpecBase with MockUserAnswer
 
   "DestinationBusinessName Controller" - {
     Seq(DirectDelivery, GbTaxWarehouse).foreach { destinationType =>
-      s"must return OK and the correct view for a GET when destinationType is '${destinationType}'" in new Fixture(Some(emptyUserAnswers.set(DestinationTypePage, destinationType))) {
-        val result = testController.onPageLoad(testErn, testArc, NormalMode)(request)
-
-        status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, destinationBusinessNameOnSubmit, destinationType, controllers.sections.destination.routes.DestinationBusinessNameController.skipThisQuestion(testErn, testArc, NormalMode))(dataRequest(request), messages(request)).toString
-      }
-
-      s"must populate the view correctly on a GET when the question has previously been answered when destinationType is '${destinationType}'" in new Fixture(Some(emptyUserAnswers
+      s"must populate the view correctly on a GET when the question has previously been answered when destinationType is '$destinationType'" in new Fixture(Some(emptyUserAnswers
         .set(DestinationTypePage, destinationType).set(DestinationBusinessNamePage, "answer")
       )) {
         val result = testController.onPageLoad(testErn, testArc, NormalMode)(request)

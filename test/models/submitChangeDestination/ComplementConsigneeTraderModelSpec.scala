@@ -38,7 +38,8 @@ class ComplementConsigneeTraderModelSpec extends SpecBase {
       "when ConsigneeExemptOrganisationPage has no answer" in {
         implicit val dr: DataRequest[_] = dataRequest(
           FakeRequest(),
-          emptyUserAnswers
+          emptyUserAnswers,
+          movementDetails = maxGetMovementResponse.copy(memberStateCode = None, serialNumberOfCertificateOfExemption = None)
         )
 
         ComplementConsigneeTraderModel.apply mustBe None

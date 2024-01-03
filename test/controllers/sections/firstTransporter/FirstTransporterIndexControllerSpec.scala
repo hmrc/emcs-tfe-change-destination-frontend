@@ -17,12 +17,12 @@
 package controllers.sections.firstTransporter
 
 import base.SpecBase
-import controllers.actions.FakeDataRetrievalAction
-import controllers.actions.FakeMovementAction
+import controllers.actions.{FakeDataRetrievalAction, FakeMovementAction}
 import mocks.services.MockUserAnswersService
+import models.sections.ReviewAnswer.{ChangeAnswers, KeepAnswers}
 import models.{NormalMode, UserAddress, UserAnswers}
 import navigation.FakeNavigators.FakeFirstTransporterNavigator
-import pages.sections.firstTransporter.{FirstTransporterAddressPage, FirstTransporterNamePage, FirstTransporterVatPage}
+import pages.sections.firstTransporter.{FirstTransporterAddressPage, FirstTransporterNamePage, FirstTransporterReviewPage, FirstTransporterVatPage}
 import play.api.http.Status.SEE_OTHER
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
@@ -39,7 +39,7 @@ class FirstTransporterIndexControllerSpec extends SpecBase with MockUserAnswersS
       fakeAuthAction,
       new FakeDataRetrievalAction(optUserAnswers, Some(testMinTraderKnownFacts)),
       dataRequiredAction,
-      new FakeMovementAction(maxGetMovementResponse),
+      new FakeMovementAction(maxGetMovementResponse.copy(firstTransporterTrader = None)),
       fakeUserAllowListAction,
       messagesControllerComponents
     )
@@ -52,7 +52,8 @@ class FirstTransporterIndexControllerSpec extends SpecBase with MockUserAnswersS
         emptyUserAnswers
           .set(FirstTransporterNamePage, "")
           .set(FirstTransporterVatPage, "")
-          .set(FirstTransporterAddressPage, UserAddress(None, "", "", "")))) {
+          .set(FirstTransporterAddressPage, UserAddress(None, "", "", ""))
+          .set(FirstTransporterReviewPage, KeepAnswers))) {
 
         val result = testController.onPageLoad(testErn, testArc)(request)
 
@@ -61,7 +62,27 @@ class FirstTransporterIndexControllerSpec extends SpecBase with MockUserAnswersS
           Some(controllers.sections.firstTransporter.routes.FirstTransporterCheckAnswersController.onPageLoad(testErn, testArc).url)
       }
 
-      "must redirect to the first transporter name controller" in new Fixture() {
+    }
+
+    "when FirstTransporterSection.needsReview" - {
+      "must redirect to the CYA controller" in new Fixture(Some(
+        emptyUserAnswers
+          .set(FirstTransporterNamePage, "")
+          .set(FirstTransporterVatPage, "")
+          .set(FirstTransporterAddressPage, UserAddress(None, "", "", "")))) {
+
+        val result = testController.onPageLoad(testErn, testArc)(request)
+
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result) mustBe
+          Some(controllers.sections.firstTransporter.routes.FirstTransporterCheckAnswersController.onPageLoad(testErn, testArc).url)
+      }
+    }
+
+    "when the section isn't complete or is in review state" - {
+      "must redirect to the first transporter name controller" in new Fixture(
+        Some(emptyUserAnswers.set(FirstTransporterReviewPage, ChangeAnswers))
+      ) {
         val result = testController.onPageLoad(testErn, testArc)(request)
 
         status(result) mustEqual SEE_OTHER

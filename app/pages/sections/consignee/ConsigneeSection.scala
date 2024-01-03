@@ -17,9 +17,8 @@
 package pages.sections.consignee
 
 import models.Enumerable
-import models.sections.info.movementScenario.MovementScenario.UnknownDestination
 import models.requests.DataRequest
-import models.sections.ReviewAnswer
+import models.sections.info.movementScenario.MovementScenario.UnknownDestination
 import pages.sections.Section
 import pages.sections.info.DestinationTypePage
 import play.api.libs.json.{JsObject, JsPath, Reads}

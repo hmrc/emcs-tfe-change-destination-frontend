@@ -17,7 +17,6 @@
 package connectors.emcsTfe
 
 import base.SpecBase
-import config.AppConfig
 import fixtures.GetMovementResponseFixtures
 import mocks.connectors.MockHttpClient
 import models.response.JsonValidationError

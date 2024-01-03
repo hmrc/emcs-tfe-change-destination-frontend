@@ -33,6 +33,7 @@ class MovementScenarioSpec extends SpecBase {
       dataRequest(FakeRequest(), movementDetails = maxGetMovementResponse
         .copy(
           deliveryPlaceCustomsOfficeReferenceNumber = value,
+          destinationType = destinationType,
           headerEadEsad = maxGetMovementResponse.headerEadEsad.copy(destinationType = destinationType)
         )
       )
@@ -41,6 +42,7 @@ class MovementScenarioSpec extends SpecBase {
       dataRequest(FakeRequest(), movementDetails =
         maxGetMovementResponse
           .copy(
+            destinationType = destinationType,
             deliveryPlaceTrader = maxGetMovementResponse.deliveryPlaceTrader.map(_.copy(traderExciseNumber = value)),
             headerEadEsad = maxGetMovementResponse.headerEadEsad.copy(destinationType = destinationType)
           )
@@ -50,6 +52,7 @@ class MovementScenarioSpec extends SpecBase {
       dataRequest(FakeRequest(), movementDetails =
         maxGetMovementResponse
           .copy(
+            destinationType = destinationType,
             headerEadEsad = maxGetMovementResponse.headerEadEsad.copy(destinationType = destinationType)
           )
       )

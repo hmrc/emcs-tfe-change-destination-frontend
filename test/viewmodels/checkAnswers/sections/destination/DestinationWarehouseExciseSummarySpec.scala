@@ -38,13 +38,35 @@ class DestinationWarehouseExciseSummarySpec extends SpecBase with Matchers {
 
         implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
 
-        "when there's no answer" - {
+        "when there's no answer in the user answers or 801" - {
 
           "must output no row" in {
 
-            implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers)
+            implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers, movementDetails = maxGetMovementResponse.copy(deliveryPlaceTrader = None))
 
             DestinationWarehouseExciseSummary.row() mustBe None
+          }
+        }
+
+        "when there's no answer in the user answers (defaulting to 801)" - {
+
+          "must output the expected row" in {
+
+            implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers)
+
+            DestinationWarehouseExciseSummary.row() mustBe Some(
+              SummaryListRowViewModel(
+                key = messagesForLanguage.cyaLabel,
+                value = Value(Text("DeliveryPlaceTraderId")),
+                actions = Seq(
+                  ActionItemViewModel(
+                    content = messagesForLanguage.change,
+                    href = controllers.sections.destination.routes.DestinationWarehouseExciseController.onPageLoad(testErn, testArc, CheckMode).url,
+                    id = "changeDestinationWarehouseExcise"
+                  ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHidden)
+                )
+              )
+            )
           }
         }
 

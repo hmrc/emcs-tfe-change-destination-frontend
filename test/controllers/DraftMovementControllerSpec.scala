@@ -17,8 +17,7 @@
 package controllers
 
 import base.SpecBase
-import controllers.actions.FakeDataRetrievalAction
-import controllers.actions.FakeMovementAction
+import controllers.actions.{FakeDataRetrievalAction, FakeMovementAction}
 import models.sections.info.movementScenario.MovementScenario
 import pages.sections.info.DestinationTypePage
 import play.api.Play.materializer

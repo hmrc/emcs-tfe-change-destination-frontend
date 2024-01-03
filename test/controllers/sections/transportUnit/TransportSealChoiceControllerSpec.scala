@@ -17,8 +17,7 @@
 package controllers.sections.transportUnit
 
 import base.SpecBase
-import controllers.actions.FakeDataRetrievalAction
-import controllers.actions.FakeMovementAction
+import controllers.actions.{FakeDataRetrievalAction, FakeMovementAction}
 import controllers.routes
 import forms.sections.transportUnit.TransportSealChoiceFormProvider
 import mocks.services.MockUserAnswersService

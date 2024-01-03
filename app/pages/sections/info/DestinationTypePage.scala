@@ -16,8 +16,8 @@
 
 package pages.sections.info
 
-import models.sections.info.movementScenario.MovementScenario
 import models.requests.DataRequest
+import models.sections.info.movementScenario.MovementScenario
 import pages.QuestionPage
 import play.api.libs.json.JsPath
 

@@ -50,11 +50,11 @@ class GuarantorRequiredSummarySpec extends SpecBase {
 
       implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
 
-      "and there is no answer for the GuarantorRequiredPage" - {
-        "then must return a not provided row" in {
+      "and there is no answer for the GuarantorRequiredPage in the user answers" - {
+        "then must return the 801 value" in {
           implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers)
 
-          GuarantorRequiredSummary.row mustBe expectedRow(value = messagesForLanguage.notProvided)
+          GuarantorRequiredSummary.row mustBe expectedRow(value = messagesForLanguage.no)
         }
       }
 

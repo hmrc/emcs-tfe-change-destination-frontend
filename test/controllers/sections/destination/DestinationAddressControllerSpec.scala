@@ -17,8 +17,7 @@
 package controllers.sections.destination
 
 import base.SpecBase
-import controllers.actions.FakeDataRetrievalAction
-import controllers.actions.FakeMovementAction
+import controllers.actions.{FakeDataRetrievalAction, FakeMovementAction}
 import controllers.routes
 import fixtures.UserAddressFixtures
 import forms.AddressFormProvider
@@ -55,7 +54,7 @@ class DestinationAddressControllerSpec extends SpecBase with MockUserAnswersServ
       fakeAuthAction,
       new FakeDataRetrievalAction(optUserAnswers, Some(testMinTraderKnownFacts)),
       dataRequiredAction,
-      new FakeMovementAction(maxGetMovementResponse),
+      new FakeMovementAction(maxGetMovementResponse.copy(deliveryPlaceTrader = None)),
       fakeUserAllowListAction,
       formProvider,
       messagesControllerComponents,

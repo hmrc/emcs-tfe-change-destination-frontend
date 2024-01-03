@@ -25,7 +25,7 @@ trait GetMovementResponseFixtures extends BaseFixtures {
   lazy val maxGetMovementResponse: GetMovementResponse = GetMovementResponse(
     arc = "ExciseMovementArc",
     sequenceNumber = 1,
-    destinationType = DestinationType.TemporaryCertifiedConsignee,
+    destinationType = DestinationType.TaxWarehouse,
     memberStateCode = Some("CCTMemberStateCode"),
     serialNumberOfCertificateOfExemption = Some("CCTSerialNumber"),
     consignorTrader = TraderModel(

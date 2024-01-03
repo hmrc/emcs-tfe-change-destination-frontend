@@ -19,6 +19,7 @@ package pages.sections.firstTransporter
 import base.SpecBase
 import models.UserAddress
 import models.requests.DataRequest
+import models.sections.ReviewAnswer.{ChangeAnswers, KeepAnswers}
 import play.api.test.FakeRequest
 
 class FirstTransporterSectionSpec extends SpecBase {
@@ -30,6 +31,7 @@ class FirstTransporterSectionSpec extends SpecBase {
             .set(FirstTransporterNamePage, "")
             .set(FirstTransporterVatPage, "")
             .set(FirstTransporterAddressPage, UserAddress(None, "", "", ""))
+            .set(FirstTransporterReviewPage, KeepAnswers)
         )
         FirstTransporterSection.isCompleted mustBe true
       }
@@ -37,14 +39,21 @@ class FirstTransporterSectionSpec extends SpecBase {
 
     "must return false" - {
       "when not finished" in {
-        implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), emptyUserAnswers.set(FirstTransporterNamePage, ""))
+        implicit val dr: DataRequest[_] = dataRequest(FakeRequest(),
+          emptyUserAnswers
+            .set(FirstTransporterNamePage, "")
+            .set(FirstTransporterReviewPage, ChangeAnswers),
+          movementDetails = maxGetMovementResponse.copy(firstTransporterTrader = None)
+        )
         FirstTransporterSection.isCompleted mustBe false
       }
-    }
 
-    "must return false" - {
       "when not empty" in {
-        implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), emptyUserAnswers)
+        implicit val dr: DataRequest[_] = dataRequest(FakeRequest(),
+          emptyUserAnswers
+            .set(FirstTransporterReviewPage, ChangeAnswers),
+          movementDetails = maxGetMovementResponse.copy(firstTransporterTrader = None)
+        )
         FirstTransporterSection.isCompleted mustBe false
       }
     }

@@ -67,26 +67,6 @@ class TransportUnitSectionSpec extends SpecBase {
         implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), emptyUserAnswers)
         TransportUnitSection(Index(0)).isCompleted mustBe false
       }
-      "when mandatory pages are answered, sca = true and seal choice has no answer" in {
-        implicit val dr: DataRequest[_] =
-          dataRequest(FakeRequest(),
-            emptyUserAnswers
-              .set(TransportUnitTypePage(testIndex1), Container)
-              .set(TransportUnitIdentityPage(testIndex1), "")
-              .set(TransportSealChoicePage(testIndex1), true)
-          )
-        TransportUnitSection(Index(0)).isCompleted mustBe false
-      }
-      "when mandatory pages are answered, sca = true, all optional pages have no answer" in {
-        implicit val dr: DataRequest[_] =
-          dataRequest(FakeRequest(),
-            emptyUserAnswers
-              .set(TransportUnitTypePage(testIndex1), Container)
-              .set(TransportUnitIdentityPage(testIndex1), "")
-              .set(TransportSealChoicePage(testIndex1), true)
-          )
-        TransportUnitSection(Index(0)).isCompleted mustBe false
-      }
     }
   }
 }

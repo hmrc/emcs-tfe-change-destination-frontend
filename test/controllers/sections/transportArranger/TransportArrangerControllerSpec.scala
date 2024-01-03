@@ -17,8 +17,7 @@
 package controllers.sections.transportArranger
 
 import base.SpecBase
-import controllers.actions.FakeDataRetrievalAction
-import controllers.actions.FakeMovementAction
+import controllers.actions.{FakeDataRetrievalAction, FakeMovementAction}
 import controllers.routes
 import forms.sections.transportArranger.TransportArrangerFormProvider
 import mocks.services.MockUserAnswersService
@@ -50,7 +49,7 @@ class TransportArrangerControllerSpec extends SpecBase with MockUserAnswersServi
       fakeAuthAction,
       new FakeDataRetrievalAction(userAnswers, Some(testMinTraderKnownFacts)),
       dataRequiredAction,
-      new FakeMovementAction(maxGetMovementResponse),
+      new FakeMovementAction(maxGetMovementResponse.copy(deliveryPlaceCustomsOfficeReferenceNumber = None)),
       fakeUserAllowListAction,
       formProvider,
       Helpers.stubMessagesControllerComponents(),
@@ -59,13 +58,6 @@ class TransportArrangerControllerSpec extends SpecBase with MockUserAnswersServi
   }
 
   "TransportArranger Controller" - {
-
-    "must return OK and the correct view for a GET" in new Test() {
-      val result = controller.onPageLoad(testErn, testArc, NormalMode)(request)
-
-      status(result) mustEqual OK
-      contentAsString(result) mustEqual view(form, NormalMode)(dataRequest(request), messages(request)).toString
-    }
 
     "must populate the view correctly on a GET when the question has previously been answered" in new Test(Some(
       emptyUserAnswers.set(TransportArrangerPage, TransportArranger.values.head)

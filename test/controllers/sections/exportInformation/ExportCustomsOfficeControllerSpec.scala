@@ -17,8 +17,7 @@
 package controllers.sections.exportInformation
 
 import base.SpecBase
-import controllers.actions.FakeDataRetrievalAction
-import controllers.actions.FakeMovementAction
+import controllers.actions.{FakeDataRetrievalAction, FakeMovementAction}
 import forms.sections.exportInformation.ExportCustomsOfficeFormProvider
 import mocks.services.MockUserAnswersService
 import models.sections.info.movementScenario.MovementScenario.ExportWithCustomsDeclarationLodgedInTheEu
@@ -56,7 +55,7 @@ class ExportCustomsOfficeControllerSpec extends SpecBase with MockUserAnswersSer
       fakeAuthAction,
       new FakeDataRetrievalAction(optUserAnswers, Some(testMinTraderKnownFacts)),
       dataRequiredAction,
-      new FakeMovementAction(maxGetMovementResponse),
+      new FakeMovementAction(maxGetMovementResponse.copy(deliveryPlaceCustomsOfficeReferenceNumber = None)),
       fakeUserAllowListAction,
       formProvider,
       messagesControllerComponents,

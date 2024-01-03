@@ -58,20 +58,12 @@ class JourneyTypeNavigatorSpec extends SpecBase {
 
           "when the option selected is not `Other`" - {
 
-            "when the user has not previously entered a days or hours value" in {
-              val userAnswers = emptyUserAnswers
-                .set(HowMovementTransportedPage, AirTransport)
-
-              navigator.nextPage(HowMovementTransportedPage, NormalMode, userAnswers) mustBe
-                controllers.sections.journeyType.routes.JourneyTimeDaysController.onPageLoad(testErn, testArc, NormalMode)
-            }
-
             "when the user previously entered a days value" in {
               val userAnswers = emptyUserAnswers
                 .set(HowMovementTransportedPage, AirTransport)
                 .set(JourneyTimeDaysPage, 1)
 
-              navigator.nextPage(HowMovementTransportedPage, NormalMode, userAnswers) mustBe
+              navigator.nextPage(HowMovementTransportedPage, NormalMode, userAnswers)(dataRequest(FakeRequest(), movementDetails = maxGetMovementResponse.copy(journeyTime = "10 days"))) mustBe
                 controllers.sections.journeyType.routes.JourneyTimeDaysController.onPageLoad(testErn, testArc, NormalMode)
             }
 

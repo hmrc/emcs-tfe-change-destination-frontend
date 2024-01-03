@@ -54,8 +54,7 @@ object FirstTransporterAddressSummary {
             mode = CheckMode
           ).url,
           id = "changeFirstTransporterAddress"
-        )
-          .withVisuallyHiddenText(messages("address.firstTransporterAddress.change.hidden"))
+        ).withVisuallyHiddenText(messages("address.firstTransporterAddress.change.hidden"))
       )
     )
   }

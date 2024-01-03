@@ -130,7 +130,7 @@ class UserAnswersSpec extends SpecBase {
         "when data exists in the IE801" - {
           "must return Some(data)" in {
             implicit val request: DataRequest[_] = dataRequest(FakeRequest())
-            emptyUserAnswers.get(DestinationTypePage) mustBe Some(MovementScenario.DirectDelivery)
+            emptyUserAnswers.get(DestinationTypePage) mustBe Some(MovementScenario.EuTaxWarehouse)
           }
         }
 

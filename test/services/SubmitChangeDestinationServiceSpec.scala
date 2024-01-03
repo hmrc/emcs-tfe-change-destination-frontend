@@ -19,8 +19,7 @@ package services
 import base.SpecBase
 import fixtures.SubmitChangeDestinationFixtures
 import mocks.connectors.MockSubmitChangeDestinationConnector
-import models.response.UnexpectedDownstreamResponseError
-import models.response.SubmitChangeDestinationException
+import models.response.{SubmitChangeDestinationException, UnexpectedDownstreamResponseError}
 import play.api.test.FakeRequest
 import play.api.test.Helpers.{await, defaultAwaitTimeout}
 import uk.gov.hmrc.http.HeaderCarrier

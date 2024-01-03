@@ -18,8 +18,8 @@ package controllers.sections.consignee
 
 import controllers.BaseNavigationController
 import controllers.actions._
-import models._
 import models.UserType._
+import models._
 import models.requests.UserRequest
 import models.sections.info.movementScenario.MovementScenario
 import models.sections.info.movementScenario.MovementScenario._

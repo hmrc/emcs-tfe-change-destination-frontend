@@ -56,9 +56,7 @@ class GuarantorRequiredController @Inject()(
         value => if (request.userAnswers.get(GuarantorRequiredPage).contains(value)) {
           Future(Redirect(navigator.nextPage(GuarantorRequiredPage, mode, request.userAnswers)))
         } else {
-
           val updatedUserAnswers = cleanseUserAnswersIfValueHasChanged(GuarantorRequiredPage, value, request.userAnswers.remove(GuarantorSection))
-
           saveAndRedirect(
             page = GuarantorRequiredPage,
             answer = value,

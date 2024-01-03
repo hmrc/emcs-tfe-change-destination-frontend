@@ -20,7 +20,6 @@ import controllers.BaseNavigationController
 import controllers.actions._
 import models.NormalMode
 import navigation.ExportInformationNavigator
-import pages.sections.destination.DestinationSection
 import pages.sections.exportInformation.ExportInformationSection
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import services.UserAnswersService

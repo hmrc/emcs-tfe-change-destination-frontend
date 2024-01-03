@@ -17,8 +17,7 @@
 package controllers.sections.transportArranger
 
 import base.SpecBase
-import controllers.actions.FakeDataRetrievalAction
-import controllers.actions.FakeMovementAction
+import controllers.actions.{FakeDataRetrievalAction, FakeMovementAction}
 import controllers.routes
 import fixtures.UserAddressFixtures
 import forms.AddressFormProvider
@@ -54,7 +53,7 @@ class TransportArrangerAddressControllerSpec extends SpecBase with MockUserAnswe
       fakeAuthAction,
       new FakeDataRetrievalAction(userAnswers, Some(testMinTraderKnownFacts)),
       dataRequiredAction,
-      new FakeMovementAction(maxGetMovementResponse),
+      new FakeMovementAction(maxGetMovementResponse.copy(transportArrangerTrader = None)),
       fakeUserAllowListAction,
       formProvider,
       Helpers.stubMessagesControllerComponents(),

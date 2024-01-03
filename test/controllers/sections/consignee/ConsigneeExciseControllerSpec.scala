@@ -17,8 +17,7 @@
 package controllers.sections.consignee
 
 import base.SpecBase
-import controllers.actions.FakeDataRetrievalAction
-import controllers.actions.FakeMovementAction
+import controllers.actions.{FakeDataRetrievalAction, FakeMovementAction}
 import controllers.routes
 import forms.sections.consignee.ConsigneeExciseFormProvider
 import mocks.services.MockUserAnswersService
@@ -54,7 +53,7 @@ class ConsigneeExciseControllerSpec extends SpecBase with MockUserAnswersService
       fakeUserAllowListAction,
       new FakeDataRetrievalAction(optUserAnswers, Some(testMinTraderKnownFacts)),
       dataRequiredAction,
-      new FakeMovementAction(maxGetMovementResponse),
+      new FakeMovementAction(maxGetMovementResponse.copy(consigneeTrader = None)),
       new FakeConsigneeNavigator(testOnwardRoute),
       mockUserAnswersService,
       formProvider,

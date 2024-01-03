@@ -20,6 +20,7 @@ import base.SpecBase
 import fixtures.messages.sections.guarantor.GuarantorNameMessages
 import fixtures.messages.sections.guarantor.GuarantorNameMessages.ViewMessages
 import models.requests.DataRequest
+import models.response.emcsTfe.{GuarantorType, MovementGuaranteeModel}
 import models.sections.guarantor.GuarantorArranger.{Consignee, Consignor, GoodsOwner, Transporter}
 import models.{CheckMode, Mode, NormalMode}
 import org.scalatest.matchers.must.Matchers
@@ -80,7 +81,8 @@ class GuarantorNameSummarySpec extends SpecBase with Matchers {
                 FakeRequest(),
                 emptyUserAnswers
                   .set(GuarantorRequiredPage, true)
-                  .set(GuarantorArrangerPage, Consignee)
+                  .set(GuarantorArrangerPage, Consignee),
+                movementDetails = maxGetMovementResponse.copy(consigneeTrader = None)
               )
 
               GuarantorNameSummary.row mustBe expectedRow(messagesForLanguage.consigneeNameNotProvided, false)
@@ -119,7 +121,8 @@ class GuarantorNameSummarySpec extends SpecBase with Matchers {
                 FakeRequest(),
                 emptyUserAnswers
                   .set(GuarantorRequiredPage, true)
-                  .set(GuarantorArrangerPage, GoodsOwner)
+                  .set(GuarantorArrangerPage, GoodsOwner),
+                movementDetails = maxGetMovementResponse.copy(movementGuarantee = MovementGuaranteeModel(GuarantorType.Owner, None))
               )
 
               GuarantorNameSummary.row mustBe expectedRow(messagesForLanguage.notProvided, showChangeLink = true, NormalMode)
@@ -145,7 +148,8 @@ class GuarantorNameSummarySpec extends SpecBase with Matchers {
                 FakeRequest(),
                 emptyUserAnswers
                   .set(GuarantorRequiredPage, true)
-                  .set(GuarantorArrangerPage, Transporter)
+                  .set(GuarantorArrangerPage, Transporter),
+                movementDetails = maxGetMovementResponse.copy(movementGuarantee = MovementGuaranteeModel(GuarantorType.Transporter, None))
               )
 
               GuarantorNameSummary.row mustBe expectedRow(messagesForLanguage.notProvided, showChangeLink = true, NormalMode)

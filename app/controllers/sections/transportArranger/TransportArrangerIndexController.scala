@@ -20,7 +20,6 @@ import controllers.BaseNavigationController
 import controllers.actions._
 import models.NormalMode
 import navigation.TransportArrangerNavigator
-import pages.sections.firstTransporter.FirstTransporterSection
 import pages.sections.transportArranger.TransportArrangerSection
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import services.UserAnswersService

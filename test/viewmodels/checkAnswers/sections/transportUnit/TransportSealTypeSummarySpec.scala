@@ -20,6 +20,7 @@ import base.SpecBase
 import fixtures.TransportUnitFixtures
 import fixtures.messages.sections.transportUnit.TransportSealTypeMessages
 import models.CheckMode
+import models.response.emcsTfe.TransportDetailsModel
 import org.scalatest.matchers.must.Matchers
 import pages.sections.transportUnit.{TransportSealChoicePage, TransportSealTypePage}
 import play.api.i18n.Messages
@@ -57,26 +58,27 @@ class TransportSealTypeSummarySpec extends SpecBase with Matchers with Transport
             TransportSealTypeSummary.row(testIndex1) mustBe None
           }
 
-          "must output row with answer not provide if TransportSealChoicePage is true" in {
+          "must output a not provided row if TransportSealChoicePage is true and TransportSealTypePage is not answered " +
+            "(not present in either 801 or user answers)" in {
 
             implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers
-              .set(TransportSealChoicePage(testIndex1), true)
+              .set(TransportSealChoicePage(testIndex1), true),
+              movementDetails = maxGetMovementResponse.copy(transportDetails = Seq(TransportDetailsModel("unitcode", None, None, None, None)))
             )
 
-            TransportSealTypeSummary.row(testIndex1) mustBe
-              Some(
-                SummaryListRowViewModel(
-                  key = messagesForLanguage.sealTypeCYA,
-                  value = Value(Text(messagesForLanguage.notProvided)),
-                  actions = Seq(
-                    ActionItemViewModel(
-                      content = messagesForLanguage.change,
-                      href = controllers.sections.transportUnit.routes.TransportSealTypeController.onPageLoad(testErn, testArc, testIndex1, CheckMode).url,
-                      id = "changeTransportSealType1"
-                    ).withVisuallyHiddenText(messagesForLanguage.sealTypeCyaChangeHidden)
-                  )
+            TransportSealTypeSummary.row(testIndex1) mustBe Some(
+              SummaryListRowViewModel(
+                key = messagesForLanguage.sealTypeCYA,
+                value = Value(Text(messagesForLanguage.notProvided)),
+                actions = Seq(
+                  ActionItemViewModel(
+                    content = messagesForLanguage.change,
+                    href = controllers.sections.transportUnit.routes.TransportSealTypeController.onPageLoad(testErn, testArc, testIndex1, CheckMode).url,
+                    id = "changeTransportSealType1"
+                  ).withVisuallyHiddenText(messagesForLanguage.sealTypeCyaChangeHidden)
                 )
               )
+            )
           }
         }
 
@@ -113,6 +115,28 @@ class TransportSealTypeSummarySpec extends SpecBase with Matchers with Transport
                 SummaryListRowViewModel(
                   key = messagesForLanguage.sealTypeCYA,
                   value = Value(Text(transportSealTypeModelMax.sealType)),
+                  actions = Seq(
+                    ActionItemViewModel(
+                      content = messagesForLanguage.change,
+                      href = controllers.sections.transportUnit.routes.TransportSealTypeController.onPageLoad(testErn, testArc, testIndex1, CheckMode).url,
+                      id = "changeTransportSealType1"
+                    ).withVisuallyHiddenText(messagesForLanguage.sealTypeCyaChangeHidden)
+                  )
+                )
+              )
+          }
+
+          "must output row with answer if TransportSealChoicePage is true (value from 801)" in {
+
+            implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers
+              .set(TransportSealChoicePage(testIndex1), true)
+            )
+
+            TransportSealTypeSummary.row(testIndex1) mustBe
+              Some(
+                SummaryListRowViewModel(
+                  key = messagesForLanguage.sealTypeCYA,
+                  value = Value(Text("TransportDetailsCommercialSealIdentification1")),
                   actions = Seq(
                     ActionItemViewModel(
                       content = messagesForLanguage.change,

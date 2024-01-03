@@ -20,6 +20,8 @@ import base.SpecBase
 import fixtures.messages.sections.guarantor.GuarantorArrangerMessages
 import fixtures.messages.sections.guarantor.GuarantorArrangerMessages.ViewMessages
 import models.CheckMode
+import models.response.emcsTfe.GuarantorType.{NoGuarantor, Owner}
+import models.response.emcsTfe.MovementGuaranteeModel
 import models.sections.guarantor.GuarantorArranger.{Consignee, Consignor, GoodsOwner, Transporter}
 import pages.sections.guarantor.{GuarantorArrangerPage, GuarantorRequiredPage}
 import play.api.i18n.Messages
@@ -51,7 +53,7 @@ class GuarantorArrangerSummarySpec extends SpecBase {
 
       "and there is no answer for the GuarantorRequiredPage" - {
         "then must not return a row" in {
-          implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers)
+          implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers, movementDetails = maxGetMovementResponse.copy(movementGuarantee = MovementGuaranteeModel(Owner, None)))
 
           GuarantorArrangerSummary.row mustBe None
         }
@@ -59,7 +61,7 @@ class GuarantorArrangerSummarySpec extends SpecBase {
 
       "and there is a GuarantorRequiredPage answer of `no`" - {
         "then must not return a row" in {
-          implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(GuarantorRequiredPage, false))
+          implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(GuarantorRequiredPage, false), movementDetails = maxGetMovementResponse.copy(movementGuarantee = MovementGuaranteeModel(NoGuarantor, None)))
 
           GuarantorArrangerSummary.row mustBe None
         }
@@ -67,7 +69,7 @@ class GuarantorArrangerSummarySpec extends SpecBase {
 
       "and there is a GuarantorRequiredPage answer of `yes`" - {
         "and there is no answer for the GuarantorArrangerPage" in {
-          implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(GuarantorRequiredPage, true))
+          implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(GuarantorRequiredPage, true), movementDetails = maxGetMovementResponse.copy(movementGuarantee = MovementGuaranteeModel(NoGuarantor, None)))
 
           GuarantorArrangerSummary.row mustBe expectedRow(messagesForLanguage.notProvided)
         }

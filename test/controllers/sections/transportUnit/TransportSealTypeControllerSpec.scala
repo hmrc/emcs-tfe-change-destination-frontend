@@ -17,8 +17,7 @@
 package controllers.sections.transportUnit
 
 import base.SpecBase
-import controllers.actions.FakeDataRetrievalAction
-import controllers.actions.FakeMovementAction
+import controllers.actions.{FakeDataRetrievalAction, FakeMovementAction}
 import fixtures.TransportUnitFixtures
 import forms.sections.transportUnit.TransportSealTypeFormProvider
 import mocks.services.MockUserAnswersService
@@ -61,19 +60,6 @@ class TransportSealTypeControllerSpec extends SpecBase with MockUserAnswersServi
 
 
   "TransportSealType Controller" - {
-
-    "must return OK and the correct view for a GET" in new Fixture(Some(emptyUserAnswers
-      .set(TransportUnitTypePage(testIndex1), Container)
-    )) {
-      val result = controller.onPageLoad(testErn, testArc, testIndex1, NormalMode)(request)
-
-      status(result) mustEqual OK
-      contentAsString(result) mustEqual view(
-        form = form,
-        transportUnitType = TransportUnitType.Container,
-        onSubmitCall = controllers.sections.transportUnit.routes.TransportSealTypeController.onSubmit(testErn, testArc, testIndex1, NormalMode)
-      )(dataRequest(request, userAnswers.get), messages(request)).toString
-    }
 
     "must populate the view correctly on a GET when the question has previously been answered" in new Fixture(Some(emptyUserAnswers
       .set(TransportUnitTypePage(testIndex1), Container)

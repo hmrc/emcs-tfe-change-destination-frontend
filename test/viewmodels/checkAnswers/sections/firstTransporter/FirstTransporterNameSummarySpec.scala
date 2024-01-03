@@ -32,6 +32,7 @@ import viewmodels.implicits._
 class FirstTransporterNameSummarySpec extends SpecBase with Matchers {
   "FirstTransporterNameSummary" - {
     val testBusinessName = "Some name"
+    val testBusinessNameFrom801 = "FirstTransporterTraderName"
 
     Seq(FirstTransporterNameMessages.English).foreach { messagesForLanguage =>
 
@@ -41,13 +42,30 @@ class FirstTransporterNameSummarySpec extends SpecBase with Matchers {
 
         "when the show action link boolean is true" - {
 
-          "when there is no answer" in {
-            implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers)
+          "when there is no answer in the user answers or in 801" in {
+            implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers, movementDetails = maxGetMovementResponse.copy(firstTransporterTrader = None))
 
             FirstTransporterNameSummary.row(showActionLinks = true) mustBe
               SummaryListRowViewModel(
                 key = messagesForLanguage.cyaLabel,
                 value = Value(Text(messagesForLanguage.notProvided)),
+                actions = Seq(
+                  ActionItemViewModel(
+                    content = messagesForLanguage.change,
+                    href = controllers.sections.firstTransporter.routes.FirstTransporterNameController.onPageLoad(testErn, testArc, CheckMode).url,
+                    id = "changeFirstTransporterName"
+                  ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHidden)
+                )
+              )
+          }
+
+          "when there is no answer in the user answers (defaulting to 801)" in {
+            implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers)
+
+            FirstTransporterNameSummary.row(showActionLinks = true) mustBe
+              SummaryListRowViewModel(
+                key = messagesForLanguage.cyaLabel,
+                value = Value(Text(testBusinessNameFrom801)),
                 actions = Seq(
                   ActionItemViewModel(
                     content = messagesForLanguage.change,
@@ -77,13 +95,24 @@ class FirstTransporterNameSummarySpec extends SpecBase with Matchers {
 
         "when the show action link boolean is false" - {
 
-          "when there is no answer" in {
-            implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers)
+          "when there is no answer in the user answers or 801" in {
+            implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers, movementDetails = maxGetMovementResponse.copy(firstTransporterTrader = None))
 
             FirstTransporterNameSummary.row(showActionLinks = false) mustBe
               SummaryListRowViewModel(
                 key = messagesForLanguage.cyaLabel,
                 value = Value(Text(messagesForLanguage.notProvided)),
+                actions = Seq()
+              )
+          }
+
+          "when there is no answer in the user answers (defaulting to 801)" in {
+            implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers)
+
+            FirstTransporterNameSummary.row(showActionLinks = false) mustBe
+              SummaryListRowViewModel(
+                key = messagesForLanguage.cyaLabel,
+                value = Value(Text(testBusinessNameFrom801)),
                 actions = Seq()
               )
           }

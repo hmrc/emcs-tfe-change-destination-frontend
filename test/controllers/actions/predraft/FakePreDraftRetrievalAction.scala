@@ -16,7 +16,7 @@
 
 package controllers.actions.predraft
 
-import models.requests.{OptionalDataRequest, MovementRequest}
+import models.requests.{MovementRequest, OptionalDataRequest}
 import models.{TraderKnownFacts, UserAnswers}
 import play.api.mvc.ActionTransformer
 

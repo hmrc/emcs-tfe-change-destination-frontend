@@ -14,35 +14,18 @@
  * limitations under the License.
  */
 
-/*
- * Copyright 2023 HM Revenue & Customs
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http:www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 package controllers.sections.info
 
 import base.SpecBase
-import controllers.actions.FakeDataRetrievalAction
-import controllers.actions.FakeMovementAction
 import controllers.actions.predraft.FakePreDraftRetrievalAction
+import controllers.actions.{FakeDataRetrievalAction, FakeMovementAction}
 import forms.sections.info.DestinationTypeFormProvider
 import mocks.services.{MockPreDraftService, MockUserAnswersService}
 import models.NormalMode
 import models.sections.info.DispatchPlace
 import models.sections.info.DispatchPlace.{GreatBritain, NorthernIreland}
 import models.sections.info.movementScenario.MovementScenario
-import models.sections.info.movementScenario.MovementScenario.ExportWithCustomsDeclarationLodgedInTheUk
+import models.sections.info.movementScenario.MovementScenario.{EuTaxWarehouse, ExportWithCustomsDeclarationLodgedInTheUk}
 import navigation.FakeNavigators.FakeInfoNavigator
 import pages.sections.info.{DestinationTypePage, DispatchPlacePage}
 import play.api.data.Form
@@ -124,7 +107,7 @@ class DestinationTypeControllerSpec extends SpecBase with MockUserAnswersService
           contentAsString(getResult) mustEqual
             view(
               GreatBritain,
-              form,
+              form.fill(EuTaxWarehouse),
               controllers.sections.info.routes.DestinationTypeController.onPreDraftSubmit("XIRC123", testArc, NormalMode)
             )(getRequest, messages(getRequest)).toString
         }
@@ -142,7 +125,7 @@ class DestinationTypeControllerSpec extends SpecBase with MockUserAnswersService
           contentAsString(getResult) mustEqual
             view(
               NorthernIreland,
-              form,
+              form.fill(EuTaxWarehouse),
               controllers.sections.info.routes.DestinationTypeController.onPreDraftSubmit("XIWK123", testArc, NormalMode)
             )(getRequest, messages(getRequest)).toString
         }

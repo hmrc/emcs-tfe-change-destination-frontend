@@ -17,9 +17,9 @@
 package controllers.sections.consignee
 
 import base.SpecBase
-import controllers.actions.FakeDataRetrievalAction
-import controllers.actions.FakeMovementAction
+import controllers.actions.{FakeDataRetrievalAction, FakeMovementAction}
 import mocks.services.MockUserAnswersService
+import models.sections.ReviewAnswer.{ChangeAnswers, KeepAnswers}
 import models.sections.info.movementScenario.MovementScenario._
 import models.{ExemptOrganisationDetailsModel, NormalMode, UserAddress, UserAnswers}
 import navigation.FakeNavigators.FakeConsigneeNavigator
@@ -43,7 +43,7 @@ class ConsigneeIndexControllerSpec extends SpecBase with MockUserAnswersService 
       fakeUserAllowListAction,
       new FakeDataRetrievalAction(optUserAnswers, Some(testMinTraderKnownFacts)),
       dataRequiredAction,
-      new FakeMovementAction(maxGetMovementResponse),
+      new FakeMovementAction(maxGetMovementResponse.copy(consigneeTrader = None)),
       new FakeConsigneeNavigator(testOnwardRoute),
       mockUserAnswersService,
       messagesControllerComponents
@@ -58,6 +58,7 @@ class ConsigneeIndexControllerSpec extends SpecBase with MockUserAnswersService 
           .set(ConsigneeExemptOrganisationPage, ExemptOrganisationDetailsModel("", ""))
           .set(ConsigneeBusinessNamePage, "")
           .set(ConsigneeAddressPage, UserAddress(None, "", "", ""))
+          .set(ConsigneeReviewPage, KeepAnswers)
         )) {
 
         val result: Future[Result] = testController.onPageLoad(testErn, testArc)(request)
@@ -69,7 +70,9 @@ class ConsigneeIndexControllerSpec extends SpecBase with MockUserAnswersService 
     }
     "must redirect to ConsigneeExemptOrganisationController" - {
       s"when destination is $ExemptedOrganisation" in new Fixture(
-        Some(emptyUserAnswers.set(DestinationTypePage, ExemptedOrganisation))) {
+        Some(emptyUserAnswers
+          .set(DestinationTypePage, ExemptedOrganisation)
+          .set(ConsigneeReviewPage, ChangeAnswers))) {
 
         val result: Future[Result] = testController.onPageLoad(testErn, testArc)(request)
 
@@ -89,7 +92,10 @@ class ConsigneeIndexControllerSpec extends SpecBase with MockUserAnswersService 
         ).foreach(
           movementScenario =>
             s"and destination is $movementScenario" in new Fixture(
-              Some(emptyUserAnswers.set(DestinationTypePage, movementScenario))) {
+              Some(emptyUserAnswers
+                .set(DestinationTypePage, movementScenario)
+                .set(ConsigneeReviewPage, ChangeAnswers)
+              )) {
 
               val result: Future[Result] = testController.onPageLoad(ern, testArc)(request)
 
@@ -102,7 +108,10 @@ class ConsigneeIndexControllerSpec extends SpecBase with MockUserAnswersService 
         Seq(ExportWithCustomsDeclarationLodgedInTheUk).foreach(
           movementScenario =>
             s"and destination is $movementScenario" in new Fixture(
-              Some(emptyUserAnswers.set(DestinationTypePage, movementScenario))) {
+              Some(emptyUserAnswers
+                .set(DestinationTypePage, movementScenario)
+                .set(ConsigneeReviewPage, ChangeAnswers)
+              )) {
 
               val result: Future[Result] = testController.onPageLoad(ern, testArc)(request)
 
@@ -122,7 +131,10 @@ class ConsigneeIndexControllerSpec extends SpecBase with MockUserAnswersService 
         ).foreach(
           movementScenario =>
             s"and destination is $movementScenario" in new Fixture(
-              Some(emptyUserAnswers.set(DestinationTypePage, movementScenario))) {
+              Some(emptyUserAnswers
+                .set(DestinationTypePage, movementScenario)
+                .set(ConsigneeReviewPage, ChangeAnswers)
+              )) {
 
               val result: Future[Result] = testController.onPageLoad(ern, testArc)(request)
 
@@ -140,7 +152,10 @@ class ConsigneeIndexControllerSpec extends SpecBase with MockUserAnswersService 
         ).foreach(
           movementScenario =>
             s"and destination is $movementScenario" in new Fixture(
-              Some(emptyUserAnswers.set(DestinationTypePage, movementScenario))) {
+              Some(emptyUserAnswers
+                .set(DestinationTypePage, movementScenario)
+                .set(ConsigneeReviewPage, ChangeAnswers)
+              )) {
 
               val result: Future[Result] = testController.onPageLoad(ern, testArc)(request)
 
@@ -161,7 +176,10 @@ class ConsigneeIndexControllerSpec extends SpecBase with MockUserAnswersService 
         ).foreach(
           movementScenario =>
             s"and destination is $movementScenario" in new Fixture(
-              Some(emptyUserAnswers.set(DestinationTypePage, movementScenario))) {
+              Some(emptyUserAnswers
+                .set(DestinationTypePage, movementScenario)
+                .set(ConsigneeReviewPage, ChangeAnswers)
+              )) {
 
               val result: Future[Result] = testController.onPageLoad(ern, testArc)(request)
 
@@ -172,7 +190,10 @@ class ConsigneeIndexControllerSpec extends SpecBase with MockUserAnswersService 
         )
 
         s"and destination is $TemporaryRegisteredConsignee" in new Fixture(
-          Some(emptyUserAnswers.set(DestinationTypePage, TemporaryRegisteredConsignee))) {
+          Some(emptyUserAnswers
+            .set(DestinationTypePage, TemporaryRegisteredConsignee)
+            .set(ConsigneeReviewPage, ChangeAnswers)
+          )) {
 
           val result: Future[Result] = testController.onPageLoad(ern, testArc)(request)
 
@@ -190,7 +211,10 @@ class ConsigneeIndexControllerSpec extends SpecBase with MockUserAnswersService 
         Seq(ExportWithCustomsDeclarationLodgedInTheUk).foreach(
           movementScenario =>
             s"and destination is $movementScenario" in new Fixture(
-              Some(emptyUserAnswers.set(DestinationTypePage, movementScenario))) {
+              Some(emptyUserAnswers
+                .set(DestinationTypePage, movementScenario)
+                .set(ConsigneeReviewPage, ChangeAnswers)
+              )) {
 
               val result: Future[Result] = testController.onPageLoad(ern, testArc)(request)
 
@@ -210,7 +234,10 @@ class ConsigneeIndexControllerSpec extends SpecBase with MockUserAnswersService 
           ExportWithCustomsDeclarationLodgedInTheEu
         ).foreach(
           movementScenario =>
-            s"and destination is $movementScenario" in new Fixture(Some(emptyUserAnswers.set(DestinationTypePage, movementScenario))) {
+            s"and destination is $movementScenario" in new Fixture(Some(emptyUserAnswers
+              .set(DestinationTypePage, movementScenario)
+              .set(ConsigneeReviewPage, ChangeAnswers)
+            )) {
 
               val result: Future[Result] = testController.onPageLoad(ern, testArc)(request)
 
@@ -224,7 +251,10 @@ class ConsigneeIndexControllerSpec extends SpecBase with MockUserAnswersService 
 
     "must redirect to the tasklist" - {
       "when user isn't any of the above (they shouldn't be able to access the NEE pages)" in new Fixture(
-        Some(emptyUserAnswers.set(DestinationTypePage, UnknownDestination))) {
+        Some(emptyUserAnswers
+          .set(DestinationTypePage, UnknownDestination)
+          .set(ConsigneeReviewPage, ChangeAnswers)
+        )) {
 
         val result: Future[Result] = testController.onPageLoad(testErn, testArc)(request)
 

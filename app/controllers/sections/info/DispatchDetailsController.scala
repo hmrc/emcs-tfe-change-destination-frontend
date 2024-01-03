@@ -20,10 +20,10 @@ import controllers.BasePreDraftNavigationController
 import controllers.actions._
 import controllers.actions.predraft.{PreDraftAuthActionHelper, PreDraftDataRequiredAction, PreDraftDataRetrievalAction}
 import forms.sections.info.DispatchDetailsFormProvider
+import models.Mode
 import models.requests.DataRequest
-import models.{CheckMode, Mode}
 import navigation.InformationNavigator
-import pages.sections.info.{DispatchDetailsPage, DispatchPlacePage}
+import pages.sections.info.DispatchDetailsPage
 import play.api.data.Form
 import play.api.i18n.MessagesApi
 import play.api.mvc._

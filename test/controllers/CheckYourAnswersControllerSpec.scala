@@ -17,7 +17,7 @@
 package controllers
 
 import base.SpecBase
-import controllers.actions.{DataRequiredAction, FakeAuthAction, FakeDataRetrievalAction, FakeMovementAction, FakeUserAllowListAction}
+import controllers.actions._
 import mocks.viewmodels.MockCheckAnswersHelper
 import models.UserAnswers
 import navigation.FakeNavigators.FakeNavigator

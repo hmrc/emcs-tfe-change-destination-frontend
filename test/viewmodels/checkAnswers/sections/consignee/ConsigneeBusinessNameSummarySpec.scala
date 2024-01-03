@@ -38,13 +38,36 @@ class ConsigneeBusinessNameSummarySpec extends SpecBase with Matchers {
 
         implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
 
-        "when there's no answer" - {
+        "when there's no answer in the user answers or 801" - {
+
+          "must output the expected data" in {
+
+            implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers, movementDetails = maxGetMovementResponse.copy(consigneeTrader = None))
+
+            ConsigneeBusinessNameSummary.row(showActionLinks = true) mustBe None
+          }
+        }
+
+        "when there's no answer in the user answers (defaulting to 801)" - {
 
           "must output the expected data" in {
 
             implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers)
 
-            ConsigneeBusinessNameSummary.row(showActionLinks = true) mustBe None
+            ConsigneeBusinessNameSummary.row(showActionLinks = true) mustBe
+              Some(
+                SummaryListRowViewModel(
+                  key = messagesForLanguage.cyaLabel,
+                  value = Value(Text("ConsigneeTraderName")),
+                  actions = Seq(
+                    ActionItemViewModel(
+                      content = messagesForLanguage.change,
+                      href = controllers.sections.consignee.routes.ConsigneeBusinessNameController.onPageLoad(testErn, testArc, CheckMode).url,
+                      id = "changeConsigneeBusinessName"
+                    ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHidden)
+                  )
+                )
+              )
           }
         }
 

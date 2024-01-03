@@ -92,21 +92,21 @@ class FirstTransporterNavigatorSpec extends SpecBase {
           val userAnswers = emptyUserAnswers
             .set(FirstTransporterVatPage, "")
             .set(FirstTransporterAddressPage, UserAddress(None, "", "", ""))
-          navigator.nextPage(FirstTransporterNamePage, CheckMode, userAnswers) mustBe
+          navigator.nextPage(FirstTransporterNamePage, CheckMode, userAnswers)(dataRequest(FakeRequest(), movementDetails = maxGetMovementResponse.copy(firstTransporterTrader = None))) mustBe
             controllers.sections.firstTransporter.routes.FirstTransporterVatController.onPageLoad(userAnswers.ern, userAnswers.arc, NormalMode)
         }
         "when FirstTransporterVatPage is empty" in {
           val userAnswers = emptyUserAnswers
             .set(FirstTransporterNamePage, "")
             .set(FirstTransporterAddressPage, UserAddress(None, "", "", ""))
-          navigator.nextPage(FirstTransporterNamePage, CheckMode, userAnswers) mustBe
+          navigator.nextPage(FirstTransporterNamePage, CheckMode, userAnswers)(dataRequest(FakeRequest(), movementDetails = maxGetMovementResponse.copy(firstTransporterTrader = None))) mustBe
             controllers.sections.firstTransporter.routes.FirstTransporterVatController.onPageLoad(userAnswers.ern, userAnswers.arc, NormalMode)
         }
         "when FirstTransporterAddressPage is empty" in {
           val userAnswers = emptyUserAnswers
             .set(FirstTransporterNamePage, "")
             .set(FirstTransporterVatPage, "")
-          navigator.nextPage(FirstTransporterNamePage, CheckMode, userAnswers) mustBe
+          navigator.nextPage(FirstTransporterNamePage, CheckMode, userAnswers)(dataRequest(FakeRequest(), movementDetails = maxGetMovementResponse.copy(firstTransporterTrader = None))) mustBe
             controllers.sections.firstTransporter.routes.FirstTransporterVatController.onPageLoad(userAnswers.ern, userAnswers.arc, NormalMode)
         }
       }

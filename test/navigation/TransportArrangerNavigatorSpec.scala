@@ -131,7 +131,7 @@ class TransportArrangerNavigatorSpec extends SpecBase {
                 .set(TransportArrangerPage, GoodsOwner)
                 .set(TransportArrangerVatPage, testVatNumber)
 
-              navigator.nextPage(TransportArrangerPage, CheckMode, userAnswers) mustBe
+              navigator.nextPage(TransportArrangerPage, CheckMode, userAnswers)(dataRequest(FakeRequest(), movementDetails = maxGetMovementResponse.copy(transportArrangerTrader = None))) mustBe
                 controllers.sections.transportArranger.routes.TransportArrangerNameController.onPageLoad(testErn, testArc, NormalMode)
             }
           }
