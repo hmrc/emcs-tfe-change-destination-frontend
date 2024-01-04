@@ -77,7 +77,7 @@ class TransportUnitsAddToListController @Inject()(
 
     }
 
-  private def onMax[D, T](ifMax: => T, ifNotMax: => T)(implicit dataRequest: DataRequest[_]): T = {
+  private def onMax[T](ifMax: => T, ifNotMax: => T)(implicit dataRequest: DataRequest[_]): T = {
     dataRequest.userAnswers.get(TransportUnitsCount) match {
       case Some(value) if value >= TransportUnitsSection.MAX => ifMax
       case _ => ifNotMax

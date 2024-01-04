@@ -174,8 +174,9 @@ class TransportUnitsSectionSpec extends SpecBase {
     }
 
     "must return not started" - {
-      "when empty user answers" in {
-        implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), emptyUserAnswers.set(TransportUnitsReviewPage, ChangeAnswers))
+      "when empty user answers and no transport details exist in 801" in {
+        implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), emptyUserAnswers.set(TransportUnitsReviewPage, ChangeAnswers),
+          movementDetails = maxGetMovementResponse.copy(transportDetails = Seq.empty))
 
         TransportUnitsSection.status mustBe NotStarted
       }

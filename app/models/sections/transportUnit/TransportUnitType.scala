@@ -48,6 +48,8 @@ object TransportUnitType extends Enumerable.Implicits {
     )
   }
 
+  def parseTransportUnitType(code: String): Option[TransportUnitType] = values.find(_.toString == code)
+
   implicit val enumerable: Enumerable[TransportUnitType] =
     Enumerable(values.map(v => v.toString -> v): _*)
 }

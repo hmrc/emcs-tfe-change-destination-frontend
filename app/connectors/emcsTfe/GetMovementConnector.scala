@@ -17,8 +17,8 @@
 package connectors.emcsTfe
 
 import config.AppConfig
-import models.response.{ErrorResponse, JsonValidationError, UnexpectedDownstreamResponseError}
 import models.response.emcsTfe.GetMovementResponse
+import models.response.{ErrorResponse, JsonValidationError, UnexpectedDownstreamResponseError}
 import play.api.libs.json.{JsResultException, Reads}
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
 

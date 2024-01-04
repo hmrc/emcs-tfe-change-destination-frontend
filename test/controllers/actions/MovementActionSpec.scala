@@ -19,8 +19,8 @@ package controllers.actions
 import base.SpecBase
 import mocks.connectors.MockGetMovementConnector
 import models.requests.{MovementRequest, UserRequest}
-import models.response.{ErrorResponse, UnexpectedDownstreamResponseError}
 import models.response.emcsTfe.GetMovementResponse
+import models.response.{ErrorResponse, UnexpectedDownstreamResponseError}
 import play.api.mvc.Result
 import play.api.mvc.Results.Ok
 import play.api.test.FakeRequest

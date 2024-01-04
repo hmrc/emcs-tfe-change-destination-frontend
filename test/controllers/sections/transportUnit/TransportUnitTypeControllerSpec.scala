@@ -52,7 +52,7 @@ class TransportUnitTypeControllerSpec extends SpecBase with MockUserAnswersServi
       fakeAuthAction,
       new FakeDataRetrievalAction(userAnswers, Some(testMinTraderKnownFacts)),
       dataRequiredAction,
-      new FakeMovementAction(maxGetMovementResponse),
+      new FakeMovementAction(maxGetMovementResponse.copy(transportDetails = Seq.empty)),
       formProvider,
       Helpers.stubMessagesControllerComponents(),
       view
@@ -93,7 +93,7 @@ class TransportUnitTypeControllerSpec extends SpecBase with MockUserAnswersServi
 
     "must redirect to the index controller if index is not next in index list for GET" in new Test(Some(emptyUserAnswers)) {
 
-      val result = controller.onPageLoad(testErn, testArc, testIndex2, NormalMode)(request)
+      val result = controller.onPageLoad(testErn, testArc, testIndex3, NormalMode)(request)
 
       status(result) mustEqual SEE_OTHER
       redirectLocation(result).value mustEqual controllers.sections.transportUnit.routes.TransportUnitIndexController.onPageLoad(testErn, testArc).url
@@ -102,7 +102,7 @@ class TransportUnitTypeControllerSpec extends SpecBase with MockUserAnswersServi
     "must redirect to the index controller if index is not next in index list for POST" in new Test(Some(emptyUserAnswers)) {
 
       val result =
-        controller.onSubmit(testErn, testArc, testIndex2, NormalMode)(request.withFormUrlEncodedBody(("value", TransportUnitType.values.head.toString)))
+        controller.onSubmit(testErn, testArc, testIndex3, NormalMode)(request.withFormUrlEncodedBody(("value", TransportUnitType.values.head.toString)))
 
       status(result) mustEqual SEE_OTHER
       redirectLocation(result).value mustEqual controllers.sections.transportUnit.routes.TransportUnitIndexController.onPageLoad(testErn, testArc).url

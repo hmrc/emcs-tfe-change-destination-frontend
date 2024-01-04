@@ -44,7 +44,7 @@ class TransportUnitsAddToListHelperSpec extends SpecBase {
       "return nothing" - {
         s"when no answers specified for '${msg.lang.code}'" in new Setup() {
           implicit val msgs: Messages = messages(Seq(msg.lang))
-
+          override implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers, movementDetails = maxGetMovementResponse.copy(transportDetails = Seq.empty))
           helper.allTransportUnitsSummary() mustBe Nil
         }
       }

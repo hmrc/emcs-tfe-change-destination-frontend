@@ -369,7 +369,8 @@ class DraftMovementHelperSpec extends SpecBase {
           ))
         }
         "should render the units row" in {
-          implicit val request: DataRequest[_] = dataRequest(FakeRequest(), ern = testErn, answers = emptyUserAnswers.set(TransportUnitsReviewPage, ChangeAnswers))
+          implicit val request: DataRequest[_] = dataRequest(FakeRequest(), ern = testErn, answers = emptyUserAnswers.set(TransportUnitsReviewPage, ChangeAnswers),
+            movementDetails = maxGetMovementResponse.copy(transportDetails = Seq.empty))
           helper.transportSection.rows must contain(TaskListSectionRow(
             messagesForLanguage.units,
             "units",
