@@ -19,6 +19,7 @@ package fixtures
 import models.response.emcsTfe._
 import models.sections.info.movementScenario.{DestinationType, OriginType}
 import models.sections.transportArranger.TransportArranger
+import play.api.libs.json.{JsObject, Json}
 
 trait GetMovementResponseFixtures extends BaseFixtures {
 
@@ -198,6 +199,246 @@ trait GetMovementResponseFixtures extends BaseFixtures {
         commercialSealIdentification = Some("TransportDetailsCommercialSealIdentification2"),
         complementaryInformation = Some("TransportDetailsComplementaryInformation2"),
         sealInformation = Some("TransportDetailsSealInformation2")
+      )
+    )
+  )
+
+  lazy val maxGetMovementJson: JsObject = Json.obj(
+    "arc"                                  -> "ExciseMovementArc",
+    "sequenceNumber"                       -> 1,
+    "destinationType"                      -> "1",
+    "memberStateCode"                      -> "CCTMemberStateCode",
+    "serialNumberOfCertificateOfExemption" -> "CCTSerialNumber",
+    "consignorTrader" -> Json.obj(
+      "traderExciseNumber" -> "ConsignorTraderExciseNumber",
+      "traderName"         -> "ConsignorTraderName",
+      "address" -> Json.obj(
+        "streetNumber" -> "ConsignorTraderStreetNumber",
+        "street"       -> "ConsignorTraderStreetName",
+        "postcode"     -> "ConsignorTraderPostcode",
+        "city"         -> "ConsignorTraderCity"
+      )
+    ),
+    "consigneeTrader" -> Json.obj(
+      "traderExciseNumber" -> "ConsigneeTraderId",
+      "traderName"         -> "ConsigneeTraderName",
+      "address" -> Json.obj(
+        "streetNumber" -> "ConsigneeTraderStreetNumber",
+        "street"       -> "ConsigneeTraderStreetName",
+        "postcode"     -> "ConsigneeTraderPostcode",
+        "city"         -> "ConsigneeTraderCity"
+      ),
+      "eoriNumber" -> "ConsigneeTraderEori"
+    ),
+    "deliveryPlaceTrader" -> Json.obj(
+      "traderExciseNumber" -> "DeliveryPlaceTraderId",
+      "traderName"         -> "DeliveryPlaceTraderName",
+      "address" -> Json.obj(
+        "streetNumber" -> "DeliveryPlaceTraderStreetNumber",
+        "street"       -> "DeliveryPlaceTraderStreetName",
+        "postcode"     -> "DeliveryPlaceTraderPostcode",
+        "city"         -> "DeliveryPlaceTraderCity"
+      )
+    ),
+    "placeOfDispatchTrader" -> Json.obj(
+      "traderExciseNumber" -> "PlaceOfDispatchTraderReferenceOfTaxWarehouse",
+      "traderName"         -> "PlaceOfDispatchTraderName",
+      "address" -> Json.obj(
+        "streetNumber" -> "PlaceOfDispatchTraderStreetNumber",
+        "street"       -> "PlaceOfDispatchTraderStreetName",
+        "postcode"     -> "PlaceOfDispatchTraderPostcode",
+        "city"         -> "PlaceOfDispatchTraderCity"
+      )
+    ),
+    "transportArrangerTrader" -> Json.obj(
+      "traderName" -> "TransportArrangerTraderName",
+      "address" -> Json.obj(
+        "streetNumber" -> "TransportArrangerTraderStreetNumber",
+        "street"       -> "TransportArrangerTraderStreetName",
+        "postcode"     -> "TransportArrangerTraderPostcode",
+        "city"         -> "TransportArrangerTraderCity"
+      ),
+      "vatNumber" -> "TransportArrangerTraderVatNumber"
+    ),
+    "firstTransporterTrader" -> Json.obj(
+      "traderName" -> "FirstTransporterTraderName",
+      "address" -> Json.obj(
+        "streetNumber" -> "FirstTransporterTraderStreetNumber",
+        "street"       -> "FirstTransporterTraderStreetName",
+        "postcode"     -> "FirstTransporterTraderPostcode",
+        "city"         -> "FirstTransporterTraderCity"
+      ),
+      "vatNumber" -> "FirstTransporterTraderVatNumber"
+    ),
+    "dispatchImportOfficeReferenceNumber"             -> "DispatchImportOfficeErn",
+    "deliveryPlaceCustomsOfficeReferenceNumber"       -> "DeliveryPlaceCustomsOfficeErn",
+    "competentAuthorityDispatchOfficeReferenceNumber" -> "CompetentAuthorityDispatchOfficeErn",
+    "localReferenceNumber"                            -> "EadEsadLocalReferenceNumber",
+    "eadStatus"                                       -> "Beans",
+    "dateAndTimeOfValidationOfEadEsad"                -> "ExciseMovementDateTime",
+    "dateOfDispatch"                                  -> "EadEsadDateOfDispatch",
+    "journeyTime"                                     -> "10 hours",
+    "documentCertificate" -> Json.arr(
+      Json.obj(
+        "documentType"        -> "DocumentCertificateDocumentType1",
+        "documentReference"   -> "DocumentCertificateDocumentReference1",
+        "documentDescription" -> "DocumentCertificateDocumentDescription1",
+        "referenceOfDocument" -> "DocumentCertificateReferenceOfDocument1"
+      ),
+      Json.obj(
+        "documentType"        -> "DocumentCertificateDocumentType2",
+        "documentReference"   -> "DocumentCertificateDocumentReference2",
+        "documentDescription" -> "DocumentCertificateDocumentDescription2",
+        "referenceOfDocument" -> "DocumentCertificateReferenceOfDocument2"
+      )
+    ),
+    "eadEsad" -> Json.obj(
+      "localReferenceNumber" -> "EadEsadLocalReferenceNumber",
+      "invoiceNumber"        -> "EadEsadInvoiceNumber",
+      "invoiceDate"          -> "EadEsadInvoiceDate",
+      "originTypeCode"       -> "3",
+      "dateOfDispatch"       -> "EadEsadDateOfDispatch",
+      "timeOfDispatch"       -> "EadEsadTimeOfDispatch",
+      "upstreamArc"          -> "EadEsadUpstreamArc",
+      "importSadNumber"      -> Json.arr("ImportSadNumber1", "ImportSadNumber2")
+    ),
+    "headerEadEsad" -> Json.obj(
+      "sequenceNumber"                -> 1,
+      "dateAndTimeOfUpdateValidation" -> "HeaderEadEsadDateTime",
+      "destinationType"               -> "10",
+      "journeyTime"                   -> "10 hours",
+      "transportArrangement"          -> "2"
+    ),
+    "transportMode" -> Json.obj(
+      "transportModeCode"        -> "TransportModeTransportModeCode",
+      "complementaryInformation" -> "TransportModeComplementaryInformation"
+    ),
+    "movementGuarantee" -> Json.obj(
+      "guarantorTypeCode" -> "123",
+      "guarantorTrader" -> Json.arr(
+        Json.obj(
+          "traderExciseNumber" -> "GuarantorTraderErn1",
+          "traderName"         -> "GuarantorTraderName1",
+          "address" -> Json.obj(
+            "streetNumber" -> "GuarantorTraderStreetNumber1",
+            "street"       -> "GuarantorTraderStreetName1",
+            "postcode"     -> "GuarantorTraderPostcode1",
+            "city"         -> "GuarantorTraderCity1"
+          ),
+          "vatNumber" -> "GuarantorTraderVatNumber1"
+        ),
+        Json.obj(
+          "traderExciseNumber" -> "GuarantorTraderErn2",
+          "traderName"         -> "GuarantorTraderName2",
+          "address" -> Json.obj(
+            "streetNumber" -> "GuarantorTraderStreetNumber2",
+            "street"       -> "GuarantorTraderStreetName2",
+            "postcode"     -> "GuarantorTraderPostcode2",
+            "city"         -> "GuarantorTraderCity2"
+          ),
+          "vatNumber" -> "GuarantorTraderVatNumber2"
+        )
+      )
+    ),
+    "items" -> Json.arr(
+      Json.obj(
+        "itemUniqueReference"   -> 1,
+        "productCode"           -> "BodyEadEsadExciseProductCode1",
+        "cnCode"                -> "BodyEadEsadCnCode1",
+        "quantity"              -> 2,
+        "grossMass"             -> 3,
+        "netMass"               -> 4,
+        "alcoholicStrength"     -> 5,
+        "degreePlato"           -> 6,
+        "fiscalMark"            -> "BodyEadEsadFiscalMark1",
+        "fiscalMarkUsedFlag"    -> true,
+        "designationOfOrigin"   -> "BodyEadEsadDesignationOfOrigin1",
+        "sizeOfProducer"        -> "BodyEadEsadSizeOfProducer1",
+        "density"               -> 7,
+        "commercialDescription" -> "BodyEadEsadCommercialDescription1",
+        "brandNameOfProduct"    -> "BodyEadEsadBrandNameOfProducts1",
+        "maturationAge"         -> "BodyEadEsadMaturationPeriodOrAgeOfProducts1",
+        "packaging" -> Json.arr(
+          Json.obj(
+            "typeOfPackage"            -> "PackageKindOfPackages11",
+            "quantity"                 -> 1,
+            "shippingMarks"            -> "PackageShippingMarks11",
+            "identityOfCommercialSeal" -> "PackageCommercialSealIdentification11",
+            "sealInformation"          -> "PackageSealInformation11"
+          ),
+          Json.obj(
+            "typeOfPackage"            -> "PackageKindOfPackages12",
+            "quantity"                 -> 2,
+            "shippingMarks"            -> "PackageShippingMarks12",
+            "identityOfCommercialSeal" -> "PackageCommercialSealIdentification12",
+            "sealInformation"          -> "PackageSealInformation12"
+          )
+        ),
+        "wineProduct" -> Json.obj(
+          "wineProductCategory"  -> "1",
+          "wineGrowingZoneCode"  -> "WineProductWineGrowingZoneCode1",
+          "thirdCountryOfOrigin" -> "WineProductThirdCountryOfOrigin1",
+          "otherInformation"     -> "WineProductOtherInformation1",
+          "wineOperations"       -> Json.arr("WineOperationCode11", "WineOperationCode12")
+        )
+      ),
+      Json.obj(
+        "itemUniqueReference"   -> 2,
+        "productCode"           -> "BodyEadEsadExciseProductCode2",
+        "cnCode"                -> "BodyEadEsadCnCode2",
+        "quantity"              -> 3,
+        "grossMass"             -> 4,
+        "netMass"               -> 5,
+        "alcoholicStrength"     -> 6,
+        "degreePlato"           -> 7,
+        "fiscalMark"            -> "BodyEadEsadFiscalMark2",
+        "fiscalMarkUsedFlag"    -> false,
+        "designationOfOrigin"   -> "BodyEadEsadDesignationOfOrigin2",
+        "sizeOfProducer"        -> "BodyEadEsadSizeOfProducer2",
+        "density"               -> 8,
+        "commercialDescription" -> "BodyEadEsadCommercialDescription2",
+        "brandNameOfProduct"    -> "BodyEadEsadBrandNameOfProducts2",
+        "maturationAge"         -> "BodyEadEsadMaturationPeriodOrAgeOfProducts2",
+        "packaging" -> Json.arr(
+          Json.obj(
+            "typeOfPackage"            -> "PackageKindOfPackages21",
+            "quantity"                 -> 3,
+            "shippingMarks"            -> "PackageShippingMarks21",
+            "identityOfCommercialSeal" -> "PackageCommercialSealIdentification21",
+            "sealInformation"          -> "PackageSealInformation21"
+          ),
+          Json.obj(
+            "typeOfPackage"            -> "PackageKindOfPackages22",
+            "quantity"                 -> 4,
+            "shippingMarks"            -> "PackageShippingMarks22",
+            "identityOfCommercialSeal" -> "PackageCommercialSealIdentification22",
+            "sealInformation"          -> "PackageSealInformation22"
+          )
+        ),
+        "wineProduct" -> Json.obj(
+          "wineProductCategory"  -> "2",
+          "wineGrowingZoneCode"  -> "WineProductWineGrowingZoneCode2",
+          "thirdCountryOfOrigin" -> "WineProductThirdCountryOfOrigin2",
+          "otherInformation"     -> "WineProductOtherInformation2",
+          "wineOperations"       -> Json.arr("WineOperationCode21", "WineOperationCode22")
+        )
+      )
+    ),
+    "numberOfItems" -> 2,
+    "transportDetails" -> Json.arr(
+      Json.obj(
+        "transportUnitCode"            -> "TransportDetailsTransportUnitCode1",
+        "identityOfTransportUnits"     -> "TransportDetailsIdentityOfTransportUnits1",
+        "commercialSealIdentification" -> "TransportDetailsCommercialSealIdentification1",
+        "complementaryInformation"     -> "TransportDetailsComplementaryInformation1",
+        "sealInformation"              -> "TransportDetailsSealInformation1"
+      ),
+      Json.obj(
+        "transportUnitCode"            -> "TransportDetailsTransportUnitCode2",
+        "identityOfTransportUnits"     -> "TransportDetailsIdentityOfTransportUnits2",
+        "commercialSealIdentification" -> "TransportDetailsCommercialSealIdentification2",
+        "complementaryInformation"     -> "TransportDetailsComplementaryInformation2",
+        "sealInformation"              -> "TransportDetailsSealInformation2"
       )
     )
   )

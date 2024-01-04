@@ -17,9 +17,9 @@
 package connectors.emcsTfe
 
 import config.AppConfig
-import models.response.ErrorResponse
+import models.response.{ErrorResponse, JsonValidationError, UnexpectedDownstreamResponseError}
 import models.response.emcsTfe.GetMovementResponse
-import play.api.libs.json.Reads
+import play.api.libs.json.{JsResultException, Reads}
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
 
 import javax.inject.{Inject, Singleton}
@@ -36,5 +36,13 @@ class GetMovementConnector @Inject()(val http: HttpClient,
   def getMovement(exciseRegistrationNumber: String, arc: String, forceFetchNew: Boolean)
                  (implicit headerCarrier: HeaderCarrier, executionContext: ExecutionContext): Future[Either[ErrorResponse, GetMovementResponse]] =
     get(s"$baseUrl/movement/$exciseRegistrationNumber/$arc?forceFetchNew=$forceFetchNew")
+      .recover {
+        case JsResultException(errors) =>
+          logger.warn(s"[getCountryCodesAndMemberStates] Bad JSON response from emcs-tfe: " + errors)
+          Left(JsonValidationError)
+        case error =>
+          logger.warn(s"[getCountryCodesAndMemberStates] Unexpected error from emcs-tfe: ${error.getClass} ${error.getMessage}")
+          Left(UnexpectedDownstreamResponseError)
+      }
 
 }
