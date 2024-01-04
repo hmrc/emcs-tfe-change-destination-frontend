@@ -19,7 +19,7 @@ package pages.sections.transportArranger
 import base.SpecBase
 import models.UserAddress
 import models.requests.DataRequest
-import models.sections.ReviewAnswer.KeepAnswers
+import models.sections.ReviewAnswer.{ChangeAnswers, KeepAnswers}
 import models.sections.transportArranger.TransportArranger._
 import play.api.test.FakeRequest
 
@@ -30,7 +30,7 @@ class TransportArrangerSectionSpec extends SpecBase {
         implicit val dr: DataRequest[_] = dataRequest(FakeRequest(),
           emptyUserAnswers
             .set(TransportArrangerPage, Consignor)
-            .set(TransportArrangerReviewPage, KeepAnswers)
+            .set(TransportArrangerReviewPage, ChangeAnswers)
         )
         TransportArrangerSection.isCompleted mustBe true
       }
@@ -38,7 +38,7 @@ class TransportArrangerSectionSpec extends SpecBase {
         implicit val dr: DataRequest[_] = dataRequest(FakeRequest(),
           emptyUserAnswers
             .set(TransportArrangerPage, Consignee)
-            .set(TransportArrangerReviewPage, KeepAnswers)
+            .set(TransportArrangerReviewPage, ChangeAnswers)
         )
         TransportArrangerSection.isCompleted mustBe true
       }
@@ -51,10 +51,19 @@ class TransportArrangerSectionSpec extends SpecBase {
                 .set(TransportArrangerNamePage, "")
                 .set(TransportArrangerVatPage, "")
                 .set(TransportArrangerAddressPage, UserAddress(None, "", "", ""))
-                .set(TransportArrangerReviewPage, KeepAnswers)
+                .set(TransportArrangerReviewPage, ChangeAnswers)
             )
             TransportArrangerSection.isCompleted mustBe true
           }
+      }
+
+      "keep answers has been selected" in {
+        implicit val dr: DataRequest[_] =
+          dataRequest(FakeRequest(),
+            emptyUserAnswers
+              .set(TransportArrangerReviewPage, KeepAnswers)
+          )
+        TransportArrangerSection.isCompleted mustBe true
       }
     }
   }

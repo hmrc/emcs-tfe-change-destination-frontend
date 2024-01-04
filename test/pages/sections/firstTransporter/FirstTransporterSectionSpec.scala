@@ -31,8 +31,17 @@ class FirstTransporterSectionSpec extends SpecBase {
             .set(FirstTransporterNamePage, "")
             .set(FirstTransporterVatPage, "")
             .set(FirstTransporterAddressPage, UserAddress(None, "", "", ""))
-            .set(FirstTransporterReviewPage, KeepAnswers)
+            .set(FirstTransporterReviewPage, ChangeAnswers)
         )
+        FirstTransporterSection.isCompleted mustBe true
+      }
+
+      "keep answers has been selected" in {
+        implicit val dr: DataRequest[_] =
+          dataRequest(FakeRequest(),
+            emptyUserAnswers
+              .set(FirstTransporterReviewPage, KeepAnswers)
+          )
         FirstTransporterSection.isCompleted mustBe true
       }
     }

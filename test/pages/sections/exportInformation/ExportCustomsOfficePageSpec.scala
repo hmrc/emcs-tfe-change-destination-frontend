@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,31 +17,26 @@
 package pages.sections.exportInformation
 
 import base.SpecBase
-import models.requests.DataRequest
-import models.sections.ReviewAnswer.ChangeAnswers
 import play.api.test.FakeRequest
 
-class ExportInformationSectionSpec extends SpecBase {
-  "isCompleted" - {
-    "must return true" - {
-      "when finished" in {
-        implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), emptyUserAnswers
-          .set(ExportCustomsOfficePage, "")
-          .set(ExportInformationReviewPage, ChangeAnswers)
-        )
-        ExportInformationSection.isCompleted mustBe true
+class ExportCustomsOfficePageSpec extends SpecBase {
+
+  val deliveryPlaceCustomsOfficeReference: String = maxGetMovementResponse.deliveryPlaceCustomsOfficeReferenceNumber.get
+
+  "getValueFromIE801" - {
+    "must return Some(_)" - {
+      "when delivery place customs office reference is defined" in {
+        ExportCustomsOfficePage.getValueFromIE801(dataRequest(FakeRequest())) mustBe Some(deliveryPlaceCustomsOfficeReference)
       }
     }
-
-    "must return false" - {
-      "when not finished" in {
-        implicit val dr: DataRequest[_] = dataRequest(
+    "must return None" - {
+      "when delivery place customs office reference doesn't exist" in {
+        ExportCustomsOfficePage.getValueFromIE801(dataRequest(
           FakeRequest(),
-          emptyUserAnswers.set(ExportInformationReviewPage, ChangeAnswers),
           movementDetails = maxGetMovementResponse.copy(deliveryPlaceCustomsOfficeReferenceNumber = None)
-        )
-        ExportInformationSection.isCompleted mustBe false
+        )) mustBe None
       }
     }
   }
+
 }

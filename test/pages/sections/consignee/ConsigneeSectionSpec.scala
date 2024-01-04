@@ -19,6 +19,7 @@ package pages.sections.consignee
 import base.SpecBase
 import models.requests.DataRequest
 import models.sections.ReviewAnswer
+import models.sections.ReviewAnswer.{ChangeAnswers, KeepAnswers}
 import models.sections.consignee.{ConsigneeExportVat, ConsigneeExportVatType}
 import models.{Enumerable, ExemptOrganisationDetailsModel, UserAddress}
 import play.api.test.FakeRequest
@@ -33,7 +34,7 @@ class ConsigneeSectionSpec extends SpecBase with Enumerable.Implicits {
       "when user starts on ConsigneeExportUkEu and selects yes" in {
         implicit val dr: DataRequest[_] = dataRequest(FakeRequest(),
           emptyUserAnswers
-            .set(ConsigneeReviewPage, ReviewAnswer.ChangeAnswers)
+            .set(ConsigneeReviewPage, ChangeAnswers)
             .set(ConsigneeExportPage, true)
             .set(ConsigneeExportVatPage, ConsigneeExportVat(ConsigneeExportVatType.No, None, None))
             .set(ConsigneeBusinessNamePage, "")
@@ -44,7 +45,7 @@ class ConsigneeSectionSpec extends SpecBase with Enumerable.Implicits {
       "when user starts on ConsigneeExportUkEu and selects no" in {
         implicit val dr: DataRequest[_] = dataRequest(FakeRequest(),
           emptyUserAnswers
-            .set(ConsigneeReviewPage, ReviewAnswer.ChangeAnswers)
+            .set(ConsigneeReviewPage, ChangeAnswers)
             .set(ConsigneeExportPage, false)
             .set(ConsigneeExcisePage, "")
             .set(ConsigneeBusinessNamePage, "")
@@ -55,7 +56,7 @@ class ConsigneeSectionSpec extends SpecBase with Enumerable.Implicits {
       "when user starts on ConsigneeExcise" in {
         implicit val dr: DataRequest[_] = dataRequest(FakeRequest(),
           emptyUserAnswers
-            .set(ConsigneeReviewPage, ReviewAnswer.ChangeAnswers)
+            .set(ConsigneeReviewPage, ChangeAnswers)
             .set(ConsigneeExcisePage, "")
             .set(ConsigneeBusinessNamePage, "")
             .set(ConsigneeAddressPage, UserAddress(None, "", "", ""))
@@ -65,11 +66,20 @@ class ConsigneeSectionSpec extends SpecBase with Enumerable.Implicits {
       "when user starts on ConsigneeExemptOrganisation" in {
         implicit val dr: DataRequest[_] = dataRequest(FakeRequest(),
           emptyUserAnswers
-            .set(ConsigneeReviewPage, ReviewAnswer.ChangeAnswers)
+            .set(ConsigneeReviewPage, ChangeAnswers)
             .set(ConsigneeExemptOrganisationPage, ExemptOrganisationDetailsModel("", ""))
             .set(ConsigneeBusinessNamePage, "")
             .set(ConsigneeAddressPage, UserAddress(None, "", "", ""))
         )
+        ConsigneeSection.isCompleted mustBe true
+      }
+
+      "when keep answers has been selected" in {
+        implicit val dr: DataRequest[_] =
+          dataRequest(FakeRequest(),
+            emptyUserAnswers
+              .set(ConsigneeReviewPage, KeepAnswers)
+          )
         ConsigneeSection.isCompleted mustBe true
       }
     }
@@ -82,7 +92,7 @@ class ConsigneeSectionSpec extends SpecBase with Enumerable.Implicits {
       "when user answers doesn't contain ConsigneeExportUkEu, ConsigneeExcise or ConsigneeExemptOrganisation" in {
         implicit val dr: DataRequest[_] = dataRequest(
           FakeRequest(),
-          emptyUserAnswers.set(ConsigneeReviewPage, ReviewAnswer.ChangeAnswers),
+          emptyUserAnswers.set(ConsigneeReviewPage, ChangeAnswers),
           movementDetails = maxGetMovementResponse.copy(consigneeTrader = None)
         )
         ConsigneeSection.isCompleted mustBe false
@@ -91,7 +101,7 @@ class ConsigneeSectionSpec extends SpecBase with Enumerable.Implicits {
         implicit val dr: DataRequest[_] = dataRequest(
           FakeRequest(),
           emptyUserAnswers
-            .set(ConsigneeReviewPage, ReviewAnswer.ChangeAnswers)
+            .set(ConsigneeReviewPage, ChangeAnswers)
             .set(ConsigneeExportPage, true),
           movementDetails = maxGetMovementResponse.copy(consigneeTrader = None)
         )
@@ -101,7 +111,7 @@ class ConsigneeSectionSpec extends SpecBase with Enumerable.Implicits {
         implicit val dr: DataRequest[_] = dataRequest(
           FakeRequest(),
           emptyUserAnswers
-            .set(ConsigneeReviewPage, ReviewAnswer.ChangeAnswers)
+            .set(ConsigneeReviewPage, ChangeAnswers)
             .set(ConsigneeExcisePage, ""),
           movementDetails = maxGetMovementResponse.copy(consigneeTrader = None)
         )
@@ -111,7 +121,7 @@ class ConsigneeSectionSpec extends SpecBase with Enumerable.Implicits {
         implicit val dr: DataRequest[_] = dataRequest(
           FakeRequest(),
           emptyUserAnswers
-            .set(ConsigneeReviewPage, ReviewAnswer.ChangeAnswers)
+            .set(ConsigneeReviewPage, ChangeAnswers)
             .set(ConsigneeExemptOrganisationPage, ExemptOrganisationDetailsModel("", "")),
           movementDetails = maxGetMovementResponse.copy(consigneeTrader = None)
         )

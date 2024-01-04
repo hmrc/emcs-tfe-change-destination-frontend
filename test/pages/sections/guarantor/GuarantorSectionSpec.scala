@@ -33,7 +33,7 @@ class GuarantorSectionSpec extends SpecBase {
           emptyUserAnswers
             .set(GuarantorRequiredPage, true)
             .set(GuarantorArrangerPage, Consignor)
-            .set(GuarantorReviewPage, KeepAnswers)
+            .set(GuarantorReviewPage, ChangeAnswers)
         )
         GuarantorSection.isCompleted mustBe true
       }
@@ -42,7 +42,7 @@ class GuarantorSectionSpec extends SpecBase {
           emptyUserAnswers
             .set(GuarantorRequiredPage, true)
             .set(GuarantorArrangerPage, Consignee)
-            .set(GuarantorReviewPage, KeepAnswers)
+            .set(GuarantorReviewPage, ChangeAnswers)
         )
         GuarantorSection.isCompleted mustBe true
       }
@@ -50,7 +50,7 @@ class GuarantorSectionSpec extends SpecBase {
         implicit val dr: DataRequest[_] = dataRequest(FakeRequest(),
           emptyUserAnswers
             .set(GuarantorRequiredPage, false)
-            .set(GuarantorReviewPage, KeepAnswers)
+            .set(GuarantorReviewPage, ChangeAnswers)
         )
         GuarantorSection.isCompleted mustBe true
       }
@@ -64,10 +64,19 @@ class GuarantorSectionSpec extends SpecBase {
                 .set(GuarantorNamePage, "")
                 .set(GuarantorVatPage, "")
                 .set(GuarantorAddressPage, UserAddress(None, "", "", ""))
-                .set(GuarantorReviewPage, KeepAnswers)
+                .set(GuarantorReviewPage, ChangeAnswers)
             )
             GuarantorSection.isCompleted mustBe true
           }
+      }
+
+      "keep answers has been selected" in {
+        implicit val dr: DataRequest[_] =
+          dataRequest(FakeRequest(),
+            emptyUserAnswers
+              .set(GuarantorReviewPage, KeepAnswers)
+          )
+        GuarantorSection.isCompleted mustBe true
       }
     }
 

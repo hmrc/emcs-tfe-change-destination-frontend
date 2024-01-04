@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,15 +14,21 @@
  * limitations under the License.
  */
 
-package utils
+package pages.sections.transportArranger
 
-import play.api.i18n.{Lang, MessagesApi}
+import base.SpecBase
+import models.sections.transportArranger.TransportArranger
+import play.api.test.FakeRequest
 
-object MessagesUtil {
-  def optionalMessage(key: String, lang: Lang, params: String*)(implicit messagesApi: MessagesApi): Option[String] = {
-    val message = messagesApi.translate(key, params.toSeq)(lang)
-    val keyNotDefined = message.exists(_.isEmpty)
+class TransportArrangerPageSpec extends SpecBase {
 
-    if (keyNotDefined || message.isEmpty) None else message
+  val transportArranger: TransportArranger = maxGetMovementResponse.headerEadEsad.transportArrangement
+
+  "getValueFromIE801" - {
+    "must return Some(_)" - {
+      "of the transport arranger" in {
+        TransportArrangerPage.getValueFromIE801(dataRequest(FakeRequest())) mustBe Some(transportArranger)
+      }
+    }
   }
 }

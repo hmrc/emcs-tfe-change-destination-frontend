@@ -34,7 +34,7 @@ trait Section[T <: JsValue] extends QuestionPage[T] {
 
   override def getValueFromIE801(implicit request: DataRequest[_]): Option[T] = None
 
-  def sectionHasBeenReviewed(page: ReviewPage)(f: => TaskListStatus)(implicit request: DataRequest[_], reads: Reads[ReviewAnswer]) =
+  def sectionHasBeenReviewed(page: ReviewPage)(f: => TaskListStatus)(implicit request: DataRequest[_], reads: Reads[ReviewAnswer]): TaskListStatus =
     request.userAnswers.get(page) match {
       case Some(ReviewAnswer.KeepAnswers) => Completed
       case Some(ReviewAnswer.ChangeAnswers) => f

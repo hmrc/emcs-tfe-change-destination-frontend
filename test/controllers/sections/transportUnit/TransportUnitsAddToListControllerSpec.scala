@@ -20,7 +20,6 @@ import base.SpecBase
 import controllers.actions.{FakeDataRetrievalAction, FakeMovementAction}
 import forms.sections.transportUnit.TransportUnitsAddToListFormProvider
 import mocks.services.MockUserAnswersService
-import models.response.emcsTfe.TransportDetailsModel
 import models.sections.transportUnit.TransportUnitType.Tractor
 import models.sections.transportUnit.TransportUnitsAddToListModel
 import models.sections.transportUnit.TransportUnitsAddToListModel.{MoreToCome, NoMoreToCome}
@@ -50,24 +49,10 @@ class TransportUnitsAddToListControllerSpec extends SpecBase with MockUserAnswer
 
   lazy val helper: TransportUnitsAddToListHelper = app.injector.instanceOf[TransportUnitsAddToListHelper]
 
-  class Test(userAnswers: Option[UserAnswers], is99TransportUnits: Boolean = false) {
+  class Test(userAnswers: Option[UserAnswers]) {
     lazy val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest()
 
-    val transportUnitsIn801: Seq[TransportDetailsModel] = if (is99TransportUnits) {
-      (0 until 99).map { index =>
-        TransportDetailsModel(
-          transportUnitCode = s"TransportDetailsTransportUnitCode${index + 1}",
-          identityOfTransportUnits = Some(s"TransportDetailsIdentityOfTransportUnits${index + 1}"),
-          commercialSealIdentification = Some(s"TransportDetailsCommercialSealIdentification${index + 1}"),
-          complementaryInformation = Some(s"TransportDetailsComplementaryInformation${index + 1}"),
-          sealInformation = Some(s"TransportDetailsSealInformation${index + 1}")
-        )
-      }
-    } else {
-      maxGetMovementResponse.transportDetails
-    }
-
-    lazy val fullCheckAnswers: Seq[SummaryList] = helper.allTransportUnitsSummary()(dataRequest(request, userAnswers.getOrElse(emptyUserAnswers), movementDetails = maxGetMovementResponse.copy(transportDetails = transportUnitsIn801)), messages(request))
+    lazy val fullCheckAnswers: Seq[SummaryList] = helper.allTransportUnitsSummary()(dataRequest(request, userAnswers.getOrElse(emptyUserAnswers)), messages(request))
 
     lazy val controller = new TransportUnitsAddToListController(
       messagesApi,
@@ -77,7 +62,7 @@ class TransportUnitsAddToListControllerSpec extends SpecBase with MockUserAnswer
       fakeAuthAction,
       new FakeDataRetrievalAction(userAnswers, Some(testMinTraderKnownFacts)),
       dataRequiredAction,
-      new FakeMovementAction(maxGetMovementResponse.copy(transportDetails = transportUnitsIn801)),
+      new FakeMovementAction(maxGetMovementResponse),
       formProvider,
       Helpers.stubMessagesControllerComponents(),
       view,
@@ -110,7 +95,7 @@ class TransportUnitsAddToListControllerSpec extends SpecBase with MockUserAnswer
       (0 until 99)
         .foldLeft(emptyUserAnswers)((answers, int) => answers.set(TransportUnitTypePage(Index(int)), Tractor))
         .set(TransportUnitsAddToListPage, TransportUnitsAddToListModel.values.head)
-    ), is99TransportUnits = true) {
+    )) {
       val result = controller.onPageLoad(testErn, testArc)(request)
 
       status(result) mustEqual OK

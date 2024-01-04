@@ -23,14 +23,16 @@ import pages.QuestionPage
 import play.api.libs.json._
 import queries.TransportUnitsCount
 
+import scala.util.Try
+
 case class TransportUnitTypePage(idx: Index) extends QuestionPage[TransportUnitType] with Enumerable.Implicits {
   override val toString: String = "transportUnitType"
   override val path: JsPath = TransportUnitSection(idx).path \ toString
 
   override def getValueFromIE801(implicit request: DataRequest[_]): Option[TransportUnitType] = {
     // TODO: check
-    ifIndexIsValid(TransportUnitsCount, idx)(valueIfIndexIsValid = {
+    ifIndexIsValid(TransportUnitsCount, idx)(valueIfIndexIsValid = Try {
       JsString(request.movementDetails.transportDetails(idx.position).transportUnitCode).asOpt[TransportUnitType]
-    })
+    }.getOrElse(None)) // In case the number of transport units in user answers exceeds the number of TU's in 801 (return None as out of bounds)
   }
 }

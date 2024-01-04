@@ -22,10 +22,14 @@ import pages.QuestionPage
 import play.api.libs.json.JsPath
 import queries.TransportUnitsCount
 
+import scala.util.Try
+
 case class TransportUnitIdentityPage(idx: Index) extends QuestionPage[String] {
   override val toString: String = "transportUnitIdentity"
   override val path: JsPath = TransportUnitSection(idx).path \ toString
 
   override def getValueFromIE801(implicit request: DataRequest[_]): Option[String] =
-    ifIndexIsValid(TransportUnitsCount, idx)(valueIfIndexIsValid = request.movementDetails.transportDetails(idx.position).identityOfTransportUnits)
+    ifIndexIsValid(TransportUnitsCount, idx)(valueIfIndexIsValid = Try {
+      request.movementDetails.transportDetails(idx.position).identityOfTransportUnits
+    }.getOrElse(None)) // In case the number of transport units in user answers exceeds the number of TU's in 801 (return None as out of bounds)
 }

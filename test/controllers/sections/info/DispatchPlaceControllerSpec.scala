@@ -17,8 +17,8 @@
 package controllers.sections.info
 
 import base.SpecBase
-import controllers.actions.{FakeDataRetrievalAction, FakeMovementAction}
 import controllers.actions.predraft.FakePreDraftRetrievalAction
+import controllers.actions.{FakeDataRetrievalAction, FakeMovementAction}
 import forms.sections.info.DispatchPlaceFormProvider
 import mocks.services.{MockPreDraftService, MockUserAnswersService}
 import models.sections.info.DispatchPlace

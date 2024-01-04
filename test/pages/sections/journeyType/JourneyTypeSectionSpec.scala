@@ -20,7 +20,7 @@ import base.SpecBase
 import models.requests.DataRequest
 import models.sections.ReviewAnswer.{ChangeAnswers, KeepAnswers}
 import models.sections.journeyType.HowMovementTransported
-import models.sections.journeyType.HowMovementTransported.{Other, SeaTransport}
+import models.sections.journeyType.HowMovementTransported.Other
 import play.api.test.FakeRequest
 
 class JourneyTypeSectionSpec extends SpecBase {
@@ -44,7 +44,7 @@ class JourneyTypeSectionSpec extends SpecBase {
             .set(HowMovementTransportedPage, Other)
             .set(GiveInformationOtherTransportPage, "information")
             .set(JourneyTimeDaysPage, 1)
-            .set(JourneyTypeReviewPage, KeepAnswers)
+            .set(JourneyTypeReviewPage, ChangeAnswers)
 
           implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), completedUserAnswers)
           JourneyTypeSection.isCompleted mustBe true
@@ -56,27 +56,37 @@ class JourneyTypeSectionSpec extends SpecBase {
               val completedUserAnswers = emptyUserAnswers
                 .set(HowMovementTransportedPage, answer)
                 .set(JourneyTimeHoursPage, 1)
-                .set(JourneyTypeReviewPage, KeepAnswers)
+                .set(JourneyTypeReviewPage, ChangeAnswers)
 
               implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), completedUserAnswers)
               JourneyTypeSection.isCompleted mustBe true
             }
         )
       }
+
+      "when keep answers has been selected" in {
+        implicit val dr: DataRequest[_] =
+          dataRequest(FakeRequest(),
+            emptyUserAnswers
+              .set(JourneyTypeReviewPage, KeepAnswers)
+          )
+        JourneyTypeSection.isCompleted mustBe true
+      }
     }
 
     "must return false" - {
       "when in progress" in {
         val partiallyCompleteUserAnswers = emptyUserAnswers
-          .set(HowMovementTransportedPage, SeaTransport)
-          .set(GiveInformationOtherTransportPage, "information")
+          .set(HowMovementTransportedPage, Other)
+          .set(JourneyTypeReviewPage, ChangeAnswers)
 
-        implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), partiallyCompleteUserAnswers)
+        implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), partiallyCompleteUserAnswers,
+          movementDetails = maxGetMovementResponse.copy(transportMode = maxGetMovementResponse.transportMode.copy(complementaryInformation = None)))
         JourneyTypeSection.isCompleted mustBe false
       }
 
       "when not finished" in {
-        implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), emptyUserAnswers)
+        implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), emptyUserAnswers.set(JourneyTypeReviewPage, ChangeAnswers))
         JourneyTypeSection.isCompleted mustBe false
       }
 
