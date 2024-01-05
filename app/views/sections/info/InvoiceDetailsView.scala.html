@@ -1,0 +1,77 @@
+@*
+ * Copyright 2023 HM Revenue & Customs
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *@
+
+@import models.requests.DataRequest
+@import viewmodels.InputWidth._
+@import viewmodels.LabelSize
+
+
+@this(
+        layout: templates.Layout,
+        formHelper: FormWithCSRF,
+        govukErrorSummary: GovukErrorSummary,
+        govukInput: GovukInput,
+        govukButton: GovukButton,
+        govukDateInput: GovukDateInput,
+        continueOrSkip: components.continueOrSkip,
+        p: components.p,
+        h1: components.h1,
+        h2: components.h2
+)
+
+@(form: Form[_], currentDate: String, onSubmitCall: Call, skipQuestionCall: Call)(implicit request: DataRequest[_], messages: Messages)
+
+@layout(pageTitle = title(form, messages("invoiceDetails.title")), maybeShowActiveTrader = maybeShowActiveTrader(request)) {
+
+  @formHelper(action = onSubmitCall) {
+
+    @defining(form.errors.headOption.map(_.args.map(_.toString)).getOrElse(Seq())) { erroredFields =>
+
+      @if(form.errors.nonEmpty) {
+        @govukErrorSummary(ErrorSummaryViewModel(form))
+      }
+
+      @h2(messages("movementInformation.subHeading"), "govuk-caption-xl")
+
+      @h1("invoiceDetails.heading")
+
+      @p(){@messages("invoiceDetails.text")}
+
+      @govukInput(
+        InputViewModel(
+          field = form("invoice-reference"),
+          label = LabelViewModel(Text(messages("invoiceDetails.invoice-reference.label"))).withCssClass(LabelSize.Medium.toString)
+        )
+        .withWidth(Full)
+      )
+
+      @govukDateInput(
+        DateViewModel(
+          field  = form("value"),
+          legend = LegendViewModel(Text(messages("invoiceDetails.value.label"))).withCssClass(LabelSize.Medium.toString),
+          erroredFields
+        )
+        .withHint(HintViewModel(messages("invoiceDetails.value.hint", currentDate)))
+      )
+    }
+
+    @continueOrSkip(skipQuestionCall.url)
+  }
+}
+
+@{
+  //$COVERAGE-OFF$
+}

@@ -51,9 +51,18 @@ class InformationNavigatorSpec extends SpecBase {
 
       "for the DestinationType page" - {
 
-        "must go to the Deferred Movement page" in {
+        "must go to the Invoice Details page" in {
 
           navigator.nextPage(DestinationTypePage, NormalMode, emptyUserAnswers) mustBe
+            controllers.sections.info.routes.InvoiceDetailsController.onPreDraftPageLoad(testErn, testArc, NormalMode)
+        }
+      }
+
+      "for the InvoiceDetails page" - {
+
+        "must go to the Dispatch Details page" in {
+
+          navigator.nextPage(InvoiceDetailsPage, NormalMode, emptyUserAnswers) mustBe
             controllers.sections.info.routes.DispatchDetailsController.onPreDraftPageLoad(testErn, testArc, NormalMode)
         }
       }

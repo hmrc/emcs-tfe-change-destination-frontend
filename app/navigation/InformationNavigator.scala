@@ -38,6 +38,9 @@ class InformationNavigator @Inject()() extends BaseNavigator {
       (userAnswers: UserAnswers) => controllers.sections.info.routes.DestinationTypeController.onPreDraftPageLoad(userAnswers.ern, userAnswers.arc, NormalMode)
 
     case DestinationTypePage =>
+      (userAnswers: UserAnswers) => controllers.sections.info.routes.InvoiceDetailsController.onPreDraftPageLoad(userAnswers.ern, userAnswers.arc, NormalMode)
+
+    case InvoiceDetailsPage =>
       (userAnswers: UserAnswers) => controllers.sections.info.routes.DispatchDetailsController.onPreDraftPageLoad(userAnswers.ern, userAnswers.arc, NormalMode)
 
     case DispatchDetailsPage(_) =>
