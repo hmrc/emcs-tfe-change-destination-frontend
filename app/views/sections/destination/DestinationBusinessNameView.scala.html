@@ -47,7 +47,7 @@ messages("destinationBusinessName.title")
             @govukErrorSummary(ErrorSummaryViewModel(form))
         }
 
-        @h2(messages("destination.subHeading"), "govuk-caption-xl")
+        @h2(messages("destination.subHeading"), "govuk-caption-xl", hiddenContent = Some(messages("subHeading.hidden"))))
 
         @govukInput(
             InputViewModel(

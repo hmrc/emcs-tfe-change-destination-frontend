@@ -14,20 +14,25 @@
  * limitations under the License.
  */
 
-package fixtures.messages.sections.info
+package viewmodels.helpers
 
-import fixtures.messages.{BaseEnglish, BaseMessages, i18n}
+import models.Index
+import models.requests.DataRequest
+import play.api.i18n.Messages
+import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryList
+import viewmodels.checkAnswers.sections.transportUnit.TransportUnitTypeSummary
+import viewmodels.govuk.summarylist._
 
-object DispatchPlaceMessages {
+import javax.inject.Inject
 
-  sealed trait ViewMessages extends BaseMessages { _: i18n =>
-    val title = titleHelper("Where is the place of dispatch for this movement?")
-    val heading = "Where is the place of dispatch for this movement?"
-    val greatBritainRadioOption = "Great Britain"
-    val northernIrelandRadioOption = "Northern Ireland"
+class CheckYourAnswersTransportUnitsHelper @Inject()() {
+
+  def summaryList()(implicit request: DataRequest[_], messages: Messages): SummaryList = {
+    SummaryListViewModel(
+      rows = Seq(
+        TransportUnitTypeSummary.checkYourAnswersRow(Index(0))
+      ).flatten
+    )
   }
-
-  object English extends ViewMessages with BaseEnglish
-
 
 }

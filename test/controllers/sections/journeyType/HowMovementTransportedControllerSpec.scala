@@ -22,14 +22,17 @@ import controllers.routes
 import forms.sections.journeyType.HowMovementTransportedFormProvider
 import mocks.services.MockUserAnswersService
 import models.sections.journeyType.HowMovementTransported
+import models.sections.transportUnit.TransportUnitType.{Container, Tractor}
 import models.{NormalMode, UserAnswers}
 import navigation.FakeNavigators.FakeJourneyTypeNavigator
 import pages.sections.journeyType.{GiveInformationOtherTransportPage, HowMovementTransportedPage, JourneyTimeDaysPage}
+import pages.sections.transportUnit.{TransportUnitIdentityPage, TransportUnitTypePage, TransportUnitsSection}
 import play.api.data.Form
+import play.api.libs.json.Json
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.Helpers._
 import play.api.test.{FakeRequest, Helpers}
-import views.html.sections.journeyType.HowMovementTransportedView
+import views.html.sections.journeyType.{HowMovementTransportedNoOptionView, HowMovementTransportedView}
 
 import scala.concurrent.Future
 
@@ -38,22 +41,24 @@ class HowMovementTransportedControllerSpec extends SpecBase with MockUserAnswers
   lazy val formProvider: HowMovementTransportedFormProvider = new HowMovementTransportedFormProvider()
   lazy val form: Form[HowMovementTransported] = formProvider()
   lazy val view: HowMovementTransportedView = app.injector.instanceOf[HowMovementTransportedView]
+  lazy val onlyFixedView: HowMovementTransportedNoOptionView = app.injector.instanceOf[HowMovementTransportedNoOptionView]
 
   class Test(val userAnswers: Option[UserAnswers]) {
     lazy val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest()
 
     lazy val controller = new HowMovementTransportedController(
-      messagesApi,
-      mockUserAnswersService,
-      new FakeJourneyTypeNavigator(testOnwardRoute),
-      fakeAuthAction,
-      new FakeDataRetrievalAction(userAnswers, Some(testMinTraderKnownFacts)),
-      dataRequiredAction,
-      new FakeMovementAction(maxGetMovementResponse),
-      formProvider,
-      Helpers.stubMessagesControllerComponents(),
-      view,
-      fakeUserAllowListAction
+      messagesApi = messagesApi,
+      userAnswersService = mockUserAnswersService,
+      navigator = new FakeJourneyTypeNavigator(testOnwardRoute),
+      auth = fakeAuthAction,
+      getData = new FakeDataRetrievalAction(userAnswers, Some(testMinTraderKnownFacts)),
+      requireData = dataRequiredAction,
+      withMovement = new FakeMovementAction(maxGetMovementResponse),
+      formProvider = formProvider,
+      controllerComponents = Helpers.stubMessagesControllerComponents(),
+      view = view,
+      onlyFixedView = onlyFixedView,
+      userAllowList = fakeUserAllowListAction
     )
   }
 
@@ -113,9 +118,39 @@ class HowMovementTransportedControllerSpec extends SpecBase with MockUserAnswers
         .set(HowMovementTransportedPage, HowMovementTransported.Other)
         .set(GiveInformationOtherTransportPage, "blah")
         .set(JourneyTimeDaysPage, 1)
+        .set(TransportUnitTypePage(testIndex1), Container)
+        .set(TransportUnitIdentityPage(testIndex1), "Container1")
+        .set(TransportUnitTypePage(testIndex2), Tractor)
+        .set(TransportUnitIdentityPage(testIndex2), "Tractor")
     )) {
       val expectedAnswers = emptyUserAnswers
         .set(HowMovementTransportedPage, HowMovementTransported.values.head)
+        .set(TransportUnitTypePage(testIndex1), Container)
+        .set(TransportUnitIdentityPage(testIndex1), "Container1")
+        .set(TransportUnitTypePage(testIndex2), Tractor)
+        .set(TransportUnitIdentityPage(testIndex2), "Tractor")
+
+      MockUserAnswersService.set(expectedAnswers).returns(Future.successful(expectedAnswers))
+
+      val result = controller.onSubmit(testErn, testArc, NormalMode)(request.withFormUrlEncodedBody(("value", HowMovementTransported.values.head.toString)))
+
+      status(result) mustEqual SEE_OTHER
+      redirectLocation(result).value mustEqual testOnwardRoute.url
+    }
+
+    "must cleanse the journey and transport unit section when changing the answer (from fixed transport installations)" in new Test(Some(
+      emptyUserAnswers
+        .set(HowMovementTransportedPage, HowMovementTransported.FixedTransportInstallations)
+        .set(GiveInformationOtherTransportPage, "blah")
+        .set(JourneyTimeDaysPage, 1)
+        .set(TransportUnitTypePage(testIndex1), Container)
+        .set(TransportUnitIdentityPage(testIndex1), "Container1")
+        .set(TransportUnitTypePage(testIndex2), Tractor)
+        .set(TransportUnitIdentityPage(testIndex2), "Tractor")
+    )) {
+      val expectedAnswers = emptyUserAnswers
+        .set(HowMovementTransportedPage, HowMovementTransported.values.head)
+        .set(TransportUnitsSection, Json.obj())
 
       MockUserAnswersService.set(expectedAnswers).returns(Future.successful(expectedAnswers))
 

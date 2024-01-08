@@ -14,20 +14,8 @@
  * limitations under the License.
  */
 
-package fixtures.messages.sections.info
+package pages.sections.transportUnit
 
-import fixtures.messages.{BaseEnglish, BaseMessages, i18n}
+import pages.Page
 
-object DispatchPlaceMessages {
-
-  sealed trait ViewMessages extends BaseMessages { _: i18n =>
-    val title = titleHelper("Where is the place of dispatch for this movement?")
-    val heading = "Where is the place of dispatch for this movement?"
-    val greatBritainRadioOption = "Great Britain"
-    val northernIrelandRadioOption = "Northern Ireland"
-  }
-
-  object English extends ViewMessages with BaseEnglish
-
-
-}
+object TransportUnitCheckAnswersPage extends Page

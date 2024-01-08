@@ -18,6 +18,7 @@ package pages.sections.transportUnit
 
 import models.Index
 import models.requests.DataRequest
+import models.sections.transportUnit.TransportUnitType.FixedTransport
 import pages.sections.Section
 import play.api.libs.json.{JsObject, JsPath}
 import viewmodels.taskList.{Completed, InProgress, NotStarted, TaskListStatus}
@@ -31,6 +32,7 @@ case class TransportUnitSection(transportUnitIndex: Index) extends Section[JsObj
     val sealChoiceAnswer = request.userAnswers.get(TransportSealChoicePage(transportUnitIndex))
 
     (unitTypeAnswer, identityAnswer, sealChoiceAnswer) match {
+      case (Some(FixedTransport), _, _) => Completed
       case (Some(_), Some(_), Some(sca)) =>
         if (sealPagesAreCompleted(sca)) {
           Completed

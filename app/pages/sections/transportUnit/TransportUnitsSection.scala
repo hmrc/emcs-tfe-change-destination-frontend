@@ -18,8 +18,10 @@ package pages.sections.transportUnit
 
 import models.Enumerable
 import models.requests.DataRequest
+import models.sections.journeyType.HowMovementTransported.FixedTransportInstallations
 import models.sections.transportUnit.TransportUnitsAddToListModel
 import pages.sections.Section
+import pages.sections.journeyType.HowMovementTransportedPage
 import play.api.libs.json.{JsObject, JsPath}
 import queries.TransportUnitsCount
 import viewmodels.taskList.{Completed, InProgress, TaskListStatus}
@@ -31,13 +33,17 @@ case object TransportUnitsSection extends Section[JsObject] with Enumerable.Impl
 
   override def status(implicit request: DataRequest[_]): TaskListStatus =
     sectionHasBeenReviewed(TransportUnitsReviewPage) {
-      (TransportUnitsSectionUnits.status, request.userAnswers.get(TransportUnitsAddToListPage), request.userAnswers.get(TransportUnitsCount)) match {
-        case (Completed, _, Some(MAX)) => Completed
-        case (Completed, Some(TransportUnitsAddToListModel.NoMoreToCome), _) => Completed
-        case (Completed, Some(TransportUnitsAddToListModel.MoreToCome) | None, _) => InProgress
-        case (Completed, Some(TransportUnitsAddToListModel.Yes) | None, _) => InProgress
-        case (InProgress, _, _) => InProgress
-        case (status, _, _) => status
+      (TransportUnitsSectionUnits.status,
+        request.userAnswers.get(TransportUnitsAddToListPage),
+        request.userAnswers.get(TransportUnitsCount),
+        request.userAnswers.get(HowMovementTransportedPage)) match {
+        case (_, _, Some(MAX), _) => Completed
+        case (_, _, Some(1), Some(FixedTransportInstallations)) => Completed
+        case (Completed, Some(TransportUnitsAddToListModel.NoMoreToCome), _, _) => Completed
+        case (Completed, Some(TransportUnitsAddToListModel.MoreToCome) | None, _, _) => InProgress
+        case (Completed, Some(TransportUnitsAddToListModel.Yes) | None, _, _) => InProgress
+        case (InProgress, _, _, _) => InProgress
+        case (status, _, _, _) => status
       }
     }
 

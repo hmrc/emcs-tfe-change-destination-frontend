@@ -20,10 +20,12 @@ import base.SpecBase
 import controllers.actions.{FakeDataRetrievalAction, FakeMovementAction}
 import mocks.services.MockUserAnswersService
 import models.response.emcsTfe.TransportDetailsModel
+import models.sections.journeyType.HowMovementTransported.{FixedTransportInstallations, RoadTransport}
 import models.sections.transportUnit.TransportUnitType.Container
 import models.sections.transportUnit.{TransportSealTypeModel, TransportUnitType}
 import models.{NormalMode, UserAnswers}
 import navigation.TransportUnitNavigator
+import pages.sections.journeyType.HowMovementTransportedPage
 import pages.sections.transportUnit._
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.Helpers._
@@ -52,17 +54,28 @@ class TransportUnitIndexControllerSpec extends SpecBase with MockUserAnswersServ
 
   "TransportUnitIndex Controller" - {
 
+    "must redirect to the transport unit check answers page (CAM-TU09) when the journey type is " +
+      "Fixed Transport Installations" in new Test(Some(emptyUserAnswers.set(HowMovementTransportedPage, FixedTransportInstallations))) {
+
+      val result = controller.onPageLoad(testErn, testArc)(request)
+
+      status(result) mustEqual SEE_OTHER
+      redirectLocation(result).value mustBe
+        routes.TransportUnitCheckAnswersController.onPageLoad(testErn, testArc).url
+    }
+
     "must redirect to the transport unit type page (CAM-TU01) when no transport units answered" in new Test(Some(emptyUserAnswers)) {
 
       val result = controller.onPageLoad(testErn, testArc)(request)
 
       status(result) mustEqual SEE_OTHER
-      redirectLocation(result) mustBe
-        Some(routes.TransportUnitTypeController.onPageLoad(testErn, testArc, testIndex1, NormalMode).url)
+      redirectLocation(result).value mustBe routes.TransportUnitTypeController.onPageLoad(testErn, testArc, testIndex1, NormalMode).url
     }
 
     "must redirect to the transport unit type page (CAM-TU01) when there is an empty transport unit list" in new Test(Some(
-      emptyUserAnswers.set(TransportUnitsCount, Seq.empty)
+      emptyUserAnswers
+        .set(HowMovementTransportedPage, RoadTransport)
+        .set(TransportUnitsCount, Seq.empty)
     )) {
 
       val result = controller.onPageLoad(testErn, testArc)(request)
@@ -73,22 +86,26 @@ class TransportUnitIndexControllerSpec extends SpecBase with MockUserAnswersServ
     }
 
     "must redirect to the add to list page (CAM-TU07) when any answer is present" in new Test(Some(
-      emptyUserAnswers.set(TransportUnitTypePage(testIndex1), TransportUnitType.Vehicle)
+      emptyUserAnswers
+        .set(HowMovementTransportedPage, RoadTransport)
+        .set(TransportUnitTypePage(testIndex1), TransportUnitType.Vehicle)
     )) {
       val result = controller.onPageLoad(testErn, testArc)(request)
 
       status(result) mustEqual SEE_OTHER
-      redirectLocation(result) mustBe
-        Some(routes.TransportUnitsAddToListController.onPageLoad(testErn, testArc).url)
+      redirectLocation(result).value mustBe routes.TransportUnitsAddToListController.onPageLoad(testErn, testArc).url
     }
 
     "must redirect to the add to list page (CAM-TU07) when any answer is present " +
       "adding any 801 TU's when none are present in the user answers (prevents index out of bounds when adding new TU's)" in new Test(
-      Some(emptyUserAnswers), transportUnits = Seq(maxGetMovementResponse.transportDetails.head.copy(transportUnitCode = "1"))
+      Some(emptyUserAnswers
+        .set(HowMovementTransportedPage, RoadTransport)
+      ), transportUnits = Seq(maxGetMovementResponse.transportDetails.head.copy(transportUnitCode = "1"))
     ) {
       val result = controller.onPageLoad(testErn, testArc)(request)
 
       val expectedUserAnswers = emptyUserAnswers
+        .set(HowMovementTransportedPage, RoadTransport)
         .set(TransportUnitTypePage(testIndex1), Container)
         .set(TransportSealChoicePage(testIndex1), true)
         .set(TransportUnitGiveMoreInformationChoicePage(testIndex1), true)
@@ -99,18 +116,20 @@ class TransportUnitIndexControllerSpec extends SpecBase with MockUserAnswersServ
       MockUserAnswersService.set(expectedUserAnswers).returns(Future.successful(expectedUserAnswers))
 
       status(result) mustEqual SEE_OTHER
-      redirectLocation(result) mustBe
-        Some(routes.TransportUnitsAddToListController.onPageLoad(testErn, testArc).url)
+      redirectLocation(result).value mustBe routes.TransportUnitsAddToListController.onPageLoad(testErn, testArc).url
     }
 
     "must redirect to the add to list page (CAM-TU07) when any answer is present " +
       "adding any 801 TU's when none are present in the user answers (prevents index out of bounds when adding new TU's) " +
       "setting only TransportSealTypePage when TransportUnitIdentity is not provided" in new Test(
-      Some(emptyUserAnswers), transportUnits = Seq(maxGetMovementResponse.transportDetails.head.copy(transportUnitCode = "1", identityOfTransportUnits = None))
+      Some(emptyUserAnswers
+        .set(HowMovementTransportedPage, RoadTransport)
+      ), transportUnits = Seq(maxGetMovementResponse.transportDetails.head.copy(transportUnitCode = "1", identityOfTransportUnits = None))
     ) {
       val result = controller.onPageLoad(testErn, testArc)(request)
 
       val expectedUserAnswers = emptyUserAnswers
+        .set(HowMovementTransportedPage, RoadTransport)
         .set(TransportUnitTypePage(testIndex1), Container)
         .set(TransportSealChoicePage(testIndex1), true)
         .set(TransportUnitGiveMoreInformationChoicePage(testIndex1), true)
@@ -120,18 +139,20 @@ class TransportUnitIndexControllerSpec extends SpecBase with MockUserAnswersServ
       MockUserAnswersService.set(expectedUserAnswers).returns(Future.successful(expectedUserAnswers))
 
       status(result) mustEqual SEE_OTHER
-      redirectLocation(result) mustBe
-        Some(routes.TransportUnitsAddToListController.onPageLoad(testErn, testArc).url)
+      redirectLocation(result).value mustBe routes.TransportUnitsAddToListController.onPageLoad(testErn, testArc).url
     }
 
     "must redirect to the add to list page (CAM-TU07) when any answer is present " +
       "adding any 801 TU's when none are present in the user answers (prevents index out of bounds when adding new TU's) " +
       "setting only TransportUnitIdentityPage when Transport Seal Info is not provided" in new Test(
-      Some(emptyUserAnswers), transportUnits = Seq(maxGetMovementResponse.transportDetails.head.copy(transportUnitCode = "1", commercialSealIdentification = None))
+      Some(emptyUserAnswers
+        .set(HowMovementTransportedPage, RoadTransport)
+      ), transportUnits = Seq(maxGetMovementResponse.transportDetails.head.copy(transportUnitCode = "1", commercialSealIdentification = None))
     ) {
       val result = controller.onPageLoad(testErn, testArc)(request)
 
       val expectedUserAnswers = emptyUserAnswers
+        .set(HowMovementTransportedPage, RoadTransport)
         .set(TransportUnitTypePage(testIndex1), Container)
         .set(TransportSealChoicePage(testIndex1), false)
         .set(TransportUnitGiveMoreInformationChoicePage(testIndex1), true)
@@ -141,8 +162,7 @@ class TransportUnitIndexControllerSpec extends SpecBase with MockUserAnswersServ
       MockUserAnswersService.set(expectedUserAnswers).returns(Future.successful(expectedUserAnswers))
 
       status(result) mustEqual SEE_OTHER
-      redirectLocation(result) mustBe
-        Some(routes.TransportUnitsAddToListController.onPageLoad(testErn, testArc).url)
+      redirectLocation(result).value mustBe routes.TransportUnitsAddToListController.onPageLoad(testErn, testArc).url
     }
   }
 }

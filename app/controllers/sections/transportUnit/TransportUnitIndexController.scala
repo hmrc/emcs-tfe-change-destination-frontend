@@ -19,9 +19,11 @@ package controllers.sections.transportUnit
 import controllers.BaseNavigationController
 import controllers.actions._
 import models.requests.DataRequest
+import models.sections.journeyType.HowMovementTransported.FixedTransportInstallations
 import models.sections.transportUnit.{TransportSealTypeModel, TransportUnitType}
 import models.{Index, NormalMode, UserAnswers}
 import navigation.TransportUnitNavigator
+import pages.sections.journeyType.HowMovementTransportedPage
 import pages.sections.transportUnit._
 import play.api.i18n.MessagesApi
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
@@ -46,11 +48,16 @@ class TransportUnitIndexController @Inject()(
   def onPageLoad(ern: String, arc: String): Action[AnyContent] =
     authorisedDataRequestWithUpToDateMovementAsync(ern, arc) { implicit request =>
       val userAnswersWith801TransportUnits = populateTransportUnitsFrom801IfEmpty
-      userAnswersWith801TransportUnits.get(TransportUnitsCount) match {
-        case None | Some(0) => Future(Redirect(
-          controllers.sections.transportUnit.routes.TransportUnitTypeController.onPageLoad(request.ern, request.arc, Index(0), NormalMode)
-        ))
-        case Some(_) =>
+      (userAnswersWith801TransportUnits.get(TransportUnitsCount), request.userAnswers.get(HowMovementTransportedPage)) match {
+        case (_, Some(FixedTransportInstallations)) =>
+          Future(Redirect(
+            controllers.sections.transportUnit.routes.TransportUnitCheckAnswersController.onPageLoad(request.ern, request.arc)
+          ))
+        case (None | Some(0), _) =>
+          Future(Redirect(
+            controllers.sections.transportUnit.routes.TransportUnitTypeController.onPageLoad(request.ern, request.arc, Index(0), NormalMode)
+          ))
+        case _ =>
           lazy val redirectCall = Redirect(
             controllers.sections.transportUnit.routes.TransportUnitsAddToListController.onPageLoad(request.ern, request.arc)
           )

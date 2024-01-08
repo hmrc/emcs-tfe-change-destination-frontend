@@ -26,30 +26,22 @@
     govukButton: GovukButton,
     h1: components.h1,
     h2: components.h2,
+    p: components.p,
     continueOrExit: components.continueOrExit
 )
 
 
-@(form: Form[_], mode: Mode)(implicit request: DataRequest[_], messages: Messages)
+@(mode: Mode)(implicit request: DataRequest[_], messages: Messages)
 
-@layout(pageTitle = title(form, messages("howMovementTransported.title")), maybeShowActiveTrader = maybeShowActiveTrader(request)) {
+@layout(pageTitle = titleNoForm(messages("howMovementTransported.onlyFixedAllowed.title")), maybeShowActiveTrader = maybeShowActiveTrader(request)) {
 
     @formHelper(action = controllers.sections.journeyType.routes.HowMovementTransportedController.onSubmit(request.ern, request.arc, mode), 'autoComplete -> "off") {
-
-        @if(form.errors.nonEmpty) {
-            @govukErrorSummary(ErrorSummaryViewModel(form,  errorLinkOverrides = Map("value" -> "value_0")))
+        @h2(messages("journeyType.subHeading", request.arc), "govuk-caption-xl", hiddenContent = Some(messages("subHeading.hidden")))
+        @h1(messages("howMovementTransported.onlyFixedAllowed.heading"), classes="govuk-heading-l")
+        @p(){
+            @messages("howMovementTransported.onlyFixedAllowed.p")
         }
-
-        @h2(messages("journeyType.subHeading", request.arc), "govuk-caption-xl", hiddenContent = Some(messages("subHeading.hidden"))))
-        @govukRadios(
-            RadiosViewModel(
-                field  = form("value"),
-                legend = LegendViewModel(Text(messages("howMovementTransported.heading"))).asPageHeading(LegendSize.Large),
-                items  = HowMovementTransported.options
-            )
-        )
-
-        @continueOrExit()
+        @continueOrExit(primaryKey = "site.confirmAndContinue")
     }
 }
 

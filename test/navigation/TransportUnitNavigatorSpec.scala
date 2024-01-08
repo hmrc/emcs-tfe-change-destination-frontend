@@ -20,10 +20,13 @@ import base.SpecBase
 import controllers.routes
 import controllers.sections.transportUnit.{routes => transportUnitRoutes}
 import fixtures.TransportUnitFixtures
-import models.sections.transportUnit.TransportUnitType.Tractor
-import models.sections.transportUnit.TransportUnitsAddToListModel
+import models.sections.journeyType.HowMovementTransported
+import models.sections.journeyType.HowMovementTransported.FixedTransportInstallations
+import models.sections.transportUnit.TransportUnitType.{FixedTransport, Tractor}
+import models.sections.transportUnit.{TransportUnitType, TransportUnitsAddToListModel}
 import models.{CheckMode, Index, NormalMode, ReviewMode}
 import pages.Page
+import pages.sections.journeyType.HowMovementTransportedPage
 import pages.sections.transportUnit._
 import play.api.test.FakeRequest
 
@@ -43,11 +46,51 @@ class TransportUnitNavigatorSpec extends SpecBase with TransportUnitFixtures {
 
     "for the TransportUnitType (CAM-TU01)" - {
 
-      "must go to CAM-TU02" in {
-        val userAnswers = emptyUserAnswers.set(TransportUnitTypePage(testIndex1), Tractor)
+      TransportUnitType.values.filterNot(_ == FixedTransport).foreach { transportUnit =>
+        s"must go to CAM-TU02 when the TU type is $transportUnit" in {
+          val userAnswers = emptyUserAnswers.set(TransportUnitTypePage(testIndex1), Tractor)
+
+          navigator.nextPage(TransportUnitTypePage(testIndex1), NormalMode, userAnswers) mustBe
+            transportUnitRoutes.TransportUnitIdentityController.onPageLoad(testErn, testArc, Index(0), NormalMode)
+        }
+      }
+
+      s"must go to CAM-TU09 (transport unit check answers) when the TU type is FixedTransport and the JourneyType is FixedTransportInstallations" in {
+        val userAnswers = emptyUserAnswers
+          .set(TransportUnitTypePage(testIndex1), FixedTransport)
+          .set(HowMovementTransportedPage, FixedTransportInstallations)
 
         navigator.nextPage(TransportUnitTypePage(testIndex1), NormalMode, userAnswers) mustBe
-          transportUnitRoutes.TransportUnitIdentityController.onPageLoad(testErn, testArc, Index(0), NormalMode)
+          transportUnitRoutes.TransportUnitCheckAnswersController.onPageLoad(testErn, testArc)
+      }
+
+      "must go to the add-to-list page when the TU type is FixedTransport and the JourneyType is something other than FixedTransportInstallations" in {
+        HowMovementTransported.values.filterNot(_ == FixedTransportInstallations).foreach { movementTransport =>
+          val userAnswers = emptyUserAnswers
+            .set(TransportUnitTypePage(testIndex1), FixedTransport)
+            .set(HowMovementTransportedPage, movementTransport)
+
+          navigator.nextPage(TransportUnitTypePage(testIndex1), NormalMode, userAnswers) mustBe
+            transportUnitRoutes.TransportUnitsAddToListController.onPageLoad(testErn, testArc)
+        }
+      }
+
+      "must go to the add-to-list page when the TU type is FixedTransport and the JourneyType has not been completed yet" in {
+        val userAnswers = emptyUserAnswers
+          .set(TransportUnitTypePage(testIndex1), FixedTransport)
+
+        navigator.nextPage(TransportUnitTypePage(testIndex1), NormalMode, userAnswers) mustBe
+          transportUnitRoutes.TransportUnitsAddToListController.onPageLoad(testErn, testArc)
+      }
+
+      "must go to the transport unit identity page when the TU type is not FixedTransport" in {
+        TransportUnitType.values.filterNot(_ == FixedTransport).foreach { transportUnit =>
+          val userAnswers = emptyUserAnswers
+            .set(TransportUnitTypePage(testIndex1), transportUnit)
+
+          navigator.nextPage(TransportUnitTypePage(testIndex1), NormalMode, userAnswers) mustBe
+            transportUnitRoutes.TransportUnitIdentityController.onPageLoad(testErn, testArc, testIndex1, NormalMode)
+        }
       }
     }
 

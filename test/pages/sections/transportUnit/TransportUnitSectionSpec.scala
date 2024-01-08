@@ -20,7 +20,7 @@ import base.SpecBase
 import models.Index
 import models.requests.DataRequest
 import models.sections.transportUnit.TransportSealTypeModel
-import models.sections.transportUnit.TransportUnitType.Container
+import models.sections.transportUnit.TransportUnitType.{Container, FixedTransport}
 import play.api.test.FakeRequest
 
 class TransportUnitSectionSpec extends SpecBase {
@@ -57,6 +57,15 @@ class TransportUnitSectionSpec extends SpecBase {
               .set(TransportSealTypePage(testIndex1), TransportSealTypeModel("", None))
               .set(TransportUnitGiveMoreInformationChoicePage(testIndex1), true)
               .set(TransportUnitGiveMoreInformationPage(testIndex1), Some(""))
+          )
+        TransportUnitSection(Index(0)).isCompleted mustBe true
+      }
+
+      "when transport unit identity is Fixed Transport" in {
+        implicit val dr: DataRequest[_] =
+          dataRequest(FakeRequest(),
+            emptyUserAnswers
+              .set(TransportUnitTypePage(testIndex1), FixedTransport)
           )
         TransportUnitSection(Index(0)).isCompleted mustBe true
       }

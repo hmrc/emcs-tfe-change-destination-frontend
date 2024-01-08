@@ -20,8 +20,10 @@ import base.SpecBase
 import models.Index
 import models.requests.DataRequest
 import models.sections.ReviewAnswer.{ChangeAnswers, KeepAnswers}
-import models.sections.transportUnit.TransportUnitType.{Container, Tractor}
+import models.sections.journeyType.HowMovementTransported.FixedTransportInstallations
+import models.sections.transportUnit.TransportUnitType.{Container, FixedTransport, Tractor}
 import models.sections.transportUnit.TransportUnitsAddToListModel.{MoreToCome, NoMoreToCome}
+import pages.sections.journeyType.HowMovementTransportedPage
 import play.api.test.FakeRequest
 import viewmodels.taskList.{Completed, InProgress, NotStarted}
 
@@ -46,6 +48,17 @@ class TransportUnitsSectionSpec extends SpecBase {
         TransportUnitsSection.isCompleted mustBe true
       }
 
+      "when the journey type is Fixed Transport Installations and the number of transport units is 1" in {
+        implicit val dr: DataRequest[_] =
+          dataRequest(FakeRequest(),
+            emptyUserAnswers
+              .set(TransportUnitsReviewPage, ChangeAnswers)
+              .set(HowMovementTransportedPage, FixedTransportInstallations)
+              .set(TransportUnitTypePage(testIndex1), FixedTransport)
+          )
+        TransportUnitsSection.isCompleted mustBe true
+      }
+
       "keep answers has been selected" in {
         implicit val dr: DataRequest[_] =
           dataRequest(FakeRequest(),
@@ -57,17 +70,31 @@ class TransportUnitsSectionSpec extends SpecBase {
     }
 
     "must return false" - {
+
       "when empty user answers" in {
         implicit val dr: DataRequest[_] = dataRequest(FakeRequest(),
           emptyUserAnswers.set(TransportUnitsReviewPage, ChangeAnswers))
         TransportUnitsSection.isCompleted mustBe false
       }
+
+      "when the journey type is Fixed Transport Installations and the number of transport units is > 1" in {
+        implicit val dr: DataRequest[_] =
+          dataRequest(FakeRequest(),
+            emptyUserAnswers
+              .set(HowMovementTransportedPage, FixedTransportInstallations)
+              .set(TransportUnitTypePage(testIndex1), FixedTransport)
+              .set(TransportUnitTypePage(testIndex2), Container)
+          )
+        TransportUnitsSection.isCompleted mustBe false
+      }
+
       "when there is somehow a transport unit with nothing in it" in {
         implicit val dr: DataRequest[_] =
           dataRequest(FakeRequest(),
             emptyUserAnswers.set(TransportUnitsReviewPage, ChangeAnswers), movementDetails = maxGetMovementResponse.copy(transportDetails = Seq.empty))
         TransportUnitsSection.isCompleted mustBe false
       }
+
       "when at least one section is unfinished" in {
         implicit val dr: DataRequest[_] =
           dataRequest(FakeRequest(),

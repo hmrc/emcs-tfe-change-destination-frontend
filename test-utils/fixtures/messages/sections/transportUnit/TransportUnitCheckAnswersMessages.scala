@@ -14,24 +14,16 @@
  * limitations under the License.
  */
 
-package fixtures.messages.sections.journeyType
+package fixtures.messages.sections.transportUnit
 
 import fixtures.messages.{BaseEnglish, BaseMessages, i18n}
 
-object HowMovementTransportedMessages {
+object TransportUnitCheckAnswersMessages {
+
   sealed trait ViewMessages extends BaseMessages { _: i18n =>
-    val heading = "How will the goods be transported?"
-    val title: String = titleHelper(heading)
-    val radioOption1: String = "Air transport"
-    val radioOption2: String = "Fixed transport installations"
-    val radioOption3: String = "Inland waterway transport"
-    val radioOption4: String = "Postal consignment"
-    val radioOption5: String = "Rail transport"
-    val radioOption6: String = "Road transport"
-    val radioOption7: String = "Sea transport"
-    val radioOption8: String = "Other"
-    val cyaLabel: String = "Type of transport"
-    val cyaChangeHidden: String = "how will the goods be transported"
+    val title = titleHelper("Check your answers")
+    val heading = "Check your answers"
+    val summaryListKey = "Type of transport"
   }
 
   object English extends ViewMessages with BaseEnglish

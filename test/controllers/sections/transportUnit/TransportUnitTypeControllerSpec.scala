@@ -20,10 +20,11 @@ import base.SpecBase
 import controllers.actions.{FakeDataRetrievalAction, FakeMovementAction}
 import forms.sections.transportUnit.TransportUnitTypeFormProvider
 import mocks.services.MockUserAnswersService
-import models.sections.transportUnit.TransportUnitType
+import models.sections.transportUnit.TransportUnitType.{Container, FixedTransport, Tractor}
+import models.sections.transportUnit.{TransportSealTypeModel, TransportUnitType}
 import models.{NormalMode, UserAnswers}
 import navigation.FakeNavigators.FakeTransportUnitNavigator
-import pages.sections.transportUnit.TransportUnitTypePage
+import pages.sections.transportUnit._
 import play.api.Play.materializer
 import play.api.data.Form
 import play.api.mvc.AnyContentAsEmpty
@@ -86,6 +87,53 @@ class TransportUnitTypeControllerSpec extends SpecBase with MockUserAnswersServi
 
       val result =
         controller.onSubmit(testErn, testArc, testIndex1, NormalMode)(request.withFormUrlEncodedBody(("value", TransportUnitType.values.head.toString)))
+
+      status(result) mustEqual SEE_OTHER
+      redirectLocation(result).value mustEqual testOnwardRoute.url
+    }
+
+    "must redirect to the next page when valid data is submitted " +
+      "(clearing down any subsequent pages when Fixed Transport Installations is selected)" in new Test(Some(
+      emptyUserAnswers
+        .set(TransportUnitTypePage(testIndex1), Container)
+        .set(TransportUnitIdentityPage(testIndex1), "identity1")
+        .set(TransportSealChoicePage(testIndex1), true)
+        .set(TransportUnitGiveMoreInformationChoicePage(testIndex1), true)
+        .set(TransportSealTypePage(testIndex1), TransportSealTypeModel("seal1", Some("moreinfo")))
+        .set(TransportUnitGiveMoreInformationPage(testIndex1), Some("more information about tu"))
+    )) {
+
+      val expectedAnswers: UserAnswers = emptyUserAnswers.set(TransportUnitTypePage(testIndex1), FixedTransport)
+      MockUserAnswersService.set(expectedAnswers).returns(Future.successful(expectedAnswers))
+
+      val result =
+        controller.onSubmit(testErn, testArc, testIndex1, NormalMode)(request.withFormUrlEncodedBody(("value", TransportUnitType.FixedTransport.toString)))
+
+      status(result) mustEqual SEE_OTHER
+      redirectLocation(result).value mustEqual testOnwardRoute.url
+    }
+
+    "must redirect to the next page when valid data is submitted " +
+      "(not clearing down any subsequent pages when Fixed Transport Installations is not selected)" in new Test(Some(
+      emptyUserAnswers
+        .set(TransportUnitTypePage(testIndex1), Container)
+        .set(TransportUnitIdentityPage(testIndex1), "identity1")
+        .set(TransportSealChoicePage(testIndex1), true)
+        .set(TransportUnitGiveMoreInformationChoicePage(testIndex1), true)
+        .set(TransportSealTypePage(testIndex1), TransportSealTypeModel("seal1", Some("moreinfo")))
+        .set(TransportUnitGiveMoreInformationPage(testIndex1), Some("more information about tu"))
+    )) {
+
+      val expectedAnswers: UserAnswers = emptyUserAnswers.set(TransportUnitTypePage(testIndex1), Tractor)
+        .set(TransportUnitIdentityPage(testIndex1), "identity1")
+        .set(TransportSealChoicePage(testIndex1), true)
+        .set(TransportUnitGiveMoreInformationChoicePage(testIndex1), true)
+        .set(TransportSealTypePage(testIndex1), TransportSealTypeModel("seal1", Some("moreinfo")))
+        .set(TransportUnitGiveMoreInformationPage(testIndex1), Some("more information about tu"))
+      MockUserAnswersService.set(expectedAnswers).returns(Future.successful(expectedAnswers))
+
+      val result =
+        controller.onSubmit(testErn, testArc, testIndex1, NormalMode)(request.withFormUrlEncodedBody(("value", TransportUnitType.Tractor.toString)))
 
       status(result) mustEqual SEE_OTHER
       redirectLocation(result).value mustEqual testOnwardRoute.url

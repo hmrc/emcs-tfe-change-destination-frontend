@@ -19,9 +19,12 @@ package navigation
 import controllers.routes
 import controllers.sections.transportUnit.{routes => transportUnitRoutes}
 import models.requests.DataRequest
+import models.sections.journeyType.HowMovementTransported.FixedTransportInstallations
+import models.sections.transportUnit.TransportUnitType.FixedTransport
 import models.sections.transportUnit.TransportUnitsAddToListModel
 import models.{CheckMode, Index, Mode, NormalMode, ReviewMode, UserAnswers}
 import pages.Page
+import pages.sections.journeyType.HowMovementTransportedPage
 import pages.sections.transportUnit._
 import play.api.mvc.Call
 import queries.TransportUnitsCount
@@ -33,7 +36,8 @@ class TransportUnitNavigator @Inject() extends BaseNavigator {
 
   private def normalRoutes(implicit request: DataRequest[_]): Page => UserAnswers => Call = {
     case TransportUnitTypePage(idx) => (userAnswers: UserAnswers) =>
-      transportUnitRoutes.TransportUnitIdentityController.onPageLoad(userAnswers.ern, userAnswers.arc, idx, NormalMode)
+      transportUnitTypeNavigation(idx, userAnswers)
+
     case TransportUnitIdentityPage(idx) => (userAnswers: UserAnswers) =>
       transportUnitRoutes.TransportSealChoiceController.onPageLoad(userAnswers.ern, userAnswers.arc, idx, NormalMode)
 
@@ -98,5 +102,13 @@ class TransportUnitNavigator @Inject() extends BaseNavigator {
       checkRouteMap(request)(page)(userAnswers)
     case ReviewMode =>
       reviewRouteMap(page)(userAnswers)
+  }
+
+  private[navigation] def transportUnitTypeNavigation(idx: Index, userAnswers: UserAnswers)(implicit request: DataRequest[_]): Call = {
+    (userAnswers.get(TransportUnitTypePage(idx)), userAnswers.get(HowMovementTransportedPage)) match {
+      case (Some(FixedTransport), Some(FixedTransportInstallations)) => transportUnitRoutes.TransportUnitCheckAnswersController.onPageLoad(userAnswers.ern, userAnswers.arc)
+      case (Some(FixedTransport), _) => transportUnitRoutes.TransportUnitsAddToListController.onPageLoad(userAnswers.ern, userAnswers.arc)
+      case _ => transportUnitRoutes.TransportUnitIdentityController.onPageLoad(userAnswers.ern, userAnswers.arc, idx, NormalMode)
+    }
   }
 }

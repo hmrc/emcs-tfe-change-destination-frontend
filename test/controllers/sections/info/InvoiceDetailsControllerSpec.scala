@@ -43,7 +43,7 @@ class InvoiceDetailsControllerSpec extends SpecBase with MockUserAnswersService 
 
   lazy val invoiceDetailsPreDraftSubmitRoute: Call = controllers.sections.info.routes.InvoiceDetailsController.onPreDraftSubmit(testErn, testArc, NormalMode)
 
-  lazy val formProvider = new InvoiceDetailsFormProvider()
+  lazy val formProvider: InvoiceDetailsFormProvider = app.injector.instanceOf[InvoiceDetailsFormProvider]
   lazy val form: Form[InvoiceDetailsModel] = formProvider()
   lazy val view: InvoiceDetailsView = app.injector.instanceOf[InvoiceDetailsView]
 

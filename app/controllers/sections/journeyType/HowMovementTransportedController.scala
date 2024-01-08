@@ -19,16 +19,25 @@ package controllers.sections.journeyType
 import controllers.BaseNavigationController
 import controllers.actions._
 import forms.sections.journeyType.HowMovementTransportedFormProvider
-import models.{Mode, NormalMode}
+import models.requests.DataRequest
+import models.sections.journeyType.HowMovementTransported
+import models.sections.journeyType.HowMovementTransported.FixedTransportInstallations
+import models.sections.transportUnit.TransportUnitType.FixedTransport
+import models.{Index, Mode, NormalMode, UserAnswers}
 import navigation.JourneyTypeNavigator
 import pages.sections.journeyType.{HowMovementTransportedPage, JourneyTypeSection}
+import pages.sections.transportUnit.{TransportUnitTypePage, TransportUnitsSection}
 import play.api.i18n.MessagesApi
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import services.UserAnswersService
-import views.html.sections.journeyType.HowMovementTransportedView
+import views.html.sections.journeyType.{HowMovementTransportedView, HowMovementTransportedNoOptionView}
 
 import javax.inject.Inject
 import scala.concurrent.Future
+import pages.sections.info.DestinationTypePage
+import pages.sections.guarantor.GuarantorRequiredPage
+import models.sections.info.movementScenario.MovementType
+import play.api.mvc.Result
 
 class HowMovementTransportedController @Inject()(
                                                   override val messagesApi: MessagesApi,
@@ -41,32 +50,60 @@ class HowMovementTransportedController @Inject()(
                                                   formProvider: HowMovementTransportedFormProvider,
                                                   val controllerComponents: MessagesControllerComponents,
                                                   view: HowMovementTransportedView,
+                                                  onlyFixedView: HowMovementTransportedNoOptionView,
                                                   val userAllowList: UserAllowListAction
                                                 ) extends BaseNavigationController with AuthActionHelper {
 
-  def onPageLoad(ern: String, arc: String, mode: Mode): Action[AnyContent] =
-    authorisedDataRequestWithUpToDateMovement(ern, arc) { implicit request =>
-      Ok(view(fillForm(HowMovementTransportedPage, formProvider()), mode))
+  private def guarantorNotRequiredEuGuard[T](onEuNotRequired: => T, default: => T)(implicit request: DataRequest[_]): T = {
+    (request.userAnswers.get(DestinationTypePage), request.userAnswers.get(GuarantorRequiredPage)) match {
+      case (Some(scenario), Some(false)) if scenario.movementType == MovementType.UkToEu => onEuNotRequired
+      case _ => default
     }
-
-  def onSubmit(ern: String, arc: String, mode: Mode): Action[AnyContent] =
-    authorisedDataRequestWithUpToDateMovementAsync(ern, arc) { implicit request =>
-      formProvider().bindFromRequest().fold(
-        formWithErrors =>
-          Future.successful(BadRequest(view(formWithErrors, mode))),
-        value => if (request.userAnswers.get(HowMovementTransportedPage).contains(value)) {
-          Future(Redirect(navigator.nextPage(HowMovementTransportedPage, mode, request.userAnswers)))
-        } else {
-
-          val cleansedAnswers = request.userAnswers.remove(JourneyTypeSection)
-
-          saveAndRedirect(
-            page = HowMovementTransportedPage,
-            answer = value,
-            currentAnswers = cleansedAnswers,
-            mode = NormalMode
-          )
-        }
+  }
+  def onPageLoad(ern: String, draftId: String, mode: Mode): Action[AnyContent] =
+    authorisedDataRequestWithUpToDateMovement(ern, draftId) { implicit request =>
+      guarantorNotRequiredEuGuard(
+        onEuNotRequired = Ok(onlyFixedView(mode)),
+        default = Ok(view(fillForm(HowMovementTransportedPage, formProvider()), mode))
       )
     }
+
+  private def redirect(answer: HowMovementTransported, mode: Mode)(implicit request: DataRequest[_]): Future[Result] =
+    if (request.userAnswers.get(HowMovementTransportedPage).contains(answer)) {
+      Future(Redirect(navigator.nextPage(HowMovementTransportedPage, mode, request.userAnswers)))
+    } else {
+      val newUserAnswers = cleanseAnswers(answer)
+      saveAndRedirect(
+        page = HowMovementTransportedPage,
+        answer = answer,
+        currentAnswers = newUserAnswers,
+        mode = NormalMode
+      )
+    }
+
+  def onSubmit(ern: String, draftId: String, mode: Mode): Action[AnyContent] =
+    authorisedDataRequestWithUpToDateMovementAsync(ern, draftId) { implicit request =>
+      guarantorNotRequiredEuGuard(
+        onEuNotRequired = redirect(HowMovementTransported.FixedTransportInstallations, mode),
+        default = formProvider().bindFromRequest().fold(
+          formWithErrors =>
+            Future.successful(BadRequest(view(formWithErrors, mode))),
+          answer => redirect(answer, mode)
+        )
+      )
+    }
+
+  private def cleanseAnswers(answer: HowMovementTransported)(implicit request: DataRequest[_]): UserAnswers = {
+    //Cond156 - cleanup any existing TU entries when the user selects FixedTransportInstallations - set the Transport Unit type to be FixedTransportInstallations
+    if(answer == FixedTransportInstallations) {
+      request.userAnswers.remove(JourneyTypeSection).resetIndexedSection(TransportUnitsSection, Index(0)).set(
+        TransportUnitTypePage(Index(0)), FixedTransport
+      )
+    } else if(request.userAnswers.get(HowMovementTransportedPage).contains(FixedTransportInstallations)) {
+      //If the user previously selected Fixed Transport Installation then clear the TU section (because the user did not actively enter any TU info)
+      request.userAnswers.remove(JourneyTypeSection).resetIndexedSection(TransportUnitsSection, Index(0))
+    } else {
+      request.userAnswers.remove(JourneyTypeSection)
+    }
+  }
 }
