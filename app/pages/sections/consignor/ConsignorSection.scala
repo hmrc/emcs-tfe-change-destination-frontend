@@ -16,21 +16,23 @@
 
 package pages.sections.consignor
 
+import models.Enumerable
 import models.requests.DataRequest
 import pages.sections.Section
 import play.api.libs.json.{JsObject, JsPath}
 import viewmodels.taskList.{Completed, NotStarted, TaskListStatus}
 
-case object ConsignorSection extends Section[JsObject] {
+case object ConsignorSection extends Section[JsObject] with Enumerable.Implicits {
   override val path: JsPath = JsPath \ "consignor"
 
-  override def status(implicit request: DataRequest[_]): TaskListStatus = {
-    if (request.userAnswers.get(ConsignorAddressPage).nonEmpty) {
-      Completed
-    } else {
-      NotStarted
+  override def status(implicit request: DataRequest[_]): TaskListStatus =
+    sectionHasBeenReviewed(ConsignorReviewPage) {
+      if (request.userAnswers.get(ConsignorAddressPage).nonEmpty) {
+        Completed
+      } else {
+        NotStarted
+      }
     }
-  }
 
   override def canBeCompletedForTraderAndDestinationType(implicit request: DataRequest[_]): Boolean = true
 }

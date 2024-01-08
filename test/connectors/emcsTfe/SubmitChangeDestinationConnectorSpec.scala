@@ -43,7 +43,7 @@ class SubmitChangeDestinationConnectorSpec extends SpecBase
       "when downstream call is successful" in {
 
         MockHttpClient.post(
-          url = s"${appConfig.emcsTfeBaseUrl}/change-destination/$testErn/$testDraftId",
+          url = s"${appConfig.emcsTfeBaseUrl}/change-destination/$testErn/$testArc",
           body = minimumSubmitChangeDestinationModel
         ).returns(Future.successful(Right(submitChangeDestinationResponseEIS)))
 
@@ -56,7 +56,7 @@ class SubmitChangeDestinationConnectorSpec extends SpecBase
       "when downstream call fails" in {
 
         MockHttpClient.post(
-          url = s"${appConfig.emcsTfeBaseUrl}/change-destination/$testErn/$testDraftId",
+          url = s"${appConfig.emcsTfeBaseUrl}/change-destination/$testErn/$testArc",
           body = minimumSubmitChangeDestinationModel
         ).returns(Future.successful(Left(JsonValidationError)))
 

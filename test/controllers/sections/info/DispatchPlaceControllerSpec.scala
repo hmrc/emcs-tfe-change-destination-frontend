@@ -17,8 +17,8 @@
 package controllers.sections.info
 
 import base.SpecBase
-import controllers.actions.FakeDataRetrievalAction
 import controllers.actions.predraft.FakePreDraftRetrievalAction
+import controllers.actions.{FakeDataRetrievalAction, FakeMovementAction}
 import forms.sections.info.DispatchPlaceFormProvider
 import mocks.services.{MockPreDraftService, MockUserAnswersService}
 import models.sections.info.DispatchPlace
@@ -52,6 +52,7 @@ class DispatchPlaceControllerSpec extends SpecBase with MockUserAnswersService w
       preDraftDataRequiredAction,
       new FakeDataRetrievalAction(userAnswers, Some(testMinTraderKnownFacts)),
       dataRequiredAction,
+      new FakeMovementAction(maxGetMovementResponse),
       formProvider,
       Helpers.stubMessagesControllerComponents(),
       view,
@@ -59,18 +60,18 @@ class DispatchPlaceControllerSpec extends SpecBase with MockUserAnswersService w
     )
   }
 
-  val northernIrelandUserAnswers: UserAnswers = UserAnswers(testNorthernIrelandErn, testDraftId)
-  val greatBritainUserAnswers: UserAnswers = UserAnswers(testGreatBritainErn, testDraftId)
+  val northernIrelandUserAnswers: UserAnswers = UserAnswers(testNorthernIrelandErn, testArc)
+  val greatBritainUserAnswers: UserAnswers = UserAnswers(testGreatBritainErn, testArc)
 
   "DispatchPlace Controller" - {
 
     ".onPreDraftPageLoad()" - {
 
       "with a Northern Ireland ERN" - {
-        lazy val dispatchPlaceSubmitAction = controllers.sections.info.routes.DispatchPlaceController.onPreDraftSubmit(testNorthernIrelandErn, NormalMode)
+        lazy val dispatchPlaceSubmitAction = controllers.sections.info.routes.DispatchPlaceController.onPreDraftSubmit(testNorthernIrelandErn, testArc, NormalMode)
 
         "must return OK and the correct view for a GET" in new Fixture(userAnswers = Some(northernIrelandUserAnswers)) {
-          val result = controller.onPreDraftPageLoad(testNorthernIrelandErn, NormalMode)(request)
+          val result = controller.onPreDraftPageLoad(testNorthernIrelandErn, testArc, NormalMode)(request)
 
           status(result) mustEqual OK
           contentAsString(result) mustEqual view(form, dispatchPlaceSubmitAction)(dataRequest(request), messages(request)).toString
@@ -78,10 +79,10 @@ class DispatchPlaceControllerSpec extends SpecBase with MockUserAnswersService w
       }
 
       "with a Great Britain ERN" - {
-        lazy val destinationTypeRoute = controllers.sections.info.routes.DestinationTypeController.onPreDraftSubmit(testGreatBritainErn, NormalMode).url
+        lazy val destinationTypeRoute = controllers.sections.info.routes.DestinationTypeController.onPreDraftSubmit(testGreatBritainErn, testArc, NormalMode).url
 
         "must redirect to the destination type page (CAM-INFO08)" in new Fixture(userAnswers = Some(greatBritainUserAnswers)) {
-          val result = controller.onPreDraftPageLoad(testGreatBritainErn, NormalMode)(request)
+          val result = controller.onPreDraftPageLoad(testGreatBritainErn, testArc, NormalMode)(request)
 
           status(result) mustEqual SEE_OTHER
           redirectLocation(result) mustBe Some(destinationTypeRoute)
@@ -92,11 +93,11 @@ class DispatchPlaceControllerSpec extends SpecBase with MockUserAnswersService w
     ".onPreDraftSubmit()" - {
 
       "with a Northern Ireland ERN" - {
-        lazy val dispatchPlaceSubmitAction = controllers.sections.info.routes.DispatchPlaceController.onPreDraftSubmit(testNorthernIrelandErn, NormalMode)
+        lazy val dispatchPlaceSubmitAction = controllers.sections.info.routes.DispatchPlaceController.onPreDraftSubmit(testNorthernIrelandErn, testArc, NormalMode)
 
         "must return a Bad Request and errors when invalid data is submitted" in new Fixture(userAnswers = Some(northernIrelandUserAnswers)) {
           val boundForm = form.bind(Map("value" -> ""))
-          val result = controller.onPreDraftSubmit(testNorthernIrelandErn, NormalMode)(request.withFormUrlEncodedBody(("value", "")))
+          val result = controller.onPreDraftSubmit(testNorthernIrelandErn, testArc, NormalMode)(request.withFormUrlEncodedBody(("value", "")))
 
           status(result) mustEqual BAD_REQUEST
           contentAsString(result) mustEqual view(boundForm, dispatchPlaceSubmitAction)(dataRequest(request), messages(request)).toString
@@ -107,7 +108,7 @@ class DispatchPlaceControllerSpec extends SpecBase with MockUserAnswersService w
 
           MockPreDraftService.set(northernIrelandUserAnswers.set(DispatchPlacePage, validDispatchPlaceValue)).returns(Future.successful(true))
 
-          val result = controller.onPreDraftSubmit(testNorthernIrelandErn, NormalMode)(request.withFormUrlEncodedBody(("value", validDispatchPlaceValue.toString)))
+          val result = controller.onPreDraftSubmit(testNorthernIrelandErn, testArc, NormalMode)(request.withFormUrlEncodedBody(("value", validDispatchPlaceValue.toString)))
 
           status(result) mustEqual SEE_OTHER
 

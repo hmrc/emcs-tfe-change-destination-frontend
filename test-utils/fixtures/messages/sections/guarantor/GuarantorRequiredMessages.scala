@@ -23,7 +23,6 @@ object GuarantorRequiredMessages {
   sealed trait ViewMessages extends BaseMessages { _: i18n =>
     val heading = "Is a guarantor required for this movement?"
     val title = titleHelper(heading)
-    val caption = "Guarantor"
     val cyaLabel: String = "Guarantor required"
     val cyaChangeHidden: String = "if a guarantor is required for this movement"
     val errorRequired = "Select yes if a guarantor is required for this movement"

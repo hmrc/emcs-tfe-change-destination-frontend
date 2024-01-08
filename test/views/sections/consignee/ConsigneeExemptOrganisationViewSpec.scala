@@ -53,7 +53,7 @@ class ConsigneeExemptOrganisationViewSpec extends SpecBase with ViewBehaviours {
         behave like pageWithExpectedElementsAndMessages(Seq(
           Selectors.title -> messagesForLanguage.title,
           Selectors.h1 -> messagesForLanguage.heading,
-          Selectors.h2(1) -> messagesForLanguage.subheading,
+          Selectors.h2(1) -> messagesForLanguage.consigneeInformationSection,
           Selectors.label("memberState") -> messagesForLanguage.memberStateLabel,
           Selectors.label("certificateSerialNumber") -> messagesForLanguage.certificateSerialNumberLabel,
           Selectors.button -> messagesForLanguage.saveAndContinue,

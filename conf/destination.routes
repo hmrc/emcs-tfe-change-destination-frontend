@@ -37,5 +37,5 @@ POST        /trader/:ern/movement/:arc/destination/address                      
 GET         /trader/:ern/movement/:arc/destination/address/change                              controllers.sections.destination.DestinationAddressController.onPageLoad(ern: String, arc: String, mode: Mode = CheckMode)
 POST        /trader/:ern/movement/:arc/destination/address/change                              controllers.sections.destination.DestinationAddressController.onSubmit(ern: String, arc: String, mode: Mode = CheckMode)
 
-GET        /trader/:ern/draft/:lrn/destination/check-answers                                    controllers.sections.destination.DestinationCheckAnswersController.onPageLoad(ern: String, lrn: String)
-POST       /trader/:ern/draft/:lrn/destination/check-answers                                    controllers.sections.destination.DestinationCheckAnswersController.onSubmit(ern: String, lrn: String)
+GET        /trader/:ern/movement/:lrn/destination/check-answers                                    controllers.sections.destination.DestinationCheckAnswersController.onPageLoad(ern: String, lrn: String)
+POST       /trader/:ern/movement/:lrn/destination/check-answers                                    controllers.sections.destination.DestinationCheckAnswersController.onSubmit(ern: String, lrn: String)

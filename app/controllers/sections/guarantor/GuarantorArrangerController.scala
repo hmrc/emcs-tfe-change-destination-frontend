@@ -40,20 +40,21 @@ class GuarantorArrangerController @Inject()(
                                              override val auth: AuthAction,
                                              override val getData: DataRetrievalAction,
                                              override val requireData: DataRequiredAction,
+                                             override val withMovement: MovementAction,
                                              formProvider: GuarantorArrangerFormProvider,
                                              val controllerComponents: MessagesControllerComponents,
                                              view: GuarantorArrangerView
                                            ) extends GuarantorBaseController with AuthActionHelper {
 
   def onPageLoad(ern: String, arc: String, mode: Mode): Action[AnyContent] =
-    authorisedDataRequest(ern, arc) { implicit request =>
+    authorisedDataRequestWithUpToDateMovement(ern, arc) { implicit request =>
       withGuarantorRequiredAnswer {
         renderView(Ok, fillForm(GuarantorArrangerPage, formProvider()), mode)
       }
     }
 
   def onSubmit(ern: String, arc: String, mode: Mode): Action[AnyContent] =
-    authorisedDataRequestAsync(ern, arc) { implicit request =>
+    authorisedDataRequestWithUpToDateMovementAsync(ern, arc) { implicit request =>
       withGuarantorRequiredAnswer {
         formProvider().bindFromRequest().fold(
           formWithErrors =>

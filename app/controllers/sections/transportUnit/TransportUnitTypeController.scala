@@ -20,9 +20,10 @@ import controllers.actions._
 import forms.sections.transportUnit.TransportUnitTypeFormProvider
 import models.requests.DataRequest
 import models.sections.transportUnit.TransportUnitType
+import models.sections.transportUnit.TransportUnitType.FixedTransport
 import models.{Index, Mode}
 import navigation.TransportUnitNavigator
-import pages.sections.transportUnit.{TransportUnitTypePage, TransportUnitsSection}
+import pages.sections.transportUnit._
 import play.api.data.Form
 import play.api.i18n.MessagesApi
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
@@ -41,26 +42,40 @@ class TransportUnitTypeController @Inject()(
                                              override val auth: AuthAction,
                                              override val getData: DataRetrievalAction,
                                              override val requireData: DataRequiredAction,
+                                             override val withMovement: MovementAction,
                                              formProvider: TransportUnitTypeFormProvider,
                                              val controllerComponents: MessagesControllerComponents,
                                              view: TransportUnitTypeView
                                            ) extends BaseTransportUnitNavigationController with AuthActionHelper {
 
   def onPageLoad(ern: String, arc: String, idx: Index, mode: Mode): Action[AnyContent] =
-    authorisedDataRequestAsync(ern, arc) { implicit request =>
+    authorisedDataRequestWithUpToDateMovementAsync(ern, arc) { implicit request =>
       validateIndex(idx) {
         renderView(Ok, fillForm(TransportUnitTypePage(idx), formProvider()), idx, mode)
       }
     }
 
   def onSubmit(ern: String, arc: String, idx: Index, mode: Mode): Action[AnyContent] =
-    authorisedDataRequestAsync(ern, arc) { implicit request =>
+    authorisedDataRequestWithUpToDateMovementAsync(ern, arc) { implicit request =>
       validateIndex(idx) {
         formProvider().bindFromRequest().fold(
           formWithErrors =>
             renderView(BadRequest, formWithErrors, idx, mode),
-          value =>
-            saveAndRedirect(TransportUnitTypePage(idx), value, mode)
+          value => {
+            val cleansedAnswers = {
+              if (value == FixedTransport) {
+                request.userAnswers
+                  .remove(TransportUnitGiveMoreInformationChoicePage(idx))
+                  .remove(TransportUnitIdentityPage(idx))
+                  .remove(TransportSealChoicePage(idx))
+                  .remove(TransportSealTypePage(idx))
+                  .remove(TransportUnitGiveMoreInformationPage(idx))
+              } else {
+                request.userAnswers
+              }
+            }
+            saveAndRedirect(TransportUnitTypePage(idx), value, cleansedAnswers, mode)
+          }
         )
       }
     }

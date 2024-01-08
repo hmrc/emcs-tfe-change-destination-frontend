@@ -19,9 +19,10 @@ package viewmodels.checkAnswers.sections.guarantor
 import base.SpecBase
 import fixtures.messages.sections.guarantor.GuarantorAddressMessages
 import fixtures.messages.sections.guarantor.GuarantorAddressMessages.ViewMessages
-import models.CheckMode
 import models.requests.DataRequest
+import models.response.emcsTfe.{GuarantorType, MovementGuaranteeModel}
 import models.sections.guarantor.GuarantorArranger.{Consignee, Consignor, GoodsOwner, Transporter}
+import models.{CheckMode, UserAddress}
 import pages.sections.consignee.ConsigneeAddressPage
 import pages.sections.consignor.ConsignorAddressPage
 import pages.sections.guarantor.{GuarantorAddressPage, GuarantorArrangerPage, GuarantorRequiredPage}
@@ -43,7 +44,7 @@ class GuarantorAddressSummarySpec extends SpecBase {
         value = Value(value),
         actions = if (!showChangeLink) Seq() else Seq(ActionItemViewModel(
           content = Text(messagesForLanguage.change),
-          href = controllers.sections.guarantor.routes.GuarantorAddressController.onPageLoad(testErn, testDraftId, CheckMode).url,
+          href = controllers.sections.guarantor.routes.GuarantorAddressController.onPageLoad(testErn, testArc, CheckMode).url,
           id = "changeGuarantorAddress"
         ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHidden))
       )
@@ -61,9 +62,26 @@ class GuarantorAddressSummarySpec extends SpecBase {
         Seq(GoodsOwner, Transporter).foreach { arranger =>
           s"when the Guarantor is ${arranger.getClass.getSimpleName.stripSuffix("$")}" - {
 
-            "when there's no answer" - {
+            "when there's no answer in the user answers or 801" - {
 
               "must output the expected data" in {
+
+                implicit lazy val request: DataRequest[_] = dataRequest(
+                  FakeRequest(),
+                  emptyUserAnswers
+                    .set(GuarantorRequiredPage, true),
+                  movementDetails = maxGetMovementResponse.copy(movementGuarantee = MovementGuaranteeModel(GuarantorType.Transporter, None))
+                )
+
+                GuarantorAddressSummary.row() mustBe expectedRow(messagesForLanguage.notProvided, true)
+              }
+            }
+
+            "when there's no answer in the user answers (defaulting to 801)" - {
+
+              "must output the expected data" in {
+
+                val userAddressFrom801 = UserAddress(Some("GuarantorTraderStreetNumber1"), "GuarantorTraderStreetName1", "GuarantorTraderCity1", "GuarantorTraderPostcode1")
 
                 implicit lazy val request: DataRequest[_] = dataRequest(
                   FakeRequest(),
@@ -72,7 +90,17 @@ class GuarantorAddressSummarySpec extends SpecBase {
                     .set(GuarantorArrangerPage, arranger)
                 )
 
-                GuarantorAddressSummary.row() mustBe expectedRow(messagesForLanguage.notProvided, true)
+                val expectedValue = HtmlContent(
+                  HtmlFormat.fill(
+                    Seq(
+                      Html(userAddressFrom801.property.fold("")(_ + " ") + userAddressFrom801.street + "<br>"),
+                      Html(userAddressFrom801.town + "<br>"),
+                      Html(userAddressFrom801.postcode),
+                    )
+                  )
+                )
+
+                GuarantorAddressSummary.row() mustBe expectedRow(expectedValue, true)
               }
             }
 
@@ -144,7 +172,7 @@ class GuarantorAddressSummarySpec extends SpecBase {
 
         "when the Guarantor is Consignee" - {
 
-          "when there's no answer for the ConsigneeAddressPage" - {
+          "when there's no answer for the ConsigneeAddressPage in the 801 response or user answers" - {
 
             "must output the expected data" in {
 
@@ -152,7 +180,8 @@ class GuarantorAddressSummarySpec extends SpecBase {
                 FakeRequest(),
                 emptyUserAnswers
                   .set(GuarantorRequiredPage, true)
-                  .set(GuarantorArrangerPage, Consignee)
+                  .set(GuarantorArrangerPage, Consignee),
+                movementDetails = maxGetMovementResponse.copy(consigneeTrader = None)
               )
 
               GuarantorAddressSummary.row() mustBe expectedRow(Text(messagesForLanguage.sectionNotComplete("Consignee")), false)

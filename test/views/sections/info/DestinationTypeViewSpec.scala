@@ -48,12 +48,12 @@ class DestinationTypeViewSpec extends SpecBase with ViewBehaviours {
              lazy val view = app.injector.instanceOf[DestinationTypeView]
               val form = app.injector.instanceOf[DestinationTypeFormProvider].apply()
 
-              implicit val doc: Document = Jsoup.parse(view(GreatBritain, form, controllers.sections.info.routes.DestinationTypeController.onPreDraftSubmit(request.ern, NormalMode)).toString())
+              implicit val doc: Document = Jsoup.parse(view(GreatBritain, form, controllers.sections.info.routes.DestinationTypeController.onPreDraftSubmit(request.ern, testArc, NormalMode)).toString())
 
               behave like pageWithExpectedElementsAndMessages(Seq(
                 Selectors.title -> messagesForLanguage.titleMovement,
                 Selectors.h1 -> messagesForLanguage.headingMovement,
-                Selectors.h2(1) -> messagesForLanguage.caption,
+                Selectors.h2(1) -> messagesForLanguage.movementInformationSection,
                 Selectors.button -> messagesForLanguage.continue
               ))
             }
@@ -67,12 +67,12 @@ class DestinationTypeViewSpec extends SpecBase with ViewBehaviours {
              lazy val view = app.injector.instanceOf[DestinationTypeView]
               val form = app.injector.instanceOf[DestinationTypeFormProvider].apply()
 
-              implicit val doc: Document = Jsoup.parse(view(GreatBritain, form, controllers.sections.info.routes.DestinationTypeController.onPreDraftSubmit(request.ern, NormalMode)).toString())
+              implicit val doc: Document = Jsoup.parse(view(GreatBritain, form, controllers.sections.info.routes.DestinationTypeController.onPreDraftSubmit(request.ern, testArc, NormalMode)).toString())
 
               behave like pageWithExpectedElementsAndMessages(Seq(
                 Selectors.title -> messagesForLanguage.titleImport,
                 Selectors.h1 -> messagesForLanguage.headingImport,
-                Selectors.h2(1) -> messagesForLanguage.caption,
+                Selectors.h2(1) -> messagesForLanguage.movementInformationSection,
                 Selectors.button -> messagesForLanguage.continue
               ))
             }

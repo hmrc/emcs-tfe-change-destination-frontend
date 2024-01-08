@@ -17,6 +17,7 @@
 package navigation
 
 import controllers.sections.destination.routes
+import models.requests.DataRequest
 import models.{CheckMode, Mode, NormalMode, ReviewMode, UserAnswers}
 import pages.Page
 import pages.sections.destination._
@@ -26,7 +27,7 @@ import javax.inject.Inject
 
 class DestinationNavigator @Inject() extends BaseNavigator {
 
-  private val normalRoutes: Page => UserAnswers => Call = {
+  private def normalRoutes(implicit request: DataRequest[_]): Page => UserAnswers => Call = {
 
     case DestinationWarehouseExcisePage =>
       (userAnswers: UserAnswers) => routes.DestinationConsigneeDetailsController.onPageLoad(userAnswers.ern, userAnswers.arc, NormalMode)
@@ -56,16 +57,16 @@ class DestinationNavigator @Inject() extends BaseNavigator {
       (userAnswers: UserAnswers) => controllers.routes.CheckYourAnswersController.onPageLoad(userAnswers.ern, userAnswers.arc)
   }
 
-  override def nextPage(page: Page, mode: Mode, userAnswers: UserAnswers): Call = mode match {
+  override def nextPage(page: Page, mode: Mode, userAnswers: UserAnswers)(implicit request: DataRequest[_]): Call = mode match {
     case NormalMode =>
-      normalRoutes(page)(userAnswers)
+      normalRoutes(request)(page)(userAnswers)
     case CheckMode =>
       checkRouteMap(page)(userAnswers)
     case ReviewMode =>
       reviewRouteMap(page)(userAnswers)
   }
 
-  private def destinationDetailsChoiceRouting(mode: Mode = NormalMode): UserAnswers => Call = (userAnswers: UserAnswers) =>
+  private def destinationDetailsChoiceRouting(mode: Mode = NormalMode)(implicit request: DataRequest[_]): UserAnswers => Call = (userAnswers: UserAnswers) =>
     userAnswers.get(DestinationDetailsChoicePage) match {
       case Some(true) =>
         routes.DestinationConsigneeDetailsController.onPageLoad(userAnswers.ern, userAnswers.arc, mode)
@@ -75,7 +76,7 @@ class DestinationNavigator @Inject() extends BaseNavigator {
         controllers.routes.JourneyRecoveryController.onPageLoad()
     }
 
-  private def destinationConsigneeDetailsRouting(mode: Mode = NormalMode): UserAnswers => Call = (userAnswers: UserAnswers) =>
+  private def destinationConsigneeDetailsRouting(mode: Mode = NormalMode)(implicit request: DataRequest[_]): UserAnswers => Call = (userAnswers: UserAnswers) =>
     userAnswers.get(DestinationConsigneeDetailsPage) match {
       case Some(true) =>
         routes.DestinationCheckAnswersController.onPageLoad(userAnswers.ern, userAnswers.arc)

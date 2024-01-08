@@ -17,7 +17,7 @@
 package controllers.sections.destination
 
 import base.SpecBase
-import controllers.actions.FakeDataRetrievalAction
+import controllers.actions.{FakeDataRetrievalAction, FakeMovementAction}
 import controllers.routes
 import fixtures.UserAddressFixtures
 import forms.AddressFormProvider
@@ -40,9 +40,9 @@ class DestinationAddressControllerSpec extends SpecBase with MockUserAnswersServ
   lazy val view: AddressView = app.injector.instanceOf[AddressView]
 
   lazy val destinationAddressRoute: String =
-    controllers.sections.destination.routes.DestinationAddressController.onPageLoad(testErn, testDraftId, NormalMode).url
+    controllers.sections.destination.routes.DestinationAddressController.onPageLoad(testErn, testArc, NormalMode).url
   lazy val destinationAddressOnSubmit: Call =
-    controllers.sections.destination.routes.DestinationAddressController.onSubmit(testErn, testDraftId, NormalMode)
+    controllers.sections.destination.routes.DestinationAddressController.onSubmit(testErn, testArc, NormalMode)
 
   class Fixture(optUserAnswers: Option[UserAnswers] = Some(emptyUserAnswers)) {
 
@@ -54,6 +54,7 @@ class DestinationAddressControllerSpec extends SpecBase with MockUserAnswersServ
       fakeAuthAction,
       new FakeDataRetrievalAction(optUserAnswers, Some(testMinTraderKnownFacts)),
       dataRequiredAction,
+      new FakeMovementAction(maxGetMovementResponse.copy(deliveryPlaceTrader = None)),
       fakeUserAllowListAction,
       formProvider,
       messagesControllerComponents,
@@ -65,7 +66,7 @@ class DestinationAddressControllerSpec extends SpecBase with MockUserAnswersServ
 
   "DestinationAddress Controller" - {
     "must return OK and the correct view for a GET" in new Fixture(Some(emptyUserAnswers)) {
-      val result = testController.onPageLoad(testErn, testDraftId, NormalMode)(request)
+      val result = testController.onPageLoad(testErn, testArc, NormalMode)(request)
 
       status(result) mustEqual OK
       contentAsString(result) mustEqual view(
@@ -90,7 +91,7 @@ class DestinationAddressControllerSpec extends SpecBase with MockUserAnswersServ
             ("postcode", userAddressModelMax.postcode)
           )
 
-      val result = testController.onSubmit(testErn, testDraftId, NormalMode)(req)
+      val result = testController.onSubmit(testErn, testArc, NormalMode)(req)
 
       status(result) mustEqual SEE_OTHER
       redirectLocation(result).value mustEqual testOnwardRoute.url
@@ -100,7 +101,7 @@ class DestinationAddressControllerSpec extends SpecBase with MockUserAnswersServ
       val req = FakeRequest(POST, destinationAddressRoute).withFormUrlEncodedBody(("value", ""))
       val boundForm = form.bind(Map("value" -> ""))
 
-      val result = testController.onSubmit(testErn, testDraftId, NormalMode)(req)
+      val result = testController.onSubmit(testErn, testArc, NormalMode)(req)
 
       status(result) mustEqual BAD_REQUEST
       contentAsString(result) mustEqual view(
@@ -112,7 +113,7 @@ class DestinationAddressControllerSpec extends SpecBase with MockUserAnswersServ
     }
 
     "must redirect to Journey Recovery for a GET if no existing data is found" in new Fixture(None) {
-      val result = testController.onPageLoad(testErn, testDraftId, NormalMode)(request)
+      val result = testController.onPageLoad(testErn, testArc, NormalMode)(request)
 
       status(result) mustEqual SEE_OTHER
       redirectLocation(result).value mustEqual routes.JourneyRecoveryController.onPageLoad().url
@@ -120,7 +121,7 @@ class DestinationAddressControllerSpec extends SpecBase with MockUserAnswersServ
 
     "must redirect to Journey Recovery for a POST if no existing data is found" in new Fixture(None) {
       val req = FakeRequest(POST, destinationAddressRoute).withFormUrlEncodedBody(("value", "answer"))
-      val result = testController.onSubmit(testErn, testDraftId, NormalMode)(req)
+      val result = testController.onSubmit(testErn, testArc, NormalMode)(req)
 
       status(result) mustEqual SEE_OTHER
       redirectLocation(result).value mustEqual routes.JourneyRecoveryController.onPageLoad().url

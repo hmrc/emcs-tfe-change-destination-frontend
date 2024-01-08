@@ -31,7 +31,7 @@ object TransportUnitTypeSummary {
     request.userAnswers.get(TransportUnitTypePage(idx)).map {
       answer =>
         SummaryListRowViewModel(
-          key = "transportUnitType.checkYourAnswersLabel",
+          key = "transportUnitType.addToListLabel",
           value = ValueViewModel(messages(s"transportUnitType.$answer")),
           actions = Seq(
             ActionItemViewModel(
@@ -41,5 +41,16 @@ object TransportUnitTypeSummary {
             ).withVisuallyHiddenText(messages("transportUnitType.change.hidden"))
           )
         )
+    }
+
+  def checkYourAnswersRow(idx: Index)(implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] =
+    request.userAnswers.get(TransportUnitTypePage(idx)).map {
+      answer => {
+        SummaryListRowViewModel(
+          key = "transportUnitType.checkYourAnswersLabel",
+          value = ValueViewModel(messages(s"transportUnitType.$answer")),
+          actions = Seq.empty
+        )
+      }
     }
 }

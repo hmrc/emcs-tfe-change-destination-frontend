@@ -18,6 +18,7 @@ package models.submitChangeDestination
 
 import models.{Enumerable, WithName}
 
+//TODO: REFACTOR FOR ACTUAL COD SUBMISSION
 sealed trait SubmissionMessageType
 
 object SubmissionMessageType extends Enumerable.Implicits {

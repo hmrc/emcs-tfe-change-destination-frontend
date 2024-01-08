@@ -14,9 +14,9 @@
  * limitations under the License.
  *@
 
-@import viewmodels.LegendSize
 @import models.requests.DataRequest
 @import models.sections.transportArranger.TransportArranger
+@import viewmodels.LegendSize
 
 @this(
     layout: templates.Layout,
@@ -40,7 +40,7 @@
             @govukErrorSummary(ErrorSummaryViewModel(form,  errorLinkOverrides = Map("value" -> "value_0")))
         }
 
-        @h2(messages("transportArranger.subHeading", request.arc),"govuk-caption-xl")
+        @h2(messages("transportArranger.subHeading", request.arc),"govuk-caption-xl", hiddenContent = Some(messages("subHeading.hidden"))))
 
         @govukRadios(
             RadiosViewModel(

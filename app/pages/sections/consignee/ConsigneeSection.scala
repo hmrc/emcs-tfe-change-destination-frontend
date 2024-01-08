@@ -16,35 +16,38 @@
 
 package pages.sections.consignee
 
+import models.Enumerable
 import models.requests.DataRequest
 import models.sections.info.movementScenario.MovementScenario.UnknownDestination
 import pages.sections.Section
 import pages.sections.info.DestinationTypePage
 import play.api.libs.json.{JsObject, JsPath, Reads}
-import viewmodels.taskList.{Completed, InProgress, NotStarted, TaskListStatus}
+import viewmodels.taskList._
 
 import scala.annotation.unused
 
-case object ConsigneeSection extends Section[JsObject] {
+case object ConsigneeSection extends Section[JsObject] with Enumerable.Implicits {
   override val path: JsPath = JsPath \ "consignee"
 
-  override def status(implicit request: DataRequest[_]): TaskListStatus = {
-    (
-      request.userAnswers.get(ConsigneeExportPage),
-      request.userAnswers.get(ConsigneeExcisePage),
-      request.userAnswers.get(ConsigneeExemptOrganisationPage)
-    ) match {
-      case (Some(value), _, _) =>
-        value match {
-          case true => checkBusinessNameAndAddressBothExistWithPage(request.userAnswers.get(ConsigneeExportVatPage))
-          case false => checkBusinessNameAndAddressBothExistWithPage(request.userAnswers.get(ConsigneeExcisePage))
-        }
-      case (_, Some(value), _) => checkBusinessNameAndAddressBothExistWithPage(Some(value))
-      case (_, _, Some(value)) => checkBusinessNameAndAddressBothExistWithPage(Some(value))
-      case _ => NotStarted
+  override def status(implicit request: DataRequest[_]): TaskListStatus =
+    sectionHasBeenReviewed(ConsigneeReviewPage) {
+      (
+        request.userAnswers.get(ConsigneeExportPage),
+        request.userAnswers.get(ConsigneeExcisePage),
+        request.userAnswers.get(ConsigneeExemptOrganisationPage)
+      ) match {
+        case (Some(value), _, _) =>
+          value match {
+            case true => checkBusinessNameAndAddressBothExistWithPage(request.userAnswers.get(ConsigneeExportVatPage))
+            case false => checkBusinessNameAndAddressBothExistWithPage(request.userAnswers.get(ConsigneeExcisePage))
+          }
+        case (_, Some(value), _) =>
+          checkBusinessNameAndAddressBothExistWithPage(Some(value))
+        case (_, _, Some(value)) =>
+          checkBusinessNameAndAddressBothExistWithPage(Some(value))
+        case _ => NotStarted
+      }
     }
-
-  }
 
   /**
    * @param pageGetResult result from request.userAnswers.get(Whatever)

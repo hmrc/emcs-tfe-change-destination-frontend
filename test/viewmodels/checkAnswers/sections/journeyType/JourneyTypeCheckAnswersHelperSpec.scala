@@ -37,29 +37,30 @@ class JourneyTypeCheckAnswersHelperSpec extends SpecBase with MockFactory {
   }
 
   "summaryList" - {
-        "must render three rows" - {
-          s"when Journey Type has Hours of value is 12" in new Test {
-            implicit val request: DataRequest[_] = dataRequest(
-              FakeRequest(),
-              emptyUserAnswers
-                .set(GiveInformationOtherTransportPage, "true")
-                .set(HowMovementTransportedPage, AirTransport)
-                .set(JourneyTimeHoursPage, hours)
-            )
-            helper.summaryList()(request, msgs).rows.length mustBe 3
-          }
-        }
-        "must render three rows" - {
-          s"when Journey Type Days value is 2" in new Test {
-            implicit val request: DataRequest[_] = dataRequest(
-              FakeRequest(),
-              emptyUserAnswers
-                .set(GiveInformationOtherTransportPage, "true")
-                .set(HowMovementTransportedPage, AirTransport)
-                .set(JourneyTimeDaysPage, days)
-            )
-            helper.summaryList()(request, msgs).rows.length mustBe 3
-          }
-        }
+    "must render three rows" - {
+      s"when Journey Type has Hours of value is 12" in new Test {
+        implicit val request: DataRequest[_] = dataRequest(
+          FakeRequest(),
+          emptyUserAnswers
+            .set(GiveInformationOtherTransportPage, "true")
+            .set(HowMovementTransportedPage, AirTransport)
+            .set(JourneyTimeHoursPage, hours)
+        )
+        helper.summaryList()(request, msgs).rows.length mustBe 3
+      }
+    }
+    "must render three rows" - {
+      s"when Journey Type Days value is 2" in new Test {
+        implicit val request: DataRequest[_] = dataRequest(
+          FakeRequest(),
+          emptyUserAnswers
+            .set(GiveInformationOtherTransportPage, "true")
+            .set(HowMovementTransportedPage, AirTransport)
+            .set(JourneyTimeDaysPage, days),
+          movementDetails = maxGetMovementResponse.copy(journeyTime = "4 days")
+        )
+        helper.summaryList()(request, msgs).rows.length mustBe 3
+      }
+    }
   }
 }

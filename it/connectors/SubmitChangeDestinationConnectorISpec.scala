@@ -3,8 +3,8 @@ package connectors
 import com.github.tomakehurst.wiremock.client.WireMock._
 import com.github.tomakehurst.wiremock.http.Fault
 import connectors.emcsTfe.SubmitChangeDestinationConnector
-import fixtures.{BaseFixtures, SubmitChangeDestinationFixtures}
-import models.requests.{DataRequest, UserRequest}
+import fixtures.{BaseFixtures, GetMovementResponseFixtures, SubmitChangeDestinationFixtures}
+import models.requests.{DataRequest, MovementRequest, UserRequest}
 import models.response.UnexpectedDownstreamResponseError
 import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
 import org.scalatest.freespec.AnyFreeSpec
@@ -28,7 +28,8 @@ class SubmitChangeDestinationConnectorISpec extends AnyFreeSpec
   with EitherValues
   with OptionValues
   with BaseFixtures
-  with SubmitChangeDestinationFixtures {
+  with SubmitChangeDestinationFixtures
+  with GetMovementResponseFixtures {
 
   implicit private lazy val hc: HeaderCarrier = HeaderCarrier()
 
@@ -41,13 +42,21 @@ class SubmitChangeDestinationConnectorISpec extends AnyFreeSpec
       .build()
 
   implicit lazy val dr: DataRequest[_] =
-    DataRequest(UserRequest(FakeRequest(), testErn, "", "", "", false), testDraftId, emptyUserAnswers, testMinTraderKnownFacts)
+    DataRequest(
+      request = MovementRequest(
+        request = UserRequest(FakeRequest(), testErn, "", "", "", false),
+        arc = testArc,
+        movementDetails = maxGetMovementResponse
+      ),
+      userAnswers = emptyUserAnswers,
+      traderKnownFacts = testMinTraderKnownFacts
+    )
 
   private lazy val connector: SubmitChangeDestinationConnector = app.injector.instanceOf[SubmitChangeDestinationConnector]
 
   ".submit" - {
 
-    val url = s"/emcs-tfe/change-destination/$testErn/$testDraftId"
+    val url = s"/emcs-tfe/change-destination/$testErn/$testArc"
     val requestBody = Json.toJson(minimumSubmitChangeDestinationModel)
     val responseBody = successResponseEISJson
 

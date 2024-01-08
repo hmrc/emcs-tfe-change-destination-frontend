@@ -23,9 +23,13 @@ import models.sections.guarantor.GuarantorArranger._
 import models.{CheckMode, NormalMode, ReviewMode}
 import pages.Page
 import pages.sections.guarantor._
+import play.api.test.FakeRequest
 
 class GuarantorNavigatorSpec extends SpecBase {
+
   val navigator = new GuarantorNavigator
+
+  implicit val request = dataRequest(FakeRequest())
 
   "GuarantorNavigator" - {
 
@@ -34,7 +38,7 @@ class GuarantorNavigatorSpec extends SpecBase {
       "must go from a page that doesn't exist in the route map to Guarantor CYA" in {
         case object UnknownPage extends Page
         navigator.nextPage(UnknownPage, NormalMode, emptyUserAnswers) mustBe
-          controllers.sections.guarantor.routes.GuarantorCheckAnswersController.onPageLoad(testErn, testDraftId)
+          controllers.sections.guarantor.routes.GuarantorCheckAnswersController.onPageLoad(testErn, testArc)
       }
 
       "for GuarantorRequiredPage" - {
@@ -46,7 +50,7 @@ class GuarantorNavigatorSpec extends SpecBase {
             val userAnswers = emptyUserAnswers.set(GuarantorRequiredPage, true)
 
             navigator.nextPage(GuarantorRequiredPage, NormalMode, userAnswers) mustBe
-              controllers.sections.guarantor.routes.GuarantorArrangerController.onPageLoad(testErn, testDraftId, NormalMode)
+              controllers.sections.guarantor.routes.GuarantorArrangerController.onPageLoad(testErn, testArc, NormalMode)
           }
         }
         "when false" - {
@@ -55,7 +59,7 @@ class GuarantorNavigatorSpec extends SpecBase {
             val userAnswers = emptyUserAnswers.set(GuarantorRequiredPage, false)
 
             navigator.nextPage(GuarantorRequiredPage, NormalMode, userAnswers) mustBe
-              controllers.sections.guarantor.routes.GuarantorCheckAnswersController.onPageLoad(testErn, testDraftId)
+              controllers.sections.guarantor.routes.GuarantorCheckAnswersController.onPageLoad(testErn, testArc)
           }
         }
       }
@@ -71,7 +75,7 @@ class GuarantorNavigatorSpec extends SpecBase {
                   .set(GuarantorArrangerPage, value)
 
                 navigator.nextPage(GuarantorArrangerPage, NormalMode, userAnswers) mustBe
-                  controllers.sections.guarantor.routes.GuarantorNameController.onPageLoad(testErn, testDraftId, NormalMode)
+                  controllers.sections.guarantor.routes.GuarantorNameController.onPageLoad(testErn, testArc, NormalMode)
               }
             }
           case value =>
@@ -82,7 +86,7 @@ class GuarantorNavigatorSpec extends SpecBase {
                   .set(GuarantorArrangerPage, value)
 
                 navigator.nextPage(GuarantorArrangerPage, NormalMode, userAnswers) mustBe
-                  controllers.sections.guarantor.routes.GuarantorCheckAnswersController.onPageLoad(testErn, testDraftId)
+                  controllers.sections.guarantor.routes.GuarantorCheckAnswersController.onPageLoad(testErn, testArc)
               }
             }
         }
@@ -91,28 +95,28 @@ class GuarantorNavigatorSpec extends SpecBase {
       "for GuarantorNamePage" - {
         "must goto CAM-G04" in {
           navigator.nextPage(GuarantorNamePage, NormalMode, emptyUserAnswers) mustBe
-            controllers.sections.guarantor.routes.GuarantorVatController.onPageLoad(testErn, testDraftId, NormalMode)
+            controllers.sections.guarantor.routes.GuarantorVatController.onPageLoad(testErn, testArc, NormalMode)
         }
       }
 
       "for GuarantorVATPage" - {
         "must goto CAM-G05" in {
           navigator.nextPage(GuarantorVatPage, NormalMode, emptyUserAnswers) mustBe
-            controllers.sections.guarantor.routes.GuarantorAddressController.onPageLoad(testErn, testDraftId, NormalMode)
+            controllers.sections.guarantor.routes.GuarantorAddressController.onPageLoad(testErn, testArc, NormalMode)
         }
       }
 
       "for GuarantorAddressPage" - {
         "must goto CAM-G06" in {
           navigator.nextPage(GuarantorAddressPage, NormalMode, emptyUserAnswers) mustBe
-            controllers.sections.guarantor.routes.GuarantorCheckAnswersController.onPageLoad(testErn, testDraftId)
+            controllers.sections.guarantor.routes.GuarantorCheckAnswersController.onPageLoad(testErn, testArc)
         }
       }
 
       "for GuarantorCheckAnswersPage" - {
         "must goto the tasklist page" in {
           navigator.nextPage(GuarantorCheckAnswersPage, NormalMode, emptyUserAnswers) mustBe
-            routes.DraftMovementController.onPageLoad(testErn, testDraftId)
+            routes.DraftMovementController.onPageLoad(testErn, testArc)
         }
       }
     }
@@ -121,7 +125,7 @@ class GuarantorNavigatorSpec extends SpecBase {
       "must go to Guarantor CYA" in {
         case object UnknownPage extends Page
         navigator.nextPage(UnknownPage, CheckMode, emptyUserAnswers) mustBe
-          controllers.sections.guarantor.routes.GuarantorCheckAnswersController.onPageLoad(testErn, testDraftId)
+          controllers.sections.guarantor.routes.GuarantorCheckAnswersController.onPageLoad(testErn, testArc)
       }
     }
 
@@ -129,7 +133,7 @@ class GuarantorNavigatorSpec extends SpecBase {
       "must go to CheckYourAnswers" in {
         case object UnknownPage extends Page
         navigator.nextPage(UnknownPage, ReviewMode, emptyUserAnswers) mustBe
-          routes.CheckYourAnswersController.onPageLoad(testErn, testDraftId)
+          routes.CheckYourAnswersController.onPageLoad(testErn, testArc)
       }
     }
   }

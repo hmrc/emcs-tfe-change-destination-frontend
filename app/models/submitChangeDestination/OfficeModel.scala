@@ -18,6 +18,7 @@ package models.submitChangeDestination
 
 import play.api.libs.json.{Json, OFormat}
 
+//TODO: REFACTOR FOR ACTUAL COD SUBMISSION
 case class OfficeModel(referenceNumber: String)
 
 object OfficeModel {

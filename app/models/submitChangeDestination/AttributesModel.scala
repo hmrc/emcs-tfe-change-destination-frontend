@@ -18,14 +18,11 @@ package models.submitChangeDestination
 
 import models.requests.DataRequest
 import models.sections.info.movementScenario.DestinationType
-import pages.sections.info.DeferredMovementPage
 import play.api.libs.json.{Json, OFormat}
 import utils.ModelConstructorHelpers
 
-case class AttributesModel(
-                            submissionMessageType: SubmissionMessageType,
-                            deferredSubmissionFlag: Option[Boolean]
-                          )
+//TODO: REFACTOR FOR ACTUAL COD SUBMISSION
+case class AttributesModel(submissionMessageType: SubmissionMessageType)
 object AttributesModel extends ModelConstructorHelpers {
   implicit val fmt: OFormat[AttributesModel] = Json.format
 
@@ -40,7 +37,6 @@ object AttributesModel extends ModelConstructorHelpers {
   }
 
   def apply(destinationType: DestinationType)(implicit request: DataRequest[_]): AttributesModel = AttributesModel(
-    submissionMessageType = deriveSubmissionMessageType(request.ern, destinationType),
-    deferredSubmissionFlag = request.userAnswers.get(DeferredMovementPage())
+    submissionMessageType = deriveSubmissionMessageType(request.ern, destinationType)
   )
 }

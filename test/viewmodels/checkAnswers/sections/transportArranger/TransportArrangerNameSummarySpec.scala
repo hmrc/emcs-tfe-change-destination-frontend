@@ -42,11 +42,15 @@ class TransportArrangerNameSummarySpec extends SpecBase with Matchers {
 
         "when TransportArranger is GoodsOwner or Other" - {
 
-          "when there's no answer" - {
+          "when there's no answer in either 801 or user answers" - {
 
             "must output the Not Provided" in {
 
-              implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(TransportArrangerPage, GoodsOwner))
+              implicit lazy val request = dataRequest(
+                FakeRequest(),
+                emptyUserAnswers.set(TransportArrangerPage, GoodsOwner),
+                movementDetails = maxGetMovementResponse.copy(transportArrangerTrader = None)
+              )
 
               TransportArrangerNameSummary.row() mustBe
                 SummaryListRowViewModel(
@@ -55,7 +59,7 @@ class TransportArrangerNameSummarySpec extends SpecBase with Matchers {
                   actions = Seq(
                     ActionItemViewModel(
                       content = messagesForLanguage.change,
-                      href = controllers.sections.transportArranger.routes.TransportArrangerNameController.onPageLoad(testErn, testDraftId, CheckMode).url,
+                      href = controllers.sections.transportArranger.routes.TransportArrangerNameController.onPageLoad(testErn, testArc, CheckMode).url,
                       id = "changeTransportArrangerName"
                     ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHidden)
                   )
@@ -79,7 +83,7 @@ class TransportArrangerNameSummarySpec extends SpecBase with Matchers {
                   actions = Seq(
                     ActionItemViewModel(
                       content = messagesForLanguage.change,
-                      href = controllers.sections.transportArranger.routes.TransportArrangerNameController.onPageLoad(testErn, testDraftId, CheckMode).url,
+                      href = controllers.sections.transportArranger.routes.TransportArrangerNameController.onPageLoad(testErn, testArc, CheckMode).url,
                       id = "changeTransportArrangerName"
                     ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHidden)
                   )
@@ -90,11 +94,15 @@ class TransportArrangerNameSummarySpec extends SpecBase with Matchers {
 
         "when TransportArranger is Consignee" - {
 
-          "when there's no answer for the ConsigneeBusinessNamePage" - {
+          "when there's no answer for the ConsigneeBusinessNamePage in either 801 or user answers" - {
 
             "must output the expected data" in {
 
-              implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(TransportArrangerPage, Consignee))
+              implicit lazy val request = dataRequest(
+                FakeRequest(),
+                emptyUserAnswers.set(TransportArrangerPage, Consignee),
+                movementDetails = maxGetMovementResponse.copy(consigneeTrader = None)
+              )
 
               TransportArrangerNameSummary.row() mustBe
                 SummaryListRowViewModel(
@@ -149,7 +157,11 @@ class TransportArrangerNameSummarySpec extends SpecBase with Matchers {
                 }
                 s"and $page has no value" - {
                   "must return the default text" in {
-                    implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers)
+                    implicit lazy val request = dataRequest(
+                      FakeRequest(),
+                      emptyUserAnswers,
+                      movementDetails = maxGetMovementResponse.copy(transportArrangerTrader = None, consigneeTrader = None)
+                    )
 
                     TransportArrangerNameSummary.transportArrangerNameValue(transportArranger) mustBe notProvidedValue
                   }

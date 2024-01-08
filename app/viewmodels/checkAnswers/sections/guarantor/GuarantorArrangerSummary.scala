@@ -28,7 +28,7 @@ object GuarantorArrangerSummary {
 
   def row()(implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] = {
 
-    request.userAnswers.get(GuarantorRequiredPage).filter(required => required).map { _ =>
+    request.userAnswers.get(GuarantorRequiredPage).filter(identity).map { _ =>
 
       val value: String = request.userAnswers.get(GuarantorArrangerPage) match {
         case Some(answer) => messages(s"guarantorArranger.$answer")

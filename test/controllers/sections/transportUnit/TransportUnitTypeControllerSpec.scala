@@ -17,13 +17,14 @@
 package controllers.sections.transportUnit
 
 import base.SpecBase
-import controllers.actions.FakeDataRetrievalAction
+import controllers.actions.{FakeDataRetrievalAction, FakeMovementAction}
 import forms.sections.transportUnit.TransportUnitTypeFormProvider
 import mocks.services.MockUserAnswersService
-import models.sections.transportUnit.TransportUnitType
+import models.sections.transportUnit.TransportUnitType.{Container, FixedTransport, Tractor}
+import models.sections.transportUnit.{TransportSealTypeModel, TransportUnitType}
 import models.{NormalMode, UserAnswers}
 import navigation.FakeNavigators.FakeTransportUnitNavigator
-import pages.sections.transportUnit.TransportUnitTypePage
+import pages.sections.transportUnit._
 import play.api.Play.materializer
 import play.api.data.Form
 import play.api.mvc.AnyContentAsEmpty
@@ -52,6 +53,7 @@ class TransportUnitTypeControllerSpec extends SpecBase with MockUserAnswersServi
       fakeAuthAction,
       new FakeDataRetrievalAction(userAnswers, Some(testMinTraderKnownFacts)),
       dataRequiredAction,
+      new FakeMovementAction(maxGetMovementResponse.copy(transportDetails = Seq.empty)),
       formProvider,
       Helpers.stubMessagesControllerComponents(),
       view
@@ -62,7 +64,7 @@ class TransportUnitTypeControllerSpec extends SpecBase with MockUserAnswersServi
 
     "must return OK and the correct view for a GET" in new Test(Some(emptyUserAnswers)) {
 
-      val result = controller.onPageLoad(testErn, testDraftId, testIndex1, NormalMode)(request)
+      val result = controller.onPageLoad(testErn, testArc, testIndex1, NormalMode)(request)
 
       status(result) mustEqual OK
       contentAsString(result) mustEqual view(form, testIndex1, NormalMode)(dataRequest(request), messages(request)).toString
@@ -72,7 +74,7 @@ class TransportUnitTypeControllerSpec extends SpecBase with MockUserAnswersServi
       emptyUserAnswers.set(TransportUnitTypePage(testIndex1), TransportUnitType.values.head)
     )) {
 
-      val result = controller.onPageLoad(testErn, testDraftId, testIndex1, NormalMode)(request)
+      val result = controller.onPageLoad(testErn, testArc, testIndex1, NormalMode)(request)
 
       status(result) mustEqual OK
       contentAsString(result) mustEqual view(
@@ -84,7 +86,54 @@ class TransportUnitTypeControllerSpec extends SpecBase with MockUserAnswersServi
       MockUserAnswersService.set().returns(Future.successful(emptyUserAnswers))
 
       val result =
-        controller.onSubmit(testErn, testDraftId, testIndex1, NormalMode)(request.withFormUrlEncodedBody(("value", TransportUnitType.values.head.toString)))
+        controller.onSubmit(testErn, testArc, testIndex1, NormalMode)(request.withFormUrlEncodedBody(("value", TransportUnitType.values.head.toString)))
+
+      status(result) mustEqual SEE_OTHER
+      redirectLocation(result).value mustEqual testOnwardRoute.url
+    }
+
+    "must redirect to the next page when valid data is submitted " +
+      "(clearing down any subsequent pages when Fixed Transport Installations is selected)" in new Test(Some(
+      emptyUserAnswers
+        .set(TransportUnitTypePage(testIndex1), Container)
+        .set(TransportUnitIdentityPage(testIndex1), "identity1")
+        .set(TransportSealChoicePage(testIndex1), true)
+        .set(TransportUnitGiveMoreInformationChoicePage(testIndex1), true)
+        .set(TransportSealTypePage(testIndex1), TransportSealTypeModel("seal1", Some("moreinfo")))
+        .set(TransportUnitGiveMoreInformationPage(testIndex1), Some("more information about tu"))
+    )) {
+
+      val expectedAnswers: UserAnswers = emptyUserAnswers.set(TransportUnitTypePage(testIndex1), FixedTransport)
+      MockUserAnswersService.set(expectedAnswers).returns(Future.successful(expectedAnswers))
+
+      val result =
+        controller.onSubmit(testErn, testArc, testIndex1, NormalMode)(request.withFormUrlEncodedBody(("value", TransportUnitType.FixedTransport.toString)))
+
+      status(result) mustEqual SEE_OTHER
+      redirectLocation(result).value mustEqual testOnwardRoute.url
+    }
+
+    "must redirect to the next page when valid data is submitted " +
+      "(not clearing down any subsequent pages when Fixed Transport Installations is not selected)" in new Test(Some(
+      emptyUserAnswers
+        .set(TransportUnitTypePage(testIndex1), Container)
+        .set(TransportUnitIdentityPage(testIndex1), "identity1")
+        .set(TransportSealChoicePage(testIndex1), true)
+        .set(TransportUnitGiveMoreInformationChoicePage(testIndex1), true)
+        .set(TransportSealTypePage(testIndex1), TransportSealTypeModel("seal1", Some("moreinfo")))
+        .set(TransportUnitGiveMoreInformationPage(testIndex1), Some("more information about tu"))
+    )) {
+
+      val expectedAnswers: UserAnswers = emptyUserAnswers.set(TransportUnitTypePage(testIndex1), Tractor)
+        .set(TransportUnitIdentityPage(testIndex1), "identity1")
+        .set(TransportSealChoicePage(testIndex1), true)
+        .set(TransportUnitGiveMoreInformationChoicePage(testIndex1), true)
+        .set(TransportSealTypePage(testIndex1), TransportSealTypeModel("seal1", Some("moreinfo")))
+        .set(TransportUnitGiveMoreInformationPage(testIndex1), Some("more information about tu"))
+      MockUserAnswersService.set(expectedAnswers).returns(Future.successful(expectedAnswers))
+
+      val result =
+        controller.onSubmit(testErn, testArc, testIndex1, NormalMode)(request.withFormUrlEncodedBody(("value", TransportUnitType.Tractor.toString)))
 
       status(result) mustEqual SEE_OTHER
       redirectLocation(result).value mustEqual testOnwardRoute.url
@@ -92,26 +141,26 @@ class TransportUnitTypeControllerSpec extends SpecBase with MockUserAnswersServi
 
     "must redirect to the index controller if index is not next in index list for GET" in new Test(Some(emptyUserAnswers)) {
 
-      val result = controller.onPageLoad(testErn, testDraftId, testIndex2, NormalMode)(request)
+      val result = controller.onPageLoad(testErn, testArc, testIndex3, NormalMode)(request)
 
       status(result) mustEqual SEE_OTHER
-      redirectLocation(result).value mustEqual controllers.sections.transportUnit.routes.TransportUnitIndexController.onPageLoad(testErn, testDraftId).url
+      redirectLocation(result).value mustEqual controllers.sections.transportUnit.routes.TransportUnitIndexController.onPageLoad(testErn, testArc).url
     }
 
     "must redirect to the index controller if index is not next in index list for POST" in new Test(Some(emptyUserAnswers)) {
 
       val result =
-        controller.onSubmit(testErn, testDraftId, testIndex2, NormalMode)(request.withFormUrlEncodedBody(("value", TransportUnitType.values.head.toString)))
+        controller.onSubmit(testErn, testArc, testIndex3, NormalMode)(request.withFormUrlEncodedBody(("value", TransportUnitType.values.head.toString)))
 
       status(result) mustEqual SEE_OTHER
-      redirectLocation(result).value mustEqual controllers.sections.transportUnit.routes.TransportUnitIndexController.onPageLoad(testErn, testDraftId).url
+      redirectLocation(result).value mustEqual controllers.sections.transportUnit.routes.TransportUnitIndexController.onPageLoad(testErn, testArc).url
     }
 
     "must return a Bad Request and errors when invalid data is submitted" in new Test(Some(emptyUserAnswers)) {
 
       val boundForm = form.bind(Map("value" -> "invalid value"))
 
-      val result = controller.onSubmit(testErn, testDraftId, testIndex1, NormalMode)(request.withFormUrlEncodedBody(("value", "invalid value")))
+      val result = controller.onSubmit(testErn, testArc, testIndex1, NormalMode)(request.withFormUrlEncodedBody(("value", "invalid value")))
 
       status(result) mustEqual BAD_REQUEST
       contentAsString(result) mustEqual view(boundForm, testIndex1, NormalMode)(dataRequest(request), messages(request)).toString
@@ -119,7 +168,7 @@ class TransportUnitTypeControllerSpec extends SpecBase with MockUserAnswersServi
 
     "must redirect to Journey Recovery for a GET if no existing data is found" in new Test(None) {
 
-      val result = controller.onPageLoad(testErn, testDraftId, testIndex1, NormalMode)(request)
+      val result = controller.onPageLoad(testErn, testArc, testIndex1, NormalMode)(request)
 
       status(result) mustEqual SEE_OTHER
       redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
@@ -127,7 +176,7 @@ class TransportUnitTypeControllerSpec extends SpecBase with MockUserAnswersServi
 
     "redirect to Journey Recovery for a POST if no existing data is found" in new Test(None) {
 
-      val result = controller.onSubmit(testErn, testDraftId, testIndex1, NormalMode)(request)
+      val result = controller.onSubmit(testErn, testArc, testIndex1, NormalMode)(request)
 
       status(result) mustEqual SEE_OTHER
       redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url

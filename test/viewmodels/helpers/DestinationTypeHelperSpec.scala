@@ -18,11 +18,11 @@ package viewmodels.helpers
 
 import base.SpecBase
 import fixtures.messages.sections.info.DestinationTypeMessages
+import models.UserType.{NorthernIrelandWarehouse, Unknown}
 import models.requests.DataRequest
 import models.response.InvalidUserTypeException
 import models.sections.info.DispatchPlace.{GreatBritain, NorthernIreland}
 import models.sections.info.movementScenario.MovementScenario
-import models.{NorthernIrelandWarehouse, Unknown}
 import play.api.i18n.Messages
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest

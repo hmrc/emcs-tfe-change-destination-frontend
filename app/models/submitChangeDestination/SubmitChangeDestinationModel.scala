@@ -17,10 +17,11 @@
 package models.submitChangeDestination
 
 import config.AppConfig
+import models.UserType
+import models.UserType._
 import models.requests.DataRequest
 import models.sections.info.DispatchPlace
 import models.sections.info.movementScenario.{MovementScenario, MovementType}
-import models.{NorthernIrelandRegisteredConsignor, NorthernIrelandWarehouseKeeper, UserType}
 import pages.sections.exportInformation.ExportCustomsOfficePage
 import pages.sections.info.{DestinationTypePage, DispatchPlacePage}
 import play.api.libs.json.{Json, OFormat}

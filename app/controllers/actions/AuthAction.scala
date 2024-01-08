@@ -18,6 +18,7 @@ package controllers.actions
 
 import config.{AppConfig, EnrolmentKeys}
 import models.requests.UserRequest
+import play.api.Logging
 import play.api.mvc.Results._
 import play.api.mvc._
 import uk.gov.hmrc.auth.core.AffinityGroup.Organisation
@@ -26,13 +27,12 @@ import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals
 import uk.gov.hmrc.auth.core.retrieve.~
 import uk.gov.hmrc.http.{HeaderCarrier, SessionId}
 import uk.gov.hmrc.play.http.HeaderCarrierConverter
-import utils.Logging
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 trait AuthAction {
-  def apply(ern: String): ActionBuilder[UserRequest, AnyContent] with ActionFunction[Request, UserRequest]
+  def apply(ern: String, arc: String): ActionBuilder[UserRequest, AnyContent] with ActionFunction[Request, UserRequest]
 }
 
 @Singleton
@@ -41,7 +41,7 @@ class AuthActionImpl @Inject()(override val authConnector: AuthConnector,
                                val bodyParser: BodyParsers.Default
                               )(implicit val ec: ExecutionContext) extends AuthAction with AuthorisedFunctions with Logging {
 
-  def apply(ern: String): ActionBuilder[UserRequest, AnyContent] with ActionFunction[Request, UserRequest] =
+  def apply(ern: String, arc: String): ActionBuilder[UserRequest, AnyContent] with ActionFunction[Request, UserRequest] =
     new ActionBuilder[UserRequest, AnyContent] with ActionFunction[Request, UserRequest] {
 
       override val parser = bodyParser
@@ -75,7 +75,7 @@ class AuthActionImpl @Inject()(override val authConnector: AuthConnector,
 
         } recover {
           case _: NoActiveSession =>
-            Redirect(config.loginUrl, Map("continue" -> Seq(config.loginContinueUrl(ern))))
+            Redirect(config.loginUrl, Map("continue" -> Seq(config.loginContinueUrl(ern, arc))))
           case x: AuthorisationException =>
             logger.debug(s"[invokeBlock] Authorisation Exception ${x.reason}")
             Redirect(controllers.error.routes.ErrorController.unauthorised())

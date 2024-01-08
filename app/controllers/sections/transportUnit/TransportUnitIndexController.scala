@@ -18,14 +18,20 @@ package controllers.sections.transportUnit
 
 import controllers.BaseNavigationController
 import controllers.actions._
-import models.{Index, NormalMode}
+import models.requests.DataRequest
+import models.sections.journeyType.HowMovementTransported.FixedTransportInstallations
+import models.sections.transportUnit.{TransportSealTypeModel, TransportUnitType}
+import models.{Index, NormalMode, UserAnswers}
 import navigation.TransportUnitNavigator
+import pages.sections.journeyType.HowMovementTransportedPage
+import pages.sections.transportUnit._
 import play.api.i18n.MessagesApi
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import queries.TransportUnitsCount
 import services.UserAnswersService
 
 import javax.inject.Inject
+import scala.concurrent.Future
 
 class TransportUnitIndexController @Inject()(
                                               override val messagesApi: MessagesApi,
@@ -34,19 +40,62 @@ class TransportUnitIndexController @Inject()(
                                               override val auth: AuthAction,
                                               override val getData: DataRetrievalAction,
                                               override val requireData: DataRequiredAction,
+                                              override val withMovement: MovementAction,
                                               override val userAllowList: UserAllowListAction,
                                               val controllerComponents: MessagesControllerComponents
                                             ) extends BaseNavigationController with AuthActionHelper {
 
   def onPageLoad(ern: String, arc: String): Action[AnyContent] =
-    authorisedDataRequest(ern, arc) { implicit request =>
-      request.userAnswers.get(TransportUnitsCount) match {
-        case None | Some(0) => Redirect(
-          controllers.sections.transportUnit.routes.TransportUnitTypeController.onPageLoad(request.ern, request.arc, Index(0), NormalMode)
-        )
-        case Some(_) => Redirect(
-          controllers.sections.transportUnit.routes.TransportUnitsAddToListController.onPageLoad(request.ern, request.arc)
-        )
+    authorisedDataRequestWithUpToDateMovementAsync(ern, arc) { implicit request =>
+      val userAnswersWith801TransportUnits = populateTransportUnitsFrom801IfEmpty
+      (userAnswersWith801TransportUnits.get(TransportUnitsCount), request.userAnswers.get(HowMovementTransportedPage)) match {
+        case (_, Some(FixedTransportInstallations)) =>
+          Future(Redirect(
+            controllers.sections.transportUnit.routes.TransportUnitCheckAnswersController.onPageLoad(request.ern, request.arc)
+          ))
+        case (None | Some(0), _) =>
+          Future(Redirect(
+            controllers.sections.transportUnit.routes.TransportUnitTypeController.onPageLoad(request.ern, request.arc, Index(0), NormalMode)
+          ))
+        case _ =>
+          lazy val redirectCall = Redirect(
+            controllers.sections.transportUnit.routes.TransportUnitsAddToListController.onPageLoad(request.ern, request.arc)
+          )
+          if(userAnswersWith801TransportUnits == request.userAnswers) {
+            Future(redirectCall)
+          } else {
+            userAnswersService.set(userAnswersWith801TransportUnits).map(_ => redirectCall)
+          }
       }
     }
+
+  private def populateTransportUnitsFrom801IfEmpty()(implicit request: DataRequest[_]): UserAnswers = {
+    request.userAnswers.get(TransportUnitsCount) match {
+      case None if request.movementDetails.transportDetails.nonEmpty =>
+        request.movementDetails.transportDetails.zipWithIndex.foldLeft(request.userAnswers)(
+          (userAnswers, indexedTransportDetails) => {
+            val idx = indexedTransportDetails._2
+            val baseUserAnswers = userAnswers
+              .set(TransportUnitTypePage(idx), TransportUnitType.parseTransportUnitType(indexedTransportDetails._1.transportUnitCode).get)
+              .set(TransportSealChoicePage(idx), indexedTransportDetails._1.commercialSealIdentification.isDefined)
+              .set(TransportUnitGiveMoreInformationChoicePage(idx), indexedTransportDetails._1.complementaryInformation.isDefined)
+              .set(TransportUnitGiveMoreInformationPage(idx), indexedTransportDetails._1.complementaryInformation)
+            (indexedTransportDetails._1.commercialSealIdentification, indexedTransportDetails._1.identityOfTransportUnits) match {
+              case (Some(sealInfo), Some(identityOfTU)) =>
+                baseUserAnswers
+                  .set(TransportSealTypePage(idx), TransportSealTypeModel(sealInfo, indexedTransportDetails._1.sealInformation))
+                  .set(TransportUnitIdentityPage(idx), identityOfTU)
+              case (Some(sealInfo), _) =>
+                baseUserAnswers
+                  .set(TransportSealTypePage(idx), TransportSealTypeModel(sealInfo, indexedTransportDetails._1.sealInformation))
+              case (_, Some(identityOfTU)) =>
+                baseUserAnswers
+                  .set(TransportUnitIdentityPage(idx), identityOfTU)
+              case (_, _) => baseUserAnswers
+            }
+          }
+        )
+      case _ => request.userAnswers
+    }
+  }
 }

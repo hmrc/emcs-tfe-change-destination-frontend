@@ -31,7 +31,7 @@
 
     @formHelper(action = onSubmitCall, 'autoComplete -> "off") {
 
-        @h2(messages("destination.subHeading"), "govuk-caption-xl")
+        @h2(messages("destination.subHeading"), "govuk-caption-xl", hiddenContent = Some(messages("subHeading.hidden"))))
 
         @h1(messages("destinationCheckAnswers.heading"))
 

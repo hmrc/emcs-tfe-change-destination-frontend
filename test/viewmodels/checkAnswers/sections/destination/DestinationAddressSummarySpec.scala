@@ -19,7 +19,7 @@ package viewmodels.checkAnswers.sections.destination
 import base.SpecBase
 import fixtures.UserAddressFixtures
 import fixtures.messages.sections.destination.DestinationAddressMessages
-import models.CheckMode
+import models.{CheckMode, UserAddress}
 import org.scalatest.matchers.must.Matchers
 import pages.sections.consignee.ConsigneeAddressPage
 import pages.sections.destination.{DestinationAddressPage, DestinationConsigneeDetailsPage}
@@ -40,16 +40,24 @@ class DestinationAddressSummarySpec extends SpecBase with Matchers with UserAddr
 
         implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
 
-        "when there's no answer" - {
+        "when there's no answer in the user answers (defaulting to 801)" - {
 
-          "must output no row" in {
+          "must output the 801 data" in {
+
+            val userAddressFrom801 = UserAddress(Some("DeliveryPlaceTraderStreetNumber"), "DeliveryPlaceTraderStreetName", "DeliveryPlaceTraderCity", "DeliveryPlaceTraderPostcode")
 
             implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers)
 
             DestinationAddressSummary.row() mustBe SummaryListRowViewModel(
               key = messagesForLanguage.cyaLabel,
-              value = Value(HtmlContent(messagesForLanguage.cyaDestinationNotProvided)),
-              actions = Seq.empty
+              value = Value(userAddressFrom801.toCheckYourAnswersFormat),
+              actions = Seq(
+                ActionItemViewModel(
+                  content = messagesForLanguage.change,
+                  href = controllers.sections.destination.routes.DestinationAddressController.onPageLoad(testErn, testArc, CheckMode).url,
+                  id = "changeDestinationAddress"
+                ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHidden)
+              )
             )
 
           }
@@ -57,12 +65,13 @@ class DestinationAddressSummarySpec extends SpecBase with Matchers with UserAddr
 
         "when the DestinationConsigneeDetailsPage has been answered no" - {
 
-          "when there is no Destination Address given" - {
+          "when there is no Destination Address given (in either 801 or user answers)" - {
 
             s"must output ${messagesForLanguage.cyaDestinationNotProvided}" in {
 
               implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers
-                .set(DestinationConsigneeDetailsPage, false)
+                .set(DestinationConsigneeDetailsPage, false),
+                movementDetails = maxGetMovementResponse.copy(deliveryPlaceTrader = None)
               )
 
               DestinationAddressSummary.row() mustBe SummaryListRowViewModel(
@@ -89,7 +98,7 @@ class DestinationAddressSummarySpec extends SpecBase with Matchers with UserAddr
                   actions = Seq(
                     ActionItemViewModel(
                       content = messagesForLanguage.change,
-                      href = controllers.sections.destination.routes.DestinationAddressController.onPageLoad(testErn, testDraftId, CheckMode).url,
+                      href = controllers.sections.destination.routes.DestinationAddressController.onPageLoad(testErn, testArc, CheckMode).url,
                       id = "changeDestinationAddress"
                     ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHidden)
                   )
@@ -105,7 +114,8 @@ class DestinationAddressSummarySpec extends SpecBase with Matchers with UserAddr
             s"must output ${messagesForLanguage.cyaConsigneeNotProvided}" in {
 
               implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers
-                .set(DestinationConsigneeDetailsPage, true)
+                .set(DestinationConsigneeDetailsPage, true),
+                movementDetails = maxGetMovementResponse.copy(consigneeTrader = None)
               )
 
               DestinationAddressSummary.row() mustBe SummaryListRowViewModel(

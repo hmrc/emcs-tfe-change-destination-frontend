@@ -133,7 +133,8 @@ class TraderModelSpec extends SpecBase {
                 .set(DestinationTypePage, movementScenario)
                 .set(ConsigneeBusinessNamePage, "consignee name")
                 .set(ConsigneeExportVatPage, ConsigneeExportVat(ConsigneeExportVatType.YesVatNumber, Some("vat no"), None))
-                .set(ConsigneeAddressPage, testUserAddress.copy(street = "consignee street"))
+                .set(ConsigneeAddressPage, testUserAddress.copy(street = "consignee street")),
+              movementDetails = maxGetMovementResponse.copy(consigneeTrader = None)
             )
 
             TraderModel.applyConsignee mustBe Some(consigneeTraderWithVatNo)
@@ -146,7 +147,8 @@ class TraderModelSpec extends SpecBase {
               emptyUserAnswers
                 .set(DestinationTypePage, movementScenario)
                 .set(ConsigneeBusinessNamePage, "consignee name")
-                .set(ConsigneeAddressPage, testUserAddress.copy(street = "consignee street"))
+                .set(ConsigneeAddressPage, testUserAddress.copy(street = "consignee street")),
+              movementDetails = maxGetMovementResponse.copy(consigneeTrader = None)
             )
 
             TraderModel.applyConsignee mustBe Some(consigneeTraderWithNeitherErnNorVatNo)
@@ -165,17 +167,6 @@ class TraderModelSpec extends SpecBase {
 
         TraderModel.applyConsignee mustBe None
       }
-      "when DestinationType is missing" in {
-
-      }
-      implicit val dr: DataRequest[_] = dataRequest(fakeRequest,
-        emptyUserAnswers
-          .set(ConsigneeExcisePage, "consignee ern")
-          .set(ConsigneeExportVatPage, ConsigneeExportVat(ConsigneeExportVatType.YesEoriNumber, Some("vat no"), Some("consignee eori")))
-          .set(ConsigneeAddressPage, testUserAddress.copy(street = "consignee street"))
-      )
-
-      TraderModel.applyConsignee mustBe None
     }
   }
 

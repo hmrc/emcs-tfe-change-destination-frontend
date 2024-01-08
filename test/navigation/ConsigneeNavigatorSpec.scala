@@ -23,9 +23,13 @@ import models.sections.consignee.ConsigneeExportVatType.{No, YesEoriNumber, YesV
 import models.{CheckMode, NormalMode, ReviewMode}
 import pages.Page
 import pages.sections.consignee._
+import play.api.test.FakeRequest
 
 class ConsigneeNavigatorSpec extends SpecBase {
+
   val navigator = new ConsigneeNavigator
+
+  implicit val request = dataRequest(FakeRequest())
 
   "ConsigneeNavigator" - {
 
@@ -35,7 +39,7 @@ class ConsigneeNavigatorSpec extends SpecBase {
 
         case object UnknownPage extends Page
         navigator.nextPage(UnknownPage, NormalMode, emptyUserAnswers) mustBe
-          controllers.sections.consignee.routes.CheckYourAnswersConsigneeController.onPageLoad(testErn, testDraftId)
+          controllers.sections.consignee.routes.CheckYourAnswersConsigneeController.onPageLoad(testErn, testArc)
       }
 
       "for the ConsigneeAddress page" - {
@@ -43,7 +47,7 @@ class ConsigneeNavigatorSpec extends SpecBase {
         "must go to the Consignee Check Your Answers page" in {
 
           navigator.nextPage(ConsigneeAddressPage, NormalMode, emptyUserAnswers) mustBe
-            controllers.sections.consignee.routes.CheckYourAnswersConsigneeController.onPageLoad(testErn, testDraftId)
+            controllers.sections.consignee.routes.CheckYourAnswersConsigneeController.onPageLoad(testErn, testArc)
         }
       }
 
@@ -52,7 +56,7 @@ class ConsigneeNavigatorSpec extends SpecBase {
         "must go to the ConsigneeBusinessName page" in {
 
           navigator.nextPage(ConsigneeExcisePage, NormalMode, emptyUserAnswers) mustBe
-            controllers.sections.consignee.routes.ConsigneeBusinessNameController.onPageLoad(testErn, testDraftId, NormalMode)
+            controllers.sections.consignee.routes.ConsigneeBusinessNameController.onPageLoad(testErn, testArc, NormalMode)
         }
       }
 
@@ -63,7 +67,7 @@ class ConsigneeNavigatorSpec extends SpecBase {
             .set(ConsigneeBusinessNamePage, "a business name")
 
           navigator.nextPage(ConsigneeBusinessNamePage, NormalMode, userAnswers) mustBe
-            controllers.sections.consignee.routes.ConsigneeAddressController.onPageLoad(testErn, testDraftId, NormalMode)
+            controllers.sections.consignee.routes.ConsigneeAddressController.onPageLoad(testErn, testArc, NormalMode)
         }
 
       }
@@ -88,14 +92,14 @@ class ConsigneeNavigatorSpec extends SpecBase {
               .set(ConsigneeExportPage, false)
 
             navigator.nextPage(ConsigneeExportPage, NormalMode, userAnswers) mustBe
-              controllers.sections.consignee.routes.ConsigneeExciseController.onPageLoad(testErn, testDraftId, NormalMode)
+              controllers.sections.consignee.routes.ConsigneeExciseController.onPageLoad(testErn, testArc, NormalMode)
           }
         }
 
         "from ConsigneeExemptOrganisationPage to ConsigneeBusinessName" in {
 
           navigator.nextPage(ConsigneeExemptOrganisationPage, NormalMode, emptyUserAnswers) mustBe
-            controllers.sections.consignee.routes.ConsigneeBusinessNameController.onPageLoad(testErn, testDraftId, NormalMode)
+            controllers.sections.consignee.routes.ConsigneeBusinessNameController.onPageLoad(testErn, testArc, NormalMode)
         }
 
         "must go to the journey recovery" - {
@@ -118,7 +122,7 @@ class ConsigneeNavigatorSpec extends SpecBase {
               .set(ConsigneeExportVatPage, ConsigneeExportVat(YesVatNumber, Some("vatnumber"), None))
 
             navigator.nextPage(ConsigneeExportVatPage, NormalMode, userAnswers) mustBe
-              controllers.sections.consignee.routes.ConsigneeBusinessNameController.onPageLoad(testErn, testDraftId, NormalMode)
+              controllers.sections.consignee.routes.ConsigneeBusinessNameController.onPageLoad(testErn, testArc, NormalMode)
           }
 
           "when YES - EORI Number is answered'" in {
@@ -126,7 +130,7 @@ class ConsigneeNavigatorSpec extends SpecBase {
               .set(ConsigneeExportVatPage, ConsigneeExportVat(YesEoriNumber, None, Some("eorinumber")))
 
             navigator.nextPage(ConsigneeExportVatPage, NormalMode, userAnswers) mustBe
-              controllers.sections.consignee.routes.ConsigneeBusinessNameController.onPageLoad(testErn, testDraftId, NormalMode)
+              controllers.sections.consignee.routes.ConsigneeBusinessNameController.onPageLoad(testErn, testArc, NormalMode)
           }
 
 
@@ -135,7 +139,7 @@ class ConsigneeNavigatorSpec extends SpecBase {
               .set(ConsigneeExportVatPage, ConsigneeExportVat(No, None, None))
 
             navigator.nextPage(ConsigneeExportVatPage, NormalMode, userAnswers) mustBe
-              controllers.sections.consignee.routes.ConsigneeBusinessNameController.onPageLoad(testErn, testDraftId, NormalMode)
+              controllers.sections.consignee.routes.ConsigneeBusinessNameController.onPageLoad(testErn, testArc, NormalMode)
           }
         }
       }
@@ -143,7 +147,7 @@ class ConsigneeNavigatorSpec extends SpecBase {
       "for the CheckAnswersConsignee page" - {
         "must go to the tasklist" in {
           navigator.nextPage(CheckAnswersConsigneePage, NormalMode, emptyUserAnswers) mustBe
-            routes.DraftMovementController.onPageLoad(testErn, testDraftId)
+            routes.DraftMovementController.onPageLoad(testErn, testArc)
         }
       }
     }
@@ -152,7 +156,7 @@ class ConsigneeNavigatorSpec extends SpecBase {
       "must go to CheckYourAnswersConsigneeController" in {
         case object UnknownPage extends Page
         navigator.nextPage(UnknownPage, CheckMode, emptyUserAnswers) mustBe
-          controllers.sections.consignee.routes.CheckYourAnswersConsigneeController.onPageLoad(testErn, testDraftId)
+          controllers.sections.consignee.routes.CheckYourAnswersConsigneeController.onPageLoad(testErn, testArc)
       }
     }
 
@@ -160,7 +164,7 @@ class ConsigneeNavigatorSpec extends SpecBase {
       "must go to CheckYourAnswers" in {
         case object UnknownPage extends Page
         navigator.nextPage(UnknownPage, ReviewMode, emptyUserAnswers) mustBe
-          routes.CheckYourAnswersController.onPageLoad(testErn, testDraftId)
+          routes.CheckYourAnswersController.onPageLoad(testErn, testArc)
       }
     }
   }

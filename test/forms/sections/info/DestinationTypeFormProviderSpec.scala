@@ -18,7 +18,7 @@ package forms.sections.info
 
 import base.SpecBase
 import forms.behaviours.OptionFieldBehaviours
-import models.GreatBritainWarehouse
+import models.UserType.GreatBritainWarehouse
 import models.requests.DataRequest
 import models.response.InvalidUserTypeException
 import models.sections.info.movementScenario.MovementScenario

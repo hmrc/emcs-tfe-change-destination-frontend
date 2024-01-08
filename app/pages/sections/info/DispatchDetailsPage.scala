@@ -16,6 +16,7 @@
 
 package pages.sections.info
 
+import models.requests.DataRequest
 import models.sections.info.DispatchDetailsModel
 import pages.QuestionPage
 import play.api.libs.json.JsPath
@@ -25,4 +26,5 @@ case class DispatchDetailsPage(isOnPreDraftFlow: Boolean = true) extends Questio
   override val toString: String = "dispatchDetails"
   override val path: JsPath = InfoSection.path \ toString
 
+  override def getValueFromIE801(implicit request: DataRequest[_]): Option[DispatchDetailsModel] = None // TODO: update
 }

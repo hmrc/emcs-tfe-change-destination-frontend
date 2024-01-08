@@ -17,11 +17,12 @@
 package forms.sections.transportUnit
 
 import forms._
-import javax.inject.Inject
 import forms.mappings.Mappings
 import models.sections.transportUnit.TransportSealTypeModel
 import play.api.data.Form
 import play.api.data.Forms.{mapping, optional}
+
+import javax.inject.Inject
 
 class TransportSealTypeFormProvider @Inject() extends BaseTextareaFormProvider[TransportSealTypeModel] with Mappings {
 

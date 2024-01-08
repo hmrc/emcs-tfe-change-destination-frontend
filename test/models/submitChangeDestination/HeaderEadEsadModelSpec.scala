@@ -18,7 +18,6 @@ package models.submitChangeDestination
 
 import base.SpecBase
 import models.requests.DataRequest
-import models.response.MissingMandatoryPage
 import models.sections.info.movementScenario.DestinationType
 import models.sections.transportArranger.TransportArranger
 import pages.sections.journeyType.{JourneyTimeDaysPage, JourneyTimeHoursPage}
@@ -37,7 +36,8 @@ class HeaderEadEsadModelSpec extends SpecBase {
           fakeRequest,
           emptyUserAnswers
             .set(JourneyTimeHoursPage, 2)
-            .set(TransportArrangerPage, TransportArranger.GoodsOwner)
+            .set(TransportArrangerPage, TransportArranger.GoodsOwner),
+          movementDetails = maxGetMovementResponse.copy(journeyTime = "1 hours")
         )
 
           HeaderEadEsadModel.apply(DestinationType.TemporaryRegisteredConsignee) mustBe HeaderEadEsadModel(
@@ -51,7 +51,8 @@ class HeaderEadEsadModelSpec extends SpecBase {
           fakeRequest,
           emptyUserAnswers
             .set(JourneyTimeDaysPage, 3)
-            .set(TransportArrangerPage, TransportArranger.Other)
+            .set(TransportArrangerPage, TransportArranger.Other),
+          movementDetails = maxGetMovementResponse.copy(journeyTime = "1 days")
         )
 
           HeaderEadEsadModel.apply(DestinationType.TemporaryRegisteredConsignee) mustBe HeaderEadEsadModel(
@@ -59,20 +60,6 @@ class HeaderEadEsadModelSpec extends SpecBase {
             journeyTime = "3 days",
             transportArrangement = TransportArranger.Other
           )
-      }
-    }
-
-    "must error" - {
-      "when journeyTime is missing" in {
-        implicit val dr: DataRequest[_] = dataRequest(
-          fakeRequest,
-          emptyUserAnswers
-            .set(TransportArrangerPage, TransportArranger.Other)
-        )
-
-        val result = intercept[MissingMandatoryPage](HeaderEadEsadModel.apply(DestinationType.TemporaryRegisteredConsignee))
-
-        result.message mustBe "Missing mandatory UserAnswer for journeyTime"
       }
     }
   }

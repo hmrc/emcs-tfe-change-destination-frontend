@@ -18,9 +18,9 @@ package models.submitChangeDestination
 
 import base.SpecBase
 import models.requests.DataRequest
+import models.sections.info.DispatchDetailsModel
 import models.sections.info.movementScenario.{MovementScenario, OriginType}
-import models.sections.info.{DispatchDetailsModel, InvoiceDetailsModel}
-import pages.sections.info.{DestinationTypePage, DispatchDetailsPage, InvoiceDetailsPage, LocalReferenceNumberPage}
+import pages.sections.info.{DestinationTypePage, DispatchDetailsPage}
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 
@@ -38,8 +38,6 @@ class EadEsadDraftModelSpec extends SpecBase {
             implicit val dr: DataRequest[_] = dataRequest(
               request = fakeRequest,
               answers = emptyUserAnswers
-                .set(LocalReferenceNumberPage(), testLrn)
-                .set(InvoiceDetailsPage(), InvoiceDetailsModel("inv ref", LocalDate.parse("2020-12-25")))
                 .set(DispatchDetailsPage(), DispatchDetailsModel(LocalDate.parse("2020-10-31"), LocalTime.parse("23:59:59")))
                 .set(DestinationTypePage, MovementScenario.ExemptedOrganisation)
               ,
@@ -47,9 +45,6 @@ class EadEsadDraftModelSpec extends SpecBase {
             )
 
             EadEsadDraftModel.apply mustBe EadEsadDraftModel(
-              localReferenceNumber = testLrn,
-              invoiceNumber = "inv ref",
-              invoiceDate = Some("2020-12-25"),
               originTypeCode = OriginType.Imports,
               dateOfDispatch = "2020-10-31",
               timeOfDispatch = Some("23:59:59")
@@ -65,8 +60,6 @@ class EadEsadDraftModelSpec extends SpecBase {
             implicit val dr: DataRequest[_] = dataRequest(
               request = fakeRequest,
               answers = emptyUserAnswers
-                .set(LocalReferenceNumberPage(), testLrn)
-                .set(InvoiceDetailsPage(), InvoiceDetailsModel("inv ref", LocalDate.parse("2020-12-25")))
                 .set(DispatchDetailsPage(), DispatchDetailsModel(LocalDate.parse("2020-10-31"), LocalTime.parse("23:59:59")))
                 .set(DestinationTypePage, MovementScenario.ExemptedOrganisation)
               ,
@@ -74,9 +67,6 @@ class EadEsadDraftModelSpec extends SpecBase {
             )
 
             EadEsadDraftModel.apply mustBe EadEsadDraftModel(
-              localReferenceNumber = testLrn,
-              invoiceNumber = "inv ref",
-              invoiceDate = Some("2020-12-25"),
               originTypeCode = OriginType.TaxWarehouse,
               dateOfDispatch = "2020-10-31",
               timeOfDispatch = Some("23:59:59")
@@ -89,8 +79,6 @@ class EadEsadDraftModelSpec extends SpecBase {
       implicit val dr: DataRequest[_] = dataRequest(
         request = fakeRequest,
         answers = emptyUserAnswers
-          .set(LocalReferenceNumberPage(), testLrn)
-          .set(InvoiceDetailsPage(), InvoiceDetailsModel("inv ref", LocalDate.parse("2020-12-25")))
           .set(DispatchDetailsPage(), DispatchDetailsModel(LocalDate.parse("2020-10-31"), LocalTime.parse("23:59")))
           .set(DestinationTypePage, MovementScenario.ExemptedOrganisation)
       )

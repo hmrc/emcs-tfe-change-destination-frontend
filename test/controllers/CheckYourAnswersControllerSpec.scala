@@ -17,7 +17,7 @@
 package controllers
 
 import base.SpecBase
-import controllers.actions.{DataRequiredAction, FakeAuthAction, FakeDataRetrievalAction, FakeUserAllowListAction}
+import controllers.actions._
 import mocks.viewmodels.MockCheckAnswersHelper
 import models.UserAnswers
 import navigation.FakeNavigators.FakeNavigator
@@ -45,6 +45,7 @@ class CheckYourAnswersControllerSpec extends SpecBase with SummaryListFluency wi
       app.injector.instanceOf[FakeUserAllowListAction],
       new FakeDataRetrievalAction(userAnswers, Some(testMinTraderKnownFacts)),
       app.injector.instanceOf[DataRequiredAction],
+      new FakeMovementAction(maxGetMovementResponse),
       Helpers.stubMessagesControllerComponents(),
       new FakeNavigator(testOnwardRoute),
       view,
@@ -62,16 +63,16 @@ class CheckYourAnswersControllerSpec extends SpecBase with SummaryListFluency wi
 
         MockCheckAnswersHelper.summaryList(Seq()).returns(list)
 
-        val result = controller.onPageLoad(testErn, testDraftId)(request)
+        val result = controller.onPageLoad(testErn, testArc)(request)
 
         status(result) mustBe OK
         contentAsString(result) mustBe
-          view(routes.CheckYourAnswersController.onSubmit(testErn, testDraftId), list)(dataRequest(request), messages).toString
+          view(routes.CheckYourAnswersController.onSubmit(testErn, testArc), list)(dataRequest(request), messages).toString
       }
 
       "must redirect to Journey Recovery for a GET if no existing data is found" in new Fixture(None) {
 
-        val result = controller.onPageLoad(testErn, testDraftId)(request)
+        val result = controller.onPageLoad(testErn, testArc)(request)
 
         status(result) mustBe SEE_OTHER
         redirectLocation(result).value mustBe routes.JourneyRecoveryController.onPageLoad().url
@@ -82,7 +83,7 @@ class CheckYourAnswersControllerSpec extends SpecBase with SummaryListFluency wi
 
       "must redirect to the onward route" in new Fixture(Some(emptyUserAnswers)) {
 
-        val result = controller.onSubmit(testErn, testDraftId)(request)
+        val result = controller.onSubmit(testErn, testArc)(request)
 
         status(result) mustBe SEE_OTHER
         redirectLocation(result).value mustBe testOnwardRoute.url

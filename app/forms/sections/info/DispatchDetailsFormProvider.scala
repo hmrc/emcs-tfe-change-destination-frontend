@@ -16,19 +16,17 @@
 
 package forms.sections.info
 
+import config.AppConfig
 import forms.mappings.Mappings
 import models.sections.info.DispatchDetailsModel
 import play.api.data.Form
 import play.api.data.Forms.mapping
 
-import java.time.LocalDate
 import javax.inject.Inject
 
-class DispatchDetailsFormProvider @Inject() extends Mappings {
+class DispatchDetailsFormProvider @Inject()(appConfig: AppConfig) extends Mappings {
 
-  // scalastyle:off magic.number
-  private val earliestDispatchDate = LocalDate.of(2000,1,1)
-  // scalastyle:on magic.number
+  private val earliestDispatchDate = appConfig.earliestDispatchDate
 
   def apply(): Form[DispatchDetailsModel] =
     Form(

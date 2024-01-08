@@ -16,7 +16,7 @@
 
 package viewmodels.helpers.draftMovement
 
-import models._
+import models.UserType._
 import models.requests.DataRequest
 import models.response.{InvalidUserTypeException, MissingMandatoryPage}
 import models.sections.info.movementScenario.MovementScenario._

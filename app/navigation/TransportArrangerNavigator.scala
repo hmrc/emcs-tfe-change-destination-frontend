@@ -17,6 +17,7 @@
 package navigation
 
 import controllers.routes
+import models.requests.DataRequest
 import models.sections.transportArranger.TransportArranger.{GoodsOwner, Other}
 import models.{CheckMode, Mode, NormalMode, ReviewMode, UserAnswers}
 import pages.Page
@@ -27,7 +28,7 @@ import javax.inject.Inject
 
 class TransportArrangerNavigator @Inject() extends BaseNavigator {
 
-  private val normalRoutes: Page => UserAnswers => Call = {
+  private def normalRoutes(implicit request: DataRequest[_]): Page => UserAnswers => Call = {
 
     case TransportArrangerPage => (userAnswers: UserAnswers) =>
       userAnswers.get(TransportArrangerPage) match {
@@ -55,7 +56,7 @@ class TransportArrangerNavigator @Inject() extends BaseNavigator {
       controllers.sections.transportArranger.routes.TransportArrangerCheckAnswersController.onPageLoad(userAnswers.ern, userAnswers.arc)
   }
 
-  private val checkRoutes: Page => UserAnswers => Call = {
+  private def checkRoutes(implicit request: DataRequest[_]): Page => UserAnswers => Call = {
     case TransportArrangerPage => (userAnswers: UserAnswers) =>
       if (
         (userAnswers.get(TransportArrangerPage).contains(GoodsOwner) || userAnswers.get(TransportArrangerPage).contains(Other)) &&
@@ -63,7 +64,7 @@ class TransportArrangerNavigator @Inject() extends BaseNavigator {
           userAnswers.get(TransportArrangerVatPage).isEmpty ||
           userAnswers.get(TransportArrangerAddressPage).isEmpty
       ) {
-        normalRoutes(TransportArrangerPage)(userAnswers)
+        normalRoutes(request)(TransportArrangerPage)(userAnswers)
       } else {
         controllers.sections.transportArranger.routes.TransportArrangerCheckAnswersController.onPageLoad(userAnswers.ern, userAnswers.arc)
       }
@@ -76,11 +77,11 @@ class TransportArrangerNavigator @Inject() extends BaseNavigator {
       (userAnswers: UserAnswers) => routes.CheckYourAnswersController.onPageLoad(userAnswers.ern, userAnswers.arc)
   }
 
-  override def nextPage(page: Page, mode: Mode, userAnswers: UserAnswers): Call = mode match {
+  override def nextPage(page: Page, mode: Mode, userAnswers: UserAnswers)(implicit request: DataRequest[_]): Call = mode match {
     case NormalMode =>
-      normalRoutes(page)(userAnswers)
+      normalRoutes(request)(page)(userAnswers)
     case CheckMode =>
-      checkRoutes(page)(userAnswers)
+      checkRoutes(request)(page)(userAnswers)
     case ReviewMode =>
       reviewRouteMap(page)(userAnswers)
   }

@@ -21,9 +21,13 @@ import controllers.sections.destination.routes
 import models.{CheckMode, NormalMode, ReviewMode}
 import pages.Page
 import pages.sections.destination._
+import play.api.test.FakeRequest
 
 class DestinationNavigatorSpec extends SpecBase {
+
   val navigator = new DestinationNavigator
+
+  implicit val request = dataRequest(FakeRequest())
 
   "DestinationNavigator" - {
 
@@ -33,7 +37,7 @@ class DestinationNavigatorSpec extends SpecBase {
 
         case object UnknownPage extends Page
         navigator.nextPage(UnknownPage, NormalMode, emptyUserAnswers) mustBe
-          routes.DestinationCheckAnswersController.onPageLoad(testErn, testDraftId)
+          routes.DestinationCheckAnswersController.onPageLoad(testErn, testArc)
       }
 
       "for the DestinationWarehouseExcisePage" - {
@@ -41,7 +45,7 @@ class DestinationNavigatorSpec extends SpecBase {
         "must go to Destination Consignee details page" in {
 
           navigator.nextPage(DestinationWarehouseExcisePage, NormalMode, emptyUserAnswers) mustBe
-            routes.DestinationConsigneeDetailsController.onPageLoad(testErn, testDraftId, NormalMode)
+            routes.DestinationConsigneeDetailsController.onPageLoad(testErn, testArc, NormalMode)
         }
       }
 
@@ -50,7 +54,7 @@ class DestinationNavigatorSpec extends SpecBase {
         "must go to test Only page" in {
 
           navigator.nextPage(DestinationWarehouseVatPage, NormalMode, emptyUserAnswers) mustBe
-            routes.DestinationDetailsChoiceController.onPageLoad(testErn, testDraftId, NormalMode)
+            routes.DestinationDetailsChoiceController.onPageLoad(testErn, testArc, NormalMode)
         }
       }
 
@@ -61,7 +65,7 @@ class DestinationNavigatorSpec extends SpecBase {
           val userAnswers = emptyUserAnswers.set(DestinationDetailsChoicePage, true)
 
           navigator.nextPage(DestinationDetailsChoicePage, NormalMode, userAnswers) mustBe
-            routes.DestinationConsigneeDetailsController.onPageLoad(testErn, testDraftId, NormalMode)
+            routes.DestinationConsigneeDetailsController.onPageLoad(testErn, testArc, NormalMode)
         }
 
         "must go to DestinationCheckAnswersPage when user selects no" in {
@@ -69,7 +73,7 @@ class DestinationNavigatorSpec extends SpecBase {
           val userAnswers = emptyUserAnswers.set(DestinationDetailsChoicePage, false)
 
           navigator.nextPage(DestinationDetailsChoicePage, NormalMode, userAnswers) mustBe
-            routes.DestinationCheckAnswersController.onPageLoad(testErn, testDraftId)
+            routes.DestinationCheckAnswersController.onPageLoad(testErn, testArc)
         }
 
         "must go to Journey Recovery if no answer is present" in {
@@ -86,7 +90,7 @@ class DestinationNavigatorSpec extends SpecBase {
           val userAnswers = emptyUserAnswers.set(DestinationConsigneeDetailsPage, false)
 
           navigator.nextPage(DestinationConsigneeDetailsPage, NormalMode, userAnswers) mustBe
-            routes.DestinationBusinessNameController.onPageLoad(testErn, testDraftId, NormalMode)
+            routes.DestinationBusinessNameController.onPageLoad(testErn, testArc, NormalMode)
 
         }
 
@@ -95,7 +99,7 @@ class DestinationNavigatorSpec extends SpecBase {
           val userAnswers = emptyUserAnswers.set(DestinationConsigneeDetailsPage, true)
 
           navigator.nextPage(DestinationConsigneeDetailsPage, NormalMode, userAnswers) mustBe
-            routes.DestinationCheckAnswersController.onPageLoad(testErn, testDraftId)
+            routes.DestinationCheckAnswersController.onPageLoad(testErn, testArc)
         }
 
         "must go to Journey Recovery Controller if no answer is present" in {
@@ -110,7 +114,7 @@ class DestinationNavigatorSpec extends SpecBase {
         "must go to Destination Address page" in {
 
           navigator.nextPage(DestinationBusinessNamePage, NormalMode, emptyUserAnswers) mustBe
-            routes.DestinationAddressController.onPageLoad(testErn, testDraftId, NormalMode)
+            routes.DestinationAddressController.onPageLoad(testErn, testArc, NormalMode)
         }
       }
 
@@ -119,7 +123,7 @@ class DestinationNavigatorSpec extends SpecBase {
         "must go to DestinationCheckAnswersPage page" in {
 
           navigator.nextPage(DestinationAddressPage, NormalMode, emptyUserAnswers) mustBe
-            routes.DestinationCheckAnswersController.onPageLoad(testErn, testDraftId)
+            routes.DestinationCheckAnswersController.onPageLoad(testErn, testArc)
         }
       }
 
@@ -128,7 +132,7 @@ class DestinationNavigatorSpec extends SpecBase {
         "must go to tasklist page" in {
 
           navigator.nextPage(DestinationCheckAnswersPage, NormalMode, emptyUserAnswers) mustBe
-            controllers.routes.DraftMovementController.onPageLoad(testErn, testDraftId)
+            controllers.routes.DraftMovementController.onPageLoad(testErn, testArc)
         }
       }
     }
@@ -139,7 +143,7 @@ class DestinationNavigatorSpec extends SpecBase {
 
         case object UnknownPage extends Page
         navigator.nextPage(UnknownPage, CheckMode, emptyUserAnswers) mustBe
-          routes.DestinationCheckAnswersController.onPageLoad(testErn, testDraftId)
+          routes.DestinationCheckAnswersController.onPageLoad(testErn, testArc)
       }
     }
 
@@ -149,7 +153,7 @@ class DestinationNavigatorSpec extends SpecBase {
 
         case object UnknownPage extends Page
         navigator.nextPage(UnknownPage, ReviewMode, emptyUserAnswers) mustBe
-          controllers.routes.CheckYourAnswersController.onPageLoad(testErn, testDraftId)
+          controllers.routes.CheckYourAnswersController.onPageLoad(testErn, testArc)
       }
     }
   }

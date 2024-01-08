@@ -16,29 +16,33 @@
 
 package pages.sections.transportArranger
 
+import models.Enumerable
 import models.requests.DataRequest
 import models.sections.transportArranger.TransportArranger._
 import pages.sections.Section
 import play.api.libs.json.{JsObject, JsPath}
 import viewmodels.taskList.{Completed, InProgress, NotStarted, TaskListStatus}
 
-case object TransportArrangerSection extends Section[JsObject] {
+case object TransportArrangerSection extends Section[JsObject] with Enumerable.Implicits {
   override val path: JsPath = JsPath \ "transportArranger"
 
-  override def status(implicit request: DataRequest[_]): TaskListStatus = request.userAnswers.get(TransportArrangerPage) match {
-    case Some(Consignee) | Some(Consignor) => Completed
-    case Some(_) =>
-      if (request.userAnswers.get(TransportArrangerNamePage).nonEmpty &&
-        request.userAnswers.get(TransportArrangerVatPage).nonEmpty &&
-        request.userAnswers.get(TransportArrangerAddressPage).nonEmpty) {
-        Completed
-      } else {
-        InProgress
+  override def status(implicit request: DataRequest[_]): TaskListStatus =
+    sectionHasBeenReviewed(TransportArrangerReviewPage) {
+      request.userAnswers.get(TransportArrangerPage) match {
+        case Some(Consignee) | Some(Consignor) => Completed
+        case Some(_) =>
+          if (request.userAnswers.get(TransportArrangerNamePage).nonEmpty &&
+            request.userAnswers.get(TransportArrangerVatPage).nonEmpty &&
+            request.userAnswers.get(TransportArrangerAddressPage).nonEmpty) {
+            Completed
+          } else {
+            InProgress
+          }
+        case None =>
+          // answer not present yet
+          NotStarted
       }
-    case None =>
-      // answer not present yet
-      NotStarted
-  }
+    }
 
   override def canBeCompletedForTraderAndDestinationType(implicit request: DataRequest[_]): Boolean = true
 }

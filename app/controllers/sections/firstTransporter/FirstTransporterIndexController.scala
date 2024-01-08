@@ -32,13 +32,14 @@ class FirstTransporterIndexController @Inject()(
                                                  override val auth: AuthAction,
                                                  override val getData: DataRetrievalAction,
                                                  override val requireData: DataRequiredAction,
+                                                 override val withMovement: MovementAction,
                                                  override val userAllowList: UserAllowListAction,
                                                  val controllerComponents: MessagesControllerComponents
                                                ) extends BaseNavigationController with AuthActionHelper {
 
   def onPageLoad(ern: String, arc: String): Action[AnyContent] =
-    authorisedDataRequest(ern, arc) { implicit request =>
-      if (FirstTransporterSection.isCompleted) {
+    authorisedDataRequestWithUpToDateMovement(ern, arc) { implicit request =>
+      if (FirstTransporterSection.isCompleted || FirstTransporterSection.needsReview) {
         Redirect(controllers.sections.firstTransporter.routes.FirstTransporterCheckAnswersController.onPageLoad(ern, arc))
       } else {
         Redirect(controllers.sections.firstTransporter.routes.FirstTransporterNameController.onPageLoad(ern, arc, NormalMode))

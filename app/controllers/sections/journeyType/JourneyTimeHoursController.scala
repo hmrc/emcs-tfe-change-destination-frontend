@@ -40,18 +40,19 @@ class JourneyTimeHoursController @Inject()(
                                             override val auth: AuthAction,
                                             override val getData: DataRetrievalAction,
                                             override val requireData: DataRequiredAction,
+                                            override val withMovement: MovementAction,
                                             formProvider: JourneyTimeHoursFormProvider,
                                             val controllerComponents: MessagesControllerComponents,
                                             view: JourneyTimeHoursView
                                           ) extends BaseNavigationController with AuthActionHelper {
 
   def onPageLoad(ern: String, arc: String, mode: Mode): Action[AnyContent] =
-    authorisedDataRequestAsync(ern, arc) { implicit request =>
+    authorisedDataRequestWithUpToDateMovementAsync(ern, arc) { implicit request =>
       renderView(Ok, fillForm(JourneyTimeHoursPage, formProvider()), mode)
     }
 
   def onSubmit(ern: String, arc: String, mode: Mode): Action[AnyContent] =
-    authorisedDataRequestAsync(ern, arc) { implicit request =>
+    authorisedDataRequestWithUpToDateMovementAsync(ern, arc) { implicit request =>
       formProvider().bindFromRequest().fold(
         renderView(BadRequest, _, mode),
         amountOfHours => {

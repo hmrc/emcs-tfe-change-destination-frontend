@@ -38,7 +38,7 @@
             @govukErrorSummary(ErrorSummaryViewModel(form))
         }
 
-        @h2(messages("destination.subHeading", request.arc), "govuk-caption-xl")
+        @h2(messages("destination.subHeading", request.arc), "govuk-caption-xl", hiddenContent = Some(messages("subHeading.hidden"))))
         
         @govukRadios(
             RadiosViewModel.yesNo(

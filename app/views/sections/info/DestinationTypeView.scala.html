@@ -15,9 +15,9 @@
  *@
 
 @import models.requests.DataRequest
-@import viewmodels.helpers.DestinationTypeHelper
-@import viewmodels.LegendSize
 @import models.sections.info.DispatchPlace
+@import viewmodels.LegendSize
+@import viewmodels.helpers.DestinationTypeHelper
 
 @this(
         layout: templates.Layout,
@@ -42,7 +42,7 @@
             @govukErrorSummary(ErrorSummaryViewModel(form, errorLinkOverrides = Map("value" -> "value_0")))
         }
 
-        @h2(messages("movementInformation.subHeading"), "govuk-caption-xl")
+        @h2(messages("movementInformation.subHeading"), "govuk-caption-xl", hiddenContent = Some(messages("subHeading.hidden"))))
         @govukRadios(
             RadiosViewModel(
                 field = form("value"),

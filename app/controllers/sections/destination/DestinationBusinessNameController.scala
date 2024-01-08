@@ -40,6 +40,7 @@ class DestinationBusinessNameController @Inject()(override val messagesApi: Mess
                                                   override val auth: AuthAction,
                                                   override val getData: DataRetrievalAction,
                                                   override val requireData: DataRequiredAction,
+                                                  override val withMovement: MovementAction,
                                                   override val userAllowList: UserAllowListAction,
                                                   formProvider: DestinationBusinessNameFormProvider,
                                                   val controllerComponents: MessagesControllerComponents,
@@ -47,7 +48,7 @@ class DestinationBusinessNameController @Inject()(override val messagesApi: Mess
                                                  ) extends BaseNavigationController with AuthActionHelper {
 
   def onPageLoad(ern: String, arc: String, mode: Mode): Action[AnyContent] =
-    authorisedDataRequest(ern, arc) { implicit request =>
+    authorisedDataRequestWithUpToDateMovement(ern, arc) { implicit request =>
       withAnswer(DestinationTypePage, controllers.sections.destination.routes.DestinationIndexController.onPageLoad(ern, arc)) {
         destinationType =>
           renderView(Ok, fillForm(DestinationBusinessNamePage, formProvider()), mode, destinationType)
@@ -55,7 +56,7 @@ class DestinationBusinessNameController @Inject()(override val messagesApi: Mess
     }
 
   def onSubmit(ern: String, arc: String, mode: Mode): Action[AnyContent] =
-    authorisedDataRequestAsync(ern, arc) { implicit request =>
+    authorisedDataRequestWithUpToDateMovementAsync(ern, arc) { implicit request =>
       withAnswerAsync(DestinationTypePage, controllers.sections.destination.routes.DestinationIndexController.onPageLoad(ern, arc)) {
         destinationType =>
           formProvider().bindFromRequest().fold(
@@ -76,7 +77,7 @@ class DestinationBusinessNameController @Inject()(override val messagesApi: Mess
     ))
 
   def skipThisQuestion(ern: String, arc: String, mode: Mode): Action[AnyContent] =
-    authorisedDataRequestAsync(ern, arc) { implicit request =>
+    authorisedDataRequestWithUpToDateMovementAsync(ern, arc) { implicit request =>
       val newUserAnswers = request.userAnswers.remove(DestinationBusinessNamePage)
       userAnswersService.set(newUserAnswers).map(result => {
         Redirect(navigator.nextPage(DestinationBusinessNamePage, mode, result))

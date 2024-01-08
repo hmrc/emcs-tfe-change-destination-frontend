@@ -17,7 +17,7 @@
 package controllers.sections.transportUnit
 
 import base.SpecBase
-import controllers.actions.FakeDataRetrievalAction
+import controllers.actions.{FakeDataRetrievalAction, FakeMovementAction}
 import forms.sections.transportUnit.TransportUnitsAddToListFormProvider
 import mocks.services.MockUserAnswersService
 import models.sections.transportUnit.TransportUnitType.Tractor
@@ -39,7 +39,7 @@ import scala.concurrent.Future
 
 class TransportUnitsAddToListControllerSpec extends SpecBase with MockUserAnswersService {
 
-  def submitRoute: Call = routes.TransportUnitsAddToListController.onSubmit(testErn, testDraftId)
+  def submitRoute: Call = routes.TransportUnitsAddToListController.onSubmit(testErn, testArc)
 
   lazy val formProvider: TransportUnitsAddToListFormProvider = new TransportUnitsAddToListFormProvider()
 
@@ -52,7 +52,7 @@ class TransportUnitsAddToListControllerSpec extends SpecBase with MockUserAnswer
   class Test(userAnswers: Option[UserAnswers]) {
     lazy val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest()
 
-    lazy val fullCheckAnswers: Seq[SummaryList] = helper.allTransportUnitsSummary()(dataRequest(request, userAnswers.getOrElse(emptyUserAnswers)), messages(request))
+    lazy val fullCheckAnswers: Seq[SummaryList] = helper.allTransportUnitsSummary()(dataRequest(request, userAnswers.getOrElse(emptyUserAnswers), movementDetails = maxGetMovementResponse.copy(transportDetails = Seq.empty)), messages(request))
 
     lazy val controller = new TransportUnitsAddToListController(
       messagesApi,
@@ -62,6 +62,7 @@ class TransportUnitsAddToListControllerSpec extends SpecBase with MockUserAnswer
       fakeAuthAction,
       new FakeDataRetrievalAction(userAnswers, Some(testMinTraderKnownFacts)),
       dataRequiredAction,
+      new FakeMovementAction(maxGetMovementResponse.copy(transportDetails = Seq.empty)),
       formProvider,
       Helpers.stubMessagesControllerComponents(),
       view,
@@ -73,7 +74,7 @@ class TransportUnitsAddToListControllerSpec extends SpecBase with MockUserAnswer
 
     "must return OK and the correct view for a GET" in new Test(Some(emptyUserAnswers)) {
 
-      val result = controller.onPageLoad(testErn, testDraftId)(request)
+      val result = controller.onPageLoad(testErn, testArc)(request)
 
       status(result) mustEqual OK
       contentAsString(result) mustEqual
@@ -83,7 +84,7 @@ class TransportUnitsAddToListControllerSpec extends SpecBase with MockUserAnswer
     "must populate the view correctly on a GET when the question has previously been answered" in new Test(Some(
       emptyUserAnswers.set(TransportUnitsAddToListPage, TransportUnitsAddToListModel.values.head)
     )) {
-      val result = controller.onPageLoad(testErn, testDraftId)(request)
+      val result = controller.onPageLoad(testErn, testArc)(request)
 
       status(result) mustEqual OK
       contentAsString(result) mustEqual
@@ -95,8 +96,7 @@ class TransportUnitsAddToListControllerSpec extends SpecBase with MockUserAnswer
         .foldLeft(emptyUserAnswers)((answers, int) => answers.set(TransportUnitTypePage(Index(int)), Tractor))
         .set(TransportUnitsAddToListPage, TransportUnitsAddToListModel.values.head)
     )) {
-
-      val result = controller.onPageLoad(testErn, testDraftId)(request)
+      val result = controller.onPageLoad(testErn, testArc)(request)
 
       status(result) mustEqual OK
       contentAsString(result) mustEqual
@@ -109,11 +109,11 @@ class TransportUnitsAddToListControllerSpec extends SpecBase with MockUserAnswer
         .set(TransportUnitsAddToListPage, TransportUnitsAddToListModel.values.head)
     )) {
 
-      val result = controller.onSubmit(testErn, testDraftId)(request.withFormUrlEncodedBody("value" -> TransportUnitsAddToListModel.Yes.toString))
+      val result = controller.onSubmit(testErn, testArc)(request.withFormUrlEncodedBody("value" -> TransportUnitsAddToListModel.Yes.toString))
 
       status(result) mustEqual SEE_OTHER
 
-      redirectLocation(result).value mustEqual controllers.routes.DraftMovementController.onPageLoad(testErn, testDraftId).url
+      redirectLocation(result).value mustEqual controllers.routes.DraftMovementController.onPageLoad(testErn, testArc).url
     }
 
     "must redirect to transport unit type page with next index if yes selected and clear down the answer for the page" in new Test(Some(
@@ -131,11 +131,11 @@ class TransportUnitsAddToListControllerSpec extends SpecBase with MockUserAnswer
               .set(TransportUnitTypePage(testIndex1), Tractor)
           ))
 
-      val result = controller.onSubmit(testErn, testDraftId)(request.withFormUrlEncodedBody(("value", TransportUnitsAddToListModel.Yes.toString)))
+      val result = controller.onSubmit(testErn, testArc)(request.withFormUrlEncodedBody(("value", TransportUnitsAddToListModel.Yes.toString)))
 
       status(result) mustEqual SEE_OTHER
       redirectLocation(result).value mustEqual
-        controllers.sections.transportUnit.routes.TransportUnitTypeController.onPageLoad(testErn, testDraftId, testIndex2, NormalMode).url
+        controllers.sections.transportUnit.routes.TransportUnitTypeController.onPageLoad(testErn, testArc, testIndex2, NormalMode).url
     }
 
     "must redirect to task list page if NoMoreToCome is selected" in new Test(Some(
@@ -149,11 +149,11 @@ class TransportUnitsAddToListControllerSpec extends SpecBase with MockUserAnswer
               .set(TransportUnitsAddToListPage, NoMoreToCome)
           ))
 
-      val result = controller.onSubmit(testErn, testDraftId)(request.withFormUrlEncodedBody(("value", TransportUnitsAddToListModel.NoMoreToCome.toString)))
+      val result = controller.onSubmit(testErn, testArc)(request.withFormUrlEncodedBody(("value", TransportUnitsAddToListModel.NoMoreToCome.toString)))
 
       status(result) mustEqual SEE_OTHER
       redirectLocation(result).value mustEqual
-        controllers.routes.DraftMovementController.onPageLoad(testErn, testDraftId).url
+        controllers.routes.DraftMovementController.onPageLoad(testErn, testArc).url
     }
 
     "must redirect to task list page if MoreToCome is selected" in new Test(Some(
@@ -167,18 +167,18 @@ class TransportUnitsAddToListControllerSpec extends SpecBase with MockUserAnswer
               .set(TransportUnitsAddToListPage, MoreToCome)
           ))
 
-      val result = controller.onSubmit(testErn, testDraftId)(request.withFormUrlEncodedBody(("value", TransportUnitsAddToListModel.MoreToCome.toString)))
+      val result = controller.onSubmit(testErn, testArc)(request.withFormUrlEncodedBody(("value", TransportUnitsAddToListModel.MoreToCome.toString)))
 
       status(result) mustEqual SEE_OTHER
       redirectLocation(result).value mustEqual
-        controllers.routes.DraftMovementController.onPageLoad(testErn, testDraftId).url
+        controllers.routes.DraftMovementController.onPageLoad(testErn, testArc).url
     }
 
     "must return a Bad Request and errors when invalid data is submitted" in new Test(Some(emptyUserAnswers)) {
 
       val boundForm = form.bind(Map("value" -> "invalid value"))
 
-      val result = controller.onSubmit(testErn, testDraftId)(request.withFormUrlEncodedBody(("value", "invalid value")))
+      val result = controller.onSubmit(testErn, testArc)(request.withFormUrlEncodedBody(("value", "invalid value")))
 
       status(result) mustEqual BAD_REQUEST
       contentAsString(result) mustEqual view(Some(boundForm), Nil, NormalMode)(dataRequest(request), messages(request)).toString
@@ -186,7 +186,7 @@ class TransportUnitsAddToListControllerSpec extends SpecBase with MockUserAnswer
 
     "must redirect to Journey Recovery for a GET if no existing data is found" in new Test(None) {
 
-      val result = controller.onPageLoad(testErn, testDraftId)(request)
+      val result = controller.onPageLoad(testErn, testArc)(request)
 
       status(result) mustEqual SEE_OTHER
       redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
@@ -194,7 +194,7 @@ class TransportUnitsAddToListControllerSpec extends SpecBase with MockUserAnswer
 
     "redirect to Journey Recovery for a POST if no existing data is found" in new Test(None) {
 
-      val result = controller.onSubmit(testErn, testDraftId)(request.withFormUrlEncodedBody(("value", TransportUnitsAddToListModel.values.head.toString)))
+      val result = controller.onSubmit(testErn, testArc)(request.withFormUrlEncodedBody(("value", TransportUnitsAddToListModel.values.head.toString)))
 
       status(result) mustEqual SEE_OTHER
 

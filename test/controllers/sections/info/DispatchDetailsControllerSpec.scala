@@ -17,15 +17,14 @@
 package controllers.sections.info
 
 import base.SpecBase
-import controllers.actions.FakeDataRetrievalAction
 import controllers.actions.predraft.FakePreDraftRetrievalAction
-import controllers.routes
+import controllers.actions.{FakeDataRetrievalAction, FakeMovementAction}
 import forms.sections.info.DispatchDetailsFormProvider
 import mocks.services.{MockPreDraftService, MockUserAnswersService}
 import models.sections.info.DispatchDetailsModel
 import models.{NormalMode, UserAnswers}
 import navigation.FakeNavigators.FakeInfoNavigator
-import pages.sections.info.{DeferredMovementPage, DispatchDetailsPage}
+import pages.sections.info.DispatchDetailsPage
 import play.api.data.Form
 import play.api.mvc.{AnyContentAsEmpty, Call}
 import play.api.test.Helpers._
@@ -40,10 +39,9 @@ class DispatchDetailsControllerSpec extends SpecBase with MockUserAnswersService
 
   val testLocalDate: LocalDate = LocalDate.of(2023, 2, 9)
 
-  lazy val dispatchDetailsPreDraftSubmitRoute: Call = controllers.sections.info.routes.DispatchDetailsController.onPreDraftSubmit(testErn, NormalMode)
-  lazy val dispatchDetailsSubmitRoute: Call = controllers.sections.info.routes.DispatchDetailsController.onSubmit(testErn, testDraftId)
+  lazy val dispatchDetailsPreDraftSubmitRoute: Call = controllers.sections.info.routes.DispatchDetailsController.onPreDraftSubmit(testErn, testArc, NormalMode)
 
-  lazy val formProvider: DispatchDetailsFormProvider = new DispatchDetailsFormProvider()
+  lazy val formProvider: DispatchDetailsFormProvider = app.injector.instanceOf[DispatchDetailsFormProvider]
   lazy val form: Form[DispatchDetailsModel] = formProvider()
   lazy val view: DispatchDetailsView = app.injector.instanceOf[DispatchDetailsView]
 
@@ -59,6 +57,7 @@ class DispatchDetailsControllerSpec extends SpecBase with MockUserAnswersService
       preDraftDataRequiredAction,
       new FakeDataRetrievalAction(userAnswers, Some(testMinTraderKnownFacts)),
       dataRequiredAction,
+      new FakeMovementAction(maxGetMovementResponse),
       formProvider,
       mockUserAnswersService,
       Helpers.stubMessagesControllerComponents(),
@@ -71,175 +70,53 @@ class DispatchDetailsControllerSpec extends SpecBase with MockUserAnswersService
 
     "onPreDraftPageLoad" - {
 
-      "must redirect when there is no deferred movement answer" in new Fixture(Some(emptyUserAnswers)) {
-        val result = controller.onPreDraftPageLoad(testErn, NormalMode)(request)
+      "must return OK and the correct view" in new Fixture(Some(emptyUserAnswers)) {
+        val result = controller.onPreDraftPageLoad(testErn, testArc, NormalMode)(request)
 
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual controllers.sections.info.routes.DeferredMovementController.onPreDraftPageLoad(testErn, NormalMode).url
-      }
-
-      Seq(
-        "is a deferred movement" -> true,
-        "is not a deferred movement" -> false
-      ).foreach {
-        case (action, deferredMovement) =>
-
-          s"when this $action" - {
-
-            "must return OK and the correct view" in new Fixture(Some(emptyUserAnswers.set(DeferredMovementPage(), deferredMovement))) {
-              val result = controller.onPreDraftPageLoad(testErn, NormalMode)(request)
-
-              status(result) mustEqual OK
-              contentAsString(result) mustEqual view(
-                form = form,
-                deferredMovement = deferredMovement,
-                onSubmitCall = dispatchDetailsPreDraftSubmitRoute,
-                skipQuestionCall = testOnwardRoute
-              )(dataRequest(request), messages(request)).toString
-            }
-          }
+        status(result) mustEqual OK
+        contentAsString(result) mustEqual view(
+          form = form,
+          deferredMovement = false, //TODO: Refactor in future - we don't know if it was originally deferred. So delete?
+          onSubmitCall = dispatchDetailsPreDraftSubmitRoute,
+          skipQuestionCall = testOnwardRoute
+        )(dataRequest(request), messages(request)).toString
       }
     }
 
     "onPreDraftSubmit" - {
 
-      "must redirect when there is no deferred movement answer" in new Fixture(Some(emptyUserAnswers)) {
-        val result = controller.onPreDraftSubmit(testErn, NormalMode)(request)
+      "must redirect to the next page when valid data is submitted" in new Fixture(Some(emptyUserAnswers)) {
+        val dispatchDetailsModel = DispatchDetailsModel(
+          date = LocalDate.of(2022, 12, 31),
+          time = LocalTime.of(6, 0)
+        )
+
+        MockPreDraftService.set(emptyUserAnswers.set(DispatchDetailsPage(), dispatchDetailsModel)).returns(Future.successful(true))
+        MockUserAnswersService.set(emptyUserAnswers).returns(Future.successful(emptyUserAnswers))
+
+        val result = controller.onPreDraftSubmit(testErn, testArc, NormalMode)(request.withFormUrlEncodedBody(
+          ("value.day", "31"),
+          ("value.month", "12"),
+          ("value.year", "2022"),
+          ("time", "6am")
+        ))
 
         status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual controllers.sections.info.routes.DeferredMovementController.onPreDraftPageLoad(testErn, NormalMode).url
+        redirectLocation(result).value mustEqual testOnwardRoute.url
       }
 
-      Seq(
-        "is a deferred movement" -> true,
-        "is not a deferred movement" -> false
-      ).foreach {
-        case (action, deferredMovement) =>
+      "must return a Bad Request and errors when invalid data is submitted" in new Fixture(Some(emptyUserAnswers)) {
+        val boundForm = form.bind(Map("time" -> "ten past twelve"))
 
-          s"when this $action" - {
+        val result = controller.onPreDraftSubmit(testErn, testArc, NormalMode)(request.withFormUrlEncodedBody(("time", "ten past twelve")))
 
-            val userAnswersSoFar = emptyUserAnswers.set(DeferredMovementPage(), deferredMovement)
-
-            "must redirect to the next page when valid data is submitted" in new Fixture(Some(userAnswersSoFar)) {
-              val dispatchDetailsModel = DispatchDetailsModel(
-                date = LocalDate.of(2022, 12, 31),
-                time = LocalTime.of(6, 0)
-              )
-
-              MockPreDraftService.set(userAnswersSoFar.set(DispatchDetailsPage(), dispatchDetailsModel)).returns(Future.successful(true))
-
-              val result = controller.onPreDraftSubmit(testErn, NormalMode)(request.withFormUrlEncodedBody(
-                ("value.day", "31"),
-                ("value.month", "12"),
-                ("value.year", "2022"),
-                ("time", "6am")
-              ))
-
-              status(result) mustEqual SEE_OTHER
-              redirectLocation(result).value mustEqual testOnwardRoute.url
-            }
-
-            "must return a Bad Request and errors when invalid data is submitted" in new Fixture(Some(userAnswersSoFar)) {
-              val boundForm = form.bind(Map("time" -> "ten past twelve"))
-
-              val result = controller.onPreDraftSubmit(testErn, NormalMode)(request.withFormUrlEncodedBody(("time", "ten past twelve")))
-
-              status(result) mustEqual BAD_REQUEST
-              contentAsString(result) mustEqual view(
-                form = boundForm,
-                deferredMovement = deferredMovement,
-                onSubmitCall = dispatchDetailsPreDraftSubmitRoute,
-                skipQuestionCall = testOnwardRoute
-              )(dataRequest(request), messages(request)).toString
-            }
-          }
-      }
-    }
-
-    "onPageLoad" - {
-
-      "must redirect when there is no deferred movement answer" in new Fixture(Some(emptyUserAnswers)) {
-        val result = controller.onPageLoad(testErn, testDraftId)(request)
-
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual routes.JourneyRecoveryController.onPageLoad().url
-      }
-
-      Seq(
-        "is a deferred movement" -> true,
-        "is not a deferred movement" -> false
-      ).foreach {
-        case (action, deferredMovement) =>
-
-          s"when this $action" - {
-
-            "must return OK and the correct view" in new Fixture(Some(emptyUserAnswers.set(DeferredMovementPage(), deferredMovement))) {
-              val result = controller.onPageLoad(testErn, testDraftId)(request)
-
-              status(result) mustEqual OK
-              contentAsString(result) mustEqual view(
-                form = form,
-                deferredMovement = deferredMovement,
-                onSubmitCall = dispatchDetailsSubmitRoute,
-                skipQuestionCall = testOnwardRoute
-              )(dataRequest(request), messages(request)).toString
-            }
-          }
-      }
-    }
-
-    "onSubmit" - {
-
-      "must redirect when there is no deferred movement answer" in new Fixture(Some(emptyUserAnswers)) {
-        val result = controller.onSubmit(testErn, testDraftId)(request)
-
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual routes.JourneyRecoveryController.onPageLoad().url
-      }
-
-      Seq(
-        "is a deferred movement" -> true,
-        "is not a deferred movement" -> false
-      ).foreach {
-        case (action, deferredMovement) =>
-
-          s"when this $action" - {
-
-            val userAnswersSoFar = emptyUserAnswers.set(DeferredMovementPage(), deferredMovement)
-
-            "must redirect to the next page when valid data is submitted" in new Fixture(Some(userAnswersSoFar)) {
-              val dispatchDetailsModel = DispatchDetailsModel(
-                date = LocalDate.of(2022, 12, 31),
-                time = LocalTime.of(6, 0)
-              )
-
-              MockUserAnswersService.set(userAnswersSoFar.set(DispatchDetailsPage(), dispatchDetailsModel)).returns(Future.successful(emptyUserAnswers))
-
-              val result = controller.onSubmit(testErn, testDraftId)(request.withFormUrlEncodedBody(
-                ("value.day", "31"),
-                ("value.month", "12"),
-                ("value.year", "2022"),
-                ("time", "6am")
-              ))
-
-              status(result) mustEqual SEE_OTHER
-              redirectLocation(result).value mustEqual testOnwardRoute.url
-            }
-
-            "must return a Bad Request and errors when invalid data is submitted" in new Fixture(Some(userAnswersSoFar)) {
-              val boundForm = form.bind(Map("time" -> "ten past twelve"))
-
-              val result = controller.onSubmit(testErn, testDraftId)(request.withFormUrlEncodedBody(("time", "ten past twelve")))
-
-              status(result) mustEqual BAD_REQUEST
-              contentAsString(result) mustEqual view(
-                form = boundForm,
-                deferredMovement = deferredMovement,
-                onSubmitCall = dispatchDetailsSubmitRoute,
-                skipQuestionCall = testOnwardRoute
-              )(dataRequest(request), messages(request)).toString
-            }
-          }
+        status(result) mustEqual BAD_REQUEST
+        contentAsString(result) mustEqual view(
+          form = boundForm,
+          deferredMovement = false, //TODO: Refactor in future - we don't know if it was originally deferred. So delete?
+          onSubmitCall = dispatchDetailsPreDraftSubmitRoute,
+          skipQuestionCall = testOnwardRoute
+        )(dataRequest(request), messages(request)).toString
       }
     }
   }

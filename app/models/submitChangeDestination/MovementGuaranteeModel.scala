@@ -22,6 +22,7 @@ import pages.sections.guarantor.{GuarantorArrangerPage, GuarantorRequiredPage}
 import play.api.libs.json.{Json, OFormat}
 import utils.ModelConstructorHelpers
 
+//TODO: REFACTOR FOR ACTUAL COD SUBMISSION
 case class MovementGuaranteeModel(
                                    guarantorTypeCode: GuarantorArranger,
                                    guarantorTrader: Option[Seq[TraderModel]]

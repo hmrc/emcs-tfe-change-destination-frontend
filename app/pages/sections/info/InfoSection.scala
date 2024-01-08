@@ -16,20 +16,19 @@
 
 package pages.sections.info
 
-import models.NorthernIrelandWarehouseKeeper
+import models.UserType.NorthernIrelandWarehouseKeeper
 import models.requests.DataRequest
 import pages.sections.Section
 import play.api.libs.json.{JsObject, JsPath}
 import viewmodels.taskList.{Completed, InProgress, NotStarted, TaskListStatus}
 
 object InfoSection extends Section[JsObject] {
+
+  //TODO: Refactor this for Change of Destination info section
   override def status(implicit request: DataRequest[_]): TaskListStatus = {
 
     val requiredPages: Seq[Option[_]] = Seq(
       request.userAnswers.get(DestinationTypePage),
-      request.userAnswers.get(DeferredMovementPage()),
-      request.userAnswers.get(LocalReferenceNumberPage()),
-      request.userAnswers.get(InvoiceDetailsPage()),
       request.userAnswers.get(DispatchDetailsPage())
     )
 

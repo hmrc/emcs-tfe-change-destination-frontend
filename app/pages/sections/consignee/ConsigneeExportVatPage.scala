@@ -16,11 +16,22 @@
 
 package pages.sections.consignee
 
-import models.sections.consignee.ConsigneeExportVat
+import models.requests.DataRequest
+import models.response.emcsTfe.TraderModel
+import models.sections.consignee.{ConsigneeExportVat, ConsigneeExportVatType}
 import pages.QuestionPage
 import play.api.libs.json.JsPath
 
 case object ConsigneeExportVatPage extends QuestionPage[ConsigneeExportVat] {
   override val toString: String = "exportVatOrEori"
   override val path: JsPath = ConsigneeSection.path \ toString
+
+  override def getValueFromIE801(implicit request: DataRequest[_]): Option[ConsigneeExportVat] =
+    request.movementDetails.consigneeTrader.map {
+      case TraderModel(_, _, _, Some(vatNumber), _) =>
+        // TODO: check - consignee doesn't have a VatNumber in the XSD
+        ConsigneeExportVat(ConsigneeExportVatType.YesVatNumber, Some(vatNumber), None)
+      case TraderModel(_, _, _, _, Some(eoriNumber)) => ConsigneeExportVat(ConsigneeExportVatType.YesEoriNumber, None, Some(eoriNumber))
+      case _ => ConsigneeExportVat(ConsigneeExportVatType.No, None, None)
+    }
 }

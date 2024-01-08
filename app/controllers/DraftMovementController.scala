@@ -30,12 +30,13 @@ class DraftMovementController @Inject()(override val messagesApi: MessagesApi,
                                         override val userAllowList: UserAllowListAction,
                                         override val getData: DataRetrievalAction,
                                         override val requireData: DataRequiredAction,
+                                        override val withMovement: MovementAction,
                                         val controllerComponents: MessagesControllerComponents,
                                         view: DraftMovementView
                                        ) extends FrontendBaseController with I18nSupport with AuthActionHelper with Logging {
 
   def onPageLoad(ern: String, arc: String): Action[AnyContent] =
-    authorisedDataRequest(ern, arc) { implicit request =>
+    authorisedDataRequestWithUpToDateMovement(ern, arc) { implicit request =>
       Ok(view())
     }
 }

@@ -17,17 +17,16 @@
 package controllers.sections.destination
 
 import base.SpecBase
-import controllers.actions.FakeDataRetrievalAction
+import controllers.actions.{FakeDataRetrievalAction, FakeMovementAction}
 import controllers.routes
 import fixtures.UserAddressFixtures
 import forms.sections.destination.DestinationDetailsChoiceFormProvider
 import mocks.services.MockUserAnswersService
-import models.sections.info.DispatchPlace.GreatBritain
 import models.sections.info.movementScenario.MovementScenario.RegisteredConsignee
 import models.{CheckMode, NormalMode, UserAnswers}
 import navigation.FakeNavigators.FakeDestinationNavigator
 import pages.sections.destination._
-import pages.sections.info.{DestinationTypePage, DispatchPlacePage}
+import pages.sections.info.DestinationTypePage
 import play.api.data.Form
 import play.api.mvc.Call
 import play.api.test.FakeRequest
@@ -44,11 +43,11 @@ class DestinationDetailsChoiceControllerSpec extends SpecBase with MockUserAnswe
   lazy val view: DestinationDetailsChoiceView = app.injector.instanceOf[DestinationDetailsChoiceView]
 
   lazy val destinationDetailsChoiceRoute: String =
-    controllers.sections.destination.routes.DestinationDetailsChoiceController.onPageLoad(testErn, testDraftId, NormalMode).url
+    controllers.sections.destination.routes.DestinationDetailsChoiceController.onPageLoad(testErn, testArc, NormalMode).url
   lazy val destinationDetailsChoiceRouteCheckMode: String =
-    controllers.sections.destination.routes.DestinationDetailsChoiceController.onPageLoad(testErn, testDraftId, CheckMode).url
+    controllers.sections.destination.routes.DestinationDetailsChoiceController.onPageLoad(testErn, testArc, CheckMode).url
   lazy val destinationDetailsChoiceSubmit: Call =
-    controllers.sections.destination.routes.DestinationDetailsChoiceController.onSubmit(testErn, testDraftId, NormalMode)
+    controllers.sections.destination.routes.DestinationDetailsChoiceController.onSubmit(testErn, testArc, NormalMode)
 
   class Setup(optUserAnswers: Option[UserAnswers] = Some(emptyUserAnswers)) {
 
@@ -61,6 +60,7 @@ class DestinationDetailsChoiceControllerSpec extends SpecBase with MockUserAnswe
       fakeAuthAction,
       new FakeDataRetrievalAction(optUserAnswers, Some(testMinTraderKnownFacts)),
       dataRequiredAction,
+      new FakeMovementAction(maxGetMovementResponse),
       formProvider,
       messagesControllerComponents,
       view,
@@ -73,7 +73,7 @@ class DestinationDetailsChoiceControllerSpec extends SpecBase with MockUserAnswe
     "must return OK and the correct view for a GET" in new Setup(Some(emptyUserAnswers
       .set(DestinationTypePage, RegisteredConsignee)
     )) {
-      val result = testController.onPageLoad(testErn, testDraftId, NormalMode)(request)
+      val result = testController.onPageLoad(testErn, testArc, NormalMode)(request)
 
       val expectedView = view(form, destinationDetailsChoiceSubmit, RegisteredConsignee)(dataRequest(request), messages(request)).toString
 
@@ -85,7 +85,7 @@ class DestinationDetailsChoiceControllerSpec extends SpecBase with MockUserAnswe
       .set(DestinationDetailsChoicePage, true)
       .set(DestinationTypePage, RegisteredConsignee)
     )) {
-      val result = testController.onPageLoad(testErn, testDraftId, NormalMode)(request)
+      val result = testController.onPageLoad(testErn, testArc, NormalMode)(request)
 
       val expectedView = view(form.fill(true), destinationDetailsChoiceSubmit, RegisteredConsignee)(dataRequest(request), messages(request)).toString
 
@@ -101,7 +101,7 @@ class DestinationDetailsChoiceControllerSpec extends SpecBase with MockUserAnswe
 
       val req = FakeRequest(POST, destinationDetailsChoiceRoute).withFormUrlEncodedBody(("value", "true"))
 
-      val result = testController.onSubmit(testErn, testDraftId, NormalMode)(req)
+      val result = testController.onSubmit(testErn, testArc, NormalMode)(req)
 
       status(result) mustEqual SEE_OTHER
       redirectLocation(result).value mustEqual testOnwardRoute.url
@@ -120,7 +120,7 @@ class DestinationDetailsChoiceControllerSpec extends SpecBase with MockUserAnswe
         val req = FakeRequest(POST, destinationDetailsChoiceRouteCheckMode)
           .withFormUrlEncodedBody(("value", "true"))
 
-        val result = testController.onSubmit(testErn, testDraftId, NormalMode)(req)
+        val result = testController.onSubmit(testErn, testArc, NormalMode)(req)
 
         status(result) mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual testOnwardRoute.url
@@ -147,7 +147,7 @@ class DestinationDetailsChoiceControllerSpec extends SpecBase with MockUserAnswe
         val req = FakeRequest(POST, destinationDetailsChoiceRouteCheckMode)
           .withFormUrlEncodedBody(("value", "false"))
 
-        val result = testController.onSubmit(testErn, testDraftId, NormalMode)(req)
+        val result = testController.onSubmit(testErn, testArc, NormalMode)(req)
 
         status(result) mustEqual SEE_OTHER
       }
@@ -160,7 +160,7 @@ class DestinationDetailsChoiceControllerSpec extends SpecBase with MockUserAnswe
 
       val boundForm = form.bind(Map("value" -> "invalid value"))
 
-      val result = testController.onSubmit(testErn, testDraftId, NormalMode)(req)
+      val result = testController.onSubmit(testErn, testArc, NormalMode)(req)
 
       val expectedView = view(boundForm, destinationDetailsChoiceSubmit, RegisteredConsignee)(dataRequest(request), messages(request)).toString
 
@@ -168,28 +168,8 @@ class DestinationDetailsChoiceControllerSpec extends SpecBase with MockUserAnswe
       contentAsString(result) mustEqual expectedView
     }
 
-    "must redirect to journey recovery for a GET if the destination type value is invalid/none for this controller/page" in new Setup(Some(emptyUserAnswers
-      .set(DispatchPlacePage, GreatBritain)
-    )) {
-      val result = testController.onPageLoad(testErn, testDraftId, NormalMode)(request)
-
-      status(result) mustEqual SEE_OTHER
-      redirectLocation(result).value mustEqual routes.JourneyRecoveryController.onPageLoad().url
-    }
-
-    "must redirect to journey recovery for a POST if the destination type value is invalid/none for this controller/page" in new Setup(Some(emptyUserAnswers
-      .set(DispatchPlacePage, GreatBritain)
-    )) {
-      val req = FakeRequest(POST, destinationDetailsChoiceRoute).withFormUrlEncodedBody(("value", "answer"))
-
-      val result = testController.onSubmit(testErn, testDraftId, NormalMode)(req)
-
-      status(result) mustEqual SEE_OTHER
-      redirectLocation(result).value mustEqual routes.JourneyRecoveryController.onPageLoad().url
-    }
-
     "must redirect to Journey Recovery for a GET if no existing data is found" in new Setup(None) {
-      val result = testController.onPageLoad(testErn, testDraftId, NormalMode)(request)
+      val result = testController.onPageLoad(testErn, testArc, NormalMode)(request)
 
       status(result) mustEqual SEE_OTHER
       redirectLocation(result).value mustEqual routes.JourneyRecoveryController.onPageLoad().url
@@ -198,7 +178,7 @@ class DestinationDetailsChoiceControllerSpec extends SpecBase with MockUserAnswe
     "redirect to Journey Recovery for a POST if no existing data is found" in new Setup(None) {
       val req = FakeRequest(POST, destinationDetailsChoiceRoute).withFormUrlEncodedBody(("value", "true"))
 
-      val result = testController.onSubmit(testErn, testDraftId, NormalMode)(req)
+      val result = testController.onSubmit(testErn, testArc, NormalMode)(req)
 
       status(result) mustEqual SEE_OTHER
 

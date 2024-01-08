@@ -21,6 +21,7 @@ import models.requests.DataRequest
 import pages.sections.consignee.ConsigneeExemptOrganisationPage
 import play.api.libs.json.{Json, OFormat}
 
+//TODO: REFACTOR FOR ACTUAL COD SUBMISSION
 case class ComplementConsigneeTraderModel(
                                            memberStateCode: String,
                                            serialNumberOfCertificateOfExemption: Option[String]

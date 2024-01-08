@@ -21,12 +21,14 @@ import controllers.routes
 import models._
 import models.sections.journeyType.HowMovementTransported.{AirTransport, Other}
 import pages._
-import pages.sections.info.LocalReferenceNumberPage
 import pages.sections.journeyType._
+import play.api.test.FakeRequest
 
 class JourneyTypeNavigatorSpec extends SpecBase {
 
   val navigator = new JourneyTypeNavigator
+
+  implicit val request = dataRequest(FakeRequest())
 
   "JourneyTypeNavigator" - {
 
@@ -36,7 +38,7 @@ class JourneyTypeNavigatorSpec extends SpecBase {
 
         case object UnknownPage extends Page
         navigator.nextPage(UnknownPage, NormalMode, emptyUserAnswers) mustBe
-          controllers.sections.journeyType.routes.CheckYourAnswersJourneyTypeController.onPageLoad(testErn, testDraftId)
+          controllers.sections.journeyType.routes.CheckYourAnswersJourneyTypeController.onPageLoad(testErn, testArc)
       }
 
       "for the HowMovementTransported page" - {
@@ -45,11 +47,10 @@ class JourneyTypeNavigatorSpec extends SpecBase {
 
           "when the option selected is 'Other'" in {
             val userAnswers = emptyUserAnswers
-              .set(LocalReferenceNumberPage(), "123")
               .set(HowMovementTransportedPage, Other)
 
             navigator.nextPage(HowMovementTransportedPage, NormalMode, userAnswers) mustBe
-              controllers.sections.journeyType.routes.GiveInformationOtherTransportController.onPageLoad(testErn, testDraftId, NormalMode)
+              controllers.sections.journeyType.routes.GiveInformationOtherTransportController.onPageLoad(testErn, testArc, NormalMode)
           }
         }
 
@@ -57,33 +58,22 @@ class JourneyTypeNavigatorSpec extends SpecBase {
 
           "when the option selected is not `Other`" - {
 
-            "when the user has not previously entered a days or hours value" in {
-              val userAnswers = emptyUserAnswers
-                .set(LocalReferenceNumberPage(), "123")
-                .set(HowMovementTransportedPage, AirTransport)
-
-              navigator.nextPage(HowMovementTransportedPage, NormalMode, userAnswers) mustBe
-                controllers.sections.journeyType.routes.JourneyTimeDaysController.onPageLoad(testErn, testDraftId, NormalMode)
-            }
-
             "when the user previously entered a days value" in {
               val userAnswers = emptyUserAnswers
-                .set(LocalReferenceNumberPage(), "123")
                 .set(HowMovementTransportedPage, AirTransport)
                 .set(JourneyTimeDaysPage, 1)
 
-              navigator.nextPage(HowMovementTransportedPage, NormalMode, userAnswers) mustBe
-                controllers.sections.journeyType.routes.JourneyTimeDaysController.onPageLoad(testErn, testDraftId, NormalMode)
+              navigator.nextPage(HowMovementTransportedPage, NormalMode, userAnswers)(dataRequest(FakeRequest(), movementDetails = maxGetMovementResponse.copy(journeyTime = "10 days"))) mustBe
+                controllers.sections.journeyType.routes.JourneyTimeDaysController.onPageLoad(testErn, testArc, NormalMode)
             }
 
             "when the user previously entered a hours value" in {
               val userAnswers = emptyUserAnswers
-                .set(LocalReferenceNumberPage(), "123")
                 .set(HowMovementTransportedPage, AirTransport)
                 .set(JourneyTimeHoursPage, 1)
 
               navigator.nextPage(HowMovementTransportedPage, NormalMode, userAnswers) mustBe
-                controllers.sections.journeyType.routes.JourneyTimeHoursController.onPageLoad(testErn, testDraftId, NormalMode)
+                controllers.sections.journeyType.routes.JourneyTimeHoursController.onPageLoad(testErn, testArc, NormalMode)
             }
           }
         }
@@ -93,12 +83,11 @@ class JourneyTypeNavigatorSpec extends SpecBase {
 
         "must go to the Journey Type Days page" - {
           val userAnswers = emptyUserAnswers
-            .set(LocalReferenceNumberPage(), "123")
             .set(HowMovementTransportedPage, Other)
             .set(GiveInformationOtherTransportPage, "some information text")
 
           navigator.nextPage(GiveInformationOtherTransportPage, NormalMode, userAnswers) mustBe
-            controllers.sections.journeyType.routes.JourneyTimeDaysController.onPageLoad(testErn, testDraftId, NormalMode)
+            controllers.sections.journeyType.routes.JourneyTimeDaysController.onPageLoad(testErn, testArc, NormalMode)
 
         }
       }
@@ -107,11 +96,10 @@ class JourneyTypeNavigatorSpec extends SpecBase {
 
         "must go to the Journey Type CYA page" - {
           val userAnswers = emptyUserAnswers
-            .set(LocalReferenceNumberPage(), "123")
             .set(HowMovementTransportedPage, AirTransport)
 
           navigator.nextPage(JourneyTimeDaysPage, NormalMode, userAnswers) mustBe
-            controllers.sections.journeyType.routes.CheckYourAnswersJourneyTypeController.onPageLoad(testErn, testDraftId)
+            controllers.sections.journeyType.routes.CheckYourAnswersJourneyTypeController.onPageLoad(testErn, testArc)
 
         }
       }
@@ -120,11 +108,10 @@ class JourneyTypeNavigatorSpec extends SpecBase {
 
         "must go to the Journey Type CYA page" - {
           val userAnswers = emptyUserAnswers
-            .set(LocalReferenceNumberPage(), "123")
             .set(HowMovementTransportedPage, AirTransport)
 
           navigator.nextPage(JourneyTimeHoursPage, NormalMode, userAnswers) mustBe
-            controllers.sections.journeyType.routes.CheckYourAnswersJourneyTypeController.onPageLoad(testErn, testDraftId)
+            controllers.sections.journeyType.routes.CheckYourAnswersJourneyTypeController.onPageLoad(testErn, testArc)
 
         }
       }
@@ -133,7 +120,7 @@ class JourneyTypeNavigatorSpec extends SpecBase {
 
         "must go to the construction page" in {
           navigator.nextPage(CheckYourAnswersJourneyTypePage, NormalMode, emptyUserAnswers) mustBe
-            routes.DraftMovementController.onPageLoad(testErn, testDraftId)
+            routes.DraftMovementController.onPageLoad(testErn, testArc)
         }
       }
     }
@@ -146,11 +133,10 @@ class JourneyTypeNavigatorSpec extends SpecBase {
 
           "when the option selected is 'Other'" in {
             val userAnswers = emptyUserAnswers
-              .set(LocalReferenceNumberPage(), "123")
               .set(HowMovementTransportedPage, Other)
 
             navigator.nextPage(HowMovementTransportedPage, CheckMode, userAnswers) mustBe
-              controllers.sections.journeyType.routes.GiveInformationOtherTransportController.onPageLoad(testErn, testDraftId, CheckMode)
+              controllers.sections.journeyType.routes.GiveInformationOtherTransportController.onPageLoad(testErn, testArc, CheckMode)
           }
         }
 
@@ -158,11 +144,10 @@ class JourneyTypeNavigatorSpec extends SpecBase {
 
           "when the option selected is not `Other`" in {
             val userAnswers = emptyUserAnswers
-              .set(LocalReferenceNumberPage(), "123")
               .set(HowMovementTransportedPage, AirTransport)
 
             navigator.nextPage(HowMovementTransportedPage, CheckMode, userAnswers) mustBe
-              controllers.sections.journeyType.routes.CheckYourAnswersJourneyTypeController.onPageLoad(testErn, testDraftId)
+              controllers.sections.journeyType.routes.CheckYourAnswersJourneyTypeController.onPageLoad(testErn, testArc)
           }
         }
       }
@@ -170,7 +155,7 @@ class JourneyTypeNavigatorSpec extends SpecBase {
       "must go to CheckYourAnswersJourneyTypeController" in {
         case object UnknownPage extends Page
         navigator.nextPage(UnknownPage, CheckMode, emptyUserAnswers) mustBe
-          controllers.sections.journeyType.routes.CheckYourAnswersJourneyTypeController.onPageLoad(testErn, testDraftId)
+          controllers.sections.journeyType.routes.CheckYourAnswersJourneyTypeController.onPageLoad(testErn, testArc)
       }
     }
 
@@ -178,7 +163,7 @@ class JourneyTypeNavigatorSpec extends SpecBase {
       "must go to CheckYourAnswers" in {
         case object UnknownPage extends Page
         navigator.nextPage(UnknownPage, ReviewMode, emptyUserAnswers) mustBe
-          routes.CheckYourAnswersController.onPageLoad(testErn, testDraftId)
+          routes.CheckYourAnswersController.onPageLoad(testErn, testArc)
       }
     }
 

@@ -16,6 +16,7 @@
 
 package pages
 
+import models.requests.DataRequest
 import pages.behaviours.PageBehaviours
 import play.api.libs.json.JsPath
 
@@ -23,6 +24,8 @@ class QuestionPageSpec extends PageBehaviours {
   object TestPage extends QuestionPage[String] {
     override val toString: String = "testPage"
     override val path: JsPath = JsPath \ toString
+
+    override def getValueFromIE801(implicit request: DataRequest[_]): Option[String] = None
   }
 
   "QuestionPage" - {

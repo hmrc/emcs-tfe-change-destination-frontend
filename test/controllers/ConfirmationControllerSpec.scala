@@ -18,12 +18,11 @@ package controllers
 
 import base.SpecBase
 import config.AppConfig
-import controllers.actions.FakeDataRetrievalAction
+import controllers.actions.{FakeDataRetrievalAction, FakeMovementAction}
 import models.UserAnswers
 import models.requests.DataRequest
 import org.scalamock.scalatest.MockFactory
 import pages.DeclarationPage
-import pages.sections.info.LocalReferenceNumberPage
 import play.api.Application
 import play.api.i18n.Messages
 import play.api.inject.guice.GuiceApplicationBuilder
@@ -35,7 +34,6 @@ import views.html.ConfirmationView
 class ConfirmationControllerSpec extends SpecBase with MockFactory {
   val testUserAnswers: UserAnswers = emptyUserAnswers
     .set(DeclarationPage, testSubmissionDate)
-    .set(LocalReferenceNumberPage(), testConfirmationReference)
 
   lazy val testExciseEnquiriesLink = "testExciseEnquiriesLink"
   lazy val testReturnToAccountLink = "testReturnToAccountLink"
@@ -52,7 +50,7 @@ class ConfirmationControllerSpec extends SpecBase with MockFactory {
       ).build()
 
   lazy val view: ConfirmationView = app.injector.instanceOf[ConfirmationView]
-  lazy val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest(GET, routes.ConfirmationController.onPageLoad(testErn, testDraftId).url)
+  lazy val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest(GET, routes.ConfirmationController.onPageLoad(testErn, testArc).url)
   lazy val controller: ConfirmationController = app.injector.instanceOf[ConfirmationController]
 
   def getController(userAnswers: UserAnswers) = new ConfirmationController(
@@ -61,6 +59,7 @@ class ConfirmationControllerSpec extends SpecBase with MockFactory {
     fakeUserAllowListAction,
     new FakeDataRetrievalAction(Some(userAnswers), Some(testMinTraderKnownFacts)),
     requireData = dataRequiredAction,
+    new FakeMovementAction(maxGetMovementResponse),
     controllerComponents = messagesControllerComponents,
     config = app.injector.instanceOf[AppConfig],
     view = view
@@ -78,11 +77,11 @@ class ConfirmationControllerSpec extends SpecBase with MockFactory {
 
         implicit val messagesInstance: Messages = messages(req)
 
-        val result = getController(testUserAnswers).onPageLoad(testErn, testDraftId)(req)
+        val result = getController(testUserAnswers).onPageLoad(testErn, testArc)(req)
 
         status(result) mustEqual OK
         contentAsString(result) mustEqual view(
-          reference = testConfirmationReference,
+          reference = testArc,
           dateOfSubmission = testSubmissionDate.toLocalDate,
           exciseEnquiriesLink = testExciseEnquiriesLink,
           returnToAccountLink = testReturnToAccountLink,
@@ -93,7 +92,7 @@ class ConfirmationControllerSpec extends SpecBase with MockFactory {
 
     "when no local reference or submission date is found" - {
       "must redirect to Journey Recovery" in {
-        val result = getController(emptyUserAnswers).onPageLoad(testErn, testDraftId)(request)
+        val result = getController(emptyUserAnswers).onPageLoad(testErn, testArc)(request)
 
         status(result) mustBe SEE_OTHER
         redirectLocation(result).value mustBe routes.JourneyRecoveryController.onPageLoad().url

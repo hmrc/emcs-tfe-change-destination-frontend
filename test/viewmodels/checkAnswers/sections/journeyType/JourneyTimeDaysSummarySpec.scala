@@ -61,7 +61,7 @@ class JourneyTimeDaysSummarySpec extends SpecBase with Matchers {
                   actions = Seq(
                     ActionItemViewModel(
                       content = messagesForLanguage.change,
-                      href = controllers.sections.journeyType.routes.JourneyTimeDaysController.onPageLoad(testErn, testDraftId, CheckMode).url,
+                      href = controllers.sections.journeyType.routes.JourneyTimeDaysController.onPageLoad(testErn, testArc, CheckMode).url,
                       id = "journeyTimeDays"
                     ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHidden)
                   )

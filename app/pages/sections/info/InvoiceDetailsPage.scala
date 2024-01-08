@@ -16,11 +16,21 @@
 
 package pages.sections.info
 
+import models.requests.DataRequest
 import models.sections.info.InvoiceDetailsModel
 import pages.QuestionPage
 import play.api.libs.json.JsPath
 
-case class InvoiceDetailsPage(isOnPreDraftFlow: Boolean = true) extends QuestionPage[InvoiceDetailsModel] {
+import java.time.LocalDate
+
+case object InvoiceDetailsPage extends QuestionPage[InvoiceDetailsModel] {
   override val toString: String = "invoiceDetails"
   override val path: JsPath = InfoSection.path \ toString
+
+  override def getValueFromIE801(implicit request: DataRequest[_]): Option[InvoiceDetailsModel] = {
+    request.movementDetails.eadEsad.invoiceDate.map { invoiceDateAsString =>
+      val invoiceDate = LocalDate.parse(invoiceDateAsString)
+      InvoiceDetailsModel(request.movementDetails.eadEsad.invoiceNumber, invoiceDate)
+    }
+  }
 }

@@ -25,12 +25,12 @@ import scala.concurrent.{ExecutionContext, Future}
 
 class FakeAuthAction @Inject()(bodyParsers: PlayBodyParsers) extends AuthAction with BaseFixtures {
 
-  override def apply(ern: String): ActionBuilder[UserRequest, AnyContent] with ActionFunction[Request, UserRequest] =
+  override def apply(ern: String, arc: String): ActionBuilder[UserRequest, AnyContent] with ActionFunction[Request, UserRequest] =
 
     new ActionBuilder[UserRequest, AnyContent] with ActionFunction[Request, UserRequest] {
 
       override def invokeBlock[A](request: Request[A], block: UserRequest[A] => Future[Result]): Future[Result] =
-        block(UserRequest(request, ern, testInternalId, testCredId, testSessionId, false))
+        block(UserRequest(request, ern, testInternalId, testCredId, testSessionId, hasMultipleErns = false))
 
       override def parser: BodyParser[AnyContent] =
         bodyParsers.default

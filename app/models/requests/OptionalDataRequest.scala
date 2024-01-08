@@ -19,10 +19,10 @@ package models.requests
 import models.{TraderKnownFacts, UserAnswers}
 import play.api.mvc.WrappedRequest
 
-case class OptionalDataRequest[A](request: UserRequest[A],
-                                  arc: String,
+case class OptionalDataRequest[A](request: MovementRequest[A],
                                   userAnswers: Option[UserAnswers],
                                   traderKnownFacts: Option[TraderKnownFacts]) extends WrappedRequest[A](request) {
   val internalId = request.internalId
   val ern = request.ern
+  val arc = request.arc
 }

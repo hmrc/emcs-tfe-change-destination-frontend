@@ -18,10 +18,8 @@ package controllers
 
 import models._
 import models.requests.DataRequest
-import models.sections.info.movementScenario.MovementScenario
 import navigation.BaseNavigator
 import pages.QuestionPage
-import pages.sections.info.{DeferredMovementPage, DestinationTypePage}
 import play.api.libs.json.Format
 import play.api.mvc.Result
 import services.PreDraftService
@@ -35,7 +33,7 @@ trait BasePreDraftNavigationController extends BaseNavigationController with Log
   val navigator: BaseNavigator
 
   def savePreDraftAndRedirect[A](page: QuestionPage[A], answer: A, currentAnswers: UserAnswers, mode: Mode)
-                                (implicit format: Format[A]): Future[Result] =
+                                (implicit format: Format[A], request: DataRequest[_]): Future[Result] =
     savePreDraft(page, answer, currentAnswers).map { updatedAnswers =>
       Redirect(navigator.nextPage(page, mode, updatedAnswers))
     }
@@ -46,7 +44,8 @@ trait BasePreDraftNavigationController extends BaseNavigationController with Log
       Redirect(navigator.nextPage(page, mode, updatedAnswers))
     }
 
-  private def savePreDraft[A](page: QuestionPage[A], answer: A, currentAnswers: UserAnswers)(implicit format: Format[A]): Future[UserAnswers] =
+  private def savePreDraft[A](page: QuestionPage[A], answer: A, currentAnswers: UserAnswers)
+                             (implicit format: Format[A], request: DataRequest[_]): Future[UserAnswers] =
     if (currentAnswers.get[A](page).contains(answer)) {
       Future.successful(currentAnswers)
     } else {
@@ -59,26 +58,5 @@ trait BasePreDraftNavigationController extends BaseNavigationController with Log
   private def savePreDraft[A](page: QuestionPage[A], answer: A)
                              (implicit request: DataRequest[_], format: Format[A]): Future[UserAnswers] =
     savePreDraft(page, answer, request.userAnswers)
-
-  protected def withDeferredMovementAnswer(isOnPreDraftFlow: Boolean)(f: Boolean => Future[Result])(implicit request: DataRequest[_]): Future[Result] =
-    withAnswerAsync(
-      page = DeferredMovementPage(isOnPreDraftFlow = isOnPreDraftFlow),
-      redirectRoute = if (isOnPreDraftFlow) {
-        controllers.sections.info.routes.DeferredMovementController.onPreDraftPageLoad(request.ern, NormalMode)
-      } else {
-        controllers.sections.info.routes.DeferredMovementController.onPageLoad(request.ern, request.arc)
-      }
-    ) {
-      f(_)
-    }
-
-  protected def withDestinationTypePageAnswer(f: MovementScenario => Future[Result])(implicit request: DataRequest[_]): Future[Result] = {
-    withAnswerAsync(
-      page = DestinationTypePage,
-      redirectRoute = controllers.sections.info.routes.DestinationTypeController.onPreDraftPageLoad(request.ern, NormalMode)
-    ) {
-      f(_)
-    }
-  }
 }
 

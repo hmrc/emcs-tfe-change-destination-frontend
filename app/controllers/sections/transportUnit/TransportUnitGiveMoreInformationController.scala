@@ -41,13 +41,14 @@ class TransportUnitGiveMoreInformationController @Inject()(
                                                             override val auth: AuthAction,
                                                             override val getData: DataRetrievalAction,
                                                             override val requireData: DataRequiredAction,
+                                                            override val withMovement: MovementAction,
                                                             formProvider: TransportUnitGiveMoreInformationFormProvider,
                                                             val controllerComponents: MessagesControllerComponents,
                                                             view: TransportUnitGiveMoreInformationView
                                                           ) extends BaseTransportUnitNavigationController with AuthActionHelper {
 
   def onPageLoad(ern: String, arc: String, idx: Index, mode: Mode): Action[AnyContent] =
-    authorisedDataRequestAsync(ern, arc) { implicit request =>
+    authorisedDataRequestWithUpToDateMovementAsync(ern, arc) { implicit request =>
       validateIndex(idx) {
         withAnswerAsync(TransportUnitTypePage(idx)) { transportUnitType =>
           renderView(Ok, fillForm(TransportUnitGiveMoreInformationPage(idx), formProvider()), idx, mode, transportUnitType)
@@ -56,7 +57,7 @@ class TransportUnitGiveMoreInformationController @Inject()(
     }
 
   def onSubmit(ern: String, arc: String, idx: Index, mode: Mode): Action[AnyContent] =
-    authorisedDataRequestAsync(ern, arc) { implicit request =>
+    authorisedDataRequestWithUpToDateMovementAsync(ern, arc) { implicit request =>
       validateIndex(idx) {
         withAnswerAsync(TransportUnitTypePage(idx)) { transportUnitType =>
           submitAndTrimWhitespaceFromTextarea(TransportUnitGiveMoreInformationPage(idx), formProvider)(

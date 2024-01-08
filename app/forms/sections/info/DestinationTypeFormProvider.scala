@@ -17,7 +17,7 @@
 package forms.sections.info
 
 import forms.mappings.Mappings
-import models._
+import models.UserType._
 import models.requests.DataRequest
 import models.response.InvalidUserTypeException
 import models.sections.info.movementScenario.MovementScenario

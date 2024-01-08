@@ -16,6 +16,7 @@
 
 package models
 
+import models.response.emcsTfe.AddressModel
 import play.api.libs.json.{Json, OFormat}
 import play.twirl.api.{Html, HtmlFormat}
 import uk.gov.hmrc.govukfrontend.views.Aliases.HtmlContent
@@ -39,4 +40,11 @@ case class UserAddress(property: Option[String],
 object UserAddress {
 
   implicit lazy val format: OFormat[UserAddress] = Json.format[UserAddress]
+
+  def userAddressFromTraderAddress(address: AddressModel): UserAddress = UserAddress(
+    property = address.streetNumber,
+    street = address.street.get,
+    town = address.city.get,
+    postcode = address.postcode.get
+  )
 }

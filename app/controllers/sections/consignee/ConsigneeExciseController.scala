@@ -19,9 +19,10 @@ package controllers.sections.consignee
 import controllers.BaseNavigationController
 import controllers.actions._
 import forms.sections.consignee.ConsigneeExciseFormProvider
+import models.Mode
+import models.UserType.{NorthernIrelandRegisteredConsignor, NorthernIrelandWarehouseKeeper}
 import models.requests.DataRequest
 import models.sections.info.movementScenario.MovementScenario.TemporaryRegisteredConsignee
-import models.{Mode, NorthernIrelandRegisteredConsignor, NorthernIrelandWarehouseKeeper}
 import navigation.ConsigneeNavigator
 import pages.sections.consignee.ConsigneeExcisePage
 import pages.sections.info.DestinationTypePage
@@ -38,6 +39,7 @@ class ConsigneeExciseController @Inject()(override val messagesApi: MessagesApi,
                                           override val userAllowList: UserAllowListAction,
                                           override val getData: DataRetrievalAction,
                                           override val requireData: DataRequiredAction,
+                                          override val withMovement: MovementAction,
                                           override val navigator: ConsigneeNavigator,
                                           override val userAnswersService: UserAnswersService,
                                           formProvider: ConsigneeExciseFormProvider,
@@ -46,7 +48,7 @@ class ConsigneeExciseController @Inject()(override val messagesApi: MessagesApi,
                                          ) extends BaseNavigationController with AuthActionHelper {
 
   def onPageLoad(ern: String, arc: String, mode: Mode): Action[AnyContent] =
-    authorisedDataRequest(ern, arc) {
+    authorisedDataRequestWithUpToDateMovement(ern, arc) {
       implicit request =>
         Ok(view(
           fillForm(ConsigneeExcisePage, formProvider(isNorthernIrishTemporaryRegisteredConsignee)),
@@ -57,7 +59,7 @@ class ConsigneeExciseController @Inject()(override val messagesApi: MessagesApi,
 
 
   def onSubmit(ern: String, arc: String, mode: Mode): Action[AnyContent] =
-    authorisedDataRequestAsync(ern, arc) {
+    authorisedDataRequestWithUpToDateMovementAsync(ern, arc) {
       implicit request =>
         formProvider(isNorthernIrishTemporaryRegisteredConsignee).bindFromRequest().fold(
           formWithErrors =>

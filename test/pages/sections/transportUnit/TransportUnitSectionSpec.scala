@@ -20,7 +20,7 @@ import base.SpecBase
 import models.Index
 import models.requests.DataRequest
 import models.sections.transportUnit.TransportSealTypeModel
-import models.sections.transportUnit.TransportUnitType.Container
+import models.sections.transportUnit.TransportUnitType.{Container, FixedTransport}
 import play.api.test.FakeRequest
 
 class TransportUnitSectionSpec extends SpecBase {
@@ -60,31 +60,20 @@ class TransportUnitSectionSpec extends SpecBase {
           )
         TransportUnitSection(Index(0)).isCompleted mustBe true
       }
+
+      "when transport unit identity is Fixed Transport" in {
+        implicit val dr: DataRequest[_] =
+          dataRequest(FakeRequest(),
+            emptyUserAnswers
+              .set(TransportUnitTypePage(testIndex1), FixedTransport)
+          )
+        TransportUnitSection(Index(0)).isCompleted mustBe true
+      }
     }
 
     "must return false" - {
       "when mandatory screens are missing an answer" in {
         implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), emptyUserAnswers)
-        TransportUnitSection(Index(0)).isCompleted mustBe false
-      }
-      "when mandatory pages are answered, sca = true and seal choice has no answer" in {
-        implicit val dr: DataRequest[_] =
-          dataRequest(FakeRequest(),
-            emptyUserAnswers
-              .set(TransportUnitTypePage(testIndex1), Container)
-              .set(TransportUnitIdentityPage(testIndex1), "")
-              .set(TransportSealChoicePage(testIndex1), true)
-          )
-        TransportUnitSection(Index(0)).isCompleted mustBe false
-      }
-      "when mandatory pages are answered, sca = true, all optional pages have no answer" in {
-        implicit val dr: DataRequest[_] =
-          dataRequest(FakeRequest(),
-            emptyUserAnswers
-              .set(TransportUnitTypePage(testIndex1), Container)
-              .set(TransportUnitIdentityPage(testIndex1), "")
-              .set(TransportSealChoicePage(testIndex1), true)
-          )
         TransportUnitSection(Index(0)).isCompleted mustBe false
       }
     }

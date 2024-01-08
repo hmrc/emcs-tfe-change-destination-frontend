@@ -61,26 +61,26 @@ class SessionRepositoryImpl @Inject()(
 
   implicit val instantFormat: Format[Instant] = MongoJavatimeFormats.instantFormat
 
-  private def by(ern: String, sessionId: String): Bson =
+  private def by(ern: String, arc: String): Bson =
     Filters.and(
       Filters.equal(UserAnswers.ern, ern),
-      Filters.equal(UserAnswers.arc, sessionId)
+      Filters.equal(UserAnswers.arc, arc)
     )
 
-  def keepAlive(ern: String, sessionId: String): Future[Boolean] =
+  def keepAlive(ern: String, arc: String): Future[Boolean] =
     collection
       .updateOne(
-        filter = by(ern, sessionId),
+        filter = by(ern, arc),
         update = Updates.set(UserAnswers.lastUpdated, Instant.now)
       )
       .toFuture()
       .map(_ => true)
 
-  def get(ern: String, sessionId: String): Future[Option[UserAnswers]] =
-    keepAlive(ern, sessionId).flatMap {
+  def get(ern: String, arc: String): Future[Option[UserAnswers]] =
+    keepAlive(ern, arc).flatMap {
       _ =>
         collection
-          .find(by(ern, sessionId))
+          .find(by(ern, arc))
           .headOption()
     }
 
@@ -98,19 +98,19 @@ class SessionRepositoryImpl @Inject()(
       .map(_ => true)
   }
 
-  def clear(ern: String, sessionId: String): Future[Boolean] =
+  def clear(ern: String, arc: String): Future[Boolean] =
     collection
-      .deleteOne(by(ern, sessionId))
+      .deleteOne(by(ern, arc))
       .toFuture()
       .map(_ => true)
 }
 
 trait SessionRepository {
 
-  def get(ern: String, sessionId: String): Future[Option[UserAnswers]]
+  def get(ern: String, arc: String): Future[Option[UserAnswers]]
 
   def set(userAnswers: UserAnswers): Future[Boolean]
 
-  def clear(ern: String, sessionId: String): Future[Boolean]
+  def clear(ern: String, arc: String): Future[Boolean]
 
 }

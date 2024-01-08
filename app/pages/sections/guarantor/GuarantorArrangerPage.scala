@@ -16,6 +16,9 @@
 
 package pages.sections.guarantor
 
+import models.requests.DataRequest
+import models.response.InvalidGuarantorTypeException
+import models.response.emcsTfe.GuarantorType
 import models.sections.guarantor.GuarantorArranger
 import pages.QuestionPage
 import play.api.libs.json.JsPath
@@ -23,4 +26,16 @@ import play.api.libs.json.JsPath
 case object GuarantorArrangerPage extends QuestionPage[GuarantorArranger] {
   override val toString: String = "guarantorArranger"
   override val path: JsPath = GuarantorSection.path \ toString
+
+  override def getValueFromIE801(implicit request: DataRequest[_]): Option[GuarantorArranger] = {
+    // TODO: check
+    request.movementDetails.movementGuarantee.guarantorTypeCode match {
+      case GuarantorType.Consignor => Some(GuarantorArranger.Consignor)
+      case GuarantorType.Consignee => Some(GuarantorArranger.Consignee)
+      case GuarantorType.Owner => Some(GuarantorArranger.GoodsOwner)
+      case GuarantorType.Transporter => Some(GuarantorArranger.Transporter)
+      case GuarantorType.NoGuarantor => None
+      case guarantorType => throw InvalidGuarantorTypeException(s"Invalid guarantor type from IE801: $guarantorType") // TODO: not sure about this
+    }
+  }
 }

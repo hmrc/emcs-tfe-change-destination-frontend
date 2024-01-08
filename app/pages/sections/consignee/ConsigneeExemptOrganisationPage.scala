@@ -17,10 +17,16 @@
 package pages.sections.consignee
 
 import models.ExemptOrganisationDetailsModel
+import models.requests.DataRequest
 import pages.QuestionPage
 import play.api.libs.json.JsPath
 
 case object ConsigneeExemptOrganisationPage extends QuestionPage[ExemptOrganisationDetailsModel] {
   override val toString: String = "exemptOrganisation"
   override val path: JsPath = ConsigneeSection.path \ toString
+
+  override def getValueFromIE801(implicit request: DataRequest[_]): Option[ExemptOrganisationDetailsModel] = for {
+    memberStateCode <- request.movementDetails.memberStateCode
+    serialNumberOfCertificateOfExemption <- request.movementDetails.serialNumberOfCertificateOfExemption
+  } yield ExemptOrganisationDetailsModel(memberState = memberStateCode, certificateSerialNumber = serialNumberOfCertificateOfExemption)
 }

@@ -17,8 +17,8 @@
 package controllers.sections.info
 
 import base.SpecBase
-import controllers.actions.FakeDataRetrievalAction
 import controllers.actions.predraft.FakePreDraftRetrievalAction
+import controllers.actions.{FakeDataRetrievalAction, FakeMovementAction}
 import forms.sections.info.InvoiceDetailsFormProvider
 import mocks.services.{MockPreDraftService, MockUserAnswersService}
 import models.sections.info.InvoiceDetailsModel
@@ -41,10 +41,9 @@ class InvoiceDetailsControllerSpec extends SpecBase with MockUserAnswersService 
 
   val timeMachine: TimeMachine = () => testLocalDate.atStartOfDay()
 
-  lazy val invoiceDetailsPreDraftSubmitRoute: Call = controllers.sections.info.routes.InvoiceDetailsController.onPreDraftSubmit(testErn, NormalMode)
-  lazy val invoiceDetailsSubmitRoute: Call = controllers.sections.info.routes.InvoiceDetailsController.onSubmit(testErn, testDraftId)
+  lazy val invoiceDetailsPreDraftSubmitRoute: Call = controllers.sections.info.routes.InvoiceDetailsController.onPreDraftSubmit(testErn, testArc, NormalMode)
 
-  lazy val formProvider = new InvoiceDetailsFormProvider()
+  lazy val formProvider: InvoiceDetailsFormProvider = app.injector.instanceOf[InvoiceDetailsFormProvider]
   lazy val form: Form[InvoiceDetailsModel] = formProvider()
   lazy val view: InvoiceDetailsView = app.injector.instanceOf[InvoiceDetailsView]
 
@@ -61,6 +60,7 @@ class InvoiceDetailsControllerSpec extends SpecBase with MockUserAnswersService 
       new FakeDataRetrievalAction(userAnswers, Some(testMinTraderKnownFacts)),
       dataRequiredAction,
       fakeUserAllowListAction,
+      new FakeMovementAction(maxGetMovementResponse.copy(eadEsad = maxGetMovementResponse.eadEsad.copy(invoiceDate = Some("2023-01-01")))),
       formProvider,
       mockUserAnswersService,
       Helpers.stubMessagesControllerComponents(),
@@ -75,11 +75,11 @@ class InvoiceDetailsControllerSpec extends SpecBase with MockUserAnswersService 
 
       "must return OK and the correct view for a GET" in new Fixture() {
 
-        val result = controller.onPreDraftPageLoad(testErn, NormalMode)(request)
+        val result = controller.onPreDraftPageLoad(testErn, testArc, NormalMode)(request)
 
         status(result) mustEqual OK
         contentAsString(result) mustEqual view(
-          form = form,
+          form = form.fill(InvoiceDetailsModel("EadEsadInvoiceNumber", LocalDate.parse("2023-01-01"))),
           currentDate = testLocalDate.formatDateNumbersOnly(),
           onSubmitCall = invoiceDetailsPreDraftSubmitRoute,
           skipQuestionCall = testOnwardRoute
@@ -89,11 +89,11 @@ class InvoiceDetailsControllerSpec extends SpecBase with MockUserAnswersService 
       "must redirect to the next page when valid data is submitted" in new Fixture() {
 
         val expectedToSaveAnswers = emptyUserAnswers
-          .set(InvoiceDetailsPage(), InvoiceDetailsModel("answer", LocalDate.of(2020, 1, 1)))
+          .set(InvoiceDetailsPage, InvoiceDetailsModel("answer", LocalDate.of(2020, 1, 1)))
 
         MockPreDraftService.set(expectedToSaveAnswers).returns(Future.successful(true))
 
-        val result = controller.onPreDraftSubmit(testErn, NormalMode)(request.withFormUrlEncodedBody(
+        val result = controller.onPreDraftSubmit(testErn, testArc, NormalMode)(request.withFormUrlEncodedBody(
           ("invoice-reference", "answer"),
           ("value.day", "1"),
           ("value.month", "1"),
@@ -108,62 +108,13 @@ class InvoiceDetailsControllerSpec extends SpecBase with MockUserAnswersService 
 
         val boundForm = form.bind(Map("value" -> ""))
 
-        val result = controller.onPreDraftSubmit(testErn, NormalMode)(request.withFormUrlEncodedBody(("value", "")))
+        val result = controller.onPreDraftSubmit(testErn, testArc, NormalMode)(request.withFormUrlEncodedBody(("value", "")))
 
         status(result) mustEqual BAD_REQUEST
         contentAsString(result) mustEqual view(
           form = boundForm,
           currentDate = testLocalDate.formatDateNumbersOnly(),
           onSubmitCall = invoiceDetailsPreDraftSubmitRoute,
-          skipQuestionCall = testOnwardRoute
-        )(dataRequest(request), messages(request)).toString
-      }
-    }
-
-    "post-draft" - {
-
-      "must return OK and the correct view for a GET" in new Fixture() {
-
-        val result = controller.onPageLoad(testErn, testDraftId)(request)
-
-        status(result) mustEqual OK
-        contentAsString(result) mustEqual view(
-          form = form,
-          currentDate = testLocalDate.formatDateNumbersOnly(),
-          onSubmitCall = invoiceDetailsSubmitRoute,
-          skipQuestionCall = testOnwardRoute
-        )(dataRequest(request), messages(request)).toString
-      }
-
-      "must redirect to the next page when valid data is submitted" in new Fixture() {
-
-        val expectedToSaveAnswers = emptyUserAnswers
-          .set(InvoiceDetailsPage(), InvoiceDetailsModel("answer", LocalDate.of(2020, 1, 1)))
-
-        MockUserAnswersService.set(expectedToSaveAnswers).returns(Future.successful(emptyUserAnswers))
-
-        val result = controller.onSubmit(testErn, testDraftId)(request.withFormUrlEncodedBody(
-          ("invoice-reference", "answer"),
-          ("value.day", "1"),
-          ("value.month", "1"),
-          ("value.year", "2020")
-        ))
-
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual testOnwardRoute.url
-      }
-
-      "must return a Bad Request and errors when invalid data is submitted" in new Fixture() {
-
-        val boundForm = form.bind(Map("value" -> ""))
-
-        val result = controller.onSubmit(testErn, testDraftId)(request.withFormUrlEncodedBody(("value", "")))
-
-        status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(
-          form = boundForm,
-          currentDate = testLocalDate.formatDateNumbersOnly(),
-          onSubmitCall = invoiceDetailsSubmitRoute,
           skipQuestionCall = testOnwardRoute
         )(dataRequest(request), messages(request)).toString
       }

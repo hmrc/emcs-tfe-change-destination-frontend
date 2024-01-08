@@ -34,6 +34,7 @@ class CheckYourAnswersConsigneeController @Inject()(override val messagesApi: Me
                                                     override val userAllowList: UserAllowListAction,
                                                     override val getData: DataRetrievalAction,
                                                     override val requireData: DataRequiredAction,
+                                                    override val withMovement: MovementAction,
                                                     val controllerComponents: MessagesControllerComponents,
                                                     val navigator: ConsigneeNavigator,
                                                     val checkYourAnswersConsigneeHelper: CheckYourAnswersConsigneeHelper,
@@ -41,7 +42,7 @@ class CheckYourAnswersConsigneeController @Inject()(override val messagesApi: Me
                                                    ) extends BaseController with AuthActionHelper {
 
   def onPageLoad(ern: String, arc: String): Action[AnyContent] =
-    authorisedDataRequest(ern, arc) {
+    authorisedDataRequestWithUpToDateMovement(ern, arc) {
       implicit request =>
         withAnswer(ConsigneeBusinessNamePage, controllers.sections.consignee.routes.ConsigneeIndexController.onPageLoad(ern, arc)) {
           _ =>
@@ -62,7 +63,7 @@ class CheckYourAnswersConsigneeController @Inject()(override val messagesApi: Me
 
 
   def onSubmit(ern: String, arc: String): Action[AnyContent] =
-    authorisedDataRequest(ern, arc) {
+    authorisedDataRequestWithUpToDateMovement(ern, arc) {
       implicit request =>
         Redirect(navigator.nextPage(CheckAnswersConsigneePage, NormalMode, request.userAnswers))
     }

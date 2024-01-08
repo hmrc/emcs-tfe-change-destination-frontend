@@ -41,6 +41,7 @@ class TransportArrangerNameController @Inject()(
                                                  override val auth: AuthAction,
                                                  override val getData: DataRetrievalAction,
                                                  override val requireData: DataRequiredAction,
+                                                 override val withMovement: MovementAction,
                                                  override val userAllowList: UserAllowListAction,
                                                  formProvider: TransportArrangerNameFormProvider,
                                                  val controllerComponents: MessagesControllerComponents,
@@ -48,14 +49,14 @@ class TransportArrangerNameController @Inject()(
                                                ) extends BaseNavigationController with AuthActionHelper {
 
   def onPageLoad(ern: String, arc: String, mode: Mode): Action[AnyContent] =
-    authorisedDataRequestAsync(ern, arc) { implicit dataRequest =>
+    authorisedDataRequestWithUpToDateMovementAsync(ern, arc) { implicit dataRequest =>
       withTransportArrangerAnswer { transportArrangerAnswer =>
         renderView(Ok, fillForm(TransportArrangerNamePage, formProvider()), transportArrangerAnswer, mode)
       }
     }
 
   def onSubmit(ern: String, arc: String, mode: Mode): Action[AnyContent] =
-    authorisedDataRequestAsync(ern, arc) { implicit request =>
+    authorisedDataRequestWithUpToDateMovementAsync(ern, arc) { implicit request =>
       withTransportArrangerAnswer { transportArrangerAnswer =>
         formProvider().bindFromRequest().fold(
           formWithErrors =>

@@ -18,6 +18,7 @@ package navigation
 
 import controllers.routes
 import models._
+import models.requests.DataRequest
 import pages._
 import play.api.mvc.Call
 
@@ -32,7 +33,7 @@ class Navigator @Inject()() extends BaseNavigator {
     case DeclarationPage =>
       (userAnswers: UserAnswers) => routes.ConfirmationController.onPageLoad(userAnswers.ern, userAnswers.arc)
     case _ =>
-      (userAnswers: UserAnswers) => routes.IndexController.onPageLoad(userAnswers.ern)
+      (userAnswers: UserAnswers) => routes.IndexController.onPageLoad(userAnswers.ern, userAnswers.arc)
   }
 
   private[navigation] val checkRouteMap: Page => UserAnswers => Call = {
@@ -45,7 +46,7 @@ class Navigator @Inject()() extends BaseNavigator {
       (userAnswers: UserAnswers) => routes.CheckYourAnswersController.onPageLoad(userAnswers.ern, userAnswers.arc)
   }
 
-  override def nextPage(page: Page, mode: Mode, userAnswers: UserAnswers): Call = mode match {
+  override def nextPage(page: Page, mode: Mode, userAnswers: UserAnswers)(implicit request: DataRequest[_]): Call = mode match {
     case NormalMode =>
       normalRoutes(page)(userAnswers)
     case CheckMode =>

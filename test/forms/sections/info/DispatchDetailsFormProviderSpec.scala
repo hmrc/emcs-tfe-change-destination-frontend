@@ -16,13 +16,12 @@
 
 package forms.sections.info
 
-import fixtures.BaseFixtures
+import base.SpecBase
 import forms.behaviours.StringFieldBehaviours
-import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.data.FormError
 import utils.DateTimeUtils
 
-class DispatchDetailsFormProviderSpec extends StringFieldBehaviours with BaseFixtures with DateTimeUtils with GuiceOneAppPerSuite {
+class DispatchDetailsFormProviderSpec extends SpecBase with StringFieldBehaviours with DateTimeUtils {
 
   val dateField = "value"
   val dayField = "value.day"
@@ -30,7 +29,7 @@ class DispatchDetailsFormProviderSpec extends StringFieldBehaviours with BaseFix
   val yearField = "value.year"
   val timeField = "time"
 
-  val form = new DispatchDetailsFormProvider()()
+  val form = new DispatchDetailsFormProvider(appConfig)()
 
   def formAnswersMap(day: String = dispatchDetailsModel.date.getDayOfMonth.toString,
                      month: String = dispatchDetailsModel.date.getMonthValue.toString,

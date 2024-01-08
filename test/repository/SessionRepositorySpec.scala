@@ -18,8 +18,9 @@ package repository
 
 import base.SpecBase
 import models.UserAnswers
+import models.sections.info.movementScenario.MovementScenario
 import org.scalatest.concurrent.IntegrationPatience
-import pages.sections.info.DeferredMovementPage
+import pages.sections.info.DestinationTypePage
 import repositories.SessionRepositoryImpl
 import uk.gov.hmrc.mongo.test.{CleanMongoCollectionSupport, PlayMongoRepositorySupport}
 
@@ -35,18 +36,18 @@ class SessionRepositorySpec extends SpecBase with PlayMongoRepositorySupport[Use
   )
 
   val userAnswers = emptyUserAnswers
-    .set(DeferredMovementPage(), true)
+    .set(DestinationTypePage, MovementScenario.GbTaxWarehouse)
 
 
   ".get" - {
     "return None when the repository is empty" in {
-      repository.get("ern", "sessionId").futureValue mustBe None
+      repository.get(testErn, testArc).futureValue mustBe None
     }
 
     "return the correct record from the repository" in {
       repository.set(userAnswers).futureValue mustBe true
 
-      val response = repository.get(testErn, testDraftId).futureValue
+      val response = repository.get(testErn, testArc).futureValue
       response.isDefined mustBe true
       response.get.data mustBe userAnswers.data
       response.get.lastUpdated mustNot be(userAnswers.lastUpdated)
@@ -57,7 +58,7 @@ class SessionRepositorySpec extends SpecBase with PlayMongoRepositorySupport[Use
     "populate the repository correctly" in {
       repository.set(userAnswers).futureValue mustBe true
 
-      val response = repository.get(testErn, testDraftId).futureValue
+      val response = repository.get(testErn, testArc).futureValue
       response.isDefined mustBe true
       response.get.data mustBe userAnswers.data
       response.get.lastUpdated mustNot be(userAnswers.lastUpdated)
@@ -67,8 +68,8 @@ class SessionRepositorySpec extends SpecBase with PlayMongoRepositorySupport[Use
   ".clear" - {
     "clear the repository correctly" in {
       repository.set(userAnswers).futureValue mustBe true
-      repository.clear(testErn, testDraftId).futureValue mustBe true
-      repository.get(testErn, testDraftId).futureValue.isDefined mustBe false
+      repository.clear(testErn, testArc).futureValue mustBe true
+      repository.get(testErn, testArc).futureValue.isDefined mustBe false
     }
   }
 

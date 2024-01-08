@@ -19,6 +19,7 @@ package viewmodels.checkAnswers.sections.destination
 import base.SpecBase
 import fixtures.messages.sections.destination.DestinationWarehouseVatMessages
 import models.CheckMode
+import models.sections.info.movementScenario.DestinationType.UnknownDestination
 import models.sections.info.movementScenario.MovementScenario.{ExemptedOrganisation, RegisteredConsignee, TemporaryRegisteredConsignee}
 import org.scalatest.matchers.must.Matchers
 import pages.sections.destination.DestinationWarehouseVatPage
@@ -28,7 +29,6 @@ import play.api.test.FakeRequest
 import uk.gov.hmrc.govukfrontend.views.Aliases.Value
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
 import utils.JsonOptionFormatter
-import viewmodels.checkAnswers.DestinationWarehouseVatSummary
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
@@ -62,7 +62,7 @@ class DestinationWarehouseVatSummarySpec extends SpecBase with Matchers with Jso
                       actions = Seq(
                         ActionItemViewModel(
                           content = messagesForLanguage.change,
-                          href = controllers.sections.destination.routes.DestinationWarehouseVatController.onPageLoad(testErn, testDraftId, CheckMode).url,
+                          href = controllers.sections.destination.routes.DestinationWarehouseVatController.onPageLoad(testErn, testArc, CheckMode).url,
                           id = "changeDestinationWarehouseVat"
                         ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHidden)
                       )
@@ -76,7 +76,7 @@ class DestinationWarehouseVatSummarySpec extends SpecBase with Matchers with Jso
 
             "must output no row" in {
 
-              implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers)
+              implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers, movementDetails = maxGetMovementResponse.copy(destinationType = UnknownDestination))
 
               DestinationWarehouseVatSummary.row() mustBe None
             }
@@ -87,7 +87,7 @@ class DestinationWarehouseVatSummarySpec extends SpecBase with Matchers with Jso
 
           "must output the expected row when vat page is answered" in {
 
-            implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(DestinationWarehouseVatPage, "vat"))
+            implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(DestinationWarehouseVatPage, "vat"), movementDetails = maxGetMovementResponse.copy(destinationType = UnknownDestination))
 
             DestinationWarehouseVatSummary.row() mustBe
               Some(
@@ -97,7 +97,7 @@ class DestinationWarehouseVatSummarySpec extends SpecBase with Matchers with Jso
                   actions = Seq(
                     ActionItemViewModel(
                       content = messagesForLanguage.change,
-                      href = controllers.sections.destination.routes.DestinationWarehouseVatController.onPageLoad(testErn, testDraftId, CheckMode).url,
+                      href = controllers.sections.destination.routes.DestinationWarehouseVatController.onPageLoad(testErn, testArc, CheckMode).url,
                       id = "changeDestinationWarehouseVat"
                     ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHidden)
                   )

@@ -17,8 +17,9 @@
 package controllers.sections.consignee
 
 import base.SpecBase
-import controllers.actions.FakeDataRetrievalAction
+import controllers.actions.{FakeDataRetrievalAction, FakeMovementAction}
 import mocks.services.MockUserAnswersService
+import models.sections.ReviewAnswer.{ChangeAnswers, KeepAnswers}
 import models.sections.info.movementScenario.MovementScenario._
 import models.{ExemptOrganisationDetailsModel, NormalMode, UserAddress, UserAnswers}
 import navigation.FakeNavigators.FakeConsigneeNavigator
@@ -42,6 +43,7 @@ class ConsigneeIndexControllerSpec extends SpecBase with MockUserAnswersService 
       fakeUserAllowListAction,
       new FakeDataRetrievalAction(optUserAnswers, Some(testMinTraderKnownFacts)),
       dataRequiredAction,
+      new FakeMovementAction(maxGetMovementResponse.copy(consigneeTrader = None)),
       new FakeConsigneeNavigator(testOnwardRoute),
       mockUserAnswersService,
       messagesControllerComponents
@@ -56,24 +58,27 @@ class ConsigneeIndexControllerSpec extends SpecBase with MockUserAnswersService 
           .set(ConsigneeExemptOrganisationPage, ExemptOrganisationDetailsModel("", ""))
           .set(ConsigneeBusinessNamePage, "")
           .set(ConsigneeAddressPage, UserAddress(None, "", "", ""))
+          .set(ConsigneeReviewPage, KeepAnswers)
         )) {
 
-        val result: Future[Result] = testController.onPageLoad(testErn, testDraftId)(request)
+        val result: Future[Result] = testController.onPageLoad(testErn, testArc)(request)
 
         status(result) mustBe SEE_OTHER
         redirectLocation(result) mustBe
-          Some(controllers.sections.consignee.routes.CheckYourAnswersConsigneeController.onPageLoad(testErn, testDraftId).url)
+          Some(controllers.sections.consignee.routes.CheckYourAnswersConsigneeController.onPageLoad(testErn, testArc).url)
       }
     }
     "must redirect to ConsigneeExemptOrganisationController" - {
       s"when destination is $ExemptedOrganisation" in new Fixture(
-        Some(emptyUserAnswers.set(DestinationTypePage, ExemptedOrganisation))) {
+        Some(emptyUserAnswers
+          .set(DestinationTypePage, ExemptedOrganisation)
+          .set(ConsigneeReviewPage, ChangeAnswers))) {
 
-        val result: Future[Result] = testController.onPageLoad(testErn, testDraftId)(request)
+        val result: Future[Result] = testController.onPageLoad(testErn, testArc)(request)
 
         status(result) mustBe SEE_OTHER
         redirectLocation(result) mustBe
-          Some(controllers.sections.consignee.routes.ConsigneeExemptOrganisationController.onPageLoad(testErn, testDraftId, NormalMode).url)
+          Some(controllers.sections.consignee.routes.ConsigneeExemptOrganisationController.onPageLoad(testErn, testArc, NormalMode).url)
       }
     }
     "must redirect to ConsigneeExciseController" - {
@@ -87,26 +92,32 @@ class ConsigneeIndexControllerSpec extends SpecBase with MockUserAnswersService 
         ).foreach(
           movementScenario =>
             s"and destination is $movementScenario" in new Fixture(
-              Some(emptyUserAnswers.set(DestinationTypePage, movementScenario))) {
+              Some(emptyUserAnswers
+                .set(DestinationTypePage, movementScenario)
+                .set(ConsigneeReviewPage, ChangeAnswers)
+              )) {
 
-              val result: Future[Result] = testController.onPageLoad(ern, testDraftId)(request)
+              val result: Future[Result] = testController.onPageLoad(ern, testArc)(request)
 
               status(result) mustBe SEE_OTHER
               redirectLocation(result) mustBe
-                Some(controllers.sections.consignee.routes.ConsigneeExciseController.onPageLoad(ern, testDraftId, NormalMode).url)
+                Some(controllers.sections.consignee.routes.ConsigneeExciseController.onPageLoad(ern, testArc, NormalMode).url)
             }
         )
 
         Seq(ExportWithCustomsDeclarationLodgedInTheUk).foreach(
           movementScenario =>
             s"and destination is $movementScenario" in new Fixture(
-              Some(emptyUserAnswers.set(DestinationTypePage, movementScenario))) {
+              Some(emptyUserAnswers
+                .set(DestinationTypePage, movementScenario)
+                .set(ConsigneeReviewPage, ChangeAnswers)
+              )) {
 
-              val result: Future[Result] = testController.onPageLoad(ern, testDraftId)(request)
+              val result: Future[Result] = testController.onPageLoad(ern, testArc)(request)
 
               status(result) mustBe SEE_OTHER
               redirectLocation(result) mustBe
-                Some(controllers.sections.consignee.routes.ConsigneeExciseController.onPageLoad(ern, testDraftId, NormalMode).url)
+                Some(controllers.sections.consignee.routes.ConsigneeExciseController.onPageLoad(ern, testArc, NormalMode).url)
             }
         )
       }
@@ -120,13 +131,16 @@ class ConsigneeIndexControllerSpec extends SpecBase with MockUserAnswersService 
         ).foreach(
           movementScenario =>
             s"and destination is $movementScenario" in new Fixture(
-              Some(emptyUserAnswers.set(DestinationTypePage, movementScenario))) {
+              Some(emptyUserAnswers
+                .set(DestinationTypePage, movementScenario)
+                .set(ConsigneeReviewPage, ChangeAnswers)
+              )) {
 
-              val result: Future[Result] = testController.onPageLoad(ern, testDraftId)(request)
+              val result: Future[Result] = testController.onPageLoad(ern, testArc)(request)
 
               status(result) mustBe SEE_OTHER
               redirectLocation(result) mustBe
-                Some(controllers.sections.consignee.routes.ConsigneeExciseController.onPageLoad(ern, testDraftId, NormalMode).url)
+                Some(controllers.sections.consignee.routes.ConsigneeExciseController.onPageLoad(ern, testArc, NormalMode).url)
             }
         )
 
@@ -138,13 +152,16 @@ class ConsigneeIndexControllerSpec extends SpecBase with MockUserAnswersService 
         ).foreach(
           movementScenario =>
             s"and destination is $movementScenario" in new Fixture(
-              Some(emptyUserAnswers.set(DestinationTypePage, movementScenario))) {
+              Some(emptyUserAnswers
+                .set(DestinationTypePage, movementScenario)
+                .set(ConsigneeReviewPage, ChangeAnswers)
+              )) {
 
-              val result: Future[Result] = testController.onPageLoad(ern, testDraftId)(request)
+              val result: Future[Result] = testController.onPageLoad(ern, testArc)(request)
 
               status(result) mustBe SEE_OTHER
               redirectLocation(result) mustBe
-                Some(controllers.sections.consignee.routes.ConsigneeExciseController.onPageLoad(ern, testDraftId, NormalMode).url)
+                Some(controllers.sections.consignee.routes.ConsigneeExciseController.onPageLoad(ern, testArc, NormalMode).url)
             }
         )
       }
@@ -159,24 +176,30 @@ class ConsigneeIndexControllerSpec extends SpecBase with MockUserAnswersService 
         ).foreach(
           movementScenario =>
             s"and destination is $movementScenario" in new Fixture(
-              Some(emptyUserAnswers.set(DestinationTypePage, movementScenario))) {
+              Some(emptyUserAnswers
+                .set(DestinationTypePage, movementScenario)
+                .set(ConsigneeReviewPage, ChangeAnswers)
+              )) {
 
-              val result: Future[Result] = testController.onPageLoad(ern, testDraftId)(request)
+              val result: Future[Result] = testController.onPageLoad(ern, testArc)(request)
 
               status(result) mustBe SEE_OTHER
               redirectLocation(result) mustBe
-                Some(controllers.sections.consignee.routes.ConsigneeExciseController.onPageLoad(ern, testDraftId, NormalMode).url)
+                Some(controllers.sections.consignee.routes.ConsigneeExciseController.onPageLoad(ern, testArc, NormalMode).url)
             }
         )
 
         s"and destination is $TemporaryRegisteredConsignee" in new Fixture(
-          Some(emptyUserAnswers.set(DestinationTypePage, TemporaryRegisteredConsignee))) {
+          Some(emptyUserAnswers
+            .set(DestinationTypePage, TemporaryRegisteredConsignee)
+            .set(ConsigneeReviewPage, ChangeAnswers)
+          )) {
 
-          val result: Future[Result] = testController.onPageLoad(ern, testDraftId)(request)
+          val result: Future[Result] = testController.onPageLoad(ern, testArc)(request)
 
           status(result) mustBe SEE_OTHER
           redirectLocation(result) mustBe
-            Some(controllers.sections.consignee.routes.ConsigneeExciseController.onPageLoad(ern, testDraftId, NormalMode).url)
+            Some(controllers.sections.consignee.routes.ConsigneeExciseController.onPageLoad(ern, testArc, NormalMode).url)
         }
       }
     }
@@ -188,13 +211,16 @@ class ConsigneeIndexControllerSpec extends SpecBase with MockUserAnswersService 
         Seq(ExportWithCustomsDeclarationLodgedInTheUk).foreach(
           movementScenario =>
             s"and destination is $movementScenario" in new Fixture(
-              Some(emptyUserAnswers.set(DestinationTypePage, movementScenario))) {
+              Some(emptyUserAnswers
+                .set(DestinationTypePage, movementScenario)
+                .set(ConsigneeReviewPage, ChangeAnswers)
+              )) {
 
-              val result: Future[Result] = testController.onPageLoad(ern, testDraftId)(request)
+              val result: Future[Result] = testController.onPageLoad(ern, testArc)(request)
 
               status(result) mustBe SEE_OTHER
               redirectLocation(result) mustBe
-                Some(controllers.sections.consignee.routes.ConsigneeExportController.onPageLoad(ern, testDraftId, NormalMode).url)
+                Some(controllers.sections.consignee.routes.ConsigneeExportController.onPageLoad(ern, testArc, NormalMode).url)
             }
         )
       }
@@ -208,13 +234,16 @@ class ConsigneeIndexControllerSpec extends SpecBase with MockUserAnswersService 
           ExportWithCustomsDeclarationLodgedInTheEu
         ).foreach(
           movementScenario =>
-            s"and destination is $movementScenario" in new Fixture(Some(emptyUserAnswers.set(DestinationTypePage, movementScenario))) {
+            s"and destination is $movementScenario" in new Fixture(Some(emptyUserAnswers
+              .set(DestinationTypePage, movementScenario)
+              .set(ConsigneeReviewPage, ChangeAnswers)
+            )) {
 
-              val result: Future[Result] = testController.onPageLoad(ern, testDraftId)(request)
+              val result: Future[Result] = testController.onPageLoad(ern, testArc)(request)
 
               status(result) mustBe SEE_OTHER
               redirectLocation(result) mustBe
-                Some(controllers.sections.consignee.routes.ConsigneeExportController.onPageLoad(ern, testDraftId, NormalMode).url)
+                Some(controllers.sections.consignee.routes.ConsigneeExportController.onPageLoad(ern, testArc, NormalMode).url)
             }
         )
       }
@@ -222,13 +251,16 @@ class ConsigneeIndexControllerSpec extends SpecBase with MockUserAnswersService 
 
     "must redirect to the tasklist" - {
       "when user isn't any of the above (they shouldn't be able to access the NEE pages)" in new Fixture(
-        Some(emptyUserAnswers.set(DestinationTypePage, UnknownDestination))) {
+        Some(emptyUserAnswers
+          .set(DestinationTypePage, UnknownDestination)
+          .set(ConsigneeReviewPage, ChangeAnswers)
+        )) {
 
-        val result: Future[Result] = testController.onPageLoad(testErn, testDraftId)(request)
+        val result: Future[Result] = testController.onPageLoad(testErn, testArc)(request)
 
         status(result) mustBe SEE_OTHER
         redirectLocation(result) mustBe
-          Some(controllers.routes.DraftMovementController.onPageLoad(testErn, testDraftId).url)
+          Some(controllers.routes.DraftMovementController.onPageLoad(testErn, testArc).url)
       }
     }
   }

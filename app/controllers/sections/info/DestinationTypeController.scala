@@ -20,9 +20,10 @@ import controllers.BasePreDraftNavigationController
 import controllers.actions._
 import controllers.actions.predraft.{PreDraftAuthActionHelper, PreDraftDataRequiredAction, PreDraftDataRetrievalAction}
 import forms.sections.info.DestinationTypeFormProvider
+import models.Mode
+import models.UserType.NorthernIrelandWarehouseKeeper
 import models.requests.DataRequest
 import models.sections.info.DispatchPlace.GreatBritain
-import models.{Mode, NorthernIrelandWarehouseKeeper}
 import navigation.InformationNavigator
 import pages.sections.info.DestinationTypePage
 import play.api.data.Form
@@ -44,19 +45,20 @@ class DestinationTypeController @Inject()(
                                            val requirePreDraftData: PreDraftDataRequiredAction,
                                            val getData: DataRetrievalAction,
                                            val requireData: DataRequiredAction,
+                                           val withMovement: MovementAction,
                                            formProvider: DestinationTypeFormProvider,
                                            val controllerComponents: MessagesControllerComponents,
                                            view: DestinationTypeView,
                                            val userAllowList: UserAllowListAction
                                          ) extends BasePreDraftNavigationController with AuthActionHelper with PreDraftAuthActionHelper {
 
-  def onPreDraftPageLoad(ern: String, mode: Mode): Action[AnyContent] =
-    authorisedPreDraftDataRequestAsync(ern) { implicit request =>
+  def onPreDraftPageLoad(ern: String, arc: String, mode: Mode): Action[AnyContent] =
+    authorisedWithPreDraftDataUpToDateMovementAsync(ern, arc) { implicit request =>
       renderView(Ok, fillForm(DestinationTypePage, formProvider()), mode)
     }
 
-  def onPreDraftSubmit(ern: String, mode: Mode): Action[AnyContent] =
-    authorisedPreDraftDataRequestAsync(ern) { implicit request =>
+  def onPreDraftSubmit(ern: String, arc: String, mode: Mode): Action[AnyContent] =
+    authorisedWithPreDraftDataUpToDateMovementAsync(ern, arc) { implicit request =>
       formProvider().bindFromRequest().fold(
         formWithErrors =>
           renderView(BadRequest, formWithErrors, mode),
@@ -70,13 +72,13 @@ class DestinationTypeController @Inject()(
       request.dispatchPlace match {
         case _ if request.userTypeFromErn != NorthernIrelandWarehouseKeeper =>
           // GB ERN or XIRC ERN
-          status(view(GreatBritain, form, controllers.sections.info.routes.DestinationTypeController.onPreDraftSubmit(request.ern, mode)))
+          status(view(GreatBritain, form, controllers.sections.info.routes.DestinationTypeController.onPreDraftSubmit(request.ern, request.arc, mode)))
         case Some(dispatchPlace) =>
           // XIWK ERN, dispatchPlace is known
-          status(view(dispatchPlace, form, controllers.sections.info.routes.DestinationTypeController.onPreDraftSubmit(request.ern, mode)))
+          status(view(dispatchPlace, form, controllers.sections.info.routes.DestinationTypeController.onPreDraftSubmit(request.ern, request.arc, mode)))
         case None =>
           // XI ERN, dispatchPlace is unknown
-          Redirect(controllers.sections.info.routes.DispatchPlaceController.onPreDraftPageLoad(request.ern, mode))
+          Redirect(controllers.sections.info.routes.DispatchPlaceController.onPreDraftPageLoad(request.ern, request.arc, mode))
       }
     )
   }

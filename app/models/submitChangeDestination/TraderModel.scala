@@ -30,6 +30,7 @@ import pages.sections.transportArranger._
 import play.api.libs.json.{Format, Json}
 import utils.ModelConstructorHelpers
 
+//TODO: REFACTOR FOR ACTUAL COD SUBMISSION
 case class TraderModel(traderExciseNumber: Option[String],
                        traderName: Option[String],
                        address: Option[AddressModel],

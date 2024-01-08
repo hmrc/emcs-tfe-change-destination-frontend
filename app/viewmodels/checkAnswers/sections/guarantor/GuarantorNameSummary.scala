@@ -32,7 +32,7 @@ object GuarantorNameSummary {
 
   def row()(implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] = {
 
-    request.userAnswers.get(GuarantorRequiredPage).filter(required => required).flatMap { _ =>
+    request.userAnswers.get(GuarantorRequiredPage).filter(identity).flatMap { _ =>
 
       request.userAnswers.get(GuarantorArrangerPage).map { arranger =>
 

@@ -18,29 +18,22 @@ package controllers.sections.info
 
 import controllers.BaseController
 import controllers.actions._
-import models.{NormalMode, NorthernIrelandWarehouseKeeper}
+import models.NormalMode
+import models.UserType.NorthernIrelandWarehouseKeeper
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 
 import javax.inject.Inject
 
 class InfoIndexController @Inject()(val userAllowList: UserAllowListAction,
-                                    val getData: DataRetrievalAction,
-                                    val requireData: DataRequiredAction,
                                     val auth: AuthAction,
-                                    val controllerComponents: MessagesControllerComponents) extends BaseController with AuthActionHelper {
-
-  def onPreDraftPageLoad(ern: String): Action[AnyContent] =
-    (auth(ern) andThen userAllowList) { implicit request =>
-      if (request.userTypeFromErn == NorthernIrelandWarehouseKeeper) {
-        Redirect(controllers.sections.info.routes.DispatchPlaceController.onPreDraftPageLoad(ern, NormalMode))
-      } else {
-        Redirect(controllers.sections.info.routes.DestinationTypeController.onPreDraftPageLoad(ern, NormalMode))
-      }
-    }
+                                    val controllerComponents: MessagesControllerComponents) extends BaseController {
 
   def onPageLoad(ern: String, arc: String): Action[AnyContent] =
-    authorisedDataRequest(ern, arc) { _ =>
-      Redirect(controllers.sections.info.routes.InformationCheckAnswersController.onPageLoad(ern, arc))
+    (auth(ern, arc) andThen userAllowList) { implicit request =>
+      if (request.userTypeFromErn == NorthernIrelandWarehouseKeeper) {
+        Redirect(controllers.sections.info.routes.DispatchPlaceController.onPreDraftPageLoad(ern, arc, NormalMode))
+      } else {
+        Redirect(controllers.sections.info.routes.DestinationTypeController.onPreDraftPageLoad(ern, arc, NormalMode))
+      }
     }
-
 }

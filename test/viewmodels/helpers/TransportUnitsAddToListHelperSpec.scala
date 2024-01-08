@@ -44,7 +44,7 @@ class TransportUnitsAddToListHelperSpec extends SpecBase {
       "return nothing" - {
         s"when no answers specified for '${msg.lang.code}'" in new Setup() {
           implicit val msgs: Messages = messages(Seq(msg.lang))
-
+          override implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers, movementDetails = maxGetMovementResponse.copy(transportDetails = Seq.empty))
           helper.allTransportUnitsSummary() mustBe Nil
         }
       }
@@ -66,7 +66,7 @@ class TransportUnitsAddToListHelperSpec extends SpecBase {
                 title = Some(CardTitle(Text(msg.transportUnit1))),
                 actions = Some(Actions(items = Seq(
                   ActionItem(
-                    href = transportUnitRoutes.TransportUnitRemoveUnitController.onPageLoad(testErn, testDraftId, testIndex1).url,
+                    href = transportUnitRoutes.TransportUnitRemoveUnitController.onPageLoad(testErn, testArc, testIndex1).url,
                     content = Text(msg.remove),
                     visuallyHiddenText = Some(msg.transportUnit1),
                     attributes = Map("id" -> "removeTransportUnit1")
@@ -105,7 +105,7 @@ class TransportUnitsAddToListHelperSpec extends SpecBase {
                 title = Some(CardTitle(Text(msg.transportUnit1))),
                 actions = Some(Actions(items = Seq(
                   ActionItem(
-                    href = transportUnitRoutes.TransportUnitRemoveUnitController.onPageLoad(testErn, testDraftId, testIndex1).url,
+                    href = transportUnitRoutes.TransportUnitRemoveUnitController.onPageLoad(testErn, testArc, testIndex1).url,
                     content = Text(msg.remove),
                     visuallyHiddenText = Some(msg.transportUnit1),
                     attributes = Map("id" -> "removeTransportUnit1")
@@ -125,19 +125,14 @@ class TransportUnitsAddToListHelperSpec extends SpecBase {
                 title = Some(CardTitle(Text(msg.transportUnit2))),
                 actions = Some(Actions(items = Seq(
                   ActionItem(
-                    href = transportUnitRoutes.TransportUnitRemoveUnitController.onPageLoad(testErn, testDraftId, testIndex2).url,
+                    href = transportUnitRoutes.TransportUnitRemoveUnitController.onPageLoad(testErn, testArc, testIndex2).url,
                     content = Text(msg.remove),
                     visuallyHiddenText = Some(msg.transportUnit2),
                     attributes = Map("id" -> "removeTransportUnit2")
                   )
                 ))))),
               rows = Seq(
-                TransportUnitTypeSummary.row(testIndex2).get,
-                TransportUnitIdentitySummary.row(testIndex2).get,
-                TransportSealChoiceSummary.row(testIndex2).get,
-                TransportSealTypeSummary.row(testIndex2).get,
-                TransportSealInformationSummary.row(testIndex2).get,
-                TransportUnitGiveMoreInformationSummary.row(testIndex2).get
+                TransportUnitTypeSummary.row(testIndex2).get
               )
             )
           )

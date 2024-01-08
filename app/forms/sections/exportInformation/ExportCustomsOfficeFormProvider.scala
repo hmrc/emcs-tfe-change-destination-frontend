@@ -16,11 +16,11 @@
 
 package forms.sections.exportInformation
 
+import forms.mappings.Mappings
 import forms.{CUSTOMS_OFFICE_CODE_REGEX, XSS_REGEX}
+import play.api.data.Form
 
 import javax.inject.Inject
-import forms.mappings.Mappings
-import play.api.data.Form
 
 class ExportCustomsOfficeFormProvider @Inject() extends Mappings {
 

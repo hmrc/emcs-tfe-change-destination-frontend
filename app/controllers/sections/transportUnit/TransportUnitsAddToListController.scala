@@ -41,6 +41,7 @@ class TransportUnitsAddToListController @Inject()(
                                                    override val auth: AuthAction,
                                                    override val getData: DataRetrievalAction,
                                                    override val requireData: DataRequiredAction,
+                                                   override val withMovement: MovementAction,
                                                    formProvider: TransportUnitsAddToListFormProvider,
                                                    val controllerComponents: MessagesControllerComponents,
                                                    view: TransportUnitsAddToListView,
@@ -48,14 +49,14 @@ class TransportUnitsAddToListController @Inject()(
                                                  ) extends BaseTransportUnitNavigationController with AuthActionHelper {
 
   def onPageLoad(ern: String, arc: String): Action[AnyContent] =
-    authorisedDataRequest(ern, arc) { implicit request =>
+    authorisedDataRequestWithUpToDateMovement(ern, arc) { implicit request =>
       val form = onMax(ifMax = None, ifNotMax = Some(fillForm(TransportUnitsAddToListPage, formProvider())))
 
       Ok(view(form, summaryHelper.allTransportUnitsSummary(), NormalMode))
     }
 
   def onSubmit(ern: String, arc: String): Action[AnyContent] =
-    authorisedDataRequestAsync(ern, arc) { implicit request =>
+    authorisedDataRequestWithUpToDateMovementAsync(ern, arc) { implicit request =>
       onMax(
         ifMax = Future.successful(Redirect(controllers.routes.DraftMovementController.onPageLoad(ern, arc))),
         ifNotMax = formProvider().bindFromRequest().fold(
@@ -76,7 +77,7 @@ class TransportUnitsAddToListController @Inject()(
 
     }
 
-  private def onMax[D, T](ifMax: => T, ifNotMax: => T)(implicit dataRequest: DataRequest[_]): T = {
+  private def onMax[T](ifMax: => T, ifNotMax: => T)(implicit dataRequest: DataRequest[_]): T = {
     dataRequest.userAnswers.get(TransportUnitsCount) match {
       case Some(value) if value >= TransportUnitsSection.MAX => ifMax
       case _ => ifNotMax

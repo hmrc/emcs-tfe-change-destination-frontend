@@ -38,6 +38,7 @@ class GuarantorAddressController @Inject()(override val messagesApi: MessagesApi
                                            override val auth: AuthAction,
                                            override val getData: DataRetrievalAction,
                                            override val requireData: DataRequiredAction,
+                                           override val withMovement: MovementAction,
                                            override val userAllowList: UserAllowListAction,
                                            override val formProvider: AddressFormProvider,
                                            override val controllerComponents: MessagesControllerComponents,

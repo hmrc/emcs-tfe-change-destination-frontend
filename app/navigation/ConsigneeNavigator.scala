@@ -17,6 +17,7 @@
 package navigation
 
 import controllers.routes
+import models.requests.DataRequest
 import models.{CheckMode, Mode, NormalMode, ReviewMode, UserAnswers}
 import pages.Page
 import pages.sections.consignee._
@@ -24,9 +25,10 @@ import play.api.mvc.Call
 
 import javax.inject.Inject
 
+//noinspection ScalaStyle
 class ConsigneeNavigator @Inject() extends BaseNavigator {
 
-  private val normalRoutes: Page => UserAnswers => Call = {
+  private def normalRoutes(implicit request: DataRequest[_]): Page => UserAnswers => Call = {
 
     // if the [destinationType] was Exempted Organisation
     case ConsigneeExemptOrganisationPage => (userAnswers: UserAnswers) =>
@@ -73,9 +75,9 @@ class ConsigneeNavigator @Inject() extends BaseNavigator {
       (userAnswers: UserAnswers) => routes.CheckYourAnswersController.onPageLoad(userAnswers.ern, userAnswers.arc)
   }
 
-  override def nextPage(page: Page, mode: Mode, userAnswers: UserAnswers): Call = mode match {
+  override def nextPage(page: Page, mode: Mode, userAnswers: UserAnswers)(implicit request: DataRequest[_]): Call = mode match {
     case NormalMode =>
-      normalRoutes(page)(userAnswers)
+      normalRoutes(request)(page)(userAnswers)
     case CheckMode =>
       checkRouteMap(page)(userAnswers)
     case ReviewMode =>

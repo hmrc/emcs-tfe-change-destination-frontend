@@ -17,7 +17,7 @@
 package models.requests
 
 import base.SpecBase
-import models._
+import models.UserType._
 import play.api.test.FakeRequest
 
 class UserRequestSpec extends SpecBase {

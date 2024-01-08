@@ -16,6 +16,7 @@
 
 package pages.sections.destination
 
+import models.Enumerable
 import models.requests.DataRequest
 import models.sections.info.movementScenario.MovementScenario
 import models.sections.info.movementScenario.MovementScenario.{DirectDelivery, EuTaxWarehouse, ExemptedOrganisation, GbTaxWarehouse, RegisteredConsignee, TemporaryRegisteredConsignee}
@@ -25,7 +26,7 @@ import play.api.libs.json.{JsObject, JsPath}
 import utils.JsonOptionFormatter
 import viewmodels.taskList.{Completed, InProgress, NotStarted, TaskListStatus}
 
-case object DestinationSection extends Section[JsObject] with JsonOptionFormatter {
+case object DestinationSection extends Section[JsObject] with JsonOptionFormatter with Enumerable.Implicits {
 
   override val path: JsPath = JsPath \ "destination"
 
@@ -48,19 +49,21 @@ case object DestinationSection extends Section[JsObject] with JsonOptionFormatte
     ).contains(destinationTypePageAnswer)
 
   override def status(implicit request: DataRequest[_]): TaskListStatus =
-    request.userAnswers.get(DestinationTypePage) match {
-      case Some(value) =>
-        implicit val destinationTypePageAnswer: MovementScenario = value
-        if(shouldStartFlowAtDestinationWarehouseExcise) {
-          startFlowAtDestinationWarehouseExciseStatus
-        } else if(shouldStartFlowAtDestinationWarehouseVat) {
-          startFlowAtDestinationWarehouseVatStatus
-        } else if(shouldStartFlowAtDestinationBusinessName) {
-          startFlowAtDestinationBusinessNameStatus
-        } else {
-          NotStarted
-        }
-      case None => NotStarted
+    sectionHasBeenReviewed(DestinationReviewPage) {
+      request.userAnswers.get(DestinationTypePage) match {
+        case Some(value) =>
+          implicit val destinationTypePageAnswer: MovementScenario = value
+          if (shouldStartFlowAtDestinationWarehouseExcise) {
+            startFlowAtDestinationWarehouseExciseStatus
+          } else if (shouldStartFlowAtDestinationWarehouseVat) {
+            startFlowAtDestinationWarehouseVatStatus
+          } else if (shouldStartFlowAtDestinationBusinessName) {
+            startFlowAtDestinationBusinessNameStatus
+          } else {
+            NotStarted
+          }
+        case None => NotStarted
+      }
     }
 
   private def startFlowAtDestinationWarehouseExciseStatus(implicit request: DataRequest[_]): TaskListStatus =

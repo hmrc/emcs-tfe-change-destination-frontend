@@ -16,11 +16,17 @@
 
 package pages.sections.journeyType
 
+import models.requests.DataRequest
 import models.sections.journeyType.HowMovementTransported
 import pages.QuestionPage
-import play.api.libs.json.JsPath
+import play.api.libs.json.{JsPath, JsString}
 
 case object HowMovementTransportedPage extends QuestionPage[HowMovementTransported] {
   override val toString: String = "howMovementTransported"
   override val path: JsPath = JourneyTypeSection.path \ toString
+
+  override def getValueFromIE801(implicit request: DataRequest[_]): Option[HowMovementTransported] = {
+    // TODO: check
+    JsString(request.movementDetails.transportMode.transportModeCode).asOpt[HowMovementTransported]
+  }
 }

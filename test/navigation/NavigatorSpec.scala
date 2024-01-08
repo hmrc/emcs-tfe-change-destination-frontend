@@ -20,10 +20,13 @@ import base.SpecBase
 import controllers.routes
 import models._
 import pages._
+import play.api.test.FakeRequest
 
 class NavigatorSpec extends SpecBase {
 
   val navigator = new Navigator
+
+  implicit val request = dataRequest(FakeRequest())
 
   "Navigator" - {
 
@@ -33,7 +36,7 @@ class NavigatorSpec extends SpecBase {
 
         case object UnknownPage extends Page
         navigator.nextPage(UnknownPage, NormalMode, emptyUserAnswers) mustBe
-          routes.IndexController.onPageLoad(testErn)
+          routes.IndexController.onPageLoad(testErn, testArc)
       }
 
       "for the CheckYourAnswers page" - {
@@ -41,7 +44,7 @@ class NavigatorSpec extends SpecBase {
         "must go to the Confirmation page" in {
 
           navigator.nextPage(CheckAnswersPage, NormalMode, emptyUserAnswers) mustBe
-            routes.ConfirmationController.onPageLoad(testErn, testDraftId)
+            routes.ConfirmationController.onPageLoad(testErn, testArc)
         }
       }
       "for the Declaration page" - {
@@ -49,7 +52,7 @@ class NavigatorSpec extends SpecBase {
         "must go to the Confirmation page" in {
 
           navigator.nextPage(DeclarationPage, NormalMode, emptyUserAnswers) mustBe
-            routes.ConfirmationController.onPageLoad(testErn, testDraftId)
+            routes.ConfirmationController.onPageLoad(testErn, testArc)
         }
       }
     }
@@ -60,7 +63,7 @@ class NavigatorSpec extends SpecBase {
 
         case object UnknownPage extends Page
         navigator.nextPage(UnknownPage, CheckMode, emptyUserAnswers) mustBe
-          routes.CheckYourAnswersController.onPageLoad(testErn, testDraftId)
+          routes.CheckYourAnswersController.onPageLoad(testErn, testArc)
       }
     }
 
@@ -70,7 +73,7 @@ class NavigatorSpec extends SpecBase {
 
         case object UnknownPage extends Page
         navigator.nextPage(UnknownPage, ReviewMode, emptyUserAnswers) mustBe
-          routes.CheckYourAnswersController.onPageLoad(testErn, testDraftId)
+          routes.CheckYourAnswersController.onPageLoad(testErn, testArc)
       }
     }
   }

@@ -49,7 +49,7 @@ class HowMovementTransportedViewSpec extends SpecBase with ViewBehaviours {
 
         behave like pageWithExpectedElementsAndMessages(Seq(
           Selectors.title -> messagesForLanguage.title,
-          Selectors.subHeadingCaptionSelector -> messagesForLanguage.subHeading,
+          Selectors.subHeadingCaptionSelector -> messagesForLanguage.journeyTypeSection,
           Selectors.h1 -> messagesForLanguage.heading,
           // scalastyle:off magic.number
           Selectors.radioButton(1) -> messagesForLanguage.radioOption1,

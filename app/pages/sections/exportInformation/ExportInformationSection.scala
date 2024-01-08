@@ -16,6 +16,7 @@
 
 package pages.sections.exportInformation
 
+import models.Enumerable
 import models.requests.DataRequest
 import models.sections.info.movementScenario.MovementScenario.{ExportWithCustomsDeclarationLodgedInTheEu, ExportWithCustomsDeclarationLodgedInTheUk}
 import pages.sections.Section
@@ -23,16 +24,17 @@ import pages.sections.info.DestinationTypePage
 import play.api.libs.json.{JsObject, JsPath}
 import viewmodels.taskList.{Completed, NotStarted, TaskListStatus}
 
-case object ExportInformationSection extends Section[JsObject] {
+case object ExportInformationSection extends Section[JsObject] with Enumerable.Implicits {
   override val path: JsPath = JsPath \ "exportInformation"
 
-  override def status(implicit request: DataRequest[_]): TaskListStatus = {
-    if (request.userAnswers.get(ExportCustomsOfficePage).nonEmpty) {
-      Completed
-    } else {
-      NotStarted
+  override def status(implicit request: DataRequest[_]): TaskListStatus =
+    sectionHasBeenReviewed(ExportInformationReviewPage) {
+      if (request.userAnswers.get(ExportCustomsOfficePage).nonEmpty) {
+        Completed
+      } else {
+        NotStarted
+      }
     }
-  }
 
   override def canBeCompletedForTraderAndDestinationType(implicit request: DataRequest[_]): Boolean =
     request.userAnswers.get(DestinationTypePage) match {

@@ -25,7 +25,6 @@ object DestinationTypeMessages {
     val titleMovement = titleHelper(headingMovement)
     val headingImport = "What is the destination type for this import?"
     val titleImport = titleHelper(headingImport)
-    val caption = "Movement information"
     val taxWarehouseInGb = "Tax warehouse in Great Britain"
     val cyaLabel: String = "Destination type"
     val cyaChangeHidden: String = "destination type"

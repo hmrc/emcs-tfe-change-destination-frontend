@@ -20,19 +20,23 @@ import base.SpecBase
 import fixtures.UserAddressFixtures
 import models.UserAnswers
 import models.requests.DataRequest
+import models.sections.info.movementScenario.DestinationType.UnknownDestination
 import org.scalamock.scalatest.MockFactory
 import pages.sections.destination._
 import play.api.i18n.Messages
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryList
-import viewmodels.checkAnswers.DestinationWarehouseVatSummary
 import viewmodels.govuk.all.FluentSummaryList
 
 class DestinationCheckAnswersHelperSpec extends SpecBase with MockFactory with UserAddressFixtures {
 
   class Setup(userAnswers: UserAnswers) {
-    implicit val fakeDataRequest: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), userAnswers)
+    implicit val fakeDataRequest: DataRequest[AnyContentAsEmpty.type] = dataRequest(
+      FakeRequest(),
+      userAnswers,
+      movementDetails = maxGetMovementResponse.copy(destinationType = UnknownDestination, deliveryPlaceTrader = None)
+    )
     implicit val msgs: Messages = messages(FakeRequest())
     lazy val dispatchCheckAnswersSummary = new DestinationCheckAnswersHelper()
   }

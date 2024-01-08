@@ -30,6 +30,9 @@ POST       /trader/:ern/movement/:arc/transport-units/transport-unit/:idx/give-m
 GET        /trader/:ern/movement/:arc/transport-units/transport-unit/:idx/give-more-information/change            controllers.sections.transportUnit.TransportUnitGiveMoreInformationController.onPageLoad(ern: String, arc: String, idx: Index, mode: Mode = CheckMode)
 POST       /trader/:ern/movement/:arc/transport-units/transport-unit/:idx/give-more-information/change            controllers.sections.transportUnit.TransportUnitGiveMoreInformationController.onSubmit(ern: String, arc: String, idx: Index, mode: Mode = CheckMode)
 
+GET        /trader/:ern/movement/:arc/transport-units/check-answers                                                   controllers.sections.transportUnit.TransportUnitCheckAnswersController.onPageLoad(ern: String, arc: String)
+POST       /trader/:ern/movement/:arc/transport-units/check-answers                                                   controllers.sections.transportUnit.TransportUnitCheckAnswersController.onSubmit(ern: String, arc: String)
+
 GET        /trader/:ern/movement/:arc/transport-units/add-to-list                        controllers.sections.transportUnit.TransportUnitsAddToListController.onPageLoad(ern: String, arc: String)
 POST       /trader/:ern/movement/:arc/transport-units/add-to-list                        controllers.sections.transportUnit.TransportUnitsAddToListController.onSubmit(ern: String, arc: String)
 

@@ -16,6 +16,7 @@
 
 package navigation
 
+import models.requests.DataRequest
 import models.{Mode, UserAnswers}
 import pages._
 import play.api.mvc.Call
@@ -23,52 +24,52 @@ import play.api.mvc.Call
 object FakeNavigators {
 
   class FakeNavigator(desiredRoute: Call) extends Navigator {
-    override def nextPage(page: Page, mode: Mode, userAnswers: UserAnswers): Call =
+    override def nextPage(page: Page, mode: Mode, userAnswers: UserAnswers)(implicit request: DataRequest[_]): Call =
       desiredRoute
   }
 
   class FakeJourneyTypeNavigator(desiredRoute: Call) extends JourneyTypeNavigator {
-    override def nextPage(page: Page, mode: Mode, userAnswers: UserAnswers): Call =
+    override def nextPage(page: Page, mode: Mode, userAnswers: UserAnswers)(implicit request: DataRequest[_]): Call =
       desiredRoute
   }
 
   class FakeInfoNavigator(desiredRoute: Call) extends InformationNavigator {
-    override def nextPage(page: Page, mode: Mode, userAnswers: UserAnswers): Call =
+    override def nextPage(page: Page, mode: Mode, userAnswers: UserAnswers)(implicit request: DataRequest[_]): Call =
       desiredRoute
   }
 
   class FakeConsigneeNavigator(desiredRoute: Call) extends ConsigneeNavigator {
-    override def nextPage(page: Page, mode: Mode, userAnswers: UserAnswers): Call =
+    override def nextPage(page: Page, mode: Mode, userAnswers: UserAnswers)(implicit request: DataRequest[_]): Call =
       desiredRoute
   }
 
   class FakeTransportArrangerNavigator(desiredRoute: Call) extends TransportArrangerNavigator {
-    override def nextPage(page: Page, mode: Mode, userAnswers: UserAnswers): Call =
+    override def nextPage(page: Page, mode: Mode, userAnswers: UserAnswers)(implicit request: DataRequest[_]): Call =
       desiredRoute
   }
 
   class FakeFirstTransporterNavigator(desiredRoute: Call) extends FirstTransporterNavigator {
-    override def nextPage(page: Page, mode: Mode, userAnswers: UserAnswers): Call =
+    override def nextPage(page: Page, mode: Mode, userAnswers: UserAnswers)(implicit request: DataRequest[_]): Call =
       desiredRoute
   }
 
   class FakeTransportUnitNavigator(desiredRoute: Call) extends TransportUnitNavigator {
-    override def nextPage(page: Page, mode: Mode, userAnswers: UserAnswers): Call =
+    override def nextPage(page: Page, mode: Mode, userAnswers: UserAnswers)(implicit request: DataRequest[_]): Call =
       desiredRoute
   }
 
   class FakeDestinationNavigator(desiredRoute: Call) extends DestinationNavigator {
-    override def nextPage(page: Page, mode: Mode, userAnswers: UserAnswers): Call =
+    override def nextPage(page: Page, mode: Mode, userAnswers: UserAnswers)(implicit request: DataRequest[_]): Call =
       desiredRoute
   }
 
   class FakeGuarantorNavigator(desiredRoute: Call) extends GuarantorNavigator {
-    override def nextPage(page: Page, mode: Mode, userAnswers: UserAnswers): Call =
+    override def nextPage(page: Page, mode: Mode, userAnswers: UserAnswers)(implicit request: DataRequest[_]): Call =
       desiredRoute
   }
 
   class FakeExportInformationNavigator(desiredRoute: Call) extends ExportInformationNavigator {
-    override def nextPage(page: Page, mode: Mode, userAnswers: UserAnswers): Call =
+    override def nextPage(page: Page, mode: Mode, userAnswers: UserAnswers)(implicit request: DataRequest[_]): Call =
       desiredRoute
   }
 }

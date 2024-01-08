@@ -14,9 +14,9 @@
  * limitations under the License.
  *@
 
+@import config.AppConfig
 @import models.requests.DataRequest
 @import viewmodels.InputWidth._
-@import config.AppConfig
 @import viewmodels.LabelSize
 
 @this(
@@ -43,7 +43,7 @@
             @govukErrorSummary(ErrorSummaryViewModel(form))
         }
 
-        @h2(messages("exportInformation.subHeading"), "govuk-caption-xl")
+        @h2(messages("exportInformation.subHeading"), "govuk-caption-xl", hiddenContent = Some(messages("subHeading.hidden"))))
         @govukInput(
             InputViewModel(
                 field = form("value"),

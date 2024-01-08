@@ -17,12 +17,13 @@
 package controllers.sections.destination
 
 import base.SpecBase
-import controllers.actions.FakeDataRetrievalAction
+import controllers.actions.{FakeDataRetrievalAction, FakeMovementAction}
 import mocks.services.MockUserAnswersService
+import models.sections.ReviewAnswer.{ChangeAnswers, KeepAnswers}
 import models.sections.info.movementScenario.MovementScenario._
 import models.{NormalMode, UserAnswers}
 import navigation.FakeNavigators.FakeDestinationNavigator
-import pages.sections.destination.{DestinationDetailsChoicePage, DestinationWarehouseVatPage}
+import pages.sections.destination.{DestinationDetailsChoicePage, DestinationReviewPage, DestinationWarehouseVatPage}
 import pages.sections.info.DestinationTypePage
 import play.api.http.Status.SEE_OTHER
 import play.api.test.FakeRequest
@@ -31,7 +32,7 @@ import play.api.test.Helpers._
 class DestinationIndexControllerSpec extends SpecBase with MockUserAnswersService {
 
   class Fixture(optUserAnswers: Option[UserAnswers] = Some(emptyUserAnswers)) {
-    implicit val request = FakeRequest(GET, routes.DestinationIndexController.onPageLoad(testErn, testDraftId).url)
+    implicit val request = FakeRequest(GET, routes.DestinationIndexController.onPageLoad(testErn, testArc).url)
 
     lazy val testController = new DestinationIndexController(
       mockUserAnswersService,
@@ -39,6 +40,7 @@ class DestinationIndexControllerSpec extends SpecBase with MockUserAnswersServic
       fakeAuthAction,
       new FakeDataRetrievalAction(optUserAnswers, Some(testMinTraderKnownFacts)),
       dataRequiredAction,
+      new FakeMovementAction(maxGetMovementResponse.copy(deliveryPlaceTrader = None)),
       fakeUserAllowListAction,
       messagesControllerComponents
     )
@@ -50,26 +52,30 @@ class DestinationIndexControllerSpec extends SpecBase with MockUserAnswersServic
       "must redirect to the CYA controller" in new Fixture(Some(emptyUserAnswers
         .set(DestinationTypePage, TemporaryRegisteredConsignee)
         .set(DestinationWarehouseVatPage, "vat")
-        .set(DestinationDetailsChoicePage, false))) {
+        .set(DestinationDetailsChoicePage, false)
+        .set(DestinationReviewPage, KeepAnswers))) {
 
-        val result = testController.onPageLoad(testErn, testDraftId)(request)
+        val result = testController.onPageLoad(testErn, testArc)(request)
 
         status(result) mustEqual SEE_OTHER
-        redirectLocation(result) mustBe Some(routes.DestinationCheckAnswersController.onPageLoad(testErn, testDraftId).url)
+        redirectLocation(result) mustBe Some(routes.DestinationCheckAnswersController.onPageLoad(testErn, testArc).url)
       }
     }
 
     "must redirect to the destination warehouse excise controller" - {
       Seq(GbTaxWarehouse, EuTaxWarehouse).foreach(
         answer =>
-          s"when DestinationTypePage answer is $answer" in new Fixture(Some(emptyUserAnswers.set(DestinationTypePage, answer))) {
+          s"when DestinationTypePage answer is $answer" in new Fixture(Some(emptyUserAnswers
+            .set(DestinationTypePage, answer)
+            .set(DestinationReviewPage, ChangeAnswers)
+          )) {
             Seq("GBWK123", "GBRC123", "XIWK123", "XIRC123").foreach {
               ern =>
-                val result = testController.onPageLoad(ern, testDraftId)(request)
+                val result = testController.onPageLoad(ern, testArc)(request)
 
                 status(result) mustEqual SEE_OTHER
                 redirectLocation(result) mustBe
-                  Some(routes.DestinationWarehouseExciseController.onPageLoad(ern, testDraftId, NormalMode).url)
+                  Some(routes.DestinationWarehouseExciseController.onPageLoad(ern, testArc, NormalMode).url)
             }
           }
       )
@@ -80,14 +86,17 @@ class DestinationIndexControllerSpec extends SpecBase with MockUserAnswersServic
         TemporaryRegisteredConsignee,
         ExemptedOrganisation).foreach(
         answer =>
-          s"when DestinationTypePage answer is $answer" in new Fixture(Some(emptyUserAnswers.set(DestinationTypePage, answer))) {
+          s"when DestinationTypePage answer is $answer" in new Fixture(Some(emptyUserAnswers
+            .set(DestinationTypePage, answer)
+            .set(DestinationReviewPage, ChangeAnswers)
+          )) {
             Seq("GBWK123", "GBRC123", "XIWK123", "XIRC123").foreach {
               ern =>
-                val result = testController.onPageLoad(ern, testDraftId)(request)
+                val result = testController.onPageLoad(ern, testArc)(request)
 
                 status(result) mustEqual SEE_OTHER
                 redirectLocation(result) mustBe
-                  Some(routes.DestinationWarehouseVatController.onPageLoad(ern, testDraftId, NormalMode).url)
+                  Some(routes.DestinationWarehouseVatController.onPageLoad(ern, testArc, NormalMode).url)
             }
           }
       )
@@ -96,14 +105,17 @@ class DestinationIndexControllerSpec extends SpecBase with MockUserAnswersServic
     "must redirect to the destination business name controller" - {
       Seq(DirectDelivery).foreach(
         answer =>
-          s"when DestinationTypePage answer is $answer" in new Fixture(Some(emptyUserAnswers.set(DestinationTypePage, answer))) {
-            Seq("GBWK123", "GBRC123", "XIWK123", "XIRC123").foreach {
+          s"when DestinationTypePage answer is $answer" in new Fixture(Some(emptyUserAnswers
+            .set(DestinationTypePage, answer)
+            .set(DestinationReviewPage, ChangeAnswers)
+          )) {
+            Seq("GBWK1234", "GBRC1234", "XIWK1234", "XIRC1234").foreach {
               ern =>
-                val result = testController.onPageLoad(ern, testDraftId)(request)
+                val result = testController.onPageLoad(ern, testArc)(request)
 
                 status(result) mustEqual SEE_OTHER
                 redirectLocation(result) mustBe
-                  Some(routes.DestinationBusinessNameController.onPageLoad(ern, testDraftId, NormalMode).url)
+                  Some(routes.DestinationBusinessNameController.onPageLoad(ern, testArc, NormalMode).url)
             }
           }
       )
@@ -114,14 +126,17 @@ class DestinationIndexControllerSpec extends SpecBase with MockUserAnswersServic
         ExportWithCustomsDeclarationLodgedInTheEu,
         ExportWithCustomsDeclarationLodgedInTheUk).foreach(
         answer =>
-          s"when DestinationTypePage answer is $answer" in new Fixture(Some(emptyUserAnswers.set(DestinationTypePage, answer))) {
+          s"when DestinationTypePage answer is $answer" in new Fixture(Some(emptyUserAnswers
+            .set(DestinationTypePage, answer)
+            .set(DestinationReviewPage, ChangeAnswers)
+          )) {
             Seq("GBWK123", "GBRC123", "XIWK123", "XIRC123").foreach {
               ern =>
-                val result = testController.onPageLoad(ern, testDraftId)(request)
+                val result = testController.onPageLoad(ern, testArc)(request)
 
                 status(result) mustEqual SEE_OTHER
                 redirectLocation(result) mustBe
-                  Some(controllers.routes.DraftMovementController.onPageLoad(ern, testDraftId).url)
+                  Some(controllers.routes.DraftMovementController.onPageLoad(ern, testArc).url)
             }
           }
       )

@@ -39,8 +39,8 @@ class FirstTransporterVatSummarySpec extends SpecBase with Matchers {
 
         "when the show action link boolean is true" - {
 
-          "when there is no answer" in {
-            implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers)
+          "when there is no answer in either 801 or user answers" in {
+            implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers, movementDetails = maxGetMovementResponse.copy(firstTransporterTrader = None))
 
             FirstTransporterVatSummary.row(showActionLinks = true) mustBe
               SummaryListRowViewModel(
@@ -49,7 +49,24 @@ class FirstTransporterVatSummarySpec extends SpecBase with Matchers {
                 actions = Seq(
                   ActionItemViewModel(
                     content = messagesForLanguage.change,
-                    href = controllers.sections.firstTransporter.routes.FirstTransporterVatController.onPageLoad(testErn, testDraftId, CheckMode).url,
+                    href = controllers.sections.firstTransporter.routes.FirstTransporterVatController.onPageLoad(testErn, testArc, CheckMode).url,
+                    id = "changeFirstTransporterVat"
+                  ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHidden)
+                )
+              )
+          }
+
+          "when there's no answer in the user answers (defaulting to 801)" in {
+            implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers)
+
+            FirstTransporterVatSummary.row(showActionLinks = true) mustBe
+              SummaryListRowViewModel(
+                key = messagesForLanguage.cyaLabel,
+                value = Value(Text("FirstTransporterTraderVatNumber")),
+                actions = Seq(
+                  ActionItemViewModel(
+                    content = messagesForLanguage.change,
+                    href = controllers.sections.firstTransporter.routes.FirstTransporterVatController.onPageLoad(testErn, testArc, CheckMode).url,
                     id = "changeFirstTransporterVat"
                   ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHidden)
                 )
@@ -65,7 +82,7 @@ class FirstTransporterVatSummarySpec extends SpecBase with Matchers {
               actions = Seq(
                 ActionItemViewModel(
                   content = messagesForLanguage.change,
-                  href = controllers.sections.firstTransporter.routes.FirstTransporterVatController.onPageLoad(testErn, testDraftId, CheckMode).url,
+                  href = controllers.sections.firstTransporter.routes.FirstTransporterVatController.onPageLoad(testErn, testArc, CheckMode).url,
                   id = "changeFirstTransporterVat"
                 ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHidden)
               )
@@ -75,8 +92,8 @@ class FirstTransporterVatSummarySpec extends SpecBase with Matchers {
 
         "when the show action link boolean is false" - {
 
-          "when there is no answer" in {
-            implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers)
+          "when there is no answer in either 801 or user answers" in {
+            implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers, movementDetails = maxGetMovementResponse.copy(firstTransporterTrader = None))
 
             FirstTransporterVatSummary.row(showActionLinks = false) mustBe
               SummaryListRowViewModel(
@@ -84,6 +101,16 @@ class FirstTransporterVatSummarySpec extends SpecBase with Matchers {
                 value = Value(Text(messagesForLanguage.notProvided)),
                 actions = Seq()
               )
+          }
+
+          "when there's no answer in the user answers (defaulting to 801)" in {
+            implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers)
+
+            FirstTransporterVatSummary.row(showActionLinks = false) mustBe SummaryListRowViewModel(
+              key = messagesForLanguage.cyaLabel,
+              value = Value(Text("FirstTransporterTraderVatNumber")),
+              actions = Seq()
+            )
           }
 
           "when there is an answer" in {

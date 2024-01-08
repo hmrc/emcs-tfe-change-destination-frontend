@@ -17,7 +17,7 @@
 package models.requests.predraft
 
 import base.SpecBase
-import models._
+import models.UserType._
 import models.sections.info.DispatchPlace.{GreatBritain, NorthernIreland}
 import pages.sections.info.DispatchPlacePage
 import play.api.test.FakeRequest

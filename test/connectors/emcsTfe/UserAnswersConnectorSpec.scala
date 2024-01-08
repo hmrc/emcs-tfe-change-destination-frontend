@@ -37,18 +37,18 @@ class UserAnswersConnectorSpec extends SpecBase with Status with MimeTypes with 
 
       "when downstream call is successful and returns some JSON" in {
 
-        MockHttpClient.get(s"${appConfig.emcsTfeBaseUrl}/user-answers/change-destination/$testErn/$testDraftId")
+        MockHttpClient.get(s"${appConfig.emcsTfeBaseUrl}/user-answers/change-destination/$testErn/$testArc")
           .returns(Future.successful(Right(Some(emptyUserAnswers))))
 
-        connector.get(testErn, testDraftId).futureValue mustBe Right(Some(emptyUserAnswers))
+        connector.get(testErn, testArc).futureValue mustBe Right(Some(emptyUserAnswers))
       }
 
       "when downstream call is successful and returns None" in {
 
-        MockHttpClient.get(s"${appConfig.emcsTfeBaseUrl}/user-answers/change-destination/$testErn/$testDraftId")
+        MockHttpClient.get(s"${appConfig.emcsTfeBaseUrl}/user-answers/change-destination/$testErn/$testArc")
           .returns(Future.successful(Right(None)))
 
-        connector.get(testErn, testDraftId).futureValue mustBe Right(None)
+        connector.get(testErn, testArc).futureValue mustBe Right(None)
       }
     }
 
@@ -56,10 +56,10 @@ class UserAnswersConnectorSpec extends SpecBase with Status with MimeTypes with 
 
       "when downstream call fails" in {
 
-        MockHttpClient.get(s"${appConfig.emcsTfeBaseUrl}/user-answers/change-destination/$testErn/$testDraftId")
+        MockHttpClient.get(s"${appConfig.emcsTfeBaseUrl}/user-answers/change-destination/$testErn/$testArc")
           .returns(Future.successful(Left(JsonValidationError)))
 
-        connector.get(testErn, testDraftId).futureValue mustBe Left(JsonValidationError)
+        connector.get(testErn, testArc).futureValue mustBe Left(JsonValidationError)
       }
     }
   }
@@ -71,7 +71,7 @@ class UserAnswersConnectorSpec extends SpecBase with Status with MimeTypes with 
       "when downstream call is successful and returns some JSON" in {
 
         MockHttpClient.put(
-          url = s"${appConfig.emcsTfeBaseUrl}/user-answers/change-destination/$testErn/$testDraftId",
+          url = s"${appConfig.emcsTfeBaseUrl}/user-answers/change-destination/$testErn/$testArc",
           body = emptyUserAnswers
         ).returns(Future.successful(Right(emptyUserAnswers)))
 
@@ -84,7 +84,7 @@ class UserAnswersConnectorSpec extends SpecBase with Status with MimeTypes with 
       "when downstream call fails" in {
 
         MockHttpClient.put(
-          url = s"${appConfig.emcsTfeBaseUrl}/user-answers/change-destination/$testErn/$testDraftId",
+          url = s"${appConfig.emcsTfeBaseUrl}/user-answers/change-destination/$testErn/$testArc",
           body = emptyUserAnswers
         ).returns(Future.successful(Left(JsonValidationError)))
 
@@ -100,10 +100,10 @@ class UserAnswersConnectorSpec extends SpecBase with Status with MimeTypes with 
       "when downstream call is successful" in {
 
         MockHttpClient.delete(
-          url = s"${appConfig.emcsTfeBaseUrl}/user-answers/change-destination/$testErn/$testDraftId"
+          url = s"${appConfig.emcsTfeBaseUrl}/user-answers/change-destination/$testErn/$testArc"
         ).returns(Future.successful(Right(true)))
 
-        connector.delete(testErn, testDraftId).futureValue mustBe Right(true)
+        connector.delete(testErn, testArc).futureValue mustBe Right(true)
       }
     }
 
@@ -112,10 +112,10 @@ class UserAnswersConnectorSpec extends SpecBase with Status with MimeTypes with 
       "when downstream call fails" in {
 
         MockHttpClient.delete(
-          url = s"${appConfig.emcsTfeBaseUrl}/user-answers/change-destination/$testErn/$testDraftId"
+          url = s"${appConfig.emcsTfeBaseUrl}/user-answers/change-destination/$testErn/$testArc"
         ).returns(Future.successful(Left(UnexpectedDownstreamResponseError)))
 
-        connector.delete(testErn, testDraftId).futureValue mustBe Left(UnexpectedDownstreamResponseError)
+        connector.delete(testErn, testArc).futureValue mustBe Left(UnexpectedDownstreamResponseError)
       }
     }
   }

@@ -24,7 +24,6 @@ object ConsigneeExemptOrganisationMessages {
 
     val heading = "Exempt organisation details"
     val title = titleHelper(heading)
-    val subheading = "Consignee information"
 
     val memberStateLabel = "Select the member state of destination"
     val memberStateErrorRequired = "Select the member state of destination"

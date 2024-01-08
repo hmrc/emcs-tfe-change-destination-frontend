@@ -17,6 +17,7 @@
 package navigation
 
 import controllers.routes
+import models.requests.DataRequest
 import models.{CheckMode, Mode, NormalMode, ReviewMode, UserAnswers}
 import pages._
 import pages.sections.firstTransporter.{FirstTransporterAddressPage, FirstTransporterCheckAnswersPage, FirstTransporterNamePage, FirstTransporterVatPage}
@@ -44,7 +45,7 @@ class FirstTransporterNavigator @Inject() extends BaseNavigator {
       controllers.sections.firstTransporter.routes.FirstTransporterCheckAnswersController.onPageLoad(userAnswers.ern, userAnswers.arc)
   }
 
-  private val checkRoutes: Page => UserAnswers => Call = {
+  private def checkRoutes(implicit request: DataRequest[_]): Page => UserAnswers => Call = {
     case FirstTransporterNamePage => (userAnswers: UserAnswers) =>
       if (
         userAnswers.get(FirstTransporterNamePage).isEmpty ||
@@ -64,11 +65,11 @@ class FirstTransporterNavigator @Inject() extends BaseNavigator {
       (userAnswers: UserAnswers) => routes.CheckYourAnswersController.onPageLoad(userAnswers.ern, userAnswers.arc)
   }
 
-  override def nextPage(page: Page, mode: Mode, userAnswers: UserAnswers): Call = mode match {
+  override def nextPage(page: Page, mode: Mode, userAnswers: UserAnswers)(implicit request: DataRequest[_]): Call = mode match {
     case NormalMode =>
       normalRoutes(page)(userAnswers)
     case CheckMode =>
-      checkRoutes(page)(userAnswers)
+      checkRoutes(request)(page)(userAnswers)
     case ReviewMode =>
       reviewRouteMap(page)(userAnswers)
   }
