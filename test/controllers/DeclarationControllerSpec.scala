@@ -31,7 +31,8 @@ import views.html.DeclarationView
 import scala.concurrent.Future
 
 
-class DeclarationControllerSpec extends SpecBase with MockUserAnswersService with MockSubmitChangeDestinationService with MockAppConfig with SubmitChangeDestinationFixtures {
+class DeclarationControllerSpec extends SpecBase with MockUserAnswersService with MockSubmitChangeDestinationService
+  with MockAppConfig with SubmitChangeDestinationFixtures {
 
   lazy val view: DeclarationView = app.injector.instanceOf[DeclarationView]
   val ern: String = "XIRC123"
@@ -65,35 +66,20 @@ class DeclarationControllerSpec extends SpecBase with MockUserAnswersService wit
   "DeclarationController" - {
     "for GET onPageLoad" - {
       "must return the declaration page" in new Test() {
-        MockAppConfig.destinationOfficeSuffix.returns("004098")
+
         val res = controller.onPageLoad(ern, testArc)(request)
 
         status(res) mustBe OK
         contentAsString(res) mustBe view(submitRoute).toString()
-      }
-
-      "when creating a request model fails" - {
-        "must return a BadRequest when MissingMandatoryPage" in new Test(emptyUserAnswers) {
-          val res = controller.onPageLoad(ern, testArc)(request)
-
-          status(res) mustBe SEE_OTHER
-          redirectLocation(res) mustBe Some(routes.DraftMovementController.onPageLoad(ern, testArc).url)
-        }
-        "must return a InternalServerError when something else goes wrong" in new Test() {
-          MockAppConfig.destinationOfficeSuffix.throws(new Exception("test error"))
-
-          val res = controller.onPageLoad(ern, testArc)(request)
-
-          status(res) mustBe INTERNAL_SERVER_ERROR
-        }
       }
     }
 
     "for POST submit" - {
       "when downstream call is successful" - {
         "must save the timestamp and redirect" in new Test() {
-          MockAppConfig.destinationOfficeSuffix.returns("004098")
-          MockSubmitChangeDestinationService.submit(xircSubmitChangeDestinationModel).returns(Future.successful(submitChangeDestinationResponseEIS))
+//TODO: Add in when submission story is worked on
+//          MockAppConfig.destinationOfficeSuffix.returns("004098")
+//          MockSubmitChangeDestinationService.submit(xircSubmitChangeDestinationModel).returns(Future.successful(submitChangeDestinationResponseEIS))
           MockUserAnswersService.set().returns(Future.successful(emptyUserAnswers))
 
           val res = controller.onSubmit(ern, testArc)(request)
@@ -102,33 +88,33 @@ class DeclarationControllerSpec extends SpecBase with MockUserAnswersService wit
           redirectLocation(res) must contain(testOnwardRoute.url)
         }
       }
-
-      "when downstream call is unsuccessful" - {
-        "must return an InternalServerError" in new Test() {
-          MockAppConfig.destinationOfficeSuffix.returns("004098")
-          MockSubmitChangeDestinationService.submit(xircSubmitChangeDestinationModel).returns(Future.failed(SubmitChangeDestinationException("test error")))
-
-          val res = controller.onSubmit(ern, testArc)(request)
-
-          status(res) mustBe INTERNAL_SERVER_ERROR
-        }
-      }
-
-      "when creating a request model fails" - {
-        "must return a BadRequest when MissingMandatoryPage" in new Test(emptyUserAnswers) {
-          val res = controller.onSubmit(ern, testArc)(request)
-
-          status(res) mustBe SEE_OTHER
-          redirectLocation(res) mustBe Some(routes.DraftMovementController.onPageLoad(ern, testArc).url)
-        }
-        "must return a InternalServerError when something else goes wrong" in new Test() {
-          MockAppConfig.destinationOfficeSuffix.throws(new Exception("test error"))
-
-          val res = controller.onSubmit(ern, testArc)(request)
-
-          status(res) mustBe INTERNAL_SERVER_ERROR
-        }
-      }
+//TODO: Add in when submission story is worked on
+//      "when downstream call is unsuccessful" - {
+//        "must return an InternalServerError" in new Test() {
+//          MockAppConfig.destinationOfficeSuffix.returns("004098")
+//          MockSubmitChangeDestinationService.submit(xircSubmitChangeDestinationModel).returns(Future.failed(SubmitChangeDestinationException("test error")))
+//
+//          val res = controller.onSubmit(ern, testArc)(request)
+//
+//          status(res) mustBe INTERNAL_SERVER_ERROR
+//        }
+//      }
+//
+//      "when creating a request model fails" - {
+//        "must return a BadRequest when MissingMandatoryPage" in new Test(emptyUserAnswers) {
+//          val res = controller.onSubmit(ern, testArc)(request)
+//
+//          status(res) mustBe SEE_OTHER
+//          redirectLocation(res) mustBe Some(routes.DraftMovementController.onPageLoad(ern, testArc).url)
+//        }
+//        "must return a InternalServerError when something else goes wrong" in new Test() {
+//          MockAppConfig.destinationOfficeSuffix.throws(new Exception("test error"))
+//
+//          val res = controller.onSubmit(ern, testArc)(request)
+//
+//          status(res) mustBe INTERNAL_SERVER_ERROR
+//        }
+//      }
     }
   }
 }
