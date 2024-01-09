@@ -17,9 +17,10 @@
 package controllers.sections.guarantor
 
 import base.SpecBase
-import controllers.actions.FakeDataRetrievalAction
+import controllers.actions.{FakeDataRetrievalAction, FakeMovementAction}
 import forms.sections.guarantor.GuarantorNameFormProvider
 import mocks.services.MockUserAnswersService
+import models.response.emcsTfe.{GuarantorType, MovementGuaranteeModel}
 import models.sections.guarantor.GuarantorArranger.{Consignee, GoodsOwner}
 import models.{NormalMode, UserAnswers}
 import navigation.FakeNavigators.FakeGuarantorNavigator
@@ -37,7 +38,7 @@ class GuarantorNameControllerSpec extends SpecBase with MockUserAnswersService {
   lazy val form: Form[String] = formProvider()
   lazy val view: GuarantorNameView = app.injector.instanceOf[GuarantorNameView]
 
-  lazy val guarantorNameRoute: String = controllers.sections.guarantor.routes.GuarantorNameController.onPageLoad(testErn, testDraftId, NormalMode).url
+  lazy val guarantorNameRoute: String = controllers.sections.guarantor.routes.GuarantorNameController.onPageLoad(testErn, testArc, NormalMode).url
 
   class Fixture(optUserAnswers: Option[UserAnswers] = Some(emptyUserAnswers)) {
     val request = FakeRequest(GET, guarantorNameRoute)
@@ -49,6 +50,7 @@ class GuarantorNameControllerSpec extends SpecBase with MockUserAnswersService {
       fakeAuthAction,
       new FakeDataRetrievalAction(optUserAnswers, Some(testMinTraderKnownFacts)),
       dataRequiredAction,
+      new FakeMovementAction(maxGetMovementResponse.copy(movementGuarantee = MovementGuaranteeModel(GuarantorType.NoGuarantor, None))),
       fakeUserAllowListAction,
       formProvider,
       messagesControllerComponents,
@@ -58,7 +60,7 @@ class GuarantorNameControllerSpec extends SpecBase with MockUserAnswersService {
 
   "GuarantorArrangerName Controller" - {
     "must return OK and the correct view for a GET" in new Fixture(Some(emptyUserAnswers.set(GuarantorArrangerPage, GoodsOwner))) {
-      val result = testController.onPageLoad(testErn, testDraftId, NormalMode)(request)
+      val result = testController.onPageLoad(testErn, testArc, NormalMode)(request)
 
       status(result) mustEqual OK
       contentAsString(result) mustEqual view(form, GoodsOwner, NormalMode)(dataRequest(request), messages(request)).toString
@@ -69,7 +71,7 @@ class GuarantorNameControllerSpec extends SpecBase with MockUserAnswersService {
         .set(GuarantorArrangerPage, GoodsOwner)
         .set(GuarantorNamePage, "answer"))) {
 
-      val result = testController.onPageLoad(testErn, testDraftId, NormalMode)(request)
+      val result = testController.onPageLoad(testErn, testArc, NormalMode)(request)
 
       status(result) mustEqual OK
       contentAsString(result) mustEqual view(form.fill("answer"), GoodsOwner, NormalMode)(dataRequest(request), messages(request)).toString
@@ -80,7 +82,7 @@ class GuarantorNameControllerSpec extends SpecBase with MockUserAnswersService {
 
       val req = FakeRequest(POST, guarantorNameRoute).withFormUrlEncodedBody(("value", "answer"))
 
-      val result = testController.onSubmit(testErn, testDraftId, NormalMode)(req)
+      val result = testController.onSubmit(testErn, testArc, NormalMode)(req)
 
       status(result) mustEqual SEE_OTHER
       redirectLocation(result).value mustEqual testOnwardRoute.url
@@ -90,41 +92,41 @@ class GuarantorNameControllerSpec extends SpecBase with MockUserAnswersService {
       val req = FakeRequest(POST, guarantorNameRoute).withFormUrlEncodedBody(("value", ""))
       val boundForm = form.bind(Map("value" -> ""))
 
-      val result = testController.onSubmit(testErn, testDraftId, NormalMode)(req)
+      val result = testController.onSubmit(testErn, testArc, NormalMode)(req)
 
       status(result) mustEqual BAD_REQUEST
       contentAsString(result) mustEqual view(boundForm, GoodsOwner, NormalMode)(dataRequest(request), messages(request)).toString
     }
 
     "must redirect to Journey Recovery for a GET if no existing data is found" in new Fixture(None) {
-      val result = testController.onPageLoad(testErn, testDraftId, NormalMode)(request)
+      val result = testController.onPageLoad(testErn, testArc, NormalMode)(request)
 
       status(result) mustEqual SEE_OTHER
       redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
     }
 
     "must redirect to the guarantor index controller for a GET if no guarantor arranger value is found" in new Fixture() {
-      val result = testController.onPageLoad(testErn, testDraftId, NormalMode)(request)
+      val result = testController.onPageLoad(testErn, testArc, NormalMode)(request)
 
       status(result) mustEqual SEE_OTHER
       redirectLocation(result).value mustEqual
-        controllers.sections.guarantor.routes.GuarantorIndexController.onPageLoad(testErn, testDraftId).url
+        controllers.sections.guarantor.routes.GuarantorIndexController.onPageLoad(testErn, testArc).url
     }
 
     "must redirect to CYA for a GET if the guarantor arranger value is invalid for this controller/page" in new Fixture(
       Some(emptyUserAnswers.set(GuarantorArrangerPage, Consignee))) {
 
-      val result = testController.onPageLoad(testErn, testDraftId, NormalMode)(request)
+      val result = testController.onPageLoad(testErn, testArc, NormalMode)(request)
 
       status(result) mustEqual SEE_OTHER
-      redirectLocation(result).value mustEqual controllers.sections.guarantor.routes.GuarantorCheckAnswersController.onPageLoad(testErn, testDraftId).url
+      redirectLocation(result).value mustEqual controllers.sections.guarantor.routes.GuarantorCheckAnswersController.onPageLoad(testErn, testArc).url
     }
 
 
     "must redirect to Journey Recovery for a POST if no existing data is found" in new Fixture(None) {
       val req = FakeRequest(POST, guarantorNameRoute).withFormUrlEncodedBody(("value", "answer"))
 
-      val result = testController.onSubmit(testErn, testDraftId, NormalMode)(req)
+      val result = testController.onSubmit(testErn, testArc, NormalMode)(req)
 
       status(result) mustEqual SEE_OTHER
       redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url

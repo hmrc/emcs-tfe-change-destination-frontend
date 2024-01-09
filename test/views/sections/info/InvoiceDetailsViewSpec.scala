@@ -44,7 +44,7 @@ class InvoiceDetailsViewSpec extends SpecBase with ViewBehaviours with DateTimeU
         implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
         implicit val request: DataRequest[_] = dataRequest(FakeRequest())
 
-       lazy val view = app.injector.instanceOf[InvoiceDetailsView]
+        lazy val view = app.injector.instanceOf[InvoiceDetailsView]
         val form = app.injector.instanceOf[InvoiceDetailsFormProvider].apply()
 
         val skipRoute: Call = Call("GET", "/skip-url")

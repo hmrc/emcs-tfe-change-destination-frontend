@@ -15,8 +15,8 @@
  *@
 
 @import models.requests.DataRequest
-@import viewmodels.LegendSize
 @import models.sections.info.DispatchPlace
+@import viewmodels.LegendSize
 
 @this(
     layout: templates.Layout,
@@ -38,7 +38,7 @@
             @govukErrorSummary(ErrorSummaryViewModel(form,  errorLinkOverrides = Map("value" -> "value_0")))
         }
 
-        @h2(messages("deferredMovement.caption"), "govuk-caption-xl")
+        @h2(messages("deferredMovement.caption"), "govuk-caption-xl", hiddenContent = Some(messages("subHeading.hidden"))))
         @govukRadios(
             RadiosViewModel(
                 field  = form("value"),

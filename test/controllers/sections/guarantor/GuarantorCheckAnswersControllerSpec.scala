@@ -17,7 +17,7 @@
 package controllers.sections.guarantor
 
 import base.SpecBase
-import controllers.actions.FakeDataRetrievalAction
+import controllers.actions.{FakeDataRetrievalAction, FakeMovementAction}
 import controllers.routes
 import mocks.services.MockUserAnswersService
 import mocks.viewmodels.MockGuarantorCheckAnswersHelper
@@ -32,7 +32,7 @@ import views.html.sections.guarantor.GuarantorCheckAnswersView
 class GuarantorCheckAnswersControllerSpec extends SpecBase with SummaryListFluency
   with MockGuarantorCheckAnswersHelper with MockUserAnswersService {
 
-  lazy val checkYourAnswersRoute: String = controllers.sections.guarantor.routes.GuarantorCheckAnswersController.onPageLoad(testErn, testDraftId).url
+  lazy val checkYourAnswersRoute: String = controllers.sections.guarantor.routes.GuarantorCheckAnswersController.onPageLoad(testErn, testArc).url
 
   lazy val view: GuarantorCheckAnswersView = app.injector.instanceOf[GuarantorCheckAnswersView]
 
@@ -48,6 +48,7 @@ class GuarantorCheckAnswersControllerSpec extends SpecBase with SummaryListFluen
       fakeAuthAction,
       new FakeDataRetrievalAction(optUserAnswers, Some(testMinTraderKnownFacts)),
       dataRequiredAction,
+      new FakeMovementAction(maxGetMovementResponse),
       fakeUserAllowListAction,
       mockGuarantorCheckAnswersHelper,
       messagesControllerComponents,
@@ -60,19 +61,19 @@ class GuarantorCheckAnswersControllerSpec extends SpecBase with SummaryListFluen
     "must return OK and the correct view for a GET" in new Fixtures(Some(emptyUserAnswers)) {
       MockGuarantorCheckAnswersHelper.summaryList().returns(list)
 
-      val result = testController.onPageLoad(testErn, testDraftId)(request)
+      val result = testController.onPageLoad(testErn, testArc)(request)
 
       status(result) mustEqual OK
       contentAsString(result) mustEqual view(
         list = list,
-        submitAction = controllers.sections.guarantor.routes.GuarantorCheckAnswersController.onSubmit(testErn, testDraftId)
+        submitAction = controllers.sections.guarantor.routes.GuarantorCheckAnswersController.onSubmit(testErn, testArc)
       )(dataRequest(request), messages(request)).toString
     }
 
     "must redirect to the next page when valid data is submitted" in new Fixtures(Some(emptyUserAnswers)) {
       val req = FakeRequest(POST, checkYourAnswersRoute).withFormUrlEncodedBody(("value", "answer"))
 
-      val result = testController.onSubmit(testErn, testDraftId)(req)
+      val result = testController.onSubmit(testErn, testArc)(req)
 
       status(result) mustEqual SEE_OTHER
       redirectLocation(result).value mustEqual testOnwardRoute.url
@@ -81,7 +82,7 @@ class GuarantorCheckAnswersControllerSpec extends SpecBase with SummaryListFluen
     "must redirect to Journey Recovery for a GET if no existing data is found" in new Fixtures(None) {
       val req = FakeRequest(GET, checkYourAnswersRoute)
 
-      val result = testController.onPageLoad(testErn, testDraftId)(req)
+      val result = testController.onPageLoad(testErn, testArc)(req)
 
       status(result) mustEqual SEE_OTHER
       redirectLocation(result).value mustEqual routes.JourneyRecoveryController.onPageLoad().url
@@ -90,7 +91,7 @@ class GuarantorCheckAnswersControllerSpec extends SpecBase with SummaryListFluen
     "must redirect to Journey Recovery for a POST if no existing data is found" in new Fixtures(None) {
       val req = FakeRequest(POST, checkYourAnswersRoute).withFormUrlEncodedBody(("value", "answer"))
 
-      val result = testController.onSubmit(testErn, testDraftId)(req)
+      val result = testController.onSubmit(testErn, testArc)(req)
 
       status(result) mustEqual SEE_OTHER
       redirectLocation(result).value mustEqual routes.JourneyRecoveryController.onPageLoad().url

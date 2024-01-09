@@ -29,7 +29,8 @@ class TransportDetailsModelSpec extends SpecBase {
       "when no transport units" in {
         implicit val dr: DataRequest[_] = dataRequest(
           FakeRequest(),
-          emptyUserAnswers
+          emptyUserAnswers,
+          movementDetails = maxGetMovementResponse.copy(transportDetails = Seq.empty)
         )
 
         val result = intercept[MissingMandatoryPage](TransportDetailsModel.apply)

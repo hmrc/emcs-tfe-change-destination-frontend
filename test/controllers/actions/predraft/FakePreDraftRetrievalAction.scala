@@ -16,7 +16,7 @@
 
 package controllers.actions.predraft
 
-import models.requests.{OptionalDataRequest, UserRequest}
+import models.requests.{MovementRequest, OptionalDataRequest}
 import models.{TraderKnownFacts, UserAnswers}
 import play.api.mvc.ActionTransformer
 
@@ -24,12 +24,12 @@ import scala.concurrent.{ExecutionContext, Future}
 
 class FakePreDraftRetrievalAction(dataToReturn: Option[UserAnswers], optTraderKnownFacts: Option[TraderKnownFacts]) extends PreDraftDataRetrievalAction {
 
-  def apply(): ActionTransformer[UserRequest, OptionalDataRequest] =
+  def apply(): ActionTransformer[MovementRequest, OptionalDataRequest] =
 
-    new ActionTransformer[UserRequest, OptionalDataRequest] {
+    new ActionTransformer[MovementRequest, OptionalDataRequest] {
 
-      override def transform[A](request: UserRequest[A]): Future[OptionalDataRequest[A]] =
-        Future(OptionalDataRequest(request, request.sessionId, dataToReturn, optTraderKnownFacts))
+      override def transform[A](request: MovementRequest[A]): Future[OptionalDataRequest[A]] =
+        Future(OptionalDataRequest(request, dataToReturn, optTraderKnownFacts))
 
       override protected implicit val executionContext: ExecutionContext =
         scala.concurrent.ExecutionContext.Implicits.global

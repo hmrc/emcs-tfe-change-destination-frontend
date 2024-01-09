@@ -18,7 +18,6 @@
 @import models.sections.transportUnit.TransportUnitType
 @import viewmodels.InputWidth._
 @import viewmodels.LabelSize
-@import models.sections.transportUnit.TransportUnitType
 
 @this(
     layout: templates.Layout,
@@ -41,7 +40,7 @@
             @govukErrorSummary(ErrorSummaryViewModel(form))
         }
 
-        @h2(messages("transportUnit.subHeading", request.arc),"govuk-caption-xl")
+        @h2(messages("transportUnit.subHeading", request.arc),"govuk-caption-xl", hiddenContent = Some(messages("subHeading.hidden"))))
 
         @govukInput(
             InputViewModel(

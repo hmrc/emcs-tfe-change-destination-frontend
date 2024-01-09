@@ -60,9 +60,9 @@ class CheckYourAnswersConsigneeViewSpec extends SpecBase with ViewBehaviours {
        lazy val view = app.injector.instanceOf[CheckYourAnswersConsigneeView]
 
         implicit val doc: Document = Jsoup.parse(view(
-          controllers.sections.consignee.routes.CheckYourAnswersConsigneeController.onSubmit(testErn, testDraftId),
+          controllers.sections.consignee.routes.CheckYourAnswersConsigneeController.onSubmit(testErn, testArc),
           testErn,
-          testDraftId,
+          testArc,
           SummaryList(Seq(
             ConsigneeBusinessNameSummary.row(true),
             ConsigneeExciseSummary.row(true),
@@ -82,17 +82,17 @@ class CheckYourAnswersConsigneeViewSpec extends SpecBase with ViewBehaviours {
 
         "have a link to change business name" in {
           doc.getElementById("changeConsigneeBusinessName").attr("href") mustBe
-            controllers.sections.consignee.routes.ConsigneeBusinessNameController.onPageLoad(testErn, testDraftId, CheckMode).url
+            controllers.sections.consignee.routes.ConsigneeBusinessNameController.onPageLoad(testErn, testArc, CheckMode).url
         }
 
         "have a link to change ERN" in {
           doc.getElementById("changeConsigneeExcise").attr("href") mustBe
-            controllers.sections.consignee.routes.ConsigneeExciseController.onPageLoad(testErn, testDraftId, CheckMode).url
+            controllers.sections.consignee.routes.ConsigneeExciseController.onPageLoad(testErn, testArc, CheckMode).url
         }
 
         "have a link to change Address" in {
           doc.getElementById("changeConsigneeAddress").attr("href") mustBe
-            controllers.sections.consignee.routes.ConsigneeAddressController.onPageLoad(testErn, testDraftId, CheckMode).url
+            controllers.sections.consignee.routes.ConsigneeAddressController.onPageLoad(testErn, testArc, CheckMode).url
         }
       }
 
@@ -111,9 +111,9 @@ class CheckYourAnswersConsigneeViewSpec extends SpecBase with ViewBehaviours {
        lazy val view = app.injector.instanceOf[CheckYourAnswersConsigneeView]
 
         implicit val doc: Document = Jsoup.parse(view(
-          controllers.sections.consignee.routes.CheckYourAnswersConsigneeController.onSubmit(testErn, testDraftId),
+          controllers.sections.consignee.routes.CheckYourAnswersConsigneeController.onSubmit(testErn, testArc),
           testErn,
-          testDraftId,
+          testArc,
           SummaryList(Seq(
             ConsigneeBusinessNameSummary.row(true),
             ConsigneeExemptOrganisationSummary.row(true),
@@ -133,17 +133,17 @@ class CheckYourAnswersConsigneeViewSpec extends SpecBase with ViewBehaviours {
 
         "have a link to change business name" in {
           doc.getElementById("changeConsigneeBusinessName").attr("href") mustBe
-            controllers.sections.consignee.routes.ConsigneeBusinessNameController.onPageLoad(testErn, testDraftId, CheckMode).url
+            controllers.sections.consignee.routes.ConsigneeBusinessNameController.onPageLoad(testErn, testArc, CheckMode).url
         }
 
         "have a link to change Exempted Organisation" in {
           doc.getElementById("changeConsigneeExemptOrganisation").attr("href") mustBe
-            controllers.sections.consignee.routes.ConsigneeExemptOrganisationController.onPageLoad(testErn, testDraftId, CheckMode).url
+            controllers.sections.consignee.routes.ConsigneeExemptOrganisationController.onPageLoad(testErn, testArc, CheckMode).url
         }
 
         "have a link to change Address" in {
           doc.getElementById("changeConsigneeAddress").attr("href") mustBe
-            controllers.sections.consignee.routes.ConsigneeAddressController.onPageLoad(testErn, testDraftId, CheckMode).url
+            controllers.sections.consignee.routes.ConsigneeAddressController.onPageLoad(testErn, testArc, CheckMode).url
         }
       }
 
@@ -162,9 +162,9 @@ class CheckYourAnswersConsigneeViewSpec extends SpecBase with ViewBehaviours {
        lazy val view = app.injector.instanceOf[CheckYourAnswersConsigneeView]
 
         implicit val doc: Document = Jsoup.parse(view(
-          controllers.sections.consignee.routes.CheckYourAnswersConsigneeController.onSubmit(testErn, testDraftId),
+          controllers.sections.consignee.routes.CheckYourAnswersConsigneeController.onSubmit(testErn, testArc),
           testErn,
-          testDraftId,
+          testArc,
           SummaryList(Seq(
             ConsigneeBusinessNameSummary.row(true),
             ConsigneeExportVatSummary.row(true),
@@ -184,17 +184,17 @@ class CheckYourAnswersConsigneeViewSpec extends SpecBase with ViewBehaviours {
 
         "have a link to change business name" in {
           doc.getElementById("changeConsigneeBusinessName").attr("href") mustBe
-            controllers.sections.consignee.routes.ConsigneeBusinessNameController.onPageLoad(testErn, testDraftId, CheckMode).url
+            controllers.sections.consignee.routes.ConsigneeBusinessNameController.onPageLoad(testErn, testArc, CheckMode).url
         }
 
         "have a link to change Vat Number" in {
           doc.getElementById("changeConsigneeExportVat").attr("href") mustBe
-            controllers.sections.consignee.routes.ConsigneeExportVatController.onPageLoad(testErn, testDraftId, CheckMode).url
+            controllers.sections.consignee.routes.ConsigneeExportVatController.onPageLoad(testErn, testArc, CheckMode).url
         }
 
         "have a link to change Address" in {
           doc.getElementById("changeConsigneeAddress").attr("href") mustBe
-            controllers.sections.consignee.routes.ConsigneeAddressController.onPageLoad(testErn, testDraftId, CheckMode).url
+            controllers.sections.consignee.routes.ConsigneeAddressController.onPageLoad(testErn, testArc, CheckMode).url
         }
       }
 
@@ -213,9 +213,9 @@ class CheckYourAnswersConsigneeViewSpec extends SpecBase with ViewBehaviours {
        lazy val view = app.injector.instanceOf[CheckYourAnswersConsigneeView]
 
         implicit val doc: Document = Jsoup.parse(view(
-          controllers.sections.consignee.routes.CheckYourAnswersConsigneeController.onSubmit(testErn, testDraftId),
+          controllers.sections.consignee.routes.CheckYourAnswersConsigneeController.onSubmit(testErn, testArc),
           testErn,
-          testDraftId,
+          testArc,
           SummaryList(Seq(
             ConsigneeBusinessNameSummary.row(true),
             ConsigneeExportVatSummary.row(true),
@@ -235,17 +235,17 @@ class CheckYourAnswersConsigneeViewSpec extends SpecBase with ViewBehaviours {
 
         "have a link to change business name" in {
           doc.getElementById("changeConsigneeBusinessName").attr("href") mustBe
-            controllers.sections.consignee.routes.ConsigneeBusinessNameController.onPageLoad(testErn, testDraftId, CheckMode).url
+            controllers.sections.consignee.routes.ConsigneeBusinessNameController.onPageLoad(testErn, testArc, CheckMode).url
         }
 
         "have a link to change Eori Number" in {
           doc.getElementById("changeConsigneeExportVat").attr("href") mustBe
-            controllers.sections.consignee.routes.ConsigneeExportVatController.onPageLoad(testErn, testDraftId, CheckMode).url
+            controllers.sections.consignee.routes.ConsigneeExportVatController.onPageLoad(testErn, testArc, CheckMode).url
         }
 
         "have a link to change Address" in {
           doc.getElementById("changeConsigneeAddress").attr("href") mustBe
-            controllers.sections.consignee.routes.ConsigneeAddressController.onPageLoad(testErn, testDraftId, CheckMode).url
+            controllers.sections.consignee.routes.ConsigneeAddressController.onPageLoad(testErn, testArc, CheckMode).url
         }
       }
 

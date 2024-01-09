@@ -29,9 +29,10 @@ object TransportUnitTypeMessages {
     val tractorRadioOption = "Tractor"
     val trailerRadioOption = "Trailer"
     val vehicleRadioOption = "Vehicle"
-    val cyaLabel = "Transport type"
-    val cyaChangeHidden: String = "transport type"
-    val cyaValue: TransportUnitType => String = {
+    val addToListLabel = "Transport type"
+    val cyaLabel = "Type of transport"
+    val addToListChangeHidden: String = "transport type"
+    val addToListValue: TransportUnitType => String = {
       case TransportUnitType.Tractor        => tractorRadioOption
       case TransportUnitType.Trailer        => trailerRadioOption
       case TransportUnitType.Vehicle        => vehicleRadioOption

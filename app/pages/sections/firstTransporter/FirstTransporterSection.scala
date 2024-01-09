@@ -16,12 +16,13 @@
 
 package pages.sections.firstTransporter
 
+import models.Enumerable
 import models.requests.DataRequest
 import pages.sections.Section
 import play.api.libs.json.{JsObject, JsPath}
 import viewmodels.taskList.{Completed, InProgress, NotStarted, TaskListStatus}
 
-case object FirstTransporterSection extends Section[JsObject] {
+case object FirstTransporterSection extends Section[JsObject] with Enumerable.Implicits {
   override val path: JsPath = JsPath \ "firstTransporter"
 
   override def status(implicit request: DataRequest[_]): TaskListStatus = {
@@ -29,12 +30,14 @@ case object FirstTransporterSection extends Section[JsObject] {
       request.userAnswers.get(FirstTransporterVatPage),
       request.userAnswers.get(FirstTransporterAddressPage))
 
-    if (pages.forall(_.nonEmpty)) {
-      Completed
-    } else if (pages.exists(_.nonEmpty)) {
-      InProgress
-    } else {
-      NotStarted
+    sectionHasBeenReviewed(FirstTransporterReviewPage) {
+      if (pages.forall(_.nonEmpty)) {
+        Completed
+      } else if (pages.exists(_.nonEmpty)) {
+        InProgress
+      } else {
+        NotStarted
+      }
     }
   }
 

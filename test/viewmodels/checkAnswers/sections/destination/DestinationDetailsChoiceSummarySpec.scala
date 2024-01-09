@@ -67,7 +67,7 @@ class DestinationDetailsChoiceSummarySpec extends SpecBase with Matchers {
                   actions = Seq(
                     ActionItemViewModel(
                       content = messagesForLanguage.change,
-                      href = controllers.sections.destination.routes.DestinationDetailsChoiceController.onPageLoad(testErn, testDraftId, CheckMode).url,
+                      href = controllers.sections.destination.routes.DestinationDetailsChoiceController.onPageLoad(testErn, testArc, CheckMode).url,
                       id = "changeDestinationDetailsChoice"
                     ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHidden(GbTaxWarehouse.stringValue))
                   )
@@ -90,7 +90,7 @@ class DestinationDetailsChoiceSummarySpec extends SpecBase with Matchers {
                   actions = Seq(
                     ActionItemViewModel(
                       content = messagesForLanguage.change,
-                      href = controllers.sections.destination.routes.DestinationDetailsChoiceController.onPageLoad(testErn, testDraftId, CheckMode).url,
+                      href = controllers.sections.destination.routes.DestinationDetailsChoiceController.onPageLoad(testErn, testArc, CheckMode).url,
                       id = "changeDestinationDetailsChoice"
                     ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHidden(GbTaxWarehouse.stringValue))
                   )

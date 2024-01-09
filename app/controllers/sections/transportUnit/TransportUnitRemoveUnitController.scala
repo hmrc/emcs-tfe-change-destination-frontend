@@ -39,20 +39,21 @@ class TransportUnitRemoveUnitController @Inject()(
                                                    override val auth: AuthAction,
                                                    override val getData: DataRetrievalAction,
                                                    override val requireData: DataRequiredAction,
+                                                   override val withMovement: MovementAction,
                                                    formProvider: TransportUnitRemoveUnitFormProvider,
                                                    val controllerComponents: MessagesControllerComponents,
                                                    view: TransportUnitRemoveUnitView
                                                  ) extends BaseTransportUnitNavigationController with AuthActionHelper {
 
   def onPageLoad(ern: String, arc: String, idx: Index): Action[AnyContent] =
-    authorisedDataRequestAsync(ern, arc) { implicit request =>
+    authorisedDataRequestWithUpToDateMovementAsync(ern, arc) { implicit request =>
       validateIndex(idx) {
         renderView(Ok, formProvider(), idx)
       }
     }
 
   def onSubmit(ern: String, arc: String, idx: Index): Action[AnyContent] =
-    authorisedDataRequestAsync(ern, arc) { implicit request =>
+    authorisedDataRequestWithUpToDateMovementAsync(ern, arc) { implicit request =>
       validateIndex(idx) {
         formProvider().bindFromRequest().fold(
           renderView(BadRequest, _, idx),

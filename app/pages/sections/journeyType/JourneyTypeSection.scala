@@ -16,13 +16,14 @@
 
 package pages.sections.journeyType
 
+import models.Enumerable
 import models.requests.DataRequest
 import models.sections.journeyType.HowMovementTransported.Other
 import pages.sections.Section
 import play.api.libs.json.{JsObject, JsPath}
 import viewmodels.taskList.{Completed, InProgress, NotStarted, TaskListStatus}
 
-case object JourneyTypeSection extends Section[JsObject] {
+case object JourneyTypeSection extends Section[JsObject] with Enumerable.Implicits {
   override val path: JsPath = JsPath \ "journeyType"
 
   override def status(implicit request: DataRequest[_]): TaskListStatus = {
@@ -39,12 +40,14 @@ case object JourneyTypeSection extends Section[JsObject] {
       }
     }
 
-    if (pageAnswersExist.forall(identity)) {
-      Completed
-    } else if (pageAnswersExist.exists(identity)) {
-      InProgress
-    } else {
-      NotStarted
+    sectionHasBeenReviewed(JourneyTypeReviewPage) {
+      if (pageAnswersExist.forall(identity)) {
+        Completed
+      } else if (pageAnswersExist.exists(identity)) {
+        InProgress
+      } else {
+        NotStarted
+      }
     }
   }
 

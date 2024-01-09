@@ -38,11 +38,11 @@ class JourneyTimeHoursSummarySpec extends SpecBase with Matchers {
 
         implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
 
-        "when there's no answer" - {
+        "when there's no answer for hours in the user answers" - {
 
           "must output the expected data" in {
 
-            implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers)
+            implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers, movementDetails = maxGetMovementResponse.copy(journeyTime = "1 days"))
 
             JourneyTimeHoursSummary.row() mustBe None
           }
@@ -61,7 +61,7 @@ class JourneyTimeHoursSummarySpec extends SpecBase with Matchers {
                   actions = Seq(
                     ActionItemViewModel(
                       content = messagesForLanguage.change,
-                      href = controllers.sections.journeyType.routes.JourneyTimeHoursController.onPageLoad(testErn, testDraftId, CheckMode).url,
+                      href = controllers.sections.journeyType.routes.JourneyTimeHoursController.onPageLoad(testErn, testArc, CheckMode).url,
                       id = "journeyTimeHours"
                     ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHidden)
                   )

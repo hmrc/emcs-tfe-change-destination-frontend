@@ -17,7 +17,7 @@
 package controllers.sections.journeyType
 
 import base.SpecBase
-import controllers.actions.FakeDataRetrievalAction
+import controllers.actions.{FakeDataRetrievalAction, FakeMovementAction}
 import forms.sections.journeyType.JourneyTimeHoursFormProvider
 import mocks.services.MockUserAnswersService
 import models.{NormalMode, UserAnswers}
@@ -50,6 +50,7 @@ class JourneyTimeHoursControllerSpec extends SpecBase with MockUserAnswersServic
       fakeAuthAction,
       new FakeDataRetrievalAction(userAnswers, Some(testMinTraderKnownFacts)),
       dataRequiredAction,
+      new FakeMovementAction(maxGetMovementResponse),
       formProvider,
       Helpers.stubMessagesControllerComponents(),
       view
@@ -58,18 +59,11 @@ class JourneyTimeHoursControllerSpec extends SpecBase with MockUserAnswersServic
 
   "JourneyTimeHours Controller" - {
 
-    "must return OK and the correct view for a GET" in new Test(Some(emptyUserAnswers)) {
-      val result = controller.onPageLoad(testErn, testDraftId, NormalMode)(request)
-
-      status(result) mustEqual OK
-      contentAsString(result) mustEqual view(form, NormalMode)(dataRequest(request), messages(request)).toString
-    }
-
     "must populate the view correctly on a GET when the question has previously been answered" in new Test(Some(
       emptyUserAnswers.set(JourneyTimeHoursPage, validAnswer)
     )) {
 
-      val result = controller.onPageLoad(testErn, testDraftId, NormalMode)(request)
+      val result = controller.onPageLoad(testErn, testArc, NormalMode)(request)
 
       status(result) mustEqual OK
       contentAsString(result) mustEqual view(form.fill(validAnswer), NormalMode)(dataRequest(request), messages(request)).toString
@@ -79,7 +73,7 @@ class JourneyTimeHoursControllerSpec extends SpecBase with MockUserAnswersServic
 
       MockUserAnswersService.set().returns(Future.successful(emptyUserAnswers))
 
-      val result = controller.onSubmit(testErn, testDraftId, NormalMode)(request.withFormUrlEncodedBody(("value", validAnswer.toString)))
+      val result = controller.onSubmit(testErn, testArc, NormalMode)(request.withFormUrlEncodedBody(("value", validAnswer.toString)))
 
       status(result) mustEqual SEE_OTHER
       redirectLocation(result).value mustEqual testOnwardRoute.url
@@ -88,21 +82,21 @@ class JourneyTimeHoursControllerSpec extends SpecBase with MockUserAnswersServic
     "must return a Bad Request and errors when invalid data is submitted" in new Test(Some(emptyUserAnswers)) {
       val boundForm = form.bind(Map("value" -> ""))
 
-      val result = controller.onSubmit(testErn, testDraftId, NormalMode)(request.withFormUrlEncodedBody(("value", "")))
+      val result = controller.onSubmit(testErn, testArc, NormalMode)(request.withFormUrlEncodedBody(("value", "")))
 
       status(result) mustEqual BAD_REQUEST
       contentAsString(result) mustEqual view(boundForm, NormalMode)(dataRequest(request), messages(request)).toString
     }
 
     "must redirect to Journey Recovery for a GET if no existing data is found" in new Test(None) {
-      val result = controller.onPageLoad(testErn, testDraftId, NormalMode)(request)
+      val result = controller.onPageLoad(testErn, testArc, NormalMode)(request)
 
       status(result) mustEqual SEE_OTHER
       redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
     }
 
     "must redirect to Journey Recovery for a POST if no existing data is found" in new Test(None) {
-      val result = controller.onSubmit(testErn, testDraftId, NormalMode)(request.withFormUrlEncodedBody(("value", validAnswer.toString)))
+      val result = controller.onSubmit(testErn, testArc, NormalMode)(request.withFormUrlEncodedBody(("value", validAnswer.toString)))
 
       status(result) mustEqual SEE_OTHER
 

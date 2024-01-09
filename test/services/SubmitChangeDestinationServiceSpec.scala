@@ -19,8 +19,7 @@ package services
 import base.SpecBase
 import fixtures.SubmitChangeDestinationFixtures
 import mocks.connectors.MockSubmitChangeDestinationConnector
-import models.response.UnexpectedDownstreamResponseError
-import models.response.SubmitChangeDestinationException
+import models.response.{SubmitChangeDestinationException, UnexpectedDownstreamResponseError}
 import play.api.test.FakeRequest
 import play.api.test.Helpers.{await, defaultAwaitTimeout}
 import uk.gov.hmrc.http.HeaderCarrier
@@ -56,7 +55,7 @@ class SubmitChangeDestinationServiceSpec extends SpecBase with MockSubmitChangeD
 
         MockSubmitChangeDestinationConnector.submit(minimumSubmitChangeDestinationModel).returns(Future.successful(Left(UnexpectedDownstreamResponseError)))
         intercept[SubmitChangeDestinationException](await(testService.submit(minimumSubmitChangeDestinationModel)(request, hc))).getMessage mustBe
-          s"Failed to submit Change Destination to emcs-tfe for ern: '$testErn' & arc: '$testDraftId'"
+          s"Failed to submit Change Destination to emcs-tfe for ern: '$testErn' & arc: '$testArc'"
       }
     }
   }

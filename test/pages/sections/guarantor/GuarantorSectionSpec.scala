@@ -19,6 +19,9 @@ package pages.sections.guarantor
 import base.SpecBase
 import models.UserAddress
 import models.requests.DataRequest
+import models.response.emcsTfe.GuarantorType.NoGuarantor
+import models.response.emcsTfe.MovementGuaranteeModel
+import models.sections.ReviewAnswer.{ChangeAnswers, KeepAnswers}
 import models.sections.guarantor.GuarantorArranger.{Consignee, Consignor, GoodsOwner, Transporter}
 import play.api.test.FakeRequest
 
@@ -30,6 +33,7 @@ class GuarantorSectionSpec extends SpecBase {
           emptyUserAnswers
             .set(GuarantorRequiredPage, true)
             .set(GuarantorArrangerPage, Consignor)
+            .set(GuarantorReviewPage, ChangeAnswers)
         )
         GuarantorSection.isCompleted mustBe true
       }
@@ -38,6 +42,7 @@ class GuarantorSectionSpec extends SpecBase {
           emptyUserAnswers
             .set(GuarantorRequiredPage, true)
             .set(GuarantorArrangerPage, Consignee)
+            .set(GuarantorReviewPage, ChangeAnswers)
         )
         GuarantorSection.isCompleted mustBe true
       }
@@ -45,6 +50,7 @@ class GuarantorSectionSpec extends SpecBase {
         implicit val dr: DataRequest[_] = dataRequest(FakeRequest(),
           emptyUserAnswers
             .set(GuarantorRequiredPage, false)
+            .set(GuarantorReviewPage, ChangeAnswers)
         )
         GuarantorSection.isCompleted mustBe true
       }
@@ -58,9 +64,19 @@ class GuarantorSectionSpec extends SpecBase {
                 .set(GuarantorNamePage, "")
                 .set(GuarantorVatPage, "")
                 .set(GuarantorAddressPage, UserAddress(None, "", "", ""))
+                .set(GuarantorReviewPage, ChangeAnswers)
             )
             GuarantorSection.isCompleted mustBe true
           }
+      }
+
+      "keep answers has been selected" in {
+        implicit val dr: DataRequest[_] =
+          dataRequest(FakeRequest(),
+            emptyUserAnswers
+              .set(GuarantorReviewPage, KeepAnswers)
+          )
+        GuarantorSection.isCompleted mustBe true
       }
     }
 
@@ -69,12 +85,15 @@ class GuarantorSectionSpec extends SpecBase {
         implicit val dr: DataRequest[_] = dataRequest(FakeRequest(),
           emptyUserAnswers
             .set(GuarantorRequiredPage, true)
+            .set(GuarantorReviewPage, ChangeAnswers),
+          movementDetails = maxGetMovementResponse.copy(movementGuarantee = MovementGuaranteeModel(NoGuarantor, None))
         )
         GuarantorSection.isCompleted mustBe false
       }
       "when nothing is completed" in {
         implicit val dr: DataRequest[_] = dataRequest(FakeRequest(),
-          emptyUserAnswers
+          emptyUserAnswers.set(GuarantorReviewPage, ChangeAnswers),
+          movementDetails = maxGetMovementResponse.copy(movementGuarantee = MovementGuaranteeModel(NoGuarantor, None))
         )
         GuarantorSection.isCompleted mustBe false
       }
@@ -87,6 +106,8 @@ class GuarantorSectionSpec extends SpecBase {
                 .set(GuarantorArrangerPage, arranger)
                 .set(GuarantorNamePage, "")
                 .set(GuarantorVatPage, "")
+                .set(GuarantorReviewPage, ChangeAnswers),
+              movementDetails = maxGetMovementResponse.copy(movementGuarantee = MovementGuaranteeModel(NoGuarantor, None))
             )
             GuarantorSection.isCompleted mustBe false
           }

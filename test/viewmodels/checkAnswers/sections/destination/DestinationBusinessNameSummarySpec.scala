@@ -24,7 +24,7 @@ import pages.sections.consignee.ConsigneeBusinessNamePage
 import pages.sections.destination.{DestinationBusinessNamePage, DestinationConsigneeDetailsPage}
 import play.api.i18n.Messages
 import play.api.test.FakeRequest
-import uk.gov.hmrc.govukfrontend.views.Aliases.Value
+import uk.gov.hmrc.govukfrontend.views.Aliases.{Text, Value}
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
@@ -38,19 +38,40 @@ class DestinationBusinessNameSummarySpec extends SpecBase with Matchers {
 
         implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
 
-        "when there's no answer" - {
+        "when there's no answer in the user answers or in 801" - {
 
           "must output row with 'Not provided' and change link" in {
+
+            implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers, movementDetails = maxGetMovementResponse.copy(deliveryPlaceTrader = None))
+
+            DestinationBusinessNameSummary.row() mustBe SummaryListRowViewModel(
+              key = messagesForLanguage.cyaLabel,
+              value = Value(Text(messagesForLanguage.cyaDestinationNotProvided)),
+              actions = Seq(
+                ActionItemViewModel(
+                  content = messagesForLanguage.change,
+                  href = controllers.sections.destination.routes.DestinationBusinessNameController.onPageLoad(testErn, testArc, CheckMode).url,
+                  id = "changeDestinationBusinessName"
+                ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHidden)
+              )
+            )
+
+          }
+        }
+
+        "when there's no answer in the user answers (defaulting to 801)" - {
+
+          "must output the expected row" in {
 
             implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers)
 
             DestinationBusinessNameSummary.row() mustBe SummaryListRowViewModel(
               key = messagesForLanguage.cyaLabel,
-              value = Value(messagesForLanguage.cyaDestinationNotProvided),
+              value = Value(Text("DeliveryPlaceTraderName")),
               actions = Seq(
                 ActionItemViewModel(
                   content = messagesForLanguage.change,
-                  href = controllers.sections.destination.routes.DestinationBusinessNameController.onPageLoad(testErn, testDraftId, CheckMode).url,
+                  href = controllers.sections.destination.routes.DestinationBusinessNameController.onPageLoad(testErn, testArc, CheckMode).url,
                   id = "changeDestinationBusinessName"
                 ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHidden)
               )
@@ -61,21 +82,22 @@ class DestinationBusinessNameSummarySpec extends SpecBase with Matchers {
 
         "when the DestinationConsigneeDetailsPage has been answered no" - {
 
-          "when there is no Destination BusinessName given" - {
+          "when there is no Destination BusinessName given in the 801 response or user answers" - {
 
             s"must output ${messagesForLanguage.cyaDestinationNotProvided}" in {
 
               implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers
-                .set(DestinationConsigneeDetailsPage, false)
+                .set(DestinationConsigneeDetailsPage, false),
+                movementDetails = maxGetMovementResponse.copy(deliveryPlaceTrader = None)
               )
 
               DestinationBusinessNameSummary.row() mustBe SummaryListRowViewModel(
                 key = messagesForLanguage.cyaLabel,
-                value = Value(messagesForLanguage.cyaDestinationNotProvided),
+                value = Value(Text(messagesForLanguage.cyaDestinationNotProvided)),
                 actions = Seq(
                   ActionItemViewModel(
                     content = messagesForLanguage.change,
-                    href = controllers.sections.destination.routes.DestinationBusinessNameController.onPageLoad(testErn, testDraftId, CheckMode).url,
+                    href = controllers.sections.destination.routes.DestinationBusinessNameController.onPageLoad(testErn, testArc, CheckMode).url,
                     id = "changeDestinationBusinessName"
                   ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHidden)
                 )
@@ -95,11 +117,11 @@ class DestinationBusinessNameSummarySpec extends SpecBase with Matchers {
               DestinationBusinessNameSummary.row() mustBe
                 SummaryListRowViewModel(
                   key = messagesForLanguage.cyaLabel,
-                  value = Value("destination name"),
+                  value = Value(Text("destination name")),
                   actions = Seq(
                     ActionItemViewModel(
                       content = messagesForLanguage.change,
-                      href = controllers.sections.destination.routes.DestinationBusinessNameController.onPageLoad(testErn, testDraftId, CheckMode).url,
+                      href = controllers.sections.destination.routes.DestinationBusinessNameController.onPageLoad(testErn, testArc, CheckMode).url,
                       id = "changeDestinationBusinessName"
                     ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHidden)
                   )
@@ -110,17 +132,18 @@ class DestinationBusinessNameSummarySpec extends SpecBase with Matchers {
 
         "when the DestinationConsigneeDetailsPage has been answered yes" - {
 
-          "when there is no Consignee BusinessName given" - {
+          "when there is no Consignee BusinessName given in the 801 response or user answers" - {
 
             s"must output ${messagesForLanguage.cyaConsigneeNotProvided}" in {
 
               implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers
-                .set(DestinationConsigneeDetailsPage, true)
+                .set(DestinationConsigneeDetailsPage, true),
+                movementDetails = maxGetMovementResponse.copy(consigneeTrader = None)
               )
 
               DestinationBusinessNameSummary.row() mustBe SummaryListRowViewModel(
                 key = messagesForLanguage.cyaLabel,
-                value = Value(messagesForLanguage.cyaConsigneeNotProvided),
+                value = Value(Text(messagesForLanguage.cyaConsigneeNotProvided)),
                 actions = Seq.empty
               )
             }
@@ -138,7 +161,7 @@ class DestinationBusinessNameSummarySpec extends SpecBase with Matchers {
               DestinationBusinessNameSummary.row() mustBe
                 SummaryListRowViewModel(
                   key = messagesForLanguage.cyaLabel,
-                  value = Value("consignee name"),
+                  value = Value(Text("consignee name")),
                   actions = Seq.empty
                 )
             }

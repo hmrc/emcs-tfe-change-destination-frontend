@@ -41,14 +41,14 @@ class TransportUnitGiveMoreInformationSummarySpec extends SpecBase with Matchers
         "when there's no answer" - {
 
           "must output the expected data" in {
-            implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers)
+            implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers, movementDetails = maxGetMovementResponse.copy(transportDetails = Seq.empty))
 
             TransportUnitGiveMoreInformationSummary.row(testIndex1) mustBe Some(
               SummaryListRowViewModel(
                 key = messagesForLanguage.cyaLabel,
                 value = Value(
                   HtmlContent(link(
-                    controllers.sections.transportUnit.routes.TransportUnitGiveMoreInformationController.onPageLoad(testErn, testDraftId, testIndex1, CheckMode).url,
+                    controllers.sections.transportUnit.routes.TransportUnitGiveMoreInformationController.onPageLoad(testErn, testArc, testIndex1, CheckMode).url,
                     messagesForLanguage.valueWhenAnswerNotPresent))
                 ),
                 actions = Seq()
@@ -69,7 +69,7 @@ class TransportUnitGiveMoreInformationSummarySpec extends SpecBase with Matchers
                 actions = Seq(
                   ActionItemViewModel(
                     content = messagesForLanguage.change,
-                    href = controllers.sections.transportUnit.routes.TransportUnitGiveMoreInformationController.onPageLoad(testErn, testDraftId, testIndex1, CheckMode).url,
+                    href = controllers.sections.transportUnit.routes.TransportUnitGiveMoreInformationController.onPageLoad(testErn, testArc, testIndex1, CheckMode).url,
                     id = "changeTransportUnitMoreInformation1"
                   ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHidden)
                 )

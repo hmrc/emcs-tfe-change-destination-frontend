@@ -19,10 +19,11 @@ package base
 import config.AppConfig
 import controllers.actions._
 import controllers.actions.predraft.PreDraftDataRequiredAction
-import fixtures.BaseFixtures
+import fixtures.{BaseFixtures, GetMovementResponseFixtures}
 import handlers.ErrorHandler
 import models.UserAnswers
-import models.requests.{DataRequest, UserRequest}
+import models.requests.{DataRequest, MovementRequest, UserRequest}
+import models.response.emcsTfe.GetMovementResponse
 import org.scalatest.OptionValues
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.freespec.AnyFreeSpec
@@ -33,7 +34,8 @@ import play.api.i18n.{Lang, Messages, MessagesApi}
 import play.api.mvc.{MessagesControllerComponents, Request}
 import play.api.test.Helpers.stubPlayBodyParsers
 
-trait SpecBase extends AnyFreeSpec with Matchers with OptionValues with ScalaFutures with BaseFixtures with GuiceOneAppPerSuite {
+trait SpecBase extends AnyFreeSpec
+  with Matchers with OptionValues with ScalaFutures with BaseFixtures with GuiceOneAppPerSuite with GetMovementResponseFixtures {
 
   lazy val appConfig: AppConfig = app.injector.instanceOf[AppConfig]
   lazy val messagesApi: MessagesApi = app.injector.instanceOf[MessagesApi]
@@ -52,6 +54,16 @@ trait SpecBase extends AnyFreeSpec with Matchers with OptionValues with ScalaFut
   def userRequest[A](request: Request[A], ern: String = testErn): UserRequest[A] =
     UserRequest(request, ern, testInternalId, testCredId, testSessionId, hasMultipleErns = false)
 
-  def dataRequest[A](request: Request[A], answers: UserAnswers = emptyUserAnswers, ern: String = testErn): DataRequest[A] =
-    DataRequest(userRequest(request, ern), testDraftId, answers, testMinTraderKnownFacts)
+  def movementRequest[A](request: Request[A],
+                         ern: String = testErn,
+                         movementDetails: GetMovementResponse = maxGetMovementResponse
+                        ): MovementRequest[A] =
+    MovementRequest(userRequest(request, ern), testArc, movementDetails)
+
+  def dataRequest[A](request: Request[A],
+                     answers: UserAnswers = emptyUserAnswers,
+                     ern: String = testErn,
+                     movementDetails: GetMovementResponse = maxGetMovementResponse
+                    ): DataRequest[A] =
+    DataRequest(movementRequest(request, ern, movementDetails), answers, testMinTraderKnownFacts)
 }

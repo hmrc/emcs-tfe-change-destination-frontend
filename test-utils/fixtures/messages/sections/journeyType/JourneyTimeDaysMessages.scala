@@ -20,7 +20,6 @@ import fixtures.messages.{BaseEnglish, BaseMessages, i18n}
 
 object JourneyTimeDaysMessages {
   sealed trait ViewMessages extends BaseMessages { _: i18n =>
-    val subHeading = "Journey type"
     val heading = "How many days will the journey take?"
     val title: String = titleHelper(heading)
     val suffix: String = "days"

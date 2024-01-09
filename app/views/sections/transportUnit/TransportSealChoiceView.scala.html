@@ -17,7 +17,6 @@
 @import models.requests.DataRequest
 @import models.sections.transportUnit.TransportUnitType
 @import viewmodels.LegendSize
-@import models.sections.transportUnit.TransportUnitType
 
 @this(
     layout: templates.Layout,
@@ -40,7 +39,7 @@
             @govukErrorSummary(ErrorSummaryViewModel(form))
         }
 
-        @h2(messages("transportUnit.subHeading"), "govuk-caption-xl")
+        @h2(messages("transportUnit.subHeading"), "govuk-caption-xl", hiddenContent = Some(messages("subHeading.hidden"))))
 
         @govukRadios(
             RadiosViewModel.yesNo(

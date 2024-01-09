@@ -17,7 +17,7 @@
 package controllers.sections.transportArranger
 
 import base.SpecBase
-import controllers.actions.FakeDataRetrievalAction
+import controllers.actions.{FakeDataRetrievalAction, FakeMovementAction}
 import controllers.routes
 import fixtures.UserAddressFixtures
 import forms.AddressFormProvider
@@ -41,7 +41,7 @@ class TransportArrangerAddressControllerSpec extends SpecBase with MockUserAnswe
   lazy val view: AddressView = app.injector.instanceOf[AddressView]
 
   lazy val transportArrangerAddressOnSubmit: Call =
-    controllers.sections.transportArranger.routes.TransportArrangerAddressController.onSubmit(testErn, testDraftId, NormalMode)
+    controllers.sections.transportArranger.routes.TransportArrangerAddressController.onSubmit(testErn, testArc, NormalMode)
 
   class Fixture(val userAnswers: Option[UserAnswers] = Some(emptyUserAnswers)) {
     lazy val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest()
@@ -53,6 +53,7 @@ class TransportArrangerAddressControllerSpec extends SpecBase with MockUserAnswe
       fakeAuthAction,
       new FakeDataRetrievalAction(userAnswers, Some(testMinTraderKnownFacts)),
       dataRequiredAction,
+      new FakeMovementAction(maxGetMovementResponse.copy(transportArrangerTrader = None)),
       fakeUserAllowListAction,
       formProvider,
       Helpers.stubMessagesControllerComponents(),
@@ -67,7 +68,7 @@ class TransportArrangerAddressControllerSpec extends SpecBase with MockUserAnswe
       "must return OK and the correct view for a GET" in new Fixture(
         Some(emptyUserAnswers.set(TransportArrangerPage, GoodsOwner))
       ) {
-        val result = controller.onPageLoad(testErn, testDraftId, NormalMode)(request)
+        val result = controller.onPageLoad(testErn, testArc, NormalMode)(request)
 
         status(result) mustEqual OK
         contentAsString(result) mustEqual view(
@@ -86,7 +87,7 @@ class TransportArrangerAddressControllerSpec extends SpecBase with MockUserAnswe
           .set(TransportArrangerPage, Other)
           .set(TransportArrangerAddressPage, userAddressModelMax)
       )) {
-        val result = controller.onPageLoad(testErn, testDraftId, NormalMode)(request)
+        val result = controller.onPageLoad(testErn, testArc, NormalMode)(request)
 
         status(result) mustEqual OK
         contentAsString(result) mustEqual view(
@@ -101,7 +102,7 @@ class TransportArrangerAddressControllerSpec extends SpecBase with MockUserAnswe
 
         MockUserAnswersService.set().returns(Future.successful(emptyUserAnswers))
 
-        val result = controller.onSubmit(testErn, testDraftId, NormalMode)(request.withFormUrlEncodedBody(
+        val result = controller.onSubmit(testErn, testArc, NormalMode)(request.withFormUrlEncodedBody(
           ("property", userAddressModelMax.property.value),
           ("street", userAddressModelMax.street),
           ("town", userAddressModelMax.town),
@@ -117,7 +118,7 @@ class TransportArrangerAddressControllerSpec extends SpecBase with MockUserAnswe
       ) {
 
         val boundForm = form.bind(Map("value" -> ""))
-        val result = controller.onSubmit(testErn, testDraftId, NormalMode)(request.withFormUrlEncodedBody(("value", "")))
+        val result = controller.onSubmit(testErn, testArc, NormalMode)(request.withFormUrlEncodedBody(("value", "")))
 
         status(result) mustEqual BAD_REQUEST
         contentAsString(result) mustEqual view(
@@ -129,14 +130,14 @@ class TransportArrangerAddressControllerSpec extends SpecBase with MockUserAnswe
       }
 
       "must redirect to Journey Recovery for a GET if no existing data is found" in new Fixture(None) {
-        val result = controller.onPageLoad(testErn, testDraftId, NormalMode)(request)
+        val result = controller.onPageLoad(testErn, testArc, NormalMode)(request)
 
         status(result) mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual routes.JourneyRecoveryController.onPageLoad().url
       }
 
       "must redirect to Journey Recovery for a POST if no existing data is found" in new Fixture(None) {
-        val result = controller.onSubmit(testErn, testDraftId, NormalMode)(request.withFormUrlEncodedBody(("value", "answer")))
+        val result = controller.onSubmit(testErn, testArc, NormalMode)(request.withFormUrlEncodedBody(("value", "answer")))
 
         status(result) mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual routes.JourneyRecoveryController.onPageLoad().url

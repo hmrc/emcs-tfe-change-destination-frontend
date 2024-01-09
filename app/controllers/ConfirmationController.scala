@@ -19,7 +19,6 @@ package controllers
 import config.AppConfig
 import controllers.actions._
 import pages.DeclarationPage
-import pages.sections.info.LocalReferenceNumberPage
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
@@ -34,17 +33,18 @@ class ConfirmationController @Inject()(
                                         override val userAllowList: UserAllowListAction,
                                         override val getData: DataRetrievalAction,
                                         override val requireData: DataRequiredAction,
+                                        override val withMovement: MovementAction,
                                         val controllerComponents: MessagesControllerComponents,
                                         config: AppConfig,
                                         view: ConfirmationView
                                       ) extends FrontendBaseController with I18nSupport with AuthActionHelper with Logging {
 
   def onPageLoad(ern: String, arc: String): Action[AnyContent] =
-    authorisedDataRequest(ern, arc) { implicit request =>
-      (request.userAnswers.get(LocalReferenceNumberPage()), request.userAnswers.get(DeclarationPage)) match {
-        case (Some(submissionReference), Some(submissionTimestamp)) =>
+    authorisedDataRequestWithUpToDateMovement(ern, arc) { implicit request =>
+      request.userAnswers.get(DeclarationPage) match {
+        case Some(submissionTimestamp) =>
           Ok(view(
-            reference = submissionReference,
+            reference = request.arc, //TODO: Check with UX what this should really be in future
             dateOfSubmission = submissionTimestamp.toLocalDate,
             exciseEnquiriesLink = config.exciseGuidance,
             returnToAccountLink = config.emcsTfeHomeUrl,

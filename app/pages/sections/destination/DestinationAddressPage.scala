@@ -17,10 +17,14 @@
 package pages.sections.destination
 
 import models.UserAddress
+import models.requests.DataRequest
 import pages.QuestionPage
 import play.api.libs.json.JsPath
 
 case object DestinationAddressPage extends QuestionPage[UserAddress] {
   override val toString: String = "destinationAddress"
   override val path: JsPath = DestinationSection.path \ toString
+
+  override def getValueFromIE801(implicit request: DataRequest[_]): Option[UserAddress] =
+    request.movementDetails.deliveryPlaceTrader.flatMap(_.address.map(UserAddress.userAddressFromTraderAddress)) // TODO: check
 }

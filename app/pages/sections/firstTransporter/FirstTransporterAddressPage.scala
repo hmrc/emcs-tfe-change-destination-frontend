@@ -17,10 +17,14 @@
 package pages.sections.firstTransporter
 
 import models.UserAddress
+import models.requests.DataRequest
 import pages.QuestionPage
 import play.api.libs.json.JsPath
 
 case object FirstTransporterAddressPage extends QuestionPage[UserAddress] {
   override val toString: String = "firstTransporterAddress"
   override val path: JsPath = FirstTransporterSection.path \ toString
+
+  override def getValueFromIE801(implicit request: DataRequest[_]): Option[UserAddress] =
+    request.movementDetails.firstTransporterTrader.flatMap(_.address.map(UserAddress.userAddressFromTraderAddress))
 }

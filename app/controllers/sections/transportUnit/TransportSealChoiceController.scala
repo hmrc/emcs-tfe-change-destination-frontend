@@ -39,13 +39,14 @@ class TransportSealChoiceController @Inject()(override val messagesApi: Messages
                                               override val auth: AuthAction,
                                               override val getData: DataRetrievalAction,
                                               override val requireData: DataRequiredAction,
+                                              override val withMovement: MovementAction,
                                               formProvider: TransportSealChoiceFormProvider,
                                               val controllerComponents: MessagesControllerComponents,
                                               view: TransportSealChoiceView
                                              ) extends BaseTransportUnitNavigationController with AuthActionHelper {
 
   def onPageLoad(ern: String, arc: String, idx: Index, mode: Mode): Action[AnyContent] =
-    authorisedDataRequestAsync(ern, arc) { implicit request =>
+    authorisedDataRequestWithUpToDateMovementAsync(ern, arc) { implicit request =>
       validateIndex(idx) {
         withAnswerAsync(
           page = TransportUnitTypePage(idx),
@@ -57,7 +58,7 @@ class TransportSealChoiceController @Inject()(override val messagesApi: Messages
     }
 
   def onSubmit(ern: String, arc: String, idx: Index, mode: Mode): Action[AnyContent] =
-    authorisedDataRequestAsync(ern, arc) { implicit request =>
+    authorisedDataRequestWithUpToDateMovementAsync(ern, arc) { implicit request =>
       validateIndex(idx) {
         withAnswerAsync(
           page = TransportUnitTypePage(idx),

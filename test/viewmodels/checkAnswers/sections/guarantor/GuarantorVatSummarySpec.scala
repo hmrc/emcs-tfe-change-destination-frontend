@@ -21,6 +21,7 @@ import fixtures.messages.sections.guarantor.GuarantorVatMessages
 import fixtures.messages.sections.guarantor.GuarantorVatMessages.ViewMessages
 import models.CheckMode
 import models.requests.DataRequest
+import models.response.emcsTfe.{GuarantorType, MovementGuaranteeModel}
 import models.sections.guarantor.GuarantorArranger.{Consignee, Consignor, GoodsOwner, Transporter}
 import org.scalatest.matchers.must.Matchers
 import pages.sections.guarantor.{GuarantorArrangerPage, GuarantorRequiredPage, GuarantorVatPage}
@@ -42,7 +43,7 @@ class GuarantorVatSummarySpec extends SpecBase with Matchers {
           value = Value(Text(value)),
           actions = if (!showChangeLink) Seq() else Seq(ActionItemViewModel(
             content = Text(messagesForLanguage.change),
-            href = controllers.sections.guarantor.routes.GuarantorVatController.onPageLoad(testErn, testDraftId, CheckMode).url,
+            href = controllers.sections.guarantor.routes.GuarantorVatController.onPageLoad(testErn, testArc, CheckMode).url,
             id = "changeGuarantorVat"
           ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHidden))
         )
@@ -99,13 +100,14 @@ class GuarantorVatSummarySpec extends SpecBase with Matchers {
           }
 
           "and there is a GuarantorArrangerPage answer of `GoodsOwner`" - {
-            "and there is no answer for GuarantorVatPage" - {
+            "and there is no answer for GuarantorVatPage in 801 or user answers" - {
               "then must render not provided row with change link" in {
                 implicit lazy val request: DataRequest[_] = dataRequest(
                   FakeRequest(),
                   emptyUserAnswers
                     .set(GuarantorRequiredPage, true)
-                    .set(GuarantorArrangerPage, GoodsOwner)
+                    .set(GuarantorArrangerPage, GoodsOwner),
+                  movementDetails = maxGetMovementResponse.copy(movementGuarantee = MovementGuaranteeModel(GuarantorType.Owner, None))
                 )
 
                 GuarantorVatSummary.row mustBe expectedRow(messagesForLanguage.notProvided, true)
@@ -128,13 +130,15 @@ class GuarantorVatSummarySpec extends SpecBase with Matchers {
           }
 
           "and there is a GuarantorArrangerPage answer of `Transporter`" - {
-            "and there is no answer for GuarantorVatPage" - {
+            "and there is no answer for GuarantorVatPage in 801 or user answers" - {
               "then must render not provided row with change link" in {
                 implicit lazy val request: DataRequest[_] = dataRequest(
                   FakeRequest(),
                   emptyUserAnswers
                     .set(GuarantorRequiredPage, true)
-                    .set(GuarantorArrangerPage, Transporter)
+                    .set(GuarantorArrangerPage, Transporter),
+                  movementDetails = maxGetMovementResponse.copy(movementGuarantee = MovementGuaranteeModel(GuarantorType.Transporter, None))
+
                 )
 
                 GuarantorVatSummary.row mustBe expectedRow(messagesForLanguage.notProvided, true)

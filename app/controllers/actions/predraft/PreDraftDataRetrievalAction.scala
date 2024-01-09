@@ -16,7 +16,7 @@
 
 package controllers.actions.predraft
 
-import models.requests.{OptionalDataRequest, UserRequest}
+import models.requests.{MovementRequest, OptionalDataRequest}
 import play.api.mvc.ActionTransformer
 import services.{GetTraderKnownFactsService, PreDraftService}
 import uk.gov.hmrc.http.HeaderCarrier
@@ -29,24 +29,24 @@ class PreDraftDataRetrievalActionImpl @Inject()(val preDraftService: PreDraftSer
                                                 val getTraderKnownFactsService: GetTraderKnownFactsService)
                                                (implicit val ec: ExecutionContext) extends PreDraftDataRetrievalAction {
 
-  def apply(): ActionTransformer[UserRequest, OptionalDataRequest] = new ActionTransformer[UserRequest, OptionalDataRequest] {
+  def apply(): ActionTransformer[MovementRequest, OptionalDataRequest] = new ActionTransformer[MovementRequest, OptionalDataRequest] {
 
     override val executionContext = ec
 
-    override protected def transform[A](request: UserRequest[A]): Future[OptionalDataRequest[A]] = {
+    override protected def transform[A](request: MovementRequest[A]): Future[OptionalDataRequest[A]] = {
 
       implicit val hc: HeaderCarrier = HeaderCarrierConverter.fromRequestAndSession(request, request.session)
 
       for {
-        userAnswers <- preDraftService.get(request.ern, request.sessionId)
+        userAnswers <- preDraftService.get(request.ern, request.arc)
         traderKnownFacts <- getTraderKnownFactsService.getTraderKnownFacts(request.ern)
       } yield {
-        OptionalDataRequest(request, request.sessionId, userAnswers, traderKnownFacts)
+        OptionalDataRequest(request, userAnswers, traderKnownFacts)
       }
     }
   }
 }
 
 trait PreDraftDataRetrievalAction {
-  def apply(): ActionTransformer[UserRequest, OptionalDataRequest]
+  def apply(): ActionTransformer[MovementRequest, OptionalDataRequest]
 }

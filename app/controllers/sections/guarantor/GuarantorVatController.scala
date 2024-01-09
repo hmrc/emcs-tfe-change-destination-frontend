@@ -40,6 +40,7 @@ class GuarantorVatController @Inject()(
                                         override val auth: AuthAction,
                                         override val getData: DataRetrievalAction,
                                         override val requireData: DataRequiredAction,
+                                        override val withMovement: MovementAction,
                                         override val userAllowList: UserAllowListAction,
                                         formProvider: GuarantorVatFormProvider,
                                         val controllerComponents: MessagesControllerComponents,
@@ -47,14 +48,14 @@ class GuarantorVatController @Inject()(
                                       ) extends GuarantorBaseController with AuthActionHelper {
 
   def onPageLoad(ern: String, arc: String, mode: Mode): Action[AnyContent] =
-    authorisedDataRequest(ern, arc) { implicit request =>
+    authorisedDataRequestWithUpToDateMovement(ern, arc) { implicit request =>
       withGuarantorArrangerAnswer { guarantorArranger =>
         renderView(Ok, fillForm(GuarantorVatPage, formProvider()), guarantorArranger, mode)
       }
     }
 
   def onSubmit(ern: String, arc: String, mode: Mode): Action[AnyContent] =
-    authorisedDataRequestAsync(ern, arc) { implicit request =>
+    authorisedDataRequestWithUpToDateMovementAsync(ern, arc) { implicit request =>
       withGuarantorArrangerAnswer { guarantorArranger =>
         formProvider().bindFromRequest().fold(
           formWithErrors =>
@@ -66,7 +67,7 @@ class GuarantorVatController @Inject()(
     }
 
   def onNonGbVAT(ern: String, arc: String, mode: Mode): Action[AnyContent] =
-    authorisedDataRequestAsync(ern, arc) { implicit request =>
+    authorisedDataRequestWithUpToDateMovementAsync(ern, arc) { implicit request =>
       saveAndRedirect(GuarantorVatPage, NONGBVAT, mode)
     }
 

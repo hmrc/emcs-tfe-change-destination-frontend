@@ -16,12 +16,13 @@
 
 package navigation
 
+import models.requests.DataRequest
 import models.{Mode, UserAnswers}
 import pages.Page
 import play.api.mvc.Call
 
 abstract class BaseNavigator {
 
-  def nextPage(page: Page, mode: Mode, userAnswers: UserAnswers): Call
+  def nextPage(page: Page, mode: Mode, userAnswers: UserAnswers)(implicit dataRequest: DataRequest[_]): Call
 
 }

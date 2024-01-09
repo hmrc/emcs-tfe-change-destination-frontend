@@ -43,6 +43,9 @@ trait EmcsTfeHttpParser[A] extends BaseConnectorUtils[A] {
     }
   }
 
+  def get(url: String)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Either[ErrorResponse, A]] =
+    http.GET[Either[ErrorResponse, A]](url)(EmcsTfeReads, hc, ec)
+
   def post[I](url: String, body: I)(implicit hc: HeaderCarrier, ec: ExecutionContext, writes: Writes[I]): Future[Either[ErrorResponse, A]] =
     http.POST[I, Either[ErrorResponse, A]](url, body)(writes, EmcsTfeReads, hc, ec)
 }

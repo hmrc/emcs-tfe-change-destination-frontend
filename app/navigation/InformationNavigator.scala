@@ -18,53 +18,41 @@ package navigation
 
 import controllers.routes
 import models._
+import models.requests.DataRequest
 import pages._
 import pages.sections.info._
 import play.api.mvc.Call
 
 import javax.inject.{Inject, Singleton}
 
+
+//TODO: This naviagtion is made up for now, it just allows you to get through a section to the draft movement page
+//      The draft movment page will actually become the Review Change of Destination Task List page and this section
+//      Will have new pages added to it to determine what type of Change of Destination is happening
 @Singleton
 class InformationNavigator @Inject()() extends BaseNavigator {
 
   private val normalRoutes: Page => UserAnswers => Call = {
 
     case DispatchPlacePage =>
-      (userAnswers: UserAnswers) => controllers.sections.info.routes.DestinationTypeController.onPreDraftPageLoad(userAnswers.ern, NormalMode)
+      (userAnswers: UserAnswers) => controllers.sections.info.routes.DestinationTypeController.onPreDraftPageLoad(userAnswers.ern, userAnswers.arc, NormalMode)
 
     case DestinationTypePage =>
-      (userAnswers: UserAnswers) => controllers.sections.info.routes.DeferredMovementController.onPreDraftPageLoad(userAnswers.ern, NormalMode)
+      (userAnswers: UserAnswers) => controllers.sections.info.routes.InvoiceDetailsController.onPreDraftPageLoad(userAnswers.ern, userAnswers.arc, NormalMode)
 
-    case DeferredMovementPage(_) =>
-      (userAnswers: UserAnswers) => controllers.sections.info.routes.LocalReferenceNumberController.onPreDraftPageLoad(userAnswers.ern, NormalMode)
-
-    case LocalReferenceNumberPage(_) =>
-      (userAnswers: UserAnswers) => controllers.sections.info.routes.InvoiceDetailsController.onPreDraftPageLoad(userAnswers.ern, NormalMode)
-
-    case InvoiceDetailsPage(_) =>
-      (userAnswers: UserAnswers) => controllers.sections.info.routes.DispatchDetailsController.onPreDraftPageLoad(userAnswers.ern, NormalMode)
+    case InvoiceDetailsPage =>
+      (userAnswers: UserAnswers) => controllers.sections.info.routes.DispatchDetailsController.onPreDraftPageLoad(userAnswers.ern, userAnswers.arc, NormalMode)
 
     case DispatchDetailsPage(_) =>
-      (userAnswers: UserAnswers) => controllers.sections.info.routes.InformationCheckAnswersController.onPreDraftPageLoad(userAnswers.ern)
-
-    case InformationCheckAnswersPage =>
-      (userAnswers: UserAnswers) => routes.DraftMovementController.onPageLoad(userAnswers.ern, userAnswers.arc)
+      (userAnswers: UserAnswers) => controllers.routes.DraftMovementController.onPageLoad(userAnswers.ern, userAnswers.arc)
 
     case _ =>
-      (userAnswers: UserAnswers) => controllers.routes.IndexController.onPageLoad(userAnswers.ern)
+      (userAnswers: UserAnswers) => controllers.routes.IndexController.onPageLoad(userAnswers.ern, userAnswers.arc)
   }
 
   private[navigation] val checkRouteMap: Page => UserAnswers => Call = {
-    case DeferredMovementPage(false) =>
-      (userAnswers: UserAnswers) => controllers.sections.info.routes.InformationCheckAnswersController.onPageLoad(userAnswers.ern, userAnswers.arc)
-    case LocalReferenceNumberPage(false) =>
-      (userAnswers: UserAnswers) => controllers.sections.info.routes.InformationCheckAnswersController.onPageLoad(userAnswers.ern, userAnswers.arc)
-    case InvoiceDetailsPage(false) =>
-      (userAnswers: UserAnswers) => controllers.sections.info.routes.InformationCheckAnswersController.onPageLoad(userAnswers.ern, userAnswers.arc)
-    case DispatchDetailsPage(false) =>
-      (userAnswers: UserAnswers) => controllers.sections.info.routes.InformationCheckAnswersController.onPageLoad(userAnswers.ern, userAnswers.arc)
     case _ =>
-      (userAnswers: UserAnswers) => controllers.sections.info.routes.InformationCheckAnswersController.onPreDraftPageLoad(userAnswers.ern)
+      (userAnswers: UserAnswers) => controllers.routes.DraftMovementController.onPageLoad(userAnswers.ern, userAnswers.arc)
   }
 
   private[navigation] val reviewRouteMap: Page => UserAnswers => Call = {
@@ -72,7 +60,7 @@ class InformationNavigator @Inject()() extends BaseNavigator {
       (userAnswers: UserAnswers) => routes.CheckYourAnswersController.onPageLoad(userAnswers.ern, userAnswers.arc)
   }
 
-  override def nextPage(page: Page, mode: Mode, userAnswers: UserAnswers): Call = mode match {
+  override def nextPage(page: Page, mode: Mode, userAnswers: UserAnswers)(implicit request: DataRequest[_]): Call = mode match {
     case NormalMode =>
       normalRoutes(page)(userAnswers)
     case CheckMode =>

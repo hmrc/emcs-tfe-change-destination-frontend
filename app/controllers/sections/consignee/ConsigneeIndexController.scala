@@ -18,6 +18,7 @@ package controllers.sections.consignee
 
 import controllers.BaseNavigationController
 import controllers.actions._
+import models.UserType._
 import models._
 import models.requests.UserRequest
 import models.sections.info.movementScenario.MovementScenario
@@ -36,19 +37,20 @@ class ConsigneeIndexController @Inject()(override val messagesApi: MessagesApi,
                                          override val userAllowList: UserAllowListAction,
                                          override val getData: DataRetrievalAction,
                                          override val requireData: DataRequiredAction,
+                                         override val withMovement: MovementAction,
                                          override val navigator: ConsigneeNavigator,
                                          override val userAnswersService: UserAnswersService,
                                          val controllerComponents: MessagesControllerComponents
                                         ) extends BaseNavigationController with AuthActionHelper {
 
   def onPageLoad(ern: String, arc: String): Action[AnyContent] = {
-    authorisedDataRequest(ern, arc) {
+    authorisedDataRequestWithUpToDateMovement(ern, arc) {
       implicit dataRequest =>
         withAnswer(DestinationTypePage) {
           destinationTypePageAnswer =>
-            val ur: UserRequest[_] = dataRequest.request
+            val ur: UserRequest[_] = dataRequest.request.request
 
-            if (ConsigneeSection.isCompleted) {
+            if (ConsigneeSection.isCompleted || ConsigneeSection.needsReview) {
               Redirect(controllers.sections.consignee.routes.CheckYourAnswersConsigneeController.onPageLoad(ern, arc))
             } else {
               if (shouldStartFlowFromConsigneeExemptOrganisation(destinationTypePageAnswer)) {

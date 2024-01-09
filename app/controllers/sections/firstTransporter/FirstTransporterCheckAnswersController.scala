@@ -36,6 +36,7 @@ class FirstTransporterCheckAnswersController @Inject()(
                                                         override val auth: AuthAction,
                                                         override val getData: DataRetrievalAction,
                                                         override val requireData: DataRequiredAction,
+                                                        override val withMovement: MovementAction,
                                                         override val userAllowList: UserAllowListAction,
                                                         val cyaHelper: FirstTransporterCheckAnswersHelper,
                                                         val controllerComponents: MessagesControllerComponents,
@@ -43,7 +44,7 @@ class FirstTransporterCheckAnswersController @Inject()(
                                                       ) extends BaseNavigationController with AuthActionHelper {
 
   def onPageLoad(ern: String, arc: String): Action[AnyContent] =
-    authorisedDataRequest(ern, arc) { implicit request =>
+    authorisedDataRequestWithUpToDateMovement(ern, arc) { implicit request =>
       Ok(view(
         cyaHelper.summaryList(),
         controllers.sections.firstTransporter.routes.FirstTransporterCheckAnswersController.onSubmit(ern, arc)
@@ -51,7 +52,7 @@ class FirstTransporterCheckAnswersController @Inject()(
     }
 
   def onSubmit(ern: String, arc: String): Action[AnyContent] =
-    authorisedDataRequest(ern, arc) { implicit request =>
+    authorisedDataRequestWithUpToDateMovement(ern, arc) { implicit request =>
       Redirect(navigator.nextPage(FirstTransporterCheckAnswersPage, NormalMode, request.userAnswers))
     }
 }

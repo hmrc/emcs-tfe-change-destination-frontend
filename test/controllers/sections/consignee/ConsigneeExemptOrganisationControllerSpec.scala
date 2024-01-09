@@ -17,7 +17,7 @@
 package controllers.sections.consignee
 
 import base.SpecBase
-import controllers.actions.FakeDataRetrievalAction
+import controllers.actions.{FakeDataRetrievalAction, FakeMovementAction}
 import controllers.routes
 import fixtures.OrganisationDetailsFixtures
 import forms.sections.consignee.ConsigneeExemptOrganisationFormProvider
@@ -43,9 +43,9 @@ class ConsigneeExemptOrganisationControllerSpec extends SpecBase with MockUserAn
   lazy val view: ConsigneeExemptOrganisationView = app.injector.instanceOf[ConsigneeExemptOrganisationView]
 
   lazy val consigneeExemptOrganisationRoute: String =
-    controllers.sections.consignee.routes.ConsigneeExemptOrganisationController.onPageLoad(testErn, testDraftId, NormalMode).url
+    controllers.sections.consignee.routes.ConsigneeExemptOrganisationController.onPageLoad(testErn, testArc, NormalMode).url
   lazy val onSubmitCall: Call =
-    controllers.sections.consignee.routes.ConsigneeExemptOrganisationController.onSubmit(testErn, testDraftId, NormalMode)
+    controllers.sections.consignee.routes.ConsigneeExemptOrganisationController.onSubmit(testErn, testArc, NormalMode)
 
 
   class Fixture(optUserAnswers: Option[UserAnswers] = Some(emptyUserAnswers)) {
@@ -73,6 +73,7 @@ class ConsigneeExemptOrganisationControllerSpec extends SpecBase with MockUserAn
       fakeAuthAction,
       new FakeDataRetrievalAction(optUserAnswers, Some(testMinTraderKnownFacts)),
       dataRequiredAction,
+      new FakeMovementAction(maxGetMovementResponse.copy(memberStateCode = None, serialNumberOfCertificateOfExemption = None)),
       fakeUserAllowListAction,
       formProvider,
       messagesControllerComponents,
@@ -87,7 +88,7 @@ class ConsigneeExemptOrganisationControllerSpec extends SpecBase with MockUserAn
     "must return OK and the correct view for a GET" in new Fixture() {
       MockGetMemberStatesService.getMemberStatesSelectItems().returns(Future(testSelectItems))
 
-      val result = testController.onPageLoad(testErn, testDraftId, NormalMode)(request)
+      val result = testController.onPageLoad(testErn, testArc, NormalMode)(request)
 
       status(result) mustEqual OK
       contentAsString(result) mustEqual view(
@@ -102,7 +103,7 @@ class ConsigneeExemptOrganisationControllerSpec extends SpecBase with MockUserAn
 
       MockGetMemberStatesService.getMemberStatesSelectItems().returns(Future(testSelectItems))
 
-      val result = testController.onPageLoad(testErn, testDraftId, NormalMode)(request)
+      val result = testController.onPageLoad(testErn, testArc, NormalMode)(request)
 
       status(result) mustEqual OK
       contentAsString(result) mustEqual view(
@@ -120,7 +121,7 @@ class ConsigneeExemptOrganisationControllerSpec extends SpecBase with MockUserAn
         ("certificateSerialNumber", "answer")
       )
 
-      val result = testController.onSubmit(testErn, testDraftId, NormalMode)(req)
+      val result = testController.onSubmit(testErn, testArc, NormalMode)(req)
 
       status(result) mustEqual SEE_OTHER
       redirectLocation(result).value mustEqual testOnwardRoute.url
@@ -133,7 +134,7 @@ class ConsigneeExemptOrganisationControllerSpec extends SpecBase with MockUserAn
 
       MockGetMemberStatesService.getMemberStatesSelectItems().returns(Future(testSelectItems))
 
-      val result = testController.onSubmit(testErn, testDraftId, NormalMode)(req)
+      val result = testController.onSubmit(testErn, testArc, NormalMode)(req)
 
       status(result) mustEqual BAD_REQUEST
       contentAsString(result) mustEqual view(
@@ -144,7 +145,7 @@ class ConsigneeExemptOrganisationControllerSpec extends SpecBase with MockUserAn
     }
 
     "must redirect to Journey Recovery for a GET if no existing data is found" in new Fixture(None) {
-      val result = testController.onPageLoad(testErn, testDraftId, NormalMode)(request)
+      val result = testController.onPageLoad(testErn, testArc, NormalMode)(request)
 
       status(result) mustEqual SEE_OTHER
       redirectLocation(result).value mustEqual routes.JourneyRecoveryController.onPageLoad().url
@@ -153,7 +154,7 @@ class ConsigneeExemptOrganisationControllerSpec extends SpecBase with MockUserAn
     "must redirect to Journey Recovery for a POST if no existing data is found" in new Fixture(None) {
       val req = FakeRequest(POST, onSubmitCall.url).withFormUrlEncodedBody(("value", "answer"))
 
-      val result = testController.onSubmit(testErn, testDraftId, NormalMode)(req)
+      val result = testController.onSubmit(testErn, testArc, NormalMode)(req)
 
       status(result) mustEqual SEE_OTHER
       redirectLocation(result).value mustEqual routes.JourneyRecoveryController.onPageLoad().url

@@ -17,10 +17,14 @@
 package pages.sections.guarantor
 
 import models.UserAddress
+import models.requests.DataRequest
 import pages.QuestionPage
 import play.api.libs.json.JsPath
 
 case object GuarantorAddressPage extends QuestionPage[UserAddress] {
   override val toString: String = "guarantorAddress"
   override val path: JsPath = GuarantorSection.path \ toString
+
+  override def getValueFromIE801(implicit request: DataRequest[_]): Option[UserAddress] =
+    request.movementDetails.movementGuarantee.guarantorTrader.flatMap(_.headOption.flatMap(_.address.map(UserAddress.userAddressFromTraderAddress))) // TODO: check headOption
 }

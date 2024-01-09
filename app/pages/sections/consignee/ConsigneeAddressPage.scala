@@ -17,10 +17,14 @@
 package pages.sections.consignee
 
 import models.UserAddress
+import models.requests.DataRequest
 import pages.QuestionPage
 import play.api.libs.json.JsPath
 
 case object ConsigneeAddressPage extends QuestionPage[UserAddress] {
   override val toString: String = "consigneeAddress"
   override val path: JsPath = ConsigneeSection.path \ toString
+
+  override def getValueFromIE801(implicit request: DataRequest[_]): Option[UserAddress] =
+    request.movementDetails.consigneeTrader.flatMap(_.address.map(UserAddress.userAddressFromTraderAddress))
 }

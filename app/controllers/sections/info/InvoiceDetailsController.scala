@@ -20,9 +20,9 @@ import controllers.BasePreDraftNavigationController
 import controllers.actions._
 import controllers.actions.predraft.{PreDraftAuthActionHelper, PreDraftDataRequiredAction, PreDraftDataRetrievalAction}
 import forms.sections.info.InvoiceDetailsFormProvider
+import models.Mode
 import models.requests.DataRequest
 import models.sections.info.InvoiceDetailsModel
-import models.{CheckMode, Mode}
 import navigation.InformationNavigator
 import pages.QuestionPage
 import pages.sections.info.InvoiceDetailsPage
@@ -46,6 +46,7 @@ class InvoiceDetailsController @Inject()(
                                           val getData: DataRetrievalAction,
                                           val requireData: DataRequiredAction,
                                           val userAllowList: UserAllowListAction,
+                                          val withMovement: MovementAction,
                                           formProvider: InvoiceDetailsFormProvider,
                                           val userAnswersService: UserAnswersService,
                                           val controllerComponents: MessagesControllerComponents,
@@ -53,57 +54,30 @@ class InvoiceDetailsController @Inject()(
                                           timeMachine: TimeMachine
                                         ) extends BasePreDraftNavigationController with AuthActionHelper with PreDraftAuthActionHelper with DateTimeUtils {
 
-  def onPreDraftPageLoad(ern: String, mode: Mode): Action[AnyContent] =
-    authorisedPreDraftDataRequestAsync(ern) { implicit request =>
+  def onPreDraftPageLoad(ern: String, arc: String,  mode: Mode): Action[AnyContent] =
+    authorisedWithPreDraftDataUpToDateMovementAsync(ern, arc) { implicit request =>
       renderView(
         Ok,
-        InvoiceDetailsPage(isOnPreDraftFlow = true),
-        fillForm(InvoiceDetailsPage(isOnPreDraftFlow = true), formProvider()),
-        controllers.sections.info.routes.InvoiceDetailsController.onPreDraftSubmit(request.ern, mode),
+        InvoiceDetailsPage,
+        fillForm(InvoiceDetailsPage, formProvider()),
+        controllers.sections.info.routes.InvoiceDetailsController.onPreDraftSubmit(ern, arc, mode),
         mode
       )
     }
 
-  def onPreDraftSubmit(ern: String, mode: Mode): Action[AnyContent] =
-    authorisedPreDraftDataRequestAsync(ern) { implicit request =>
+  def onPreDraftSubmit(ern: String, arc: String, mode: Mode): Action[AnyContent] =
+    authorisedWithPreDraftDataUpToDateMovementAsync(ern, arc) { implicit request =>
       formProvider().bindFromRequest().fold(
         formWithErrors =>
           renderView(
             BadRequest,
-            InvoiceDetailsPage(isOnPreDraftFlow = true),
+            InvoiceDetailsPage,
             formWithErrors,
-            controllers.sections.info.routes.InvoiceDetailsController.onPreDraftSubmit(request.ern, mode),
+            controllers.sections.info.routes.InvoiceDetailsController.onPreDraftSubmit(ern, arc, mode),
             mode
           ),
         value =>
-          savePreDraftAndRedirect(InvoiceDetailsPage(isOnPreDraftFlow = true), value, mode)
-      )
-    }
-
-  def onPageLoad(ern: String, arc: String): Action[AnyContent] =
-    authorisedDataRequestAsync(ern, arc) { implicit request =>
-      renderView(
-        Ok,
-        InvoiceDetailsPage(isOnPreDraftFlow = false),
-        fillForm(InvoiceDetailsPage(isOnPreDraftFlow = false), formProvider()),
-        controllers.sections.info.routes.InvoiceDetailsController.onSubmit(request.ern, arc),
-        CheckMode
-      )
-    }
-
-  def onSubmit(ern: String, arc: String): Action[AnyContent] =
-    authorisedDataRequestAsync(ern, arc) { implicit request =>
-      formProvider().bindFromRequest().fold(
-        formWithErrors =>
-          renderView(
-            BadRequest,
-            InvoiceDetailsPage(isOnPreDraftFlow = false),
-            formWithErrors,
-            controllers.sections.info.routes.InvoiceDetailsController.onSubmit(request.ern, arc),
-            CheckMode
-          ),
-        value =>
-          saveAndRedirect(InvoiceDetailsPage(isOnPreDraftFlow = false), value, CheckMode)
+          savePreDraftAndRedirect(InvoiceDetailsPage, value, mode)
       )
     }
 

@@ -39,6 +39,7 @@ class DestinationWarehouseVatController @Inject()(
                                                    override val auth: AuthAction,
                                                    override val getData: DataRetrievalAction,
                                                    override val requireData: DataRequiredAction,
+                                                   override val withMovement: MovementAction,
                                                    override val userAllowList: UserAllowListAction,
                                                    formProvider: DestinationWarehouseVatFormProvider,
                                                    val controllerComponents: MessagesControllerComponents,
@@ -46,7 +47,7 @@ class DestinationWarehouseVatController @Inject()(
                                                  ) extends BaseNavigationController with AuthActionHelper with JsonOptionFormatter {
 
   def onPageLoad(ern: String, arc: String, mode: Mode): Action[AnyContent] =
-    authorisedDataRequest(ern, arc) {
+    authorisedDataRequestWithUpToDateMovement(ern, arc) {
       implicit request =>
         withAnswer(DestinationTypePage) {
           movementScenario =>
@@ -61,7 +62,7 @@ class DestinationWarehouseVatController @Inject()(
 
 
   def onSubmit(ern: String, arc: String, mode: Mode): Action[AnyContent] =
-    authorisedDataRequestAsync(ern, arc) {
+    authorisedDataRequestWithUpToDateMovementAsync(ern, arc) {
       implicit request =>
         withAnswerAsync(DestinationTypePage) {
           movementScenario =>
@@ -80,7 +81,7 @@ class DestinationWarehouseVatController @Inject()(
     }
 
   def skipThisQuestion(ern: String, arc: String, mode: Mode): Action[AnyContent] =
-    authorisedDataRequestAsync(ern, arc) { implicit request =>
+    authorisedDataRequestWithUpToDateMovementAsync(ern, arc) { implicit request =>
       val newUserAnswers = request.userAnswers.remove(DestinationWarehouseVatPage)
       userAnswersService.set(newUserAnswers).map(result => {
         Redirect(navigator.nextPage(DestinationWarehouseVatPage, mode, result))

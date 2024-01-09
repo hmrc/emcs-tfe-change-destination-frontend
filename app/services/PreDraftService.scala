@@ -24,13 +24,13 @@ import scala.concurrent.Future
 
 class PreDraftService @Inject()(sessionRepository: SessionRepository) {
 
-  def get(ern: String, sessionId: String): Future[Option[UserAnswers]] =
-    sessionRepository.get(ern, sessionId)
+  def get(ern: String, arc: String): Future[Option[UserAnswers]] =
+    sessionRepository.get(ern, arc)
 
   def set(answers: UserAnswers): Future[Boolean] = {
     sessionRepository.set(answers)
   }
 
-  def clear(ern: String, sessionId: String): Future[Boolean] =
-    sessionRepository.clear(ern, sessionId)
+  def clear(ern: String, arc: String): Future[Boolean] =
+    sessionRepository.clear(ern, arc)
 }

@@ -30,7 +30,7 @@ class InvoiceDetailsFormProviderSpec extends SpecBase with StringFieldBehaviours
   val monthField = "value.month"
   val yearField = "value.year"
 
-  val form = new InvoiceDetailsFormProvider()()
+  val form = new InvoiceDetailsFormProvider(appConfig)()
 
   def formAnswersMap(reference: String = invoiceDetailsModel.reference,
                      day: String = invoiceDetailsModel.date.getDayOfMonth.toString,

@@ -19,6 +19,8 @@ package viewmodels.helpers
 import controllers.sections.transportUnit.{routes => transportUnitRoutes}
 import models.Index
 import models.requests.DataRequest
+import models.sections.transportUnit.TransportUnitType.FixedTransport
+import pages.sections.transportUnit.TransportUnitTypePage
 import play.api.i18n.Messages
 import queries.TransportUnitsCount
 import uk.gov.hmrc.govukfrontend.views.Aliases.Text
@@ -38,15 +40,16 @@ class TransportUnitsAddToListHelper @Inject()(implicit link: views.html.componen
   }
 
   private def summaryList(idx: Index)(implicit request: DataRequest[_], messages: Messages): SummaryList = {
+    val isTransportUnitAFixedTransportInstallation = request.userAnswers.get(TransportUnitTypePage(idx)).contains(FixedTransport)
     SummaryListViewModel(
       rows = Seq(
-        TransportUnitTypeSummary.row(idx),
-        TransportUnitIdentitySummary.row(idx),
-        TransportSealChoiceSummary.row(idx),
-        TransportSealTypeSummary.row(idx),
-        TransportSealInformationSummary.row(idx),
-        TransportUnitGiveMoreInformationSummary.row(idx)
-      ).flatten
+        Some(TransportUnitTypeSummary.row(idx)),
+        if (!isTransportUnitAFixedTransportInstallation) Some(TransportUnitIdentitySummary.row(idx)) else None,
+        if (!isTransportUnitAFixedTransportInstallation) Some(TransportSealChoiceSummary.row(idx)) else None,
+        if (!isTransportUnitAFixedTransportInstallation) Some(TransportSealTypeSummary.row(idx)) else None,
+        if (!isTransportUnitAFixedTransportInstallation) Some(TransportSealInformationSummary.row(idx)) else None,
+        if (!isTransportUnitAFixedTransportInstallation) Some(TransportUnitGiveMoreInformationSummary.row(idx)) else None
+      ).flatMap(_.flatten)
     ).copy(card = Some(Card(
       title = Some(CardTitle(Text(messages("transportUnitsAddToList.transportUnitCardTitle", idx.displayIndex)))),
       actions = Some(Actions(items = Seq(

@@ -16,10 +16,14 @@
 
 package pages.sections.consignee
 
+import models.requests.DataRequest
 import pages.QuestionPage
 import play.api.libs.json.JsPath
 
 case object ConsigneeExcisePage extends QuestionPage[String] {
   override val toString: String = "exciseRegistrationNumber"
   override val path: JsPath = ConsigneeSection.path \ toString
+
+  override def getValueFromIE801(implicit request: DataRequest[_]): Option[String] =
+    request.movementDetails.consigneeTrader.flatMap(_.traderExciseNumber)
 }

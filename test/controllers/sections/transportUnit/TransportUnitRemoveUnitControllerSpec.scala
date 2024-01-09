@@ -17,7 +17,7 @@
 package controllers.sections.transportUnit
 
 import base.SpecBase
-import controllers.actions.FakeDataRetrievalAction
+import controllers.actions.{FakeDataRetrievalAction, FakeMovementAction}
 import forms.sections.transportUnit.TransportUnitRemoveUnitFormProvider
 import mocks.services.MockUserAnswersService
 import models.UserAnswers
@@ -52,6 +52,7 @@ class TransportUnitRemoveUnitControllerSpec extends SpecBase with MockUserAnswer
       fakeAuthAction,
       new FakeDataRetrievalAction(userAnswers, Some(testMinTraderKnownFacts)),
       dataRequiredAction,
+      new FakeMovementAction(maxGetMovementResponse),
       formProvider,
       Helpers.stubMessagesControllerComponents(),
       view
@@ -64,7 +65,7 @@ class TransportUnitRemoveUnitControllerSpec extends SpecBase with MockUserAnswer
       emptyUserAnswers.set(TransportUnitTypePage(testIndex1), TransportUnitType.FixedTransport)
     )) {
 
-      val result = controller.onPageLoad(testErn, testDraftId, testIndex1)(request)
+      val result = controller.onPageLoad(testErn, testArc, testIndex1)(request)
 
       status(result) mustEqual OK
       contentAsString(result) mustEqual view(form, testIndex1)(dataRequest(request), messages(request)).toString
@@ -74,20 +75,20 @@ class TransportUnitRemoveUnitControllerSpec extends SpecBase with MockUserAnswer
       emptyUserAnswers
         .set(TransportUnitTypePage(testIndex1), TransportUnitType.FixedTransport)
     )) {
-      val result = controller.onPageLoad(testErn, testDraftId, testIndex2)(request)
+      val result = controller.onPageLoad(testErn, testArc, testIndex2)(request)
 
       status(result) mustEqual SEE_OTHER
-      redirectLocation(result).value mustEqual controllers.sections.transportUnit.routes.TransportUnitIndexController.onPageLoad(testErn, testDraftId).url
+      redirectLocation(result).value mustEqual controllers.sections.transportUnit.routes.TransportUnitIndexController.onPageLoad(testErn, testArc).url
     }
 
     "must redirect to TU07 when the user answers no" in new Test(Some(
       emptyUserAnswers.set(TransportUnitTypePage(testIndex1), TransportUnitType.FixedTransport)
     )) {
-      val result = controller.onSubmit(testErn, testDraftId, testIndex1)(request.withFormUrlEncodedBody(("value", "false")))
+      val result = controller.onSubmit(testErn, testArc, testIndex1)(request.withFormUrlEncodedBody(("value", "false")))
 
       status(result) mustEqual SEE_OTHER
       redirectLocation(result).value mustEqual
-        controllers.sections.transportUnit.routes.TransportUnitsAddToListController.onPageLoad(testErn, testDraftId).url
+        controllers.sections.transportUnit.routes.TransportUnitsAddToListController.onPageLoad(testErn, testArc).url
     }
 
     "must redirect to the index controller when the user answers yes (removing the transport unit)" in new Test(Some(
@@ -102,20 +103,20 @@ class TransportUnitRemoveUnitControllerSpec extends SpecBase with MockUserAnswer
         emptyUserAnswers.set(TransportUnitTypePage(testIndex1), TransportUnitType.Container)
       ))
 
-      val result = controller.onSubmit(testErn, testDraftId, testIndex1)(request.withFormUrlEncodedBody(("value", "true")))
+      val result = controller.onSubmit(testErn, testArc, testIndex1)(request.withFormUrlEncodedBody(("value", "true")))
 
       status(result) mustEqual SEE_OTHER
-      redirectLocation(result).value mustEqual controllers.sections.transportUnit.routes.TransportUnitIndexController.onPageLoad(testErn, testDraftId).url
+      redirectLocation(result).value mustEqual controllers.sections.transportUnit.routes.TransportUnitIndexController.onPageLoad(testErn, testArc).url
     }
 
     "must redirect to the index controller when index is out of bounds (for POST)" in new Test(Some(
       emptyUserAnswers
         .set(TransportUnitTypePage(testIndex1), TransportUnitType.FixedTransport)
     )) {
-      val result = controller.onPageLoad(testErn, testDraftId, testIndex2)(request.withFormUrlEncodedBody(("value", "true")))
+      val result = controller.onPageLoad(testErn, testArc, testIndex2)(request.withFormUrlEncodedBody(("value", "true")))
 
       status(result) mustEqual SEE_OTHER
-      redirectLocation(result).value mustEqual controllers.sections.transportUnit.routes.TransportUnitIndexController.onPageLoad(testErn, testDraftId).url
+      redirectLocation(result).value mustEqual controllers.sections.transportUnit.routes.TransportUnitIndexController.onPageLoad(testErn, testArc).url
     }
 
     "must return a Bad Request and errors when invalid data is submitted" in new Test(Some(
@@ -124,7 +125,7 @@ class TransportUnitRemoveUnitControllerSpec extends SpecBase with MockUserAnswer
 
       val boundForm = form.bind(Map("value" -> ""))
 
-      val result = controller.onSubmit(testErn, testDraftId, testIndex1)(request.withFormUrlEncodedBody(("value", "")))
+      val result = controller.onSubmit(testErn, testArc, testIndex1)(request.withFormUrlEncodedBody(("value", "")))
 
       status(result) mustEqual BAD_REQUEST
       contentAsString(result) mustEqual view(boundForm, testIndex1)(dataRequest(request), messages(request)).toString
@@ -132,14 +133,14 @@ class TransportUnitRemoveUnitControllerSpec extends SpecBase with MockUserAnswer
 
     "must redirect to Journey Recovery for a GET if no existing data is found" in new Test(None) {
 
-      val result = controller.onPageLoad(testErn, testDraftId, testIndex1)(request)
+      val result = controller.onPageLoad(testErn, testArc, testIndex1)(request)
 
       status(result) mustEqual SEE_OTHER
       redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
     }
 
     "must redirect to Journey Recovery for a POST if no existing data is found" in new Test(None) {
-      val result = controller.onSubmit(testErn, testDraftId, testIndex1)(request.withFormUrlEncodedBody(("value", "true")))
+      val result = controller.onSubmit(testErn, testArc, testIndex1)(request.withFormUrlEncodedBody(("value", "true")))
 
       status(result) mustEqual SEE_OTHER
       redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url

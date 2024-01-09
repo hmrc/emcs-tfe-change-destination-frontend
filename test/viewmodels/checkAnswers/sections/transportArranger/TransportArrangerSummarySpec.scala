@@ -39,13 +39,26 @@ class TransportArrangerSummarySpec extends SpecBase with Matchers {
 
         implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
 
-        "when there's no answer" - {
+        "when there's no answer in the user answers (defaulting to 801)" - {
 
           "must output the expected data" in {
 
             implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers)
 
-            TransportArrangerSummary.row() mustBe None
+            TransportArrangerSummary.row() mustBe
+              Some(
+                SummaryListRowViewModel(
+                  key = messagesForLanguage.cyaLabel,
+                  value = Value(Text(messagesForLanguage.consigneeRadioOption)),
+                  actions = Seq(
+                    ActionItemViewModel(
+                      content = messagesForLanguage.change,
+                      href = controllers.sections.transportArranger.routes.TransportArrangerController.onPageLoad(testErn, testArc, CheckMode).url,
+                      id = "changeTransportArranger"
+                    ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHidden)
+                  )
+                )
+              )
           }
         }
 
@@ -63,7 +76,7 @@ class TransportArrangerSummarySpec extends SpecBase with Matchers {
                   actions = Seq(
                     ActionItemViewModel(
                       content = messagesForLanguage.change,
-                      href = controllers.sections.transportArranger.routes.TransportArrangerController.onPageLoad(testErn, testDraftId, CheckMode).url,
+                      href = controllers.sections.transportArranger.routes.TransportArrangerController.onPageLoad(testErn, testArc, CheckMode).url,
                       id = "changeTransportArranger"
                     ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHidden)
                   )

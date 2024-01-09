@@ -18,7 +18,7 @@ package models.sections.info.movementScenario
 
 import base.SpecBase
 import models.requests.DataRequest
-import models.response.InvalidUserTypeException
+import models.response.{InvalidDestinationTypeException, InvalidUserTypeException}
 import models.sections.info.movementScenario.MovementScenario._
 import play.api.test.FakeRequest
 
@@ -27,6 +27,160 @@ class MovementScenarioSpec extends SpecBase {
   val warehouseKeeperDataRequest: DataRequest[_] = dataRequest(FakeRequest(), ern = "GBWK123")
   val registeredConsignorDataRequest: DataRequest[_] = dataRequest(FakeRequest(), ern = "GBRC123")
   val nonWKRCDataRequest: DataRequest[_] = dataRequest(FakeRequest(), ern = "GB00123")
+
+  "getMovementScenarioFromMovement" - {
+    def testDataRequestWithDeliveryPlaceCustomsOffice(value: Option[String], destinationType: DestinationType): DataRequest[_] =
+      dataRequest(FakeRequest(), movementDetails = maxGetMovementResponse
+        .copy(
+          deliveryPlaceCustomsOfficeReferenceNumber = value,
+          destinationType = destinationType,
+          headerEadEsad = maxGetMovementResponse.headerEadEsad.copy(destinationType = destinationType)
+        )
+      )
+
+    def testDataRequestWithDeliveryPlaceTrader(value: Option[String], destinationType: DestinationType): DataRequest[_] =
+      dataRequest(FakeRequest(), movementDetails =
+        maxGetMovementResponse
+          .copy(
+            destinationType = destinationType,
+            deliveryPlaceTrader = maxGetMovementResponse.deliveryPlaceTrader.map(_.copy(traderExciseNumber = value)),
+            headerEadEsad = maxGetMovementResponse.headerEadEsad.copy(destinationType = destinationType)
+          )
+      )
+
+    def testDataRequest(destinationType: DestinationType): DataRequest[_] =
+      dataRequest(FakeRequest(), movementDetails =
+        maxGetMovementResponse
+          .copy(
+            destinationType = destinationType,
+            headerEadEsad = maxGetMovementResponse.headerEadEsad.copy(destinationType = destinationType)
+          )
+      )
+
+    "when DestinationType is Export" - {
+      "must return ExportWithCustomsDeclarationLodgedInTheUk" - {
+        "when deliveryPlaceCustomsOfficeReferenceNumber starts with GB" in {
+          MovementScenario.getMovementScenarioFromMovement(testDataRequestWithDeliveryPlaceCustomsOffice(
+            value = Some("GBWK123"),
+            destinationType = DestinationType.Export
+          )) mustBe ExportWithCustomsDeclarationLodgedInTheUk
+        }
+        "when deliveryPlaceCustomsOfficeReferenceNumber starts with XI" in {
+          MovementScenario.getMovementScenarioFromMovement(testDataRequestWithDeliveryPlaceCustomsOffice(
+            value = Some("XIWK123"),
+            destinationType = DestinationType.Export
+          )) mustBe ExportWithCustomsDeclarationLodgedInTheUk
+        }
+      }
+      "must return ExportWithCustomsDeclarationLodgedInTheEu" - {
+        "when deliveryPlaceCustomsOfficeReferenceNumber does not start with GB or XI" in {
+          MovementScenario.getMovementScenarioFromMovement(testDataRequestWithDeliveryPlaceCustomsOffice(
+            value = Some("FRWK123"),
+            destinationType = DestinationType.Export
+          )) mustBe ExportWithCustomsDeclarationLodgedInTheEu
+        }
+        "when deliveryPlaceCustomsOfficeReferenceNumber is not present" in {
+          MovementScenario.getMovementScenarioFromMovement(testDataRequestWithDeliveryPlaceCustomsOffice(
+            value = None,
+            destinationType = DestinationType.Export
+          )) mustBe ExportWithCustomsDeclarationLodgedInTheEu
+        }
+      }
+    }
+    "when DestinationType is TaxWarehouse" - {
+      "must return GbTaxWarehouse" - {
+        "when deliveryPlaceTrader.traderExciseNumber starts with GB" in {
+          MovementScenario.getMovementScenarioFromMovement(testDataRequestWithDeliveryPlaceTrader(
+            value = Some("GBWK123"),
+            destinationType = DestinationType.TaxWarehouse
+          )) mustBe GbTaxWarehouse
+        }
+        "when deliveryPlaceTrader.traderExciseNumber starts with XI" in {
+          MovementScenario.getMovementScenarioFromMovement(testDataRequestWithDeliveryPlaceTrader(
+            value = Some("XIWK123"),
+            destinationType = DestinationType.TaxWarehouse
+          )) mustBe GbTaxWarehouse
+        }
+      }
+      "must return EuTaxWarehouse" - {
+        "when deliveryPlaceTrader.traderExciseNumber does not start with GB or XI" in {
+          MovementScenario.getMovementScenarioFromMovement(testDataRequestWithDeliveryPlaceTrader(
+            value = Some("FRWK123"),
+            destinationType = DestinationType.TaxWarehouse
+          )) mustBe EuTaxWarehouse
+        }
+        "when deliveryPlaceTrader.traderExciseNumber is not present" in {
+          MovementScenario.getMovementScenarioFromMovement(testDataRequestWithDeliveryPlaceTrader(
+            value = None,
+            destinationType = DestinationType.TaxWarehouse
+          )) mustBe EuTaxWarehouse
+        }
+      }
+    }
+    "when DestinationType is DirectDelivery" - {
+      "must return DirectDelivery" in {
+        MovementScenario.getMovementScenarioFromMovement(testDataRequest(
+          destinationType = DestinationType.DirectDelivery
+        )) mustBe DirectDelivery
+      }
+    }
+    "when DestinationType is ExemptedOrganisation" - {
+      "must return ExemptedOrganisation" in {
+        MovementScenario.getMovementScenarioFromMovement(testDataRequest(
+          destinationType = DestinationType.ExemptedOrganisation
+        )) mustBe ExemptedOrganisation
+      }
+    }
+    "when DestinationType is RegisteredConsignee" - {
+      "must return RegisteredConsignee" in {
+        MovementScenario.getMovementScenarioFromMovement(testDataRequest(
+          destinationType = DestinationType.RegisteredConsignee
+        )) mustBe RegisteredConsignee
+      }
+    }
+    "when DestinationType is TemporaryRegisteredConsignee" - {
+      "must return TemporaryRegisteredConsignee" in {
+        MovementScenario.getMovementScenarioFromMovement(testDataRequest(
+          destinationType = DestinationType.TemporaryRegisteredConsignee
+        )) mustBe TemporaryRegisteredConsignee
+      }
+    }
+    "when DestinationType is UnknownDestination" - {
+      "must return UnknownDestination" in {
+        MovementScenario.getMovementScenarioFromMovement(testDataRequest(
+          destinationType = DestinationType.UnknownDestination
+        )) mustBe UnknownDestination
+      }
+    }
+    "when DestinationType is a Duty Paid option" - {
+      "must return an error" - {
+        "when DestinationType is CertifiedConsignee" in {
+          val result = intercept[InvalidDestinationTypeException](
+            MovementScenario.getMovementScenarioFromMovement(testDataRequest(
+              destinationType = DestinationType.CertifiedConsignee
+            ))
+          )
+          result.message mustBe "[MovementScenario][getMovementScenarioFromMovement] invalid DestinationType: 9"
+        }
+        "when DestinationType is TemporaryCertifiedConsignee" in {
+          val result = intercept[InvalidDestinationTypeException](
+            MovementScenario.getMovementScenarioFromMovement(testDataRequest(
+              destinationType = DestinationType.TemporaryCertifiedConsignee
+            ))
+          )
+          result.message mustBe "[MovementScenario][getMovementScenarioFromMovement] invalid DestinationType: 10"
+        }
+        "when DestinationType is ReturnToThePlaceOfDispatchOfTheConsignor" in {
+          val result = intercept[InvalidDestinationTypeException](
+            MovementScenario.getMovementScenarioFromMovement(testDataRequest(
+              destinationType = DestinationType.ReturnToThePlaceOfDispatchOfTheConsignor
+            ))
+          )
+          result.message mustBe "[MovementScenario][getMovementScenarioFromMovement] invalid DestinationType: 11"
+        }
+      }
+    }
+  }
 
   "ExportWithCustomsDeclarationLodgedInTheUk" - {
     ".originType" - {

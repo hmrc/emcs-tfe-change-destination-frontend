@@ -15,7 +15,6 @@
  *@
 
 @import models.requests.DataRequest
-@import pages.sections.info.LocalReferenceNumberPage
 @import pages.sections.consignee.ConsigneeBusinessNamePage
 @import viewmodels.helpers.draftMovement.DraftMovementHelper
 @import viewmodels.taskList.TaskList
@@ -38,7 +37,7 @@
 
     @h1(helper.heading, Some(messages("draftMovement.subHeading")), "govuk-heading-l")
     @p("govuk-body govuk-!-margin-bottom-0") {
-        @messages("draftMovement.lrn", request.userAnswers.get(LocalReferenceNumberPage()).getOrElse(messages("draftMovement.notProvided")))
+        @messages("draftMovement.lrn", request.arc)
     }
     @p("govuk-body govuk-!-margin-bottom-7") {
         @messages("draftMovement.consignee", request.userAnswers.get(ConsigneeBusinessNamePage).getOrElse(messages("draftMovement.notProvided")))

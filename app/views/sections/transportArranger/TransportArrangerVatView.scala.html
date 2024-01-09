@@ -15,8 +15,8 @@
  *@
 
 @import models.requests.DataRequest
-@import viewmodels.InputWidth._
 @import models.sections.transportArranger.TransportArranger
+@import viewmodels.InputWidth._
 @import viewmodels.LabelSize
 
 @this(
@@ -42,7 +42,7 @@
             @govukErrorSummary(ErrorSummaryViewModel(form))
         }
 
-        @h2(messages("transportArranger.subHeading", request.arc), "govuk-caption-xl")
+        @h2(messages("transportArranger.subHeading", request.arc), "govuk-caption-xl", hiddenContent = Some(messages("subHeading.hidden"))))
         @govukInput(
             InputViewModel(
                 field = form("value"),

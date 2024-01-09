@@ -35,10 +35,12 @@ object GuarantorArranger extends Enumerable.Implicits {
 
   case object NoGuarantorRequiredUkToEu extends WithName("5") with GuarantorArranger
 
+  case object NoTransporterNeeded extends WithName("5") with GuarantorArranger
+
   case object NoGuarantorRequired extends WithName("0") with GuarantorArranger
 
   val displayValues: Seq[GuarantorArranger] = Seq(
-    Consignor, Consignee, GoodsOwner, Transporter
+    Consignor, Consignee, GoodsOwner, Transporter, NoTransporterNeeded
   )
 
   val values: Seq[GuarantorArranger] = displayValues ++ Seq(NoGuarantorRequiredUkToEu, NoGuarantorRequired)

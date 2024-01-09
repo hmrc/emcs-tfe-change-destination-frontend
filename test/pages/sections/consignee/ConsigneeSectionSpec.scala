@@ -18,16 +18,23 @@ package pages.sections.consignee
 
 import base.SpecBase
 import models.requests.DataRequest
+import models.sections.ReviewAnswer
+import models.sections.ReviewAnswer.{ChangeAnswers, KeepAnswers}
 import models.sections.consignee.{ConsigneeExportVat, ConsigneeExportVatType}
-import models.{ExemptOrganisationDetailsModel, UserAddress}
+import models.{Enumerable, ExemptOrganisationDetailsModel, UserAddress}
 import play.api.test.FakeRequest
 
-class ConsigneeSectionSpec extends SpecBase {
+class ConsigneeSectionSpec extends SpecBase with Enumerable.Implicits {
   "isCompleted" - {
     "must return true" - {
+      "when user changes no answers" in {
+        implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), emptyUserAnswers.set(ConsigneeReviewPage, ReviewAnswer.KeepAnswers))
+        ConsigneeSection.isCompleted mustBe true
+      }
       "when user starts on ConsigneeExportUkEu and selects yes" in {
         implicit val dr: DataRequest[_] = dataRequest(FakeRequest(),
           emptyUserAnswers
+            .set(ConsigneeReviewPage, ChangeAnswers)
             .set(ConsigneeExportPage, true)
             .set(ConsigneeExportVatPage, ConsigneeExportVat(ConsigneeExportVatType.No, None, None))
             .set(ConsigneeBusinessNamePage, "")
@@ -38,6 +45,7 @@ class ConsigneeSectionSpec extends SpecBase {
       "when user starts on ConsigneeExportUkEu and selects no" in {
         implicit val dr: DataRequest[_] = dataRequest(FakeRequest(),
           emptyUserAnswers
+            .set(ConsigneeReviewPage, ChangeAnswers)
             .set(ConsigneeExportPage, false)
             .set(ConsigneeExcisePage, "")
             .set(ConsigneeBusinessNamePage, "")
@@ -48,6 +56,7 @@ class ConsigneeSectionSpec extends SpecBase {
       "when user starts on ConsigneeExcise" in {
         implicit val dr: DataRequest[_] = dataRequest(FakeRequest(),
           emptyUserAnswers
+            .set(ConsigneeReviewPage, ChangeAnswers)
             .set(ConsigneeExcisePage, "")
             .set(ConsigneeBusinessNamePage, "")
             .set(ConsigneeAddressPage, UserAddress(None, "", "", ""))
@@ -57,29 +66,65 @@ class ConsigneeSectionSpec extends SpecBase {
       "when user starts on ConsigneeExemptOrganisation" in {
         implicit val dr: DataRequest[_] = dataRequest(FakeRequest(),
           emptyUserAnswers
+            .set(ConsigneeReviewPage, ChangeAnswers)
             .set(ConsigneeExemptOrganisationPage, ExemptOrganisationDetailsModel("", ""))
             .set(ConsigneeBusinessNamePage, "")
             .set(ConsigneeAddressPage, UserAddress(None, "", "", ""))
         )
         ConsigneeSection.isCompleted mustBe true
       }
+
+      "when keep answers has been selected" in {
+        implicit val dr: DataRequest[_] =
+          dataRequest(FakeRequest(),
+            emptyUserAnswers
+              .set(ConsigneeReviewPage, KeepAnswers)
+          )
+        ConsigneeSection.isCompleted mustBe true
+      }
     }
 
     "must return false" - {
-      "when user answers doesn't contain ConsigneeExportUkEu, ConsigneeExcise or ConsigneeExemptOrganisation" in {
+      "when user hasn't answered the Review page" in {
         implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), emptyUserAnswers)
         ConsigneeSection.isCompleted mustBe false
       }
-      "when user starts on ConsigneeExportUkEu, answers that page and doesn't finish the flow" in {
-        implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), emptyUserAnswers.set(ConsigneeExportPage, true))
+      "when user answers doesn't contain ConsigneeExportUkEu, ConsigneeExcise or ConsigneeExemptOrganisation" in {
+        implicit val dr: DataRequest[_] = dataRequest(
+          FakeRequest(),
+          emptyUserAnswers.set(ConsigneeReviewPage, ChangeAnswers),
+          movementDetails = maxGetMovementResponse.copy(consigneeTrader = None)
+        )
         ConsigneeSection.isCompleted mustBe false
       }
-      "when user starts on ConsigneeExcise, answers that page and doesn't finish the flow" in {
-        implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), emptyUserAnswers.set(ConsigneeExcisePage, ""))
+      "when user starts on ConsigneeExportUkEu, not all answers are in IE801" in {
+        implicit val dr: DataRequest[_] = dataRequest(
+          FakeRequest(),
+          emptyUserAnswers
+            .set(ConsigneeReviewPage, ChangeAnswers)
+            .set(ConsigneeExportPage, true),
+          movementDetails = maxGetMovementResponse.copy(consigneeTrader = None)
+        )
         ConsigneeSection.isCompleted mustBe false
       }
-      "when user starts on ConsigneeExemptOrganisation, answers that page and doesn't finish the flow" in {
-        implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), emptyUserAnswers.set(ConsigneeExemptOrganisationPage, ExemptOrganisationDetailsModel("", "")))
+      "when user starts on ConsigneeExcise, not all answers are in IE801" in {
+        implicit val dr: DataRequest[_] = dataRequest(
+          FakeRequest(),
+          emptyUserAnswers
+            .set(ConsigneeReviewPage, ChangeAnswers)
+            .set(ConsigneeExcisePage, ""),
+          movementDetails = maxGetMovementResponse.copy(consigneeTrader = None)
+        )
+        ConsigneeSection.isCompleted mustBe false
+      }
+      "when user starts on ConsigneeExemptOrganisation, not all answers are in IE801" in {
+        implicit val dr: DataRequest[_] = dataRequest(
+          FakeRequest(),
+          emptyUserAnswers
+            .set(ConsigneeReviewPage, ChangeAnswers)
+            .set(ConsigneeExemptOrganisationPage, ExemptOrganisationDetailsModel("", "")),
+          movementDetails = maxGetMovementResponse.copy(consigneeTrader = None)
+        )
         ConsigneeSection.isCompleted mustBe false
       }
     }

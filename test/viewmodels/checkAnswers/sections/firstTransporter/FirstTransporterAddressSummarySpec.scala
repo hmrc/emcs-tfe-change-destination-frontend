@@ -18,7 +18,7 @@ package viewmodels.checkAnswers.sections.firstTransporter
 
 import base.SpecBase
 import fixtures.messages.sections.firstTransporter.FirstTransporterAddressMessages
-import models.CheckMode
+import models.{CheckMode, UserAddress}
 import org.scalatest.matchers.must.Matchers
 import pages.sections.firstTransporter.FirstTransporterAddressPage
 import play.api.i18n.{Messages, MessagesApi}
@@ -40,8 +40,8 @@ class FirstTransporterAddressSummarySpec extends SpecBase with Matchers {
 
         "when the show action link boolean is true" - {
 
-          "when there is no answer" in {
-            implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers)
+          "when there's no answer in the user answers or 801" in {
+            implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers, movementDetails = maxGetMovementResponse.copy(firstTransporterTrader = None))
 
             FirstTransporterAddressSummary.row(showActionLinks = true) mustBe
               SummaryListRowViewModel(
@@ -50,7 +50,33 @@ class FirstTransporterAddressSummarySpec extends SpecBase with Matchers {
                 actions = Seq(
                   ActionItemViewModel(
                     content = messagesForLanguage.change,
-                    href = controllers.sections.firstTransporter.routes.FirstTransporterAddressController.onPageLoad(testErn, testDraftId, CheckMode).url,
+                    href = controllers.sections.firstTransporter.routes.FirstTransporterAddressController.onPageLoad(testErn, testArc, CheckMode).url,
+                    id = "changeFirstTransporterAddress"
+                  ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHidden)
+                )
+              )
+          }
+
+          "when there's no answer in the user answers (defaulting to 801)" in {
+
+            val userAddressFrom801 = UserAddress(Some("FirstTransporterTraderStreetNumber"), "FirstTransporterTraderStreetName", "FirstTransporterTraderCity", "FirstTransporterTraderPostcode")
+
+            implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers)
+
+            FirstTransporterAddressSummary.row(showActionLinks = true) mustBe
+              SummaryListRowViewModel(
+                key = messagesForLanguage.cyaLabel,
+                value = Value(HtmlContent(
+                  HtmlFormat.fill(Seq(
+                    Html(userAddressFrom801.property.fold("")(_ + " ") + userAddressFrom801.street + "<br>"),
+                    Html(userAddressFrom801.town + "<br>"),
+                    Html(userAddressFrom801.postcode),
+                  ))
+                )),
+                actions = Seq(
+                  ActionItemViewModel(
+                    content = messagesForLanguage.change,
+                    href = controllers.sections.firstTransporter.routes.FirstTransporterAddressController.onPageLoad(testErn, testArc, CheckMode).url,
                     id = "changeFirstTransporterAddress"
                   ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHidden)
                 )
@@ -73,7 +99,7 @@ class FirstTransporterAddressSummarySpec extends SpecBase with Matchers {
                 actions = Seq(
                   ActionItemViewModel(
                     content = messagesForLanguage.change,
-                    href = controllers.sections.firstTransporter.routes.FirstTransporterAddressController.onPageLoad(testErn, testDraftId, CheckMode).url,
+                    href = controllers.sections.firstTransporter.routes.FirstTransporterAddressController.onPageLoad(testErn, testArc, CheckMode).url,
                     id = "changeFirstTransporterAddress"
                   ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHidden)
                 )
@@ -83,13 +109,33 @@ class FirstTransporterAddressSummarySpec extends SpecBase with Matchers {
 
         "when the show action link boolean is false" - {
 
-          "when there is no answer" in {
-            implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers)
+          "when there's no answer in the user answers or 801" in {
+            implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers, movementDetails = maxGetMovementResponse.copy(firstTransporterTrader = None))
 
             FirstTransporterAddressSummary.row(showActionLinks = false) mustBe
               SummaryListRowViewModel(
                 key = messagesForLanguage.cyaLabel,
                 value = Value(Text(messagesForLanguage.notProvided)),
+                actions = Seq()
+              )
+          }
+
+          "when there's no answer in the user answers (defaulting to 801)" in {
+
+            val userAddressFrom801 = UserAddress(Some("FirstTransporterTraderStreetNumber"), "FirstTransporterTraderStreetName", "FirstTransporterTraderCity", "FirstTransporterTraderPostcode")
+
+            implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers)
+
+            FirstTransporterAddressSummary.row(showActionLinks = false) mustBe
+              SummaryListRowViewModel(
+                key = messagesForLanguage.cyaLabel,
+                value = Value(HtmlContent(
+                  HtmlFormat.fill(Seq(
+                    Html(userAddressFrom801.property.fold("")(_ + " ") + userAddressFrom801.street + "<br>"),
+                    Html(userAddressFrom801.town + "<br>"),
+                    Html(userAddressFrom801.postcode),
+                  ))
+                )),
                 actions = Seq()
               )
           }

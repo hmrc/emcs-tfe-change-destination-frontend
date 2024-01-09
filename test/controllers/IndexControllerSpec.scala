@@ -40,10 +40,10 @@ class IndexControllerSpec extends SpecBase with MockPreDraftService with MockUse
       MockPreDraftService.set(UserAnswers(testNorthernIrelandErn, testSessionId)).returns(Future.successful(true))
 
       val request = FakeRequest()
-      val result = testController.onPageLoad(testNorthernIrelandErn)(request)
+      val result = testController.onPageLoad(testNorthernIrelandErn, testArc)(request)
 
       status(result) mustEqual SEE_OTHER
-      redirectLocation(result) mustBe Some(controllers.sections.info.routes.InfoIndexController.onPreDraftPageLoad(testNorthernIrelandErn).url)
+      redirectLocation(result) mustBe Some(controllers.sections.info.routes.InfoIndexController.onPageLoad(testNorthernIrelandErn, testArc).url)
     }
   }
 }

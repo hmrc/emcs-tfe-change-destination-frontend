@@ -17,10 +17,13 @@
 package pages.sections.consignor
 
 import models.UserAddress
+import models.requests.DataRequest
 import pages.QuestionPage
 import play.api.libs.json.JsPath
 
 case object ConsignorAddressPage extends QuestionPage[UserAddress] {
   override val toString: String = "consignorAddress"
   override val path: JsPath = ConsignorSection.path \ toString
+
+  override def getValueFromIE801(implicit request: DataRequest[_]): Option[UserAddress] = None // TODO: update
 }

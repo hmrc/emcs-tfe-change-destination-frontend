@@ -16,12 +16,15 @@
 
 package queries
 
+import models.requests.DataRequest
 import play.api.libs.json.JsPath
 
 sealed trait Query {
   val path: JsPath
 }
 
-trait Gettable[+A] extends Query
+trait Gettable[+A] extends Query {
+  def getValueFromIE801(implicit request: DataRequest[_]): Option[A]
+}
 
 trait Settable[+A] extends Query

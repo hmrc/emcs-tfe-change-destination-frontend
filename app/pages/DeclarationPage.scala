@@ -16,6 +16,7 @@
 
 package pages
 
+import models.requests.DataRequest
 import play.api.libs.json.JsPath
 
 import java.time.LocalDateTime
@@ -23,4 +24,6 @@ import java.time.LocalDateTime
 object DeclarationPage extends QuestionPage[LocalDateTime] {
   override val toString: String = "declaration"
   override val path: JsPath = JsPath \ "declaration"
+
+  override def getValueFromIE801(implicit request: DataRequest[_]): Option[LocalDateTime] = None
 }

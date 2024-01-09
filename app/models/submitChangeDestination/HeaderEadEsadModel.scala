@@ -25,6 +25,7 @@ import pages.sections.transportArranger.TransportArrangerPage
 import play.api.libs.json.{Json, OFormat}
 import utils.ModelConstructorHelpers
 
+//TODO: REFACTOR FOR ACTUAL COD SUBMISSION
 case class HeaderEadEsadModel(
                                destinationType: DestinationType,
                                journeyTime: String,

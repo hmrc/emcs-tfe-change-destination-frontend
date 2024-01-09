@@ -20,21 +20,16 @@ import config.AppConfig
 import controllers.actions._
 import handlers.ErrorHandler
 import models.NormalMode
-import models.requests.DataRequest
-import models.response.MissingMandatoryPage
-import models.submitChangeDestination.SubmitChangeDestinationModel
 import navigation.Navigator
 import pages.DeclarationPage
 import play.api.i18n.{I18nSupport, MessagesApi}
-import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
+import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import services.{SubmitChangeDestinationService, UserAnswersService}
 import utils.Logging
 import views.html.DeclarationView
 
 import java.time.LocalDateTime
 import javax.inject.Inject
-import scala.concurrent.Future
-import scala.util.{Failure, Success, Try}
 
 class DeclarationController @Inject()(
                                        override val messagesApi: MessagesApi,
@@ -42,6 +37,7 @@ class DeclarationController @Inject()(
                                        override val userAllowList: UserAllowListAction,
                                        override val getData: DataRetrievalAction,
                                        override val requireData: DataRequiredAction,
+                                       override val withMovement: MovementAction,
                                        val controllerComponents: MessagesControllerComponents,
                                        val userAnswersService: UserAnswersService,
                                        val navigator: Navigator,
@@ -51,38 +47,39 @@ class DeclarationController @Inject()(
                                      )(implicit appConfig: AppConfig) extends BaseNavigationController with I18nSupport with AuthActionHelper with Logging {
 
   def onPageLoad(ern: String, arc: String): Action[AnyContent] =
-    authorisedDataRequestAsync(ern, arc) { implicit request =>
-      withSubmitChangeDestinationModel { _ =>
-        Future.successful(Ok(view(submitAction = routes.DeclarationController.onSubmit(ern, arc))))
-      }
+    authorisedDataRequestWithUpToDateMovement(ern, arc) { implicit request =>
+      Ok(view(submitAction = routes.DeclarationController.onSubmit(ern, arc)))
     }
 
   def onSubmit(ern: String, arc: String): Action[AnyContent] =
-    authorisedDataRequestAsync(ern, arc) { implicit request =>
-      withSubmitChangeDestinationModel { submitChangeDestinationModel =>
-        service.submit(submitChangeDestinationModel).flatMap {
-          response =>
-            logger.debug(s"[onSubmit] response received from downstream service ${response.downstreamService}: ${response.receipt}")
+    authorisedDataRequestWithUpToDateMovementAsync(ern, arc) { implicit request =>
+//TODO: Construct model and submit to emcs-tfe
+//      withSubmitChangeDestinationModel { submitChangeDestinationModel =>
+//        service.submit(submitChangeDestinationModel).flatMap {
+//          response =>
+//            logger.debug(s"[onSubmit] response received from downstream service ${response.downstreamService}: ${response.receipt}")
 
             saveAndRedirect(DeclarationPage, LocalDateTime.now(), NormalMode)
-        }.recover {
-          case exception =>
-            logger.error(s"Error thrown when calling Submit Change Destination: ${exception.getMessage}")
-            InternalServerError(errorHandler.internalServerErrorTemplate)
-        }
-      }
+//TODO: Add Recover block back in when submission
+//        }.recover {
+//          case exception =>
+//            logger.error(s"Error thrown when calling Submit Change Destination: ${exception.getMessage}")
+//            InternalServerError(errorHandler.internalServerErrorTemplate)
+//        }
+//      }
     }
 
-  private def withSubmitChangeDestinationModel(onSuccess: SubmitChangeDestinationModel => Future[Result])(implicit request: DataRequest[_]): Future[Result] =
-    Try(SubmitChangeDestinationModel.apply) match {
-      case Failure(exception: MissingMandatoryPage) =>
-        logger.warn(s"[withSubmitChangeDestinationModel] MissingMandatoryPage error thrown: ${exception.message}")
-        Future.successful(Redirect(routes.DraftMovementController.onPageLoad(request.ern, request.arc)))
-
-      case Failure(exception) =>
-        logger.error(s"[withSubmitChangeDestinationModel]Error thrown when creating request model to submit: ${exception.getMessage}")
-        Future.successful(InternalServerError(errorHandler.internalServerErrorTemplate))
-
-      case Success(submitChangeDestinationModel) => onSuccess(submitChangeDestinationModel)
-    }
+//  TODO: Will be called by submit method above in future to construct the submission model
+//  private def withSubmitChangeDestinationModel(onSuccess: SubmitChangeDestinationModel => Future[Result])(implicit request: DataRequest[_]): Future[Result] =
+//    Try(SubmitChangeDestinationModel.apply) match {
+//      case Failure(exception: MissingMandatoryPage) =>
+//        logger.warn(s"[withSubmitChangeDestinationModel] MissingMandatoryPage error thrown: ${exception.message}")
+//        Future.successful(Redirect(routes.DraftMovementController.onPageLoad(request.ern, request.arc)))
+//
+//      case Failure(exception) =>
+//        logger.error(s"[withSubmitChangeDestinationModel]Error thrown when creating request model to submit: ${exception.getMessage}")
+//        Future.successful(InternalServerError(errorHandler.internalServerErrorTemplate))
+//
+//      case Success(submitChangeDestinationModel) => onSuccess(submitChangeDestinationModel)
+//    }
 }

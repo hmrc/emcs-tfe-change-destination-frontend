@@ -17,7 +17,7 @@
 package controllers.sections.journeyType
 
 import base.SpecBase
-import controllers.actions.FakeDataRetrievalAction
+import controllers.actions.{FakeDataRetrievalAction, FakeMovementAction}
 import controllers.routes
 import mocks.services.MockUserAnswersService
 import mocks.viewmodels.MockCheckYourAnswersJourneyTypeHelper
@@ -47,6 +47,7 @@ class CheckYourAnswersJourneyTypeControllerSpec extends SpecBase with SummaryLis
       fakeAuthAction,
       new FakeDataRetrievalAction(userAnswers, Some(testMinTraderKnownFacts)),
       dataRequiredAction,
+      new FakeMovementAction(maxGetMovementResponse),
       fakeUserAllowListAction,
       MockCheckYourAnswersJourneyTypeHelper,
       Helpers.stubMessagesControllerComponents(),
@@ -60,18 +61,18 @@ class CheckYourAnswersJourneyTypeControllerSpec extends SpecBase with SummaryLis
 
       MockCheckAnswersJourneyTypeHelper.summaryList().returns(list)
 
-      val result = controller.onPageLoad(testErn, testDraftId)(request)
+      val result = controller.onPageLoad(testErn, testArc)(request)
 
       status(result) mustEqual OK
       contentAsString(result) mustEqual view(
         list = list,
-        submitAction = controllers.sections.journeyType.routes.CheckYourAnswersJourneyTypeController.onSubmit(testErn, testDraftId)
+        submitAction = controllers.sections.journeyType.routes.CheckYourAnswersJourneyTypeController.onSubmit(testErn, testArc)
       )(dataRequest(request), messages(request)).toString
     }
 
     "must redirect to the next page when valid data is submitted" in new Test(Some(emptyUserAnswers)) {
 
-      val result = controller.onSubmit(testErn, testDraftId)(request.withFormUrlEncodedBody(("value", "answer")))
+      val result = controller.onSubmit(testErn, testArc)(request.withFormUrlEncodedBody(("value", "answer")))
 
       status(result) mustEqual SEE_OTHER
       redirectLocation(result).value mustEqual testOnwardRoute.url
@@ -79,7 +80,7 @@ class CheckYourAnswersJourneyTypeControllerSpec extends SpecBase with SummaryLis
 
     "must redirect to Journey Recovery for a GET if no existing data is found" in new Test(None) {
 
-      val result = controller.onPageLoad(testErn, testDraftId)(request)
+      val result = controller.onPageLoad(testErn, testArc)(request)
 
       status(result) mustEqual SEE_OTHER
       redirectLocation(result).value mustEqual routes.JourneyRecoveryController.onPageLoad().url
@@ -87,7 +88,7 @@ class CheckYourAnswersJourneyTypeControllerSpec extends SpecBase with SummaryLis
 
     "must redirect to Journey Recovery for a POST if no existing data is found" in new Test(None) {
 
-      val result = controller.onSubmit(testErn, testDraftId)(request.withFormUrlEncodedBody(("value", "answer")))
+      val result = controller.onSubmit(testErn, testArc)(request.withFormUrlEncodedBody(("value", "answer")))
 
       status(result) mustEqual SEE_OTHER
       redirectLocation(result).value mustEqual routes.JourneyRecoveryController.onPageLoad().url

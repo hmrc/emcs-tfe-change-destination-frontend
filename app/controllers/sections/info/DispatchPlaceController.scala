@@ -43,19 +43,20 @@ class DispatchPlaceController @Inject()(
                                          val requirePreDraftData: PreDraftDataRequiredAction,
                                          val getData: DataRetrievalAction,
                                          val requireData: DataRequiredAction,
+                                         val withMovement: MovementAction,
                                          formProvider: DispatchPlaceFormProvider,
                                          val controllerComponents: MessagesControllerComponents,
                                          view: DispatchPlaceView,
                                          val userAllowList: UserAllowListAction
                                        ) extends BasePreDraftNavigationController with AuthActionHelper with PreDraftAuthActionHelper {
 
-  def onPreDraftPageLoad(ern: String, mode: Mode): Action[AnyContent] =
-    authorisedPreDraftDataRequestAsync(ern) { implicit request =>
+  def onPreDraftPageLoad(ern: String, arc: String, mode: Mode): Action[AnyContent] =
+    authorisedWithPreDraftDataUpToDateMovementAsync(ern, arc) { implicit request =>
       renderView(Ok, fillForm(DispatchPlacePage, formProvider()), mode)
     }
 
-  def onPreDraftSubmit(ern: String, mode: Mode): Action[AnyContent] =
-    authorisedPreDraftDataRequestAsync(ern) { implicit request =>
+  def onPreDraftSubmit(ern: String, arc: String, mode: Mode): Action[AnyContent] =
+    authorisedWithPreDraftDataUpToDateMovementAsync(ern, arc) { implicit request =>
       formProvider().bindFromRequest().fold(
         formWithErrors =>
           renderView(BadRequest, formWithErrors, mode),
@@ -67,7 +68,7 @@ class DispatchPlaceController @Inject()(
   def renderView(status: Status, form: Form[_], mode: Mode)(implicit request: DataRequest[_]): Future[Result] = {
     withGuard {
       Future.successful(
-        status(view(form, controllers.sections.info.routes.DispatchPlaceController.onPreDraftSubmit(request.ern, mode)))
+        status(view(form, controllers.sections.info.routes.DispatchPlaceController.onPreDraftSubmit(request.ern, request.arc, mode)))
       )
     }
   }
@@ -77,7 +78,7 @@ class DispatchPlaceController @Inject()(
       f
     } else {
       Future.successful(
-        Redirect(controllers.sections.info.routes.DestinationTypeController.onPreDraftPageLoad(request.ern, NormalMode))
+        Redirect(controllers.sections.info.routes.DestinationTypeController.onPreDraftPageLoad(request.ern, request.arc, NormalMode))
       )
     }
 }

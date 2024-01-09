@@ -38,13 +38,14 @@ class DestinationCheckAnswersController @Inject()(
                                                    override val auth: AuthAction,
                                                    override val getData: DataRetrievalAction,
                                                    override val requireData: DataRequiredAction,
+                                                   override val withMovement: MovementAction,
                                                    val destinationCheckAnswersHelper: DestinationCheckAnswersHelper,
                                                    val controllerComponents: MessagesControllerComponents,
                                                    view: DestinationCheckAnswersView
                                                  ) extends BaseNavigationController with AuthActionHelper {
 
   def onPageLoad(ern: String, arc: String): Action[AnyContent] =
-    authorisedDataRequest(ern, arc) { implicit request =>
+    authorisedDataRequestWithUpToDateMovement(ern, arc) { implicit request =>
       withAnswer(DestinationTypePage) { _ =>
         Ok(view(
           list = destinationCheckAnswersHelper.summaryList(),
@@ -54,7 +55,7 @@ class DestinationCheckAnswersController @Inject()(
     }
 
   def onSubmit(ern: String, arc: String): Action[AnyContent] =
-    authorisedDataRequest(ern, arc) { implicit request =>
+    authorisedDataRequestWithUpToDateMovement(ern, arc) { implicit request =>
       Redirect(navigator.nextPage(DestinationCheckAnswersPage, NormalMode, request.userAnswers))
     }
 }

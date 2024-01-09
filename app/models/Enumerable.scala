@@ -26,10 +26,9 @@ trait Enumerable[A] {
 object Enumerable {
 
   def apply[A](entries: (String, A)*): Enumerable[A] =
-    new Enumerable[A] {
-      override def withName(str: String): Option[A] =
+    (str: String) =>
         entries.toMap.get(str)
-    }
+
 
   trait Implicits {
 

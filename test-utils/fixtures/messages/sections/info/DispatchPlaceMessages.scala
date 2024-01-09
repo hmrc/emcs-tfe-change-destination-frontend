@@ -23,7 +23,6 @@ object DispatchPlaceMessages {
   sealed trait ViewMessages extends BaseMessages { _: i18n =>
     val title = titleHelper("Where is the place of dispatch for this movement?")
     val heading = "Where is the place of dispatch for this movement?"
-    val caption = "Movement information"
     val greatBritainRadioOption = "Great Britain"
     val northernIrelandRadioOption = "Northern Ireland"
   }

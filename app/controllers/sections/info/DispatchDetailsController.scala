@@ -20,10 +20,10 @@ import controllers.BasePreDraftNavigationController
 import controllers.actions._
 import controllers.actions.predraft.{PreDraftAuthActionHelper, PreDraftDataRequiredAction, PreDraftDataRetrievalAction}
 import forms.sections.info.DispatchDetailsFormProvider
+import models.Mode
 import models.requests.DataRequest
-import models.{CheckMode, Mode}
 import navigation.InformationNavigator
-import pages.sections.info.{DeferredMovementPage, DispatchDetailsPage}
+import pages.sections.info.DispatchDetailsPage
 import play.api.data.Form
 import play.api.i18n.MessagesApi
 import play.api.mvc._
@@ -42,6 +42,7 @@ class DispatchDetailsController @Inject()(
                                            val requirePreDraftData: PreDraftDataRequiredAction,
                                            val getData: DataRetrievalAction,
                                            val requireData: DataRequiredAction,
+                                           val withMovement: MovementAction,
                                            formProvider: DispatchDetailsFormProvider,
                                            val userAnswersService: UserAnswersService,
                                            val controllerComponents: MessagesControllerComponents,
@@ -49,90 +50,47 @@ class DispatchDetailsController @Inject()(
                                            val userAllowList: UserAllowListAction
                                          ) extends BasePreDraftNavigationController with AuthActionHelper with PreDraftAuthActionHelper {
 
-  def onPreDraftPageLoad(ern: String, mode: Mode): Action[AnyContent] =
-    authorisedPreDraftDataRequestAsync(ern) { implicit request =>
+  def onPreDraftPageLoad(ern: String, arc: String, mode: Mode): Action[AnyContent] =
+    authorisedWithPreDraftDataUpToDateMovementAsync(ern, arc) { implicit request =>
       renderViewPreDraft(
         Ok,
         fillForm(DispatchDetailsPage(), formProvider()),
-        controllers.sections.info.routes.DispatchDetailsController.onPreDraftSubmit(request.ern, mode),
+        controllers.sections.info.routes.DispatchDetailsController.onPreDraftSubmit(request.ern, request.arc, mode),
         mode
       )
     }
 
 
-  def onPreDraftSubmit(ern: String, mode: Mode): Action[AnyContent] =
-    authorisedPreDraftDataRequestAsync(ern) { implicit request =>
+  def onPreDraftSubmit(ern: String, arc: String, mode: Mode): Action[AnyContent] =
+    authorisedWithPreDraftDataUpToDateMovementAsync(ern, arc) { implicit request =>
       formProvider().bindFromRequest().fold(
         formWithErrors =>
           renderViewPreDraft(
             BadRequest,
             formWithErrors,
-            controllers.sections.info.routes.DispatchDetailsController.onPreDraftSubmit(request.ern, mode),
+            controllers.sections.info.routes.DispatchDetailsController.onPreDraftSubmit(request.ern, request.arc, mode),
             mode
           ),
         value =>
-          savePreDraftAndRedirect(DispatchDetailsPage(), value, mode)
-      )
-    }
-
-  def onPageLoad(ern: String, arc: String): Action[AnyContent] =
-    authorisedDataRequestAsync(ern, arc) { implicit request =>
-      renderView(
-        Ok,
-        fillForm(DispatchDetailsPage(isOnPreDraftFlow = false), formProvider()),
-        controllers.sections.info.routes.DispatchDetailsController.onSubmit(request.ern, arc),
-        CheckMode
-      )
-    }
-
-
-  def onSubmit(ern: String, arc: String): Action[AnyContent] =
-    authorisedDataRequestAsync(ern, arc) { implicit request =>
-      formProvider().bindFromRequest().fold(
-        formWithErrors =>
-          renderView(
-            BadRequest,
-            formWithErrors,
-            controllers.sections.info.routes.DispatchDetailsController.onSubmit(request.ern, arc),
-            CheckMode
-          ),
-        value =>
-          saveAndRedirect(DispatchDetailsPage(isOnPreDraftFlow = false), value, CheckMode)
+          //TODO: Temporarily reinitialise the protected mongo UserAnswers (draft CoD answers).
+          //      This will get replaced with proper logic once the Change of Destination INFO section is built properly!!!
+          //      ALSO! If you click the "Skip Link" it won't hit this code and will therefore fail. But none of this will
+          //      be relevant in the future.
+          userAnswersService.set(request.userAnswers).flatMap { _ =>
+            savePreDraftAndRedirect(DispatchDetailsPage(), value, mode)
+          }
       )
     }
 
   def renderViewPreDraft(status: Status, form: Form[_], onSubmitCall: Call, mode: Mode)
                         (implicit request: DataRequest[_]): Future[Result] = {
-    withAnswerAsync(
-      page = DeferredMovementPage(),
-      redirectRoute = controllers.sections.info.routes.DeferredMovementController.onPreDraftPageLoad(request.ern, mode)
-    ) { deferredMovement =>
-      Future.successful(
-        status(view(
-          form = form,
-          deferredMovement = deferredMovement,
-          onSubmitCall = onSubmitCall,
-          skipQuestionCall = navigator.nextPage(DispatchDetailsPage(), mode, request.userAnswers)
-        ))
-      )
-    }
+    Future.successful(
+      status(view(
+        form = form,
+        deferredMovement = false, //TODO: This can't be worked out, so needs to be removed
+        onSubmitCall = onSubmitCall,
+        skipQuestionCall = navigator.nextPage(DispatchDetailsPage(), mode, request.userAnswers)
+      ))
+    )
   }
-
-  def renderView(status: Status, form: Form[_], onSubmitCall: Call, mode: Mode)
-                (implicit request: DataRequest[_]): Future[Result] = {
-    withAnswerAsync(
-      page = DeferredMovementPage(false)
-    ) { deferredMovement =>
-      Future.successful(
-        status(view(
-          form = form,
-          deferredMovement = deferredMovement,
-          onSubmitCall = onSubmitCall,
-          skipQuestionCall = navigator.nextPage(DispatchDetailsPage(isOnPreDraftFlow = false), mode, request.userAnswers)
-        ))
-      )
-    }
-  }
-
-
 }

@@ -20,58 +20,58 @@
 
 
 @this(
-    layout: templates.Layout,
-    formHelper: FormWithCSRF,
-    govukErrorSummary: GovukErrorSummary,
-    govukInput: GovukInput,
-    govukButton: GovukButton,
-    govukDateInput: GovukDateInput,
-    continueOrSkip: components.continueOrSkip,
-    p: components.p,
-    h1: components.h1,
-    h2: components.h2
+        layout: templates.Layout,
+        formHelper: FormWithCSRF,
+        govukErrorSummary: GovukErrorSummary,
+        govukInput: GovukInput,
+        govukButton: GovukButton,
+        govukDateInput: GovukDateInput,
+        continueOrSkip: components.continueOrSkip,
+        p: components.p,
+        h1: components.h1,
+        h2: components.h2
 )
 
 @(form: Form[_], currentDate: String, onSubmitCall: Call, skipQuestionCall: Call)(implicit request: DataRequest[_], messages: Messages)
 
 @layout(pageTitle = title(form, messages("invoiceDetails.title")), maybeShowActiveTrader = maybeShowActiveTrader(request)) {
 
-    @formHelper(action = onSubmitCall) {
+  @formHelper(action = onSubmitCall) {
 
-        @defining(form.errors.headOption.map(_.args.map(_.toString)).getOrElse(Seq())) { erroredFields =>
+    @defining(form.errors.headOption.map(_.args.map(_.toString)).getOrElse(Seq())) { erroredFields =>
 
-            @if(form.errors.nonEmpty) {
-                @govukErrorSummary(ErrorSummaryViewModel(form))
-            }
+      @if(form.errors.nonEmpty) {
+        @govukErrorSummary(ErrorSummaryViewModel(form))
+      }
 
-            @h2(messages("movementInformation.subHeading"), "govuk-caption-xl")
+      @h2(messages("movementInformation.subHeading"), "govuk-caption-xl", hiddenContent = Some(messages("subHeading.hidden"))))
 
-            @h1("invoiceDetails.heading")
+      @h1("invoiceDetails.heading")
 
-            @p(){@messages("invoiceDetails.text")}
+      @p(){@messages("invoiceDetails.text")}
 
-            @govukInput(
-                InputViewModel(
-                    field = form("invoice-reference"),
-                    label = LabelViewModel(Text(messages("invoiceDetails.invoice-reference.label"))).withCssClass(LabelSize.Medium.toString)
-                )
-            .withWidth(Full)
-            )
+      @govukInput(
+        InputViewModel(
+          field = form("invoice-reference"),
+          label = LabelViewModel(Text(messages("invoiceDetails.invoice-reference.label"))).withCssClass(LabelSize.Medium.toString)
+        )
+        .withWidth(Full)
+      )
 
-            @govukDateInput(
-                DateViewModel(
-                    field  = form("value"),
-                    legend = LegendViewModel(Text(messages("invoiceDetails.value.label"))).withCssClass(LabelSize.Medium.toString),
-                    erroredFields
-                )
-                .withHint(HintViewModel(messages("invoiceDetails.value.hint", currentDate)))
-            )
-        }
-
-        @continueOrSkip(skipQuestionCall.url)
+      @govukDateInput(
+        DateViewModel(
+          field  = form("value"),
+          legend = LegendViewModel(Text(messages("invoiceDetails.value.label"))).withCssClass(LabelSize.Medium.toString),
+          erroredFields
+        )
+        .withHint(HintViewModel(messages("invoiceDetails.value.hint", currentDate)))
+      )
     }
+
+    @continueOrSkip(skipQuestionCall.url)
+  }
 }
 
 @{
-    //$COVERAGE-OFF$
+  //$COVERAGE-OFF$
 }

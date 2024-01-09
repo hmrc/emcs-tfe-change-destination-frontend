@@ -17,6 +17,7 @@
 package navigation
 
 import controllers.routes
+import models.requests.DataRequest
 import models.{CheckMode, Mode, NormalMode, ReviewMode, UserAnswers}
 import pages.Page
 import pages.sections.exportInformation.{ExportCustomsOfficePage, ExportInformationCheckAnswersPage}
@@ -48,7 +49,7 @@ class ExportInformationNavigator @Inject() extends BaseNavigator {
       (userAnswers: UserAnswers) => routes.CheckYourAnswersController.onPageLoad(userAnswers.ern, userAnswers.arc)
   }
 
-  override def nextPage(page: Page, mode: Mode, userAnswers: UserAnswers): Call = mode match {
+  override def nextPage(page: Page, mode: Mode, userAnswers: UserAnswers)(implicit request: DataRequest[_]): Call = mode match {
     case NormalMode =>
       normalRoutes(page)(userAnswers)
     case CheckMode =>
