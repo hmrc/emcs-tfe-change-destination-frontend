@@ -32,11 +32,11 @@ import play.api.test.Helpers._
 import uk.gov.hmrc.govukfrontend.views.viewmodels.select.SelectItem
 import views.html.sections.consignee.ConsigneeExemptOrganisationView
 
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.{ExecutionContext, ExecutionContextExecutor, Future}
 
 class ConsigneeExemptOrganisationControllerSpec extends SpecBase with MockUserAnswersService with OrganisationDetailsFixtures with MockGetMemberStatesService {
 
-  implicit val ec = ExecutionContext.global
+  implicit val ec: ExecutionContextExecutor = ExecutionContext.global
 
   lazy val formProvider: ConsigneeExemptOrganisationFormProvider = new ConsigneeExemptOrganisationFormProvider()
   lazy val form: Form[ExemptOrganisationDetailsModel] = formProvider()

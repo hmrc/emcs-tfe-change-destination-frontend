@@ -22,7 +22,9 @@ import controllers.routes
 import mocks.services.MockUserAnswersService
 import mocks.viewmodels.MockFirstTransporterCheckAnswersHelper
 import models.UserAnswers
+import models.requests.DataRequest
 import navigation.FakeNavigators.FakeFirstTransporterNavigator
+import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryList
@@ -41,7 +43,7 @@ class FirstTransporterCheckAnswersControllerSpec extends SpecBase with SummaryLi
 
   class Fixtures(optUserAnswers: Option[UserAnswers]) {
 
-    implicit val request = dataRequest(FakeRequest(GET, checkYourAnswersJourneyTypeRoute))
+    implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(GET, checkYourAnswersJourneyTypeRoute))
 
     lazy val testController = new FirstTransporterCheckAnswersController(
       messagesApi,

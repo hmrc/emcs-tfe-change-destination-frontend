@@ -22,7 +22,7 @@ import mocks.connectors.MockUserAllowListConnector
 import models.requests.{CheckUserAllowListRequest, UserRequest}
 import models.response.{ErrorResponse, UnexpectedDownstreamResponseError}
 import org.scalamock.scalatest.MockFactory
-import play.api.mvc.Result
+import play.api.mvc.{AnyContentAsEmpty, Result}
 import play.api.mvc.Results.Ok
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
@@ -33,8 +33,8 @@ import scala.concurrent.Future
 
 class UserAllowListActionSpec extends SpecBase with MockFactory with MockUserAllowListConnector {
 
-  implicit val hc = HeaderCarrier()
-  implicit lazy val request = UserRequest(FakeRequest(), testErn, testInternalId, testCredId, testSessionId, false)
+  implicit val hc: HeaderCarrier = HeaderCarrier()
+  implicit lazy val request: UserRequest[AnyContentAsEmpty.type] = UserRequest(FakeRequest(), testErn, testInternalId, testCredId, testSessionId, false)
 
   lazy val mockAppConfig = mock[AppConfig]
 

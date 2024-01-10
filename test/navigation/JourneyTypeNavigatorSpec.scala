@@ -19,16 +19,18 @@ package navigation
 import base.SpecBase
 import controllers.routes
 import models._
+import models.requests.DataRequest
 import models.sections.journeyType.HowMovementTransported.{AirTransport, Other}
 import pages._
 import pages.sections.journeyType._
+import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 
 class JourneyTypeNavigatorSpec extends SpecBase {
 
   val navigator = new JourneyTypeNavigator
 
-  implicit val request = dataRequest(FakeRequest())
+  implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest())
 
   "JourneyTypeNavigator" - {
 

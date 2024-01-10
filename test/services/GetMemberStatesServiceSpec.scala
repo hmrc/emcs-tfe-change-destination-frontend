@@ -23,12 +23,12 @@ import play.api.test.Helpers._
 import uk.gov.hmrc.govukfrontend.views.viewmodels.select.SelectItem
 import uk.gov.hmrc.http.HeaderCarrier
 
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.{ExecutionContext, ExecutionContextExecutor, Future}
 
 class GetMemberStatesServiceSpec extends SpecBase with MockGetMemberStatesConnector {
 
-  implicit val hc = HeaderCarrier()
-  implicit val ec = ExecutionContext.global
+  implicit val hc: HeaderCarrier = HeaderCarrier()
+  implicit val ec: ExecutionContextExecutor = ExecutionContext.global
 
   lazy val testService = new GetMemberStatesService(mockGetMemberStatesConnector)
 

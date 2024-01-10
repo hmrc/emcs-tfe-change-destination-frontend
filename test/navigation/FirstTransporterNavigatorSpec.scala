@@ -18,16 +18,18 @@ package navigation
 
 import base.SpecBase
 import controllers.routes
+import models.requests.DataRequest
 import models.{CheckMode, NormalMode, ReviewMode, UserAddress}
 import pages._
 import pages.sections.firstTransporter._
+import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 
 class FirstTransporterNavigatorSpec extends SpecBase {
 
   val navigator = new FirstTransporterNavigator
 
-  implicit val request = dataRequest(FakeRequest())
+  implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest())
 
   "in Normal mode" - {
 

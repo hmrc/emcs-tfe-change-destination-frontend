@@ -18,18 +18,20 @@ package navigation
 
 import base.SpecBase
 import controllers.routes
+import models.requests.DataRequest
 import models.sections.consignee.ConsigneeExportVat
 import models.sections.consignee.ConsigneeExportVatType.{No, YesEoriNumber, YesVatNumber}
 import models.{CheckMode, NormalMode, ReviewMode}
 import pages.Page
 import pages.sections.consignee._
+import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 
 class ConsigneeNavigatorSpec extends SpecBase {
 
   val navigator = new ConsigneeNavigator
 
-  implicit val request = dataRequest(FakeRequest())
+  implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest())
 
   "ConsigneeNavigator" - {
 

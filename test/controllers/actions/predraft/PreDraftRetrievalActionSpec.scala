@@ -39,17 +39,17 @@ class PreDraftRetrievalActionSpec extends SpecBase with MockPreDraftService with
         MockPreDraftService.get(testErn, testArc).returns(Future.successful(None))
         MockGetTraderKnownFactsService.getTraderKnownFacts(testErn).returns(Future.successful(Some(testMinTraderKnownFacts)))
 
-        val result = dataRetrievalAction.refine(movementRequest(FakeRequest())).futureValue.value
+        val result = dataRetrievalAction.refine(movementRequest(FakeRequest())).futureValue.toOption
 
-        result.userAnswers must not be defined
+        result.flatMap(_.userAnswers) must not be defined
       }
       "must set TraderKnownFacts to 'None' in the request" in {
         MockPreDraftService.get(testErn, testArc).returns(Future.successful(None))
         MockGetTraderKnownFactsService.getTraderKnownFacts(testErn).returns(Future.successful(None))
 
-        val result = dataRetrievalAction.refine(movementRequest(FakeRequest())).futureValue.value
+        val result = dataRetrievalAction.refine(movementRequest(FakeRequest())).futureValue.toOption
 
-        result.traderKnownFacts must not be defined
+        result.flatMap(_.traderKnownFacts) must not be defined
       }
     }
 
@@ -58,18 +58,18 @@ class PreDraftRetrievalActionSpec extends SpecBase with MockPreDraftService with
         MockPreDraftService.get(testErn, testArc).returns(Future(Some(emptyUserAnswers)))
         MockGetTraderKnownFactsService.getTraderKnownFacts(testErn).returns(Future.successful(Some(testMinTraderKnownFacts)))
 
-        val result = dataRetrievalAction.refine(movementRequest(FakeRequest())).futureValue.value
+        val result = dataRetrievalAction.refine(movementRequest(FakeRequest())).futureValue.toOption
 
-        result.userAnswers mustBe defined
+        result.flatMap(_.userAnswers) mustBe defined
       }
 
       "must build a TraderKnownFacts object and add it to the request" in {
         MockPreDraftService.get(testErn, testArc).returns(Future(Some(emptyUserAnswers)))
         MockGetTraderKnownFactsService.getTraderKnownFacts(testErn).returns(Future.successful(Some(testMinTraderKnownFacts)))
 
-        val result = dataRetrievalAction.refine(movementRequest(FakeRequest())).futureValue.value
+        val result = dataRetrievalAction.refine(movementRequest(FakeRequest())).futureValue.toOption
 
-        result.traderKnownFacts mustBe defined
+        result.flatMap(_.traderKnownFacts) mustBe defined
       }
     }
   }

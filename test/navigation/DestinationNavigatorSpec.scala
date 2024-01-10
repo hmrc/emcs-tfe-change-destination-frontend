@@ -18,16 +18,18 @@ package navigation
 
 import base.SpecBase
 import controllers.sections.destination.routes
+import models.requests.DataRequest
 import models.{CheckMode, NormalMode, ReviewMode}
 import pages.Page
 import pages.sections.destination._
+import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 
 class DestinationNavigatorSpec extends SpecBase {
 
   val navigator = new DestinationNavigator
 
-  implicit val request = dataRequest(FakeRequest())
+  implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest())
 
   "DestinationNavigator" - {
 

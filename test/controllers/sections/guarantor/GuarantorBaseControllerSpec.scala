@@ -19,6 +19,7 @@ package controllers.sections.guarantor
 import base.SpecBase
 import mocks.services.MockUserAnswersService
 import models.UserAnswers
+import models.requests.DataRequest
 import models.response.emcsTfe.GuarantorType.NoGuarantor
 import models.response.emcsTfe.MovementGuaranteeModel
 import models.sections.guarantor.GuarantorArranger._
@@ -27,7 +28,7 @@ import navigation.FakeNavigators.FakeNavigator
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import pages.sections.guarantor.{GuarantorArrangerPage, GuarantorRequiredPage}
 import play.api.mvc.Results.Ok
-import play.api.mvc.{MessagesControllerComponents, Result}
+import play.api.mvc.{AnyContentAsEmpty, MessagesControllerComponents, Result}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import services.UserAnswersService
@@ -44,7 +45,8 @@ class GuarantorBaseControllerSpec extends SpecBase with MockUserAnswersService w
   }
 
   class Test(ua: UserAnswers) {
-    implicit val dr = dataRequest(FakeRequest(), ua, movementDetails = maxGetMovementResponse.copy(movementGuarantee = MovementGuaranteeModel(NoGuarantor, None)))
+    implicit val dr: DataRequest[AnyContentAsEmpty.type] =
+      dataRequest(FakeRequest(), ua, movementDetails = maxGetMovementResponse.copy(movementGuarantee = MovementGuaranteeModel(NoGuarantor, None)))
   }
 
   "withGuarantorRequiredAnswer" - {

@@ -22,12 +22,12 @@ import models.response.{TraderKnownFactsException, UnexpectedDownstreamResponseE
 import play.api.test.Helpers._
 import uk.gov.hmrc.http.HeaderCarrier
 
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.{ExecutionContext, ExecutionContextExecutor, Future}
 
 class GetTraderKnownFactsServiceSpec extends SpecBase with MockGetTraderKnownFactsConnector {
 
-  implicit val hc = HeaderCarrier()
-  implicit val ec = ExecutionContext.global
+  implicit val hc: HeaderCarrier = HeaderCarrier()
+  implicit val ec: ExecutionContextExecutor = ExecutionContext.global
 
   lazy val testService = new GetTraderKnownFactsService(mockGetTraderKnownFactsConnector)
 

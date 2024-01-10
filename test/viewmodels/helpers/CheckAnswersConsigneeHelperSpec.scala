@@ -18,7 +18,7 @@ package viewmodels.helpers
 
 import base.SpecBase
 import models.UserAnswers
-import models.requests.DataRequest
+import models.requests.{DataRequest, UserRequest}
 import play.api.i18n.Messages
 import play.api.libs.json.{JsObject, Json}
 import play.api.mvc.AnyContentAsEmpty
@@ -33,7 +33,7 @@ class CheckAnswersConsigneeHelperSpec extends SpecBase {
     lazy val checkAnswersConsigneeHelper = new CheckYourAnswersConsigneeHelper()
     val userAnswers: UserAnswers = UserAnswers(ern, testArc, data)
     implicit val fakeDataRequest: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), userAnswers, movementDetails = maxGetMovementResponse.copy(consigneeTrader = None, memberStateCode = None, serialNumberOfCertificateOfExemption = None))
-    implicit val testUserRequest = userRequest(fakeDataRequest)
+    implicit val testUserRequest: UserRequest[AnyContentAsEmpty.type] = userRequest(fakeDataRequest)
     implicit val msgs: Messages = stubMessagesApi().preferred(fakeDataRequest)
   }
 

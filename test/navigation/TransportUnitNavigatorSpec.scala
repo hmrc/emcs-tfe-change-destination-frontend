@@ -20,6 +20,7 @@ import base.SpecBase
 import controllers.routes
 import controllers.sections.transportUnit.{routes => transportUnitRoutes}
 import fixtures.TransportUnitFixtures
+import models.requests.DataRequest
 import models.sections.journeyType.HowMovementTransported
 import models.sections.journeyType.HowMovementTransported.FixedTransportInstallations
 import models.sections.transportUnit.TransportUnitType.{FixedTransport, Tractor}
@@ -28,13 +29,14 @@ import models.{CheckMode, Index, NormalMode, ReviewMode}
 import pages.Page
 import pages.sections.journeyType.HowMovementTransportedPage
 import pages.sections.transportUnit._
+import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 
 class TransportUnitNavigatorSpec extends SpecBase with TransportUnitFixtures {
 
   val navigator = new TransportUnitNavigator
 
-  implicit val request = dataRequest(FakeRequest())
+  implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest())
 
   "in Normal mode" - {
 

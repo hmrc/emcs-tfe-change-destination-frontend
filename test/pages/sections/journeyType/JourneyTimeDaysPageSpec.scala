@@ -40,7 +40,7 @@ class JourneyTimeDaysPageSpec extends SpecBase {
     "must throw an exception" - {
       "when the journey time is invalid" in {
         intercept[JsResultException](JourneyTimeDaysPage.getValueFromIE801(dataRequest(FakeRequest(),
-          movementDetails = maxGetMovementResponse.copy(journeyTime = "fake")))).getMessage mustBe "JsResultException(errors:List((,List(JsonValidationError(List(Could not parse JourneyTime from JSON, received: 'fake'),ArraySeq())))))"
+          movementDetails = maxGetMovementResponse.copy(journeyTime = "fake")))).getMessage must include("Could not parse JourneyTime from JSON, received: 'fake'")
       }
     }
   }

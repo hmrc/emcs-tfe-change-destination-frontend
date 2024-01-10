@@ -150,9 +150,8 @@ class DestinationSectionSpec extends SpecBase with UserAddressFixtures with Json
                 DestinationAddressPage
               ).foreach {
                 page =>
-                  implicit val dr: DataRequest[_] = dataRequest(request, baseUserAnswers
-                    .remove(page), movementDetails = maxGetMovementResponse.copy(deliveryPlaceTrader = None)
-                  )
+                  implicit val dr: DataRequest[_] =
+                    dataRequest(request, baseUserAnswers.remove(page), movementDetails = maxGetMovementResponse.copy(deliveryPlaceTrader = None))
 
                   DestinationSection.status mustBe InProgress
               }

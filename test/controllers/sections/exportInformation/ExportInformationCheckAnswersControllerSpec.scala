@@ -21,7 +21,9 @@ import controllers.actions.{FakeDataRetrievalAction, FakeMovementAction}
 import mocks.services.MockUserAnswersService
 import mocks.viewmodels.MockCheckAnswersExportInformationHelper
 import models.UserAnswers
+import models.requests.DataRequest
 import navigation.FakeNavigators.FakeExportInformationNavigator
+import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryList
@@ -39,7 +41,7 @@ class ExportInformationCheckAnswersControllerSpec extends SpecBase with SummaryL
   val list: SummaryList = SummaryListViewModel(Seq.empty).withCssClass("govuk-!-margin-bottom-9")
 
   class Fixtures(optUserAnswers: Option[UserAnswers]) {
-    implicit val request = dataRequest(FakeRequest(GET, checkYourAnswersExportInformationRoute))
+    implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(GET, checkYourAnswersExportInformationRoute))
 
     lazy val testController = new ExportInformationCheckAnswersController(
       messagesApi,
