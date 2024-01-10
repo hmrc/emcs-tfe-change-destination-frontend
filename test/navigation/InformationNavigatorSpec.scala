@@ -20,6 +20,8 @@ import base.SpecBase
 import controllers.routes
 import models._
 import models.requests.DataRequest
+import models.sections.info.ChangeType
+import models.sections.info.ChangeType.Consignee
 import pages._
 import pages.sections.info._
 import play.api.mvc.AnyContentAsEmpty
@@ -40,6 +42,31 @@ class InformationNavigatorSpec extends SpecBase {
         case object UnknownPage extends Page
         navigator.nextPage(UnknownPage, NormalMode, emptyUserAnswers) mustBe
           controllers.routes.IndexController.onPageLoad(testErn, testArc)
+      }
+
+      "for the ChangeType page" - {
+
+        "when the answer is `Consignee`" - {
+
+          //TODO: Route to COD-02
+          "must go to Under Construction" in {
+
+            navigator.nextPage(ChangeTypePage, NormalMode, emptyUserAnswers.set(ChangeTypePage, Consignee)) mustBe
+              testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+          }
+        }
+
+        ChangeType.allValues.filterNot(_ == Consignee).foreach { changeType =>
+
+          s"when the answer is `$changeType`" - {
+
+            "must go to Task List page" in {
+
+              navigator.nextPage(ChangeTypePage, NormalMode, emptyUserAnswers.set(ChangeTypePage, changeType)) mustBe
+                controllers.routes.DraftMovementController.onPageLoad(testErn, testArc)
+            }
+          }
+        }
       }
 
       "for the DispatchPlace page" - {

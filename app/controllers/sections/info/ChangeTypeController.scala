@@ -22,7 +22,8 @@ import controllers.actions.predraft.{PreDraftAuthActionHelper, PreDraftDataRequi
 import forms.sections.info.ChangeTypeFormProvider
 import models.Mode
 import models.requests.DataRequest
-import navigation.Navigator
+import models.sections.info.ChangeType.Consignee
+import navigation.{InformationNavigator, Navigator}
 import pages.sections.info.ChangeTypePage
 import play.api.data.Form
 import play.api.i18n.MessagesApi
@@ -34,18 +35,18 @@ import javax.inject.Inject
 import scala.concurrent.Future
 
 class ChangeTypeController @Inject()(
-                                       override val messagesApi: MessagesApi,
-                                       override val userAnswersService: UserAnswersService,
-                                       override val userAllowList: UserAllowListAction,
-                                       override val navigator: Navigator,
-                                       override val auth: AuthAction,
-                                       override val preDraftService: PreDraftService,
-                                       override val getPreDraftData: PreDraftDataRetrievalAction,
-                                       override val requirePreDraftData: PreDraftDataRequiredAction,
-                                       override val withMovement: MovementAction,
-                                       formProvider: ChangeTypeFormProvider,
-                                       val controllerComponents: MessagesControllerComponents,
-                                       view: ChangeTypeView
+                                      override val messagesApi: MessagesApi,
+                                      override val userAnswersService: UserAnswersService,
+                                      override val userAllowList: UserAllowListAction,
+                                      override val navigator: InformationNavigator,
+                                      override val auth: AuthAction,
+                                      override val preDraftService: PreDraftService,
+                                      override val getPreDraftData: PreDraftDataRetrievalAction,
+                                      override val requirePreDraftData: PreDraftDataRequiredAction,
+                                      override val withMovement: MovementAction,
+                                      formProvider: ChangeTypeFormProvider,
+                                      val controllerComponents: MessagesControllerComponents,
+                                      view: ChangeTypeView
                                      ) extends BasePreDraftNavigationController with PreDraftAuthActionHelper {
 
   def onPageLoad(ern: String, arc: String, mode: Mode): Action[AnyContent] =
@@ -54,10 +55,17 @@ class ChangeTypeController @Inject()(
     }
 
   def onSubmit(ern: String, arc: String, mode: Mode): Action[AnyContent] =
-    authorisedWithPreDraftDataCachedMovementAsync(ern, arc) { implicit request =>
+    authorisedWithPreDraftDataUpToDateMovementAsync(ern, arc) { implicit request =>
       formProvider().bindFromRequest().fold(
         renderView(BadRequest, _, mode),
-        savePreDraftAndRedirect(ChangeTypePage, _, mode)
+        {
+          case Consignee =>
+            savePreDraftAndRedirect(ChangeTypePage, Consignee, mode)
+          case changeType =>
+            userAnswersService.set(request.userAnswers.set(ChangeTypePage, changeType)).flatMap { _ =>
+              savePreDraftAndRedirect(ChangeTypePage, changeType, mode)
+            }
+        }
       )
     }
 

@@ -23,8 +23,9 @@ import forms.sections.info.ChangeTypeFormProvider
 import mocks.services.{MockPreDraftService, MockUserAnswersService}
 import models.requests.DataRequest
 import models.sections.info.ChangeType
+import models.sections.info.ChangeType.{Consignee, ExportOffice}
 import models.{NormalMode, UserAnswers}
-import navigation.FakeNavigators.FakeNavigator
+import navigation.FakeNavigators.FakeInfoNavigator
 import pages.sections.info.ChangeTypePage
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.Helpers._
@@ -50,7 +51,7 @@ class ChangeTypeControllerSpec extends SpecBase with MockUserAnswersService with
       messagesApi = messagesApi,
       userAnswersService = mockUserAnswersService,
       userAllowList = fakeUserAllowListAction,
-      navigator = new FakeNavigator(testOnwardRoute),
+      navigator = new FakeInfoNavigator(testOnwardRoute),
       auth = fakeAuthAction,
       preDraftService = mockPreDraftService,
       getPreDraftData = new FakePreDraftRetrievalAction(userAnswers, Some(testMinTraderKnownFacts)),
@@ -80,16 +81,33 @@ class ChangeTypeControllerSpec extends SpecBase with MockUserAnswersService with
       contentAsString(result) mustEqual view(form.fill(ChangeType.values.head), submitAction)(dataRequest(request, userAnswers.get), messages(request)).toString
     }
 
-    "must redirect to the next page when valid data is submitted" in new Test(Some(emptyUserAnswers)) {
+    "must redirect to the next page when valid data is submitted" - {
 
-      val answersAfterSubmission = emptyUserAnswers.set(ChangeTypePage, ChangeType.values.head)
+      "when changeType is Consignee don't save draft in UserAnswers" in new Test(Some(emptyUserAnswers)) {
 
-      MockPreDraftService.set(answersAfterSubmission).returns(Future.successful(true))
+        val answersAfterSubmission = emptyUserAnswers.set(ChangeTypePage, Consignee)
 
-      val result = controller.onSubmit(testErn, testArc, NormalMode)(request.withFormUrlEncodedBody(("value", ChangeType.values.head.toString)))
+        MockUserAnswersService.set().never()
+        MockPreDraftService.set(answersAfterSubmission).returns(Future.successful(true))
 
-      status(result) mustEqual SEE_OTHER
-      redirectLocation(result).value mustEqual testOnwardRoute.url
+        val result = controller.onSubmit(testErn, testArc, NormalMode)(request.withFormUrlEncodedBody(("value", Consignee.toString)))
+
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual testOnwardRoute.url
+      }
+
+      "when changeType is anything other than Consignee save draft in UserAnswers" in new Test(Some(emptyUserAnswers)) {
+
+        val answersAfterSubmission = emptyUserAnswers.set(ChangeTypePage, ExportOffice)
+
+        MockUserAnswersService.set(answersAfterSubmission).returns(Future.successful(answersAfterSubmission))
+        MockPreDraftService.set(answersAfterSubmission).returns(Future.successful(true))
+
+        val result = controller.onSubmit(testErn, testArc, NormalMode)(request.withFormUrlEncodedBody(("value", ExportOffice.toString)))
+
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual testOnwardRoute.url
+      }
     }
 
     "must return a Bad Request and errors when invalid data is submitted" in new Test(Some(emptyUserAnswers)) {
