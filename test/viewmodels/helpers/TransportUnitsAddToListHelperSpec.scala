@@ -20,10 +20,12 @@ import base.SpecBase
 import controllers.sections.transportUnit.{routes => transportUnitRoutes}
 import fixtures.messages.sections.transportUnit.TransportUnitAddToListMessages
 import models.UserAnswers
+import models.requests.DataRequest
 import models.sections.transportUnit.TransportSealTypeModel
 import models.sections.transportUnit.TransportUnitType.{FixedTransport, Tractor}
 import pages.sections.transportUnit._
 import play.api.i18n.Messages
+import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist._
@@ -33,8 +35,8 @@ import views.html.components.link
 class TransportUnitsAddToListHelperSpec extends SpecBase {
 
   class Setup(userAnswers: UserAnswers = emptyUserAnswers) {
-    implicit lazy val link = app.injector.instanceOf[link]
-    implicit lazy val request = dataRequest(FakeRequest(), userAnswers)
+    implicit lazy val link: link = app.injector.instanceOf[link]
+    implicit lazy val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), userAnswers)
 
     lazy val helper: TransportUnitsAddToListHelper = app.injector.instanceOf[TransportUnitsAddToListHelper]
   }
@@ -44,7 +46,8 @@ class TransportUnitsAddToListHelperSpec extends SpecBase {
       "return nothing" - {
         s"when no answers specified for '${msg.lang.code}'" in new Setup() {
           implicit val msgs: Messages = messages(Seq(msg.lang))
-          override implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers, movementDetails = maxGetMovementResponse.copy(transportDetails = Seq.empty))
+          override implicit lazy val request: DataRequest[AnyContentAsEmpty.type] =
+            dataRequest(FakeRequest(), emptyUserAnswers, movementDetails = maxGetMovementResponse.copy(transportDetails = Seq.empty))
           helper.allTransportUnitsSummary() mustBe Nil
         }
       }

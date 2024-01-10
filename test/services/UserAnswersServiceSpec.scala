@@ -22,12 +22,12 @@ import models.response.{UnexpectedDownstreamResponseError, UserAnswersException}
 import play.api.test.Helpers.{await, defaultAwaitTimeout}
 import uk.gov.hmrc.http.HeaderCarrier
 
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.{ExecutionContext, ExecutionContextExecutor, Future}
 
 class UserAnswersServiceSpec extends SpecBase with MockUserAnswersConnector {
 
-  implicit val hc = HeaderCarrier()
-  implicit val ec = ExecutionContext.global
+  implicit val hc: HeaderCarrier = HeaderCarrier()
+  implicit val ec: ExecutionContextExecutor = ExecutionContext.global
 
   lazy val testService = new UserAnswersService(mockUserAnswersConnector)
 

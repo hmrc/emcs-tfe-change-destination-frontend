@@ -22,6 +22,7 @@ import controllers.actions.{FakeDataRetrievalAction, FakeMovementAction}
 import forms.sections.info.DestinationTypeFormProvider
 import mocks.services.{MockPreDraftService, MockUserAnswersService}
 import models.NormalMode
+import models.requests.DataRequest
 import models.sections.info.DispatchPlace
 import models.sections.info.DispatchPlace.{GreatBritain, NorthernIreland}
 import models.sections.info.movementScenario.MovementScenario
@@ -29,7 +30,7 @@ import models.sections.info.movementScenario.MovementScenario.{EuTaxWarehouse, E
 import navigation.FakeNavigators.FakeInfoNavigator
 import pages.sections.info.{DestinationTypePage, DispatchPlacePage}
 import play.api.data.Form
-import play.api.mvc.Result
+import play.api.mvc.{AnyContentAsEmpty, AnyContentAsFormUrlEncoded, Result}
 import play.api.test.Helpers._
 import play.api.test.{FakeRequest, Helpers}
 import views.html.sections.info.DestinationTypeView
@@ -55,8 +56,11 @@ class DestinationTypeControllerSpec extends SpecBase with MockUserAnswersService
     lazy val destinationTypeGetRoute: String = controllers.sections.info.routes.DestinationTypeController.onPreDraftPageLoad(ern, testArc, NormalMode).url
     lazy val destinationTypePostRoute: String = controllers.sections.info.routes.DestinationTypeController.onPreDraftSubmit(ern, testArc, NormalMode).url
 
-    implicit lazy val getRequest = dataRequest(FakeRequest(GET, destinationTypeGetRoute), ern = ern)
-    implicit lazy val postRequest = dataRequest(FakeRequest(POST, destinationTypePostRoute).withFormUrlEncodedBody(("value", value)), ern = ern)
+    implicit lazy val getRequest: DataRequest[AnyContentAsEmpty.type] =
+      dataRequest(FakeRequest(GET, destinationTypeGetRoute), ern = ern)
+
+    implicit lazy val postRequest: DataRequest[AnyContentAsFormUrlEncoded] =
+      dataRequest(FakeRequest(POST, destinationTypePostRoute).withFormUrlEncodedBody(("value", value)), ern = ern)
 
     lazy val form: Form[MovementScenario] = formProvider()(getRequest)
 

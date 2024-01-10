@@ -26,13 +26,14 @@ import navigation.FakeNavigators.FakeDestinationNavigator
 import pages.sections.destination.{DestinationDetailsChoicePage, DestinationReviewPage, DestinationWarehouseVatPage}
 import pages.sections.info.DestinationTypePage
 import play.api.http.Status.SEE_OTHER
+import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 
 class DestinationIndexControllerSpec extends SpecBase with MockUserAnswersService {
 
   class Fixture(optUserAnswers: Option[UserAnswers] = Some(emptyUserAnswers)) {
-    implicit val request = FakeRequest(GET, routes.DestinationIndexController.onPageLoad(testErn, testArc).url)
+    implicit val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest(GET, routes.DestinationIndexController.onPageLoad(testErn, testArc).url)
 
     lazy val testController = new DestinationIndexController(
       mockUserAnswersService,

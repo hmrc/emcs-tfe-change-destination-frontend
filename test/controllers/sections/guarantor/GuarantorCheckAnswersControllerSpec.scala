@@ -22,7 +22,9 @@ import controllers.routes
 import mocks.services.MockUserAnswersService
 import mocks.viewmodels.MockGuarantorCheckAnswersHelper
 import models.UserAnswers
+import models.requests.DataRequest
 import navigation.FakeNavigators.FakeGuarantorNavigator
+import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryList
@@ -39,7 +41,7 @@ class GuarantorCheckAnswersControllerSpec extends SpecBase with SummaryListFluen
   val list: SummaryList = SummaryListViewModel(Seq.empty).withCssClass("govuk-!-margin-bottom-9")
 
   class Fixtures(optUserAnswers: Option[UserAnswers]) {
-    implicit val request = dataRequest(FakeRequest(GET, checkYourAnswersRoute))
+    implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(GET, checkYourAnswersRoute))
 
     lazy val testController = new GuarantorCheckAnswersController(
       messagesApi,

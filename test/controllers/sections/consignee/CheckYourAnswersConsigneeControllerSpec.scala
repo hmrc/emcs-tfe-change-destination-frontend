@@ -27,6 +27,7 @@ import models.sections.info.movementScenario.MovementScenario.{EuTaxWarehouse, E
 import navigation.FakeNavigators.FakeConsigneeNavigator
 import pages.sections.consignee._
 import pages.sections.info.DestinationTypePage
+import play.api.i18n.Messages
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
@@ -44,7 +45,7 @@ class CheckYourAnswersConsigneeControllerSpec extends SpecBase with SummaryListF
     FakeRequest(GET, controllers.sections.consignee.routes.CheckYourAnswersConsigneeController.onPageLoad(testErn, testArc).url)
   )
 
-  implicit val msgs = messages(testDataRequest)
+  implicit val msgs: Messages = messages(testDataRequest)
 
   class Fixture(optUserAnswers: Option[UserAnswers]) {
 

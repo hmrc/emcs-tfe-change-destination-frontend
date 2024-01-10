@@ -25,7 +25,7 @@ import navigation.FakeNavigators.FakeNavigator
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import pages.QuestionPage
 import play.api.libs.json.{JsObject, JsPath, __}
-import play.api.mvc.{MessagesControllerComponents, Result}
+import play.api.mvc.{AnyContentAsEmpty, MessagesControllerComponents, Result}
 import play.api.test.FakeRequest
 import play.api.test.Helpers.{GET, defaultAwaitTimeout, redirectLocation}
 import queries.Derivable
@@ -36,9 +36,9 @@ import scala.concurrent.Future
 
 class BaseNavigationControllerSpec extends SpecBase with GuiceOneAppPerSuite with MockUserAnswersService {
   trait Test {
-    implicit val hc = HeaderCarrier()
+    implicit val hc: HeaderCarrier = HeaderCarrier()
 
-    implicit val request = dataRequest(FakeRequest(GET, "/foo/bar"))
+    implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(GET, "/foo/bar"))
 
     val page = new QuestionPage[String] {
       override val path: JsPath = __ \ "page1"

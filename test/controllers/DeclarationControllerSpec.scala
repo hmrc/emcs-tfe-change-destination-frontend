@@ -22,8 +22,10 @@ import fixtures.SubmitChangeDestinationFixtures
 import mocks.config.MockAppConfig
 import mocks.services.{MockSubmitChangeDestinationService, MockUserAnswersService}
 import models.UserAnswers
-import models.response.SubmitChangeDestinationException
+import models.requests.DataRequest
 import navigation.FakeNavigators.FakeNavigator
+import play.api.i18n.Messages
+import play.api.mvc.AnyContentAsEmpty
 import play.api.test.Helpers._
 import play.api.test.{FakeRequest, Helpers}
 import views.html.DeclarationView
@@ -40,12 +42,12 @@ class DeclarationControllerSpec extends SpecBase with MockUserAnswersService wit
 
 
   class Test(userAnswers: UserAnswers = baseFullUserAnswers) {
-    implicit val request = dataRequest(
+    implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(
       FakeRequest(),
       userAnswers,
       ern
     )
-    implicit lazy val messagesInstance = messages(request)
+    implicit lazy val messagesInstance: Messages = messages(request)
     val controller: DeclarationController = new DeclarationController(
       messagesApi,
       fakeAuthAction,

@@ -18,17 +18,19 @@ package navigation
 
 import base.SpecBase
 import controllers.routes
+import models.requests.DataRequest
 import models.sections.transportArranger.TransportArranger.{Consignee, Consignor, GoodsOwner, Other}
 import models.{CheckMode, NormalMode, ReviewMode}
 import pages.Page
 import pages.sections.transportArranger._
+import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 
 class TransportArrangerNavigatorSpec extends SpecBase {
 
   val navigator = new TransportArrangerNavigator
 
-  implicit val request = dataRequest(FakeRequest())
+  implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest())
 
   "TransportArrangerNavigator" - {
 

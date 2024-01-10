@@ -19,15 +19,17 @@ package navigation
 import base.SpecBase
 import controllers.routes
 import models._
+import models.requests.DataRequest
 import pages._
 import pages.sections.info._
+import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 
 class InformationNavigatorSpec extends SpecBase {
 
   val navigator = new InformationNavigator
 
-  implicit val request = dataRequest(FakeRequest())
+  implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest())
 
   "InfoNavigator" - {
 

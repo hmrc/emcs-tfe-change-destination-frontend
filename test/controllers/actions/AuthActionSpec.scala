@@ -23,7 +23,7 @@ import models.requests.UserRequest
 import org.scalatest.BeforeAndAfterAll
 import play.api.Play
 import play.api.i18n.MessagesApi
-import play.api.mvc.{Action, AnyContent, BodyParsers, Results}
+import play.api.mvc.{Action, AnyContent, AnyContentAsEmpty, BodyParsers, Results}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.auth.core.AffinityGroup.{Agent, Organisation}
@@ -41,7 +41,7 @@ class AuthActionSpec extends SpecBase with BaseFixtures with BeforeAndAfterAll {
 
   type AuthRetrieval = ~[~[~[Option[AffinityGroup], Enrolments], Option[String]], Option[Credentials]]
 
-  implicit val fakeRequest = FakeRequest().withSession(SessionKeys.sessionId -> UUID.randomUUID().toString)
+  implicit val fakeRequest: FakeRequest[AnyContentAsEmpty.type] = FakeRequest().withSession(SessionKeys.sessionId -> UUID.randomUUID().toString)
 
   override def beforeAll(): Unit = {
     Play.start(app)
@@ -55,8 +55,8 @@ class AuthActionSpec extends SpecBase with BaseFixtures with BeforeAndAfterAll {
 
     lazy val bodyParsers = app.injector.instanceOf[BodyParsers.Default]
     lazy val appConfig = app.injector.instanceOf[AppConfig]
-    implicit lazy val ec = app.injector.instanceOf[ExecutionContext]
-    implicit lazy val messagesApi = app.injector.instanceOf[MessagesApi]
+    implicit lazy val ec: ExecutionContext = app.injector.instanceOf[ExecutionContext]
+    implicit lazy val messagesApi: MessagesApi = app.injector.instanceOf[MessagesApi]
 
     val authConnector: AuthConnector
     lazy val authAction = new AuthActionImpl(authConnector, appConfig, bodyParsers)

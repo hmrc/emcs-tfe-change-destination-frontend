@@ -24,12 +24,12 @@ import models.response.{CountriesAndMemberStatesException, UnexpectedDownstreamR
 import play.api.test.Helpers._
 import uk.gov.hmrc.http.HeaderCarrier
 
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.{ExecutionContext, ExecutionContextExecutor, Future}
 
 class GetCountriesAndMemberStatesServiceSpec extends SpecBase with MockGetCountriesAndMemberStatesConnector with MockGetMemberStatesService {
 
-  implicit val hc = HeaderCarrier()
-  implicit val ec = ExecutionContext.global
+  implicit val hc: HeaderCarrier = HeaderCarrier()
+  implicit val ec: ExecutionContextExecutor = ExecutionContext.global
 
   lazy val testService = new GetCountriesAndMemberStatesService(mockGetCountriesAndMemberStatesConnector, mockGetMemberStatesService)
 
