@@ -1,33 +1,36 @@
 @import models.requests.DataRequest
+@import viewmodels.LegendSize
 
 @this(
-        layout: templates.Layout,
-        formHelper: FormWithCSRF,
-        govukErrorSummary: GovukErrorSummary,
-        govukDateInput: GovukDateInput,
-        govukButton: GovukButton,
-        h1: components.h1
+    layout: templates.Layout,
+    formHelper: FormWithCSRF,
+    govukErrorSummary: GovukErrorSummary,
+    govukDateInput: GovukDateInput,
+    govukButton: GovukButton,
+    h1: components.h1,
+    h2: components.h2
 )
 
 @(form: Form[_], mode: Mode)(implicit request: DataRequest[_], messages: Messages)
 
 @layout(pageTitle = title(form, messages("$className;format="decap"$.title")), maybeShowActiveTrader = maybeShowActiveTrader(request)) {
 
-    @formHelper(action = routes.$className$Controller.onSubmit(request.ern, request.arc, mode), 'autoComplete -> "off") {
+    @formHelper(action = routes.$className$Controller.onSubmit(request.ern, request.draftId, mode), 'autoComplete -> "off") {
 
         @defining(form.errors.headOption.map(_.args.map(_.toString)).getOrElse(Seq())) { erroredFields =>
 
             @if(form.errors.nonEmpty) {
-                @govukErrorSummary(ErrorSummaryViewModel(form, errorLinkOverrides = Map("value" -> s"value.${erroredFields.headOption.getOrElse("day")}")))
+                @govukErrorSummary(ErrorSummaryViewModel(form, errorLinkOverrides = Map("value" -> s"value.\${erroredFields.headOption.getOrElse("day")}")))
             }
 
+            @h2(messages("draftId.subHeading", request.draftId), "govuk-caption-xl")
             @govukDateInput(
                 DateViewModel(
                     field  = form("value"),
-                    legend = LegendViewModel(HtmlContent(heading)).withCssClass("govuk-fieldset__legend govuk-fieldset__legend--l"),
+                    legend = LegendViewModel(Text(messages("$className;format="decap"$.heading"))).asPageHeading(LegendSize.Large),
                     erroredFields
                 )
-                        .withHint(HintViewModel(messages("$className;format="decap"$.hint")))
+                .withHint(HintViewModel(messages("$className;format="decap"$.hint")))
             )
 
             @govukButton(
@@ -37,6 +40,6 @@
     }
 }
 
-@heading = {
-    @h1("$className;format="decap"$.heading", Some(messages("arc.subHeading", request.arc)), "govuk-fieldset__heading")
+@{
+    //\$COVERAGE-OFF\$
 }

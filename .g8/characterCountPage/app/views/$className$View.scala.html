@@ -10,20 +10,20 @@
         govukButton: GovukButton,
         h1: components.h1,
         h2: components.h2,
-        continueOrExit: components.continueOrExit
+        saveAndContinue: components.saveAndContinue
 )
 
 @(form: Form[_], mode: Mode)(implicit request: DataRequest[_], messages: Messages)
 
 @layout(pageTitle = title(form, messages("$className;format="decap"$.title")), maybeShowActiveTrader = maybeShowActiveTrader(request)) {
 
-    @formHelper(action = routes.$className$Controller.onSubmit(request.ern, request.arc, mode)) {
+    @formHelper(action = routes.$className$Controller.onSubmit(request.ern, request.draftId, mode)) {
 
         @if(form.errors.nonEmpty) {
             @govukErrorSummary(ErrorSummaryViewModel(form))
         }
 
-        @h2(messages("arc.subHeading", request.arc), "govuk-caption-l")
+        @h2(messages("draftId.subHeading", request.draftId), "govuk-caption-l")
 
         @{govukCharacterCount(CharacterCount(
             id = "value",
@@ -37,11 +37,11 @@
             }
         ))}
 
-        @continueOrExit()
+        @saveAndContinue()
 
     }
 }
 
 @{
-    //$COVERAGE-OFF$
+    //\$COVERAGE-OFF\$
 }

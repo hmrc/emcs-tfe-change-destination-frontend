@@ -18,7 +18,7 @@ class $className$FormProviderSpec extends StringFieldBehaviours {
     behave like fieldThatBindsValidData(
       form,
       fieldName,
-      stringsWithMaxLength(maxLength)
+      "0" * maxLength
     )
 
     behave like fieldWithMaxLength(

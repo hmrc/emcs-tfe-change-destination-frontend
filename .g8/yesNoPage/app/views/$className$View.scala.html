@@ -1,4 +1,5 @@
 @import models.requests.DataRequest
+@import viewmodels.LegendSize
 
 @this(
     layout: templates.Layout,
@@ -6,23 +7,25 @@
     govukErrorSummary: GovukErrorSummary,
     govukRadios: GovukRadios,
     govukButton: GovukButton,
-    h1: components.h1
+    h1: components.h1,
+    h2: components.h2
 )
 
 @(form: Form[_], mode: Mode)(implicit request: DataRequest[_], messages: Messages)
 
 @layout(pageTitle = title(form, messages("$className;format="decap"$.title")), maybeShowActiveTrader = maybeShowActiveTrader(request)) {
 
-    @formHelper(action = routes.$className$Controller.onSubmit(request.ern, request.arc, mode), 'autoComplete -> "off") {
+    @formHelper(action = routes.$className$Controller.onSubmit(request.ern, request.draftId, mode), 'autoComplete -> "off") {
 
         @if(form.errors.nonEmpty) {
             @govukErrorSummary(ErrorSummaryViewModel(form))
         }
 
+        @h2(messages("draftId.subHeading", request.draftId), "govuk-caption-xl")
         @govukRadios(
             RadiosViewModel.yesNo(
                 field = form("value"),
-                legend = LegendViewModel(HtmlContent(heading)).withCssClass("govuk-fieldset__legend govuk-fieldset__legend--l")
+                legend = LegendViewModel(Text(messages("$className;format="decap"$.heading"))).asPageHeading(LegendSize.Large)
             )
         )
 
@@ -32,10 +35,6 @@
     }
 }
 
-@heading = {
-    @h1("$className;format="decap"$.heading", Some(messages("arc.subHeading", request.arc)), "govuk-fieldset__heading")
-}
-
 @{
-    //$COVERAGE-OFF$
+    //\$COVERAGE-OFF\$
 }

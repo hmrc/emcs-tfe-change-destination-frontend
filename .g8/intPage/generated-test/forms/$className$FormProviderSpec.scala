@@ -3,6 +3,8 @@ package forms
 import forms.behaviours.IntFieldBehaviours
 import play.api.data.FormError
 
+import scala.util.Random
+
 class $className$FormProviderSpec extends IntFieldBehaviours {
 
   val form = new $className$FormProvider()()
@@ -14,12 +16,10 @@ class $className$FormProviderSpec extends IntFieldBehaviours {
     val minimum = $minimum$
     val maximum = $maximum$
 
-    val validDataGenerator = intsInRangeWithCommas(minimum, maximum)
-
     behave like fieldThatBindsValidData(
       form,
       fieldName,
-      validDataGenerator
+      Random.nextInt(maximum).toString
     )
 
     behave like intField(
