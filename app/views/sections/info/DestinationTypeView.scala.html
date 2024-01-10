@@ -42,7 +42,7 @@
             @govukErrorSummary(ErrorSummaryViewModel(form, errorLinkOverrides = Map("value" -> "value_0")))
         }
 
-        @h2(messages("movementInformation.subHeading"), "govuk-caption-xl", hiddenContent = Some(messages("subHeading.hidden"))))
+        @h2(messages("movementInformation.subHeading"), "govuk-caption-xl", hiddenContent = Some(messages("subHeading.hidden")))
         @govukRadios(
             RadiosViewModel(
                 field = form("value"),
