@@ -6,11 +6,11 @@ echo "Applying migration $className;format="snake"$"
 echo "Adding routes to conf/app.routes"
 
 echo "" >> ../conf/app.routes
-echo "GET        /trader/:ern/draft/:draftId/$className;format="decap"$                        controllers.$className$Controller.onPageLoad(ern: String, draftId: String, mode: Mode = NormalMode)" >> ../conf/app.routes
-echo "POST       /trader/:ern/draft/:draftId/$className;format="decap"$                        controllers.$className$Controller.onSubmit(ern: String, draftId: String, mode: Mode = NormalMode)" >> ../conf/app.routes
+echo "GET        /trader/:ern/movement/:arc/$className;format="decap"$                        controllers.$className$Controller.onPageLoad(ern: String, arc: String, mode: Mode = NormalMode)" >> ../conf/app.routes
+echo "POST       /trader/:ern/movement/:arc/$className;format="decap"$                        controllers.$className$Controller.onSubmit(ern: String, arc: String, mode: Mode = NormalMode)" >> ../conf/app.routes
 
-echo "GET        /trader/:ern/draft/:draftId/$className$/change                  controllers.$className$Controller.onPageLoad(ern: String, draftId: String, mode: Mode = CheckMode)" >> ../conf/app.routes
-echo "POST       /trader/:ern/draft/:draftId/$className$/change                  controllers.$className$Controller.onSubmit(ern: String, draftId: String, mode: Mode = CheckMode)" >> ../conf/app.routes
+echo "GET        /trader/:ern/movement/:arc/$className$/change                  controllers.$className$Controller.onPageLoad(ern: String, arc: String, mode: Mode = CheckMode)" >> ../conf/app.routes
+echo "POST       /trader/:ern/movement/:arc/$className$/change                  controllers.$className$Controller.onSubmit(ern: String, arc: String, mode: Mode = CheckMode)" >> ../conf/app.routes
 
 echo "Adding messages to conf.messages"
 echo "" >> ../conf/messages

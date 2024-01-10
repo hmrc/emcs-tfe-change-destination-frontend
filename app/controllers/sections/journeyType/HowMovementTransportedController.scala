@@ -60,8 +60,8 @@ class HowMovementTransportedController @Inject()(
       case _ => default
     }
   }
-  def onPageLoad(ern: String, draftId: String, mode: Mode): Action[AnyContent] =
-    authorisedDataRequestWithUpToDateMovement(ern, draftId) { implicit request =>
+  def onPageLoad(ern: String, arc: String, mode: Mode): Action[AnyContent] =
+    authorisedDataRequestWithUpToDateMovement(ern, arc) { implicit request =>
       guarantorNotRequiredEuGuard(
         onEuNotRequired = Ok(onlyFixedView(mode)),
         default = Ok(view(fillForm(HowMovementTransportedPage, formProvider()), mode))
@@ -81,8 +81,8 @@ class HowMovementTransportedController @Inject()(
       )
     }
 
-  def onSubmit(ern: String, draftId: String, mode: Mode): Action[AnyContent] =
-    authorisedDataRequestWithUpToDateMovementAsync(ern, draftId) { implicit request =>
+  def onSubmit(ern: String, arc: String, mode: Mode): Action[AnyContent] =
+    authorisedDataRequestWithUpToDateMovementAsync(ern, arc) { implicit request =>
       guarantorNotRequiredEuGuard(
         onEuNotRequired = redirect(HowMovementTransported.FixedTransportInstallations, mode),
         default = formProvider().bindFromRequest().fold(

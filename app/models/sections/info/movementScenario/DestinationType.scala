@@ -18,7 +18,9 @@ package models.sections.info.movementScenario
 
 import models.{Enumerable, WithName}
 
-sealed trait DestinationType
+sealed trait DestinationType {
+  lazy val isDutyPaid: Boolean = DestinationType.dutyPaidDestinationTypes.contains(this)
+}
 
 object DestinationType extends Enumerable.Implicits {
   case object TaxWarehouse extends WithName("1") with DestinationType
@@ -41,6 +43,8 @@ object DestinationType extends Enumerable.Implicits {
 
   case object ReturnToThePlaceOfDispatchOfTheConsignor extends WithName("11") with DestinationType
 
+  val dutyPaidDestinationTypes = Seq(CertifiedConsignee, TemporaryCertifiedConsignee, ReturnToThePlaceOfDispatchOfTheConsignor)
+
   val values: Seq[DestinationType] = Seq(
     TaxWarehouse,
     RegisteredConsignee,
@@ -48,11 +52,8 @@ object DestinationType extends Enumerable.Implicits {
     DirectDelivery,
     ExemptedOrganisation,
     Export,
-    UnknownDestination,
-    CertifiedConsignee,
-    TemporaryCertifiedConsignee,
-    ReturnToThePlaceOfDispatchOfTheConsignor
-  )
+    UnknownDestination
+  ) ++ dutyPaidDestinationTypes
 
   implicit val enumerable: Enumerable[DestinationType] =
     Enumerable(values.map(v => v.toString -> v): _*)

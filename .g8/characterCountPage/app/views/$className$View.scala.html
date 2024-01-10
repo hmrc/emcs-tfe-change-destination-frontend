@@ -17,13 +17,13 @@
 
 @layout(pageTitle = title(form, messages("$className;format="decap"$.title")), maybeShowActiveTrader = maybeShowActiveTrader(request)) {
 
-    @formHelper(action = routes.$className$Controller.onSubmit(request.ern, request.draftId, mode)) {
+    @formHelper(action = routes.$className$Controller.onSubmit(request.ern, request.arc, mode)) {
 
         @if(form.errors.nonEmpty) {
             @govukErrorSummary(ErrorSummaryViewModel(form))
         }
 
-        @h2(messages("draftId.subHeading", request.draftId), "govuk-caption-l")
+        @h2(messages("arc.subHeading", request.arc), "govuk-caption-l")
 
         @{govukCharacterCount(CharacterCount(
             id = "value",

@@ -26,13 +26,13 @@ class $className$Controller @Inject()(
                                        view: $className$View
                                      ) extends BaseNavigationController with AuthActionHelper {
 
-  def onPageLoad(ern: String, draftId: String, mode: Mode): Action[AnyContent] =
-    authorisedDataRequest(ern, draftId) { implicit request =>
+  def onPageLoad(ern: String, arc: String, mode: Mode): Action[AnyContent] =
+    authorisedDataRequest(ern, arc) { implicit request =>
       Ok(view(fillForm($className$Page, formProvider()), mode))
     }
 
-  def onSubmit(ern: String, draftId: String, mode: Mode): Action[AnyContent] =
-    authorisedDataRequestAsync(ern, draftId) { implicit request =>
+  def onSubmit(ern: String, arc: String, mode: Mode): Action[AnyContent] =
+    authorisedDataRequestAsync(ern, arc) { implicit request =>
       formProvider().bindFromRequest().fold(
         formWithErrors =>
           Future.successful(BadRequest(view(formWithErrors, mode))),

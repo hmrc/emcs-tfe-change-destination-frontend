@@ -15,7 +15,7 @@
 
 @layout(pageTitle = title(form, messages("$className;format="decap"$.title")), maybeShowActiveTrader = maybeShowActiveTrader(request)) {
 
-    @formHelper(action = routes.$className$Controller.onSubmit(request.ern, request.draftId, mode), 'autoComplete -> "off") {
+    @formHelper(action = routes.$className$Controller.onSubmit(request.ern, request.arc, mode), 'autoComplete -> "off") {
 
         @defining(form.errors.headOption.map(_.args.map(_.toString)).getOrElse(Seq())) { erroredFields =>
 
@@ -23,7 +23,7 @@
                 @govukErrorSummary(ErrorSummaryViewModel(form, errorLinkOverrides = Map("value" -> s"value.\${erroredFields.headOption.getOrElse("day")}")))
             }
 
-            @h2(messages("draftId.subHeading", request.draftId), "govuk-caption-xl")
+            @h2(messages("arc.subHeading", request.arc), "govuk-caption-xl")
             @govukDateInput(
                 DateViewModel(
                     field  = form("value"),

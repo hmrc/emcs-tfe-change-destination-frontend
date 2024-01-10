@@ -50,26 +50,12 @@ class InfoIndexControllerSpec extends SpecBase {
 
   "InfoIndex Controller" - {
 
-    "with a Northern Ireland Warehouse Keeper ERN" - {
+    "must redirect to the Change Type page (COD-01)" in {
 
-      "must redirect to the Dispatch place page (CAM-INFO01)" in {
-        val result = controller.onPageLoad(testNorthernIrelandErn, testArc)(request)
+      val result = controller.onPageLoad(testErn, testArc)(request)
 
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result) mustBe
-          Some(controllers.sections.info.routes.DispatchPlaceController.onPreDraftPageLoad(testNorthernIrelandErn, testArc, NormalMode).url)
-      }
-    }
-
-    "with any other ERN" - {
-
-      "must redirect to the Destination Type page (CAM-INFO08)" in {
-        val result = controller.onPageLoad(testGreatBritainErn, testArc)(request)
-
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result) mustBe
-          Some(controllers.sections.info.routes.DestinationTypeController.onPreDraftPageLoad(testGreatBritainErn, testArc, NormalMode).url)
-      }
+      status(result) mustEqual SEE_OTHER
+      redirectLocation(result).value mustBe routes.ChangeTypeController.onPageLoad(testErn, testArc, NormalMode).url
     }
   }
 }

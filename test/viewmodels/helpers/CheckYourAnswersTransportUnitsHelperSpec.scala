@@ -19,8 +19,10 @@ package viewmodels.helpers
 import base.SpecBase
 import fixtures.messages.sections.transportUnit.TransportUnitTypeMessages
 import models.UserAnswers
+import models.requests.DataRequest
 import models.sections.transportUnit.TransportUnitType.FixedTransport
 import pages.sections.transportUnit.{TransportUnitIdentityPage, TransportUnitTypePage}
+import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import uk.gov.hmrc.govukfrontend.views.Aliases.{Key, Text}
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryList
@@ -29,7 +31,7 @@ import viewmodels.govuk.summarylist._
 class CheckYourAnswersTransportUnitsHelperSpec extends SpecBase {
 
   class Setup(userAnswers: UserAnswers = emptyUserAnswers) {
-    implicit lazy val request = dataRequest(FakeRequest(), userAnswers)
+    implicit lazy val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), userAnswers)
 
     lazy val helper: CheckYourAnswersTransportUnitsHelper = app.injector.instanceOf[CheckYourAnswersTransportUnitsHelper]
   }
