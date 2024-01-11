@@ -23,7 +23,7 @@ object ChangeTypeMessages {
     val heading = "What do you want to change about this movement?"
     val title = titleHelper(heading)
     val consigneeRadio = "I want to change the consignee"
-    val destintationRadio = "I want to keep the consignee the same and change the place of destination"
+    val destinationRadio = "I want to keep the consignee the same and change the place of destination"
     val exportOfficeRadio = "I want to keep the consignee the same and change the office of export"
     val returnToSenderRadio = "I want to return the goods to the consignor’s place of dispatch"
     val errorRequired: String = "Select what you want to change about the movement"

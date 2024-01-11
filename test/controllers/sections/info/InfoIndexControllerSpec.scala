@@ -55,7 +55,7 @@ class InfoIndexControllerSpec extends SpecBase {
       val result = controller.onPageLoad(testErn, testArc)(request)
 
       status(result) mustEqual SEE_OTHER
-      redirectLocation(result).value mustBe routes.ChangeTypeController.onPageLoad(testErn, testArc, NormalMode).url
+      redirectLocation(result).value mustBe routes.ChangeTypeController.onPageLoad(testErn, testArc).url
     }
   }
 }

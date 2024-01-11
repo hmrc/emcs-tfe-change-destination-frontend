@@ -16,18 +16,20 @@
 
 package forms.sections.info
 
+import base.SpecBase
+import fixtures.messages.sections.info.ChangeTypeMessages
 import forms.behaviours.OptionFieldBehaviours
 import models.sections.info.ChangeType
 import play.api.data.FormError
+import play.api.i18n.Messages
 
-class ChangeTypeFormProviderSpec extends OptionFieldBehaviours {
+class ChangeTypeFormProviderSpec extends SpecBase with OptionFieldBehaviours {
 
+  val fieldName = "value"
+  val requiredKey = "changeType.error.required"
   val form = new ChangeTypeFormProvider()()
 
   ".value" - {
-
-    val fieldName = "value"
-    val requiredKey = "changeType.error.required"
 
     behave like optionsField[ChangeType](
       form,
@@ -41,5 +43,21 @@ class ChangeTypeFormProviderSpec extends OptionFieldBehaviours {
       fieldName,
       requiredError = FormError(fieldName, requiredKey)
     )
+  }
+
+  "Error messages" - {
+
+    Seq(ChangeTypeMessages.English).foreach { messagesForLang =>
+
+      implicit val msgs: Messages = messages(Seq(messagesForLang.lang))
+
+      s"when rendering with lang code of '${messagesForLang.lang}'" - {
+
+        "have the correct mandatory wording" in {
+
+          msgs(requiredKey) mustBe messagesForLang.errorRequired
+        }
+      }
+    }
   }
 }

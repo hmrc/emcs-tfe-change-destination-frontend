@@ -19,7 +19,6 @@ package views.sections.info
 import base.SpecBase
 import fixtures.messages.sections.info.ChangeTypeMessages
 import forms.sections.info.ChangeTypeFormProvider
-import models.NormalMode
 import models.requests.DataRequest
 import models.sections.info.movementScenario.DestinationType
 import models.sections.info.movementScenario.DestinationType.{Export, dutyPaidDestinationTypes}
@@ -56,13 +55,13 @@ class ChangeTypeViewSpec extends SpecBase with ViewBehaviours {
               lazy val view = app.injector.instanceOf[ChangeTypeView]
               val form = app.injector.instanceOf[ChangeTypeFormProvider].apply()
 
-              implicit val doc: Document = Jsoup.parse(view(form, controllers.sections.info.routes.ChangeTypeController.onSubmit(request.ern, testArc, NormalMode)).toString())
+              implicit val doc: Document = Jsoup.parse(view(form, controllers.sections.info.routes.ChangeTypeController.onSubmit(request.ern, testArc)).toString())
 
               behave like pageWithExpectedElementsAndMessages(Seq(
                 Selectors.title -> messagesForLanguage.title,
                 Selectors.h1 -> messagesForLanguage.heading,
                 Selectors.h2(1) -> messagesForLanguage.infoSection(testArc),
-                Selectors.radioButton(1) -> messagesForLanguage.destintationRadio,
+                Selectors.radioButton(1) -> messagesForLanguage.destinationRadio,
                 Selectors.radioButton(2) -> messagesForLanguage.returnToSenderRadio,
                 Selectors.button -> messagesForLanguage.continue
               ))
@@ -81,7 +80,7 @@ class ChangeTypeViewSpec extends SpecBase with ViewBehaviours {
           lazy val view = app.injector.instanceOf[ChangeTypeView]
           val form = app.injector.instanceOf[ChangeTypeFormProvider].apply()
 
-          implicit val doc: Document = Jsoup.parse(view(form, controllers.sections.info.routes.ChangeTypeController.onSubmit(request.ern, testArc, NormalMode)).toString())
+          implicit val doc: Document = Jsoup.parse(view(form, controllers.sections.info.routes.ChangeTypeController.onSubmit(request.ern, testArc)).toString())
 
           behave like pageWithExpectedElementsAndMessages(Seq(
             Selectors.title -> messagesForLanguage.title,
@@ -110,14 +109,14 @@ class ChangeTypeViewSpec extends SpecBase with ViewBehaviours {
               lazy val view = app.injector.instanceOf[ChangeTypeView]
               val form = app.injector.instanceOf[ChangeTypeFormProvider].apply()
 
-              implicit val doc: Document = Jsoup.parse(view(form, controllers.sections.info.routes.ChangeTypeController.onSubmit(request.ern, testArc, NormalMode)).toString())
+              implicit val doc: Document = Jsoup.parse(view(form, controllers.sections.info.routes.ChangeTypeController.onSubmit(request.ern, testArc)).toString())
 
               behave like pageWithExpectedElementsAndMessages(Seq(
                 Selectors.title -> messagesForLanguage.title,
                 Selectors.h1 -> messagesForLanguage.heading,
                 Selectors.h2(1) -> messagesForLanguage.infoSection(testArc),
                 Selectors.radioButton(1) -> messagesForLanguage.consigneeRadio,
-                Selectors.radioButton(2) -> messagesForLanguage.destintationRadio,
+                Selectors.radioButton(2) -> messagesForLanguage.destinationRadio,
                 Selectors.button -> messagesForLanguage.continue
               ))
             }

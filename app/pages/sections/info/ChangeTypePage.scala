@@ -23,7 +23,7 @@ import play.api.libs.json.JsPath
 
 case object ChangeTypePage extends QuestionPage[ChangeType] {
   override val toString: String = "changeType"
-  override val path: JsPath = JsPath \ toString
+  override val path: JsPath = InfoSection.path \ toString
 
   override def getValueFromIE801(implicit request: DataRequest[_]): Option[ChangeType] = None
 }

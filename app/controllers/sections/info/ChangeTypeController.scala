@@ -20,10 +20,10 @@ import controllers.BasePreDraftNavigationController
 import controllers.actions._
 import controllers.actions.predraft.{PreDraftAuthActionHelper, PreDraftDataRequiredAction, PreDraftDataRetrievalAction}
 import forms.sections.info.ChangeTypeFormProvider
-import models.Mode
+import models.NormalMode
 import models.requests.DataRequest
 import models.sections.info.ChangeType.Consignee
-import navigation.{InformationNavigator, Navigator}
+import navigation.InformationNavigator
 import pages.sections.info.ChangeTypePage
 import play.api.data.Form
 import play.api.i18n.MessagesApi
@@ -49,26 +49,24 @@ class ChangeTypeController @Inject()(
                                       view: ChangeTypeView
                                      ) extends BasePreDraftNavigationController with PreDraftAuthActionHelper {
 
-  def onPageLoad(ern: String, arc: String, mode: Mode): Action[AnyContent] =
+  def onPageLoad(ern: String, arc: String): Action[AnyContent] =
     authorisedWithPreDraftDataUpToDateMovementAsync(ern, arc) { implicit request =>
-      renderView(Ok, fillForm(ChangeTypePage, formProvider()), mode)
+      renderView(Ok, fillForm(ChangeTypePage, formProvider()))
     }
 
-  def onSubmit(ern: String, arc: String, mode: Mode): Action[AnyContent] =
+  def onSubmit(ern: String, arc: String): Action[AnyContent] =
     authorisedWithPreDraftDataUpToDateMovementAsync(ern, arc) { implicit request =>
       formProvider().bindFromRequest().fold(
-        renderView(BadRequest, _, mode),
+        renderView(BadRequest, _),
         {
           case Consignee =>
-            savePreDraftAndRedirect(ChangeTypePage, Consignee, mode)
+            savePreDraftAndRedirect(ChangeTypePage, Consignee, NormalMode)
           case changeType =>
-            userAnswersService.set(request.userAnswers.set(ChangeTypePage, changeType)).flatMap { _ =>
-              savePreDraftAndRedirect(ChangeTypePage, changeType, mode)
-            }
+            createDraftEntryAndRedirect(ChangeTypePage, changeType)
         }
       )
     }
 
-  private def renderView(status: Status, form: Form[_], mode: Mode)(implicit request: DataRequest[_]): Future[Result] =
-    Future(status(view(form, routes.ChangeTypeController.onSubmit(request.ern, request.arc, mode))))
+  private def renderView(status: Status, form: Form[_])(implicit request: DataRequest[_]): Future[Result] =
+    Future(status(view(form, routes.ChangeTypeController.onSubmit(request.ern, request.arc))))
 }
