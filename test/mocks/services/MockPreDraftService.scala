@@ -29,9 +29,9 @@ trait MockPreDraftService extends MockFactory {
 
   object MockPreDraftService {
 
-    def get(ern: String, sessionId: String): CallHandler2[String, String, Future[Option[UserAnswers]]] =
+    def get(ern: String, arc: String): CallHandler2[String, String, Future[Option[UserAnswers]]] =
       (mockPreDraftService.get(_: String, _: String))
-        .expects(ern, sessionId)
+        .expects(ern, arc)
 
     def set(userAnswers: UserAnswers): CallHandler1[UserAnswers, Future[Boolean]] =
       (mockPreDraftService.set(_: UserAnswers))
@@ -41,9 +41,9 @@ trait MockPreDraftService extends MockFactory {
         ))
 
 
-    def clear(ern: String, sessionId: String): CallHandler2[String, String, Future[Boolean]] = {
+    def clear(ern: String, arc: String): CallHandler2[String, String, Future[Boolean]] = {
       (mockPreDraftService.clear(_: String, _: String))
-        .expects(ern, sessionId)
+        .expects(ern, arc)
     }
   }
 }
