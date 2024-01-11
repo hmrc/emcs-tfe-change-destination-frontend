@@ -33,6 +33,7 @@ import javax.inject.{Inject, Singleton}
 @Singleton
 class InformationNavigator @Inject()() extends BaseNavigator {
 
+  // noinspection ScalaStyle
   private def normalRoutes(implicit request: DataRequest[_]): Page => UserAnswers => Call = {
 
     case ChangeTypePage => (userAnswers: UserAnswers) =>

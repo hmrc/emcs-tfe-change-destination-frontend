@@ -67,17 +67,15 @@ class DestinationTypeController @Inject()(
       )
     }
 
+  // TODO should the mode be removed here?
   private[info] def renderView(status: Status, form: Form[_], mode: Mode)(implicit request: DataRequest[_]): Future[Result] = {
     Future.successful(
+      // TODO should request.dispatchPlace be optional here? There is no logic in the copydeck?
       request.dispatchPlace match {
-        case _ if request.userTypeFromErn != NorthernIrelandWarehouseKeeper =>
-          // GB ERN or XIRC ERN
-          status(view(GreatBritain, form, controllers.sections.info.routes.DestinationTypeController.onPreDraftSubmit(request.ern, request.arc, mode)))
         case Some(dispatchPlace) =>
-          // XIWK ERN, dispatchPlace is known
           status(view(dispatchPlace, form, controllers.sections.info.routes.DestinationTypeController.onPreDraftSubmit(request.ern, request.arc, mode)))
         case None =>
-          // XI ERN, dispatchPlace is unknown
+          //  dispatchPlace is unknown
           Redirect(controllers.sections.info.routes.DispatchPlaceController.onPreDraftPageLoad(request.ern, request.arc, mode))
       }
     )

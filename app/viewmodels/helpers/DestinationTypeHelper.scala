@@ -16,11 +16,12 @@
 
 package viewmodels.helpers
 
+import models.UserType
 import models.UserType._
 import models.requests.DataRequest
 import models.response.InvalidUserTypeException
 import models.sections.info.DispatchPlace
-import models.sections.info.DispatchPlace.{GreatBritain, NorthernIreland}
+import models.sections.info.DispatchPlace.GreatBritain
 import models.sections.info.movementScenario.MovementScenario
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
@@ -33,28 +34,30 @@ class DestinationTypeHelper extends Logging {
     case GreatBritainWarehouseKeeper | NorthernIrelandWarehouseKeeper => messages("destinationType.title.movement")
     case GreatBritainRegisteredConsignor | NorthernIrelandRegisteredConsignor => messages("destinationType.title.import")
     case userType =>
-      logger.error(s"[title] invalid UserType for CAM journey: $userType")
-      throw InvalidUserTypeException(s"[DestinationTypeHelper][title] invalid UserType for CAM journey: $userType")
+      logger.error(s"[title] invalid UserType for COD journey: $userType")
+      throw InvalidUserTypeException(s"[DestinationTypeHelper][title] invalid UserType for COD journey: $userType")
   }
 
   def heading(implicit request: DataRequest[_], messages: Messages): String = request.userTypeFromErn match {
     case GreatBritainWarehouseKeeper | NorthernIrelandWarehouseKeeper => messages("destinationType.heading.movement")
     case GreatBritainRegisteredConsignor | NorthernIrelandRegisteredConsignor => messages("destinationType.heading.import")
     case userType =>
-      logger.error(s"[heading] invalid UserType for CAM journey: $userType")
+      logger.error(s"[heading] invalid UserType for COD journey: $userType")
       throw InvalidUserTypeException(s"[DestinationTypeHelper][heading] invalid UserType for CAM journey: $userType")
   }
 
   def options(dispatchPlace: DispatchPlace)(implicit request: DataRequest[_], messages: Messages): Seq[RadioItem] = {
     // Note: __RC can only do imports, __WK can only do exports
     request.userTypeFromErn match {
-      case GreatBritainWarehouseKeeper | GreatBritainRegisteredConsignor => MovementScenario.valuesUk.map(radioOption)
-      case NorthernIrelandWarehouseKeeper if dispatchPlace == GreatBritain => MovementScenario.valuesUk.map(radioOption)
-      case NorthernIrelandWarehouseKeeper if dispatchPlace == NorthernIreland => MovementScenario.valuesEu.map(radioOption)
-      case NorthernIrelandRegisteredConsignor => MovementScenario.valuesEu.map(radioOption)
-      case userType =>
-        logger.error(s"[options] invalid UserType for CAM journey: $userType")
-        throw InvalidUserTypeException(s"[DestinationTypeHelper][options] invalid UserType for CAM journey: $userType")
+      case GreatBritainWarehouseKeeper | GreatBritainRegisteredConsignor =>
+        MovementScenario.valuesUk.map(radioOption)
+      case NorthernIrelandWarehouseKeeper if dispatchPlace == GreatBritain =>
+        MovementScenario.valuesUk.map(radioOption)
+      case NorthernIrelandWarehouseKeeper | NorthernIrelandRegisteredConsignor  => // TODO how to get 'NI radio option selected' from CAM-INFO 01, request.userAnswers ?
+        MovementScenario.valuesEu.map(radioOption)
+      case userType: UserType =>
+        logger.error(s"[options] invalid UserType for COD journey: $userType")
+        throw InvalidUserTypeException(s"[DestinationTypeHelper][options] invalid UserType for COD journey: $userType")
     }
   }
 

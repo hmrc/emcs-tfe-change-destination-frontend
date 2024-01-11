@@ -326,10 +326,10 @@ subHeading.hidden = This section is
 checkYourAnswersJourneyType.title = Check your answers
 checkYourAnswersJourneyType.heading = Check your answers
 
-destinationType.heading.movement = What is the destination type for this movement?
-destinationType.heading.import = What is the destination type for this import?
-destinationType.title.movement = What is the destination type for this movement?
-destinationType.title.import = What is the destination type for this import?
+destinationType.heading.movement = What is the new destination type for this movement?
+destinationType.heading.import = What is the new destination type for this import?
+destinationType.title.movement = What is the new destination type for this movement?
+destinationType.title.import = What is the new destination type for this import?
 
 destinationType.exportWithCustomsDeclarationLodgedInTheUk = Export with customs declaration lodged in the United Kingdom
 destinationType.gbTaxWarehouse = Tax warehouse in Great Britain
