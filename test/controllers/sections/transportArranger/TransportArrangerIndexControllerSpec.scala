@@ -50,7 +50,7 @@ class TransportArrangerIndexControllerSpec extends SpecBase with MockUserAnswers
 
   "TransportArrangerIndexController" - {
     "when TransportArrangerSection.isCompleted" - {
-      "must redirect to the CYA controller" in new Test(Some(
+      "must redirect to the Review controller" in new Test(Some(
         emptyUserAnswers
           .set(TransportArrangerPage, Consignor)
           .set(ConsignorAddressPage, UserAddress(None, "", "", ""))
@@ -60,12 +60,12 @@ class TransportArrangerIndexControllerSpec extends SpecBase with MockUserAnswers
 
         status(result) mustEqual SEE_OTHER
         redirectLocation(result) mustBe
-          Some(controllers.sections.transportArranger.routes.TransportArrangerCheckAnswersController.onPageLoad(testErn, testArc).url)
+          Some(controllers.sections.transportArranger.routes.TransportArrangerReviewController.onPageLoad(testErn, testArc).url)
       }
     }
 
     "when TransportArrangerSection.needsReview" - {
-      "must redirect to the CYA controller" in new Test(Some(
+      "must redirect to the Review controller" in new Test(Some(
         emptyUserAnswers
           .set(TransportArrangerPage, Consignor)
           .set(ConsignorAddressPage, UserAddress(None, "", "", ""))
@@ -74,7 +74,7 @@ class TransportArrangerIndexControllerSpec extends SpecBase with MockUserAnswers
 
         status(result) mustEqual SEE_OTHER
         redirectLocation(result) mustBe
-          Some(controllers.sections.transportArranger.routes.TransportArrangerCheckAnswersController.onPageLoad(testErn, testArc).url)
+          Some(controllers.sections.transportArranger.routes.TransportArrangerReviewController.onPageLoad(testErn, testArc).url)
       }
     }
   }

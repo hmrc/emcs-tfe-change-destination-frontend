@@ -40,7 +40,7 @@ class TransportArrangerIndexController @Inject()(
   def onPageLoad(ern: String, arc: String): Action[AnyContent] =
     authorisedDataRequestWithUpToDateMovement(ern, arc) { implicit request =>
       if (TransportArrangerSection.isCompleted || TransportArrangerSection.needsReview) {
-        Redirect(controllers.sections.transportArranger.routes.TransportArrangerCheckAnswersController.onPageLoad(ern, arc))
+        Redirect(controllers.sections.transportArranger.routes.TransportArrangerReviewController.onPageLoad(ern, arc))
       } else {
         Redirect(controllers.sections.transportArranger.routes.TransportArrangerController.onPageLoad(ern, arc, NormalMode))
       }

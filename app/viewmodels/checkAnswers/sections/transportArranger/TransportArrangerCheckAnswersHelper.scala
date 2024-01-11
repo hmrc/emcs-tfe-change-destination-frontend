@@ -25,13 +25,13 @@ import javax.inject.Inject
 
 class TransportArrangerCheckAnswersHelper @Inject()() {
 
-  def summaryList()(implicit request: DataRequest[_], messages: Messages): SummaryList =
+  def summaryList(onReviewPage: Boolean = false)(implicit request: DataRequest[_], messages: Messages): SummaryList =
     SummaryListViewModel(
       rows = Seq(
-        TransportArrangerSummary.row(),
-        Some(TransportArrangerNameSummary.row()),
-        TransportArrangerVatSummary.row(),
-        Some(TransportArrangerAddressSummary.row())
+        TransportArrangerSummary.row(onReviewPage),
+        Some(TransportArrangerNameSummary.row(onReviewPage)),
+        TransportArrangerVatSummary.row(onReviewPage),
+        Some(TransportArrangerAddressSummary.row(onReviewPage))
       ).flatten
     ).withCssClass("govuk-!-margin-bottom-9")
 }

@@ -45,7 +45,7 @@ class TransportArrangerSummarySpec extends SpecBase with Matchers {
 
             implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers)
 
-            TransportArrangerSummary.row() mustBe
+            TransportArrangerSummary.row(onReviewPage = false) mustBe
               Some(
                 SummaryListRowViewModel(
                   key = messagesForLanguage.cyaLabel,
@@ -64,11 +64,27 @@ class TransportArrangerSummarySpec extends SpecBase with Matchers {
 
         "when there's an answer" - {
 
+          "and the user is on the review page" - {
+
+            "must output a row with no change link" in {
+
+              implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(TransportArrangerPage, GoodsOwner))
+
+              TransportArrangerSummary.row(onReviewPage = true) mustBe Some(
+                SummaryListRowViewModel(
+                  key = messagesForLanguage.cyaLabel,
+                  value = Value(Text(messagesForLanguage.goodsOwnerRadioOption)),
+                  actions = Seq()
+                )
+              )
+            }
+          }
+
           "must output the expected row" in {
 
             implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(TransportArrangerPage, GoodsOwner))
 
-            TransportArrangerSummary.row() mustBe
+            TransportArrangerSummary.row(onReviewPage = false) mustBe
               Some(
                 SummaryListRowViewModel(
                   key = messagesForLanguage.cyaLabel,

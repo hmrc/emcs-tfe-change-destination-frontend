@@ -32,7 +32,7 @@ import viewmodels.implicits._
 
 object TransportArrangerAddressSummary {
 
-  def row()(implicit request: DataRequest[_], messages: Messages): SummaryListRow = {
+  def row(onReviewPage: Boolean)(implicit request: DataRequest[_], messages: Messages): SummaryListRow = {
 
     val transportArranger = request.userAnswers.get(TransportArrangerPage)
 
@@ -63,7 +63,7 @@ object TransportArrangerAddressSummary {
     SummaryListRowViewModel(
       key = "transportArrangerAddress.checkYourAnswers.label",
       value = ValueViewModel(value),
-      actions = if (!showChangeLink) Seq() else Seq(
+      actions = if (!showChangeLink || onReviewPage) Seq() else Seq(
         ActionItemViewModel(
           content = "site.change",
           href = controllers.sections.transportArranger.routes.TransportArrangerAddressController.onPageLoad(

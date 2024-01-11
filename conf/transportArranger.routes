@@ -23,3 +23,6 @@ POST        /trader/:ern/movement/:arc/transport-arranger/address/change        
 
 GET         /trader/:ern/movement/:arc/transport-arranger/check-answers          controllers.sections.transportArranger.TransportArrangerCheckAnswersController.onPageLoad(ern: String, arc: String)
 POST        /trader/:ern/movement/:arc/transport-arranger/check-answers          controllers.sections.transportArranger.TransportArrangerCheckAnswersController.onSubmit(ern: String, arc: String)
+
+GET        /trader/:ern/movement/:arc/transport-arranger/review-answers          controllers.sections.transportArranger.TransportArrangerReviewController.onPageLoad(ern: String, arc: String)
+POST       /trader/:ern/movement/:arc/transport-arranger/review-answers          controllers.sections.transportArranger.TransportArrangerReviewController.onSubmit(ern: String, arc: String)

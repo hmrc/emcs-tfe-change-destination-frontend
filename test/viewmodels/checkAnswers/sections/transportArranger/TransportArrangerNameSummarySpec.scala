@@ -52,7 +52,7 @@ class TransportArrangerNameSummarySpec extends SpecBase with Matchers {
                 movementDetails = maxGetMovementResponse.copy(transportArrangerTrader = None)
               )
 
-              TransportArrangerNameSummary.row() mustBe
+              TransportArrangerNameSummary.row(onReviewPage = false) mustBe
                 SummaryListRowViewModel(
                   key = messagesForLanguage.cyaLabel,
                   value = Value(Text(messagesForLanguage.sectionNotComplete("Goods owner"))),
@@ -76,7 +76,7 @@ class TransportArrangerNameSummarySpec extends SpecBase with Matchers {
                 .set(TransportArrangerNamePage, "Jeff")
               )
 
-              TransportArrangerNameSummary.row() mustBe
+              TransportArrangerNameSummary.row(onReviewPage = false) mustBe
                 SummaryListRowViewModel(
                   key = messagesForLanguage.cyaLabel,
                   value = Value(Text("Jeff")),
@@ -88,6 +88,22 @@ class TransportArrangerNameSummarySpec extends SpecBase with Matchers {
                     ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHidden)
                   )
                 )
+            }
+
+            "and the user is on the review page" - {
+
+              "must output a row with no change link" in {
+
+                implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers
+                  .set(TransportArrangerPage, Other)
+                  .set(TransportArrangerNamePage, "Jeff"))
+
+                TransportArrangerNameSummary.row(onReviewPage = true) mustBe SummaryListRowViewModel(
+                  key = messagesForLanguage.cyaLabel,
+                  value = Value(Text("Jeff")),
+                  actions = Seq()
+                )
+              }
             }
           }
         }
@@ -104,7 +120,7 @@ class TransportArrangerNameSummarySpec extends SpecBase with Matchers {
                 movementDetails = maxGetMovementResponse.copy(consigneeTrader = None)
               )
 
-              TransportArrangerNameSummary.row() mustBe
+              TransportArrangerNameSummary.row(onReviewPage = false) mustBe
                 SummaryListRowViewModel(
                   key = messagesForLanguage.cyaLabel,
                   value = Value(Text(messagesForLanguage.sectionNotComplete("Consignee"))),
@@ -122,12 +138,29 @@ class TransportArrangerNameSummarySpec extends SpecBase with Matchers {
                 .set(ConsigneeBusinessNamePage, "Jeff")
               )
 
-              TransportArrangerNameSummary.row() mustBe
+              TransportArrangerNameSummary.row(onReviewPage = false) mustBe
                 SummaryListRowViewModel(
                   key = messagesForLanguage.cyaLabel,
                   value = Value(Text("Jeff")),
                   actions = Seq()
                 )
+            }
+
+            "and the user is on the review page" - {
+
+              "must output a row with no change link" in {
+
+                implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers
+                  .set(TransportArrangerPage, Consignee)
+                  .set(ConsigneeBusinessNamePage, "Jeff")
+                )
+
+                TransportArrangerNameSummary.row(onReviewPage = true) mustBe SummaryListRowViewModel(
+                  key = messagesForLanguage.cyaLabel,
+                  value = Value(Text("Jeff")),
+                  actions = Seq()
+                )
+              }
             }
           }
         }

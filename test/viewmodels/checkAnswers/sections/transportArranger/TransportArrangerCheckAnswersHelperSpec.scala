@@ -34,32 +34,37 @@ class TransportArrangerCheckAnswersHelperSpec extends SpecBase with MockFactory 
   }
 
   "summaryList" - {
-    TransportArranger.values.foreach {
-      case value@(GoodsOwner | Other) =>
-        // Only GoodsOwner or Other contain the VAT reg row
-        "must render four rows" - {
-          s"when TransportArranger value is $value" in new Test {
-            implicit val request: DataRequest[_] = dataRequest(
-              FakeRequest(),
-              emptyUserAnswers
-                .set(TransportArrangerPage, value)
-                .set(TransportArrangerVatPage, "beans")
-            )
-            helper.summaryList()(request, msgs).rows.length mustBe 4
-          }
+    Seq(true, false).foreach { onReviewPage =>
+      s"when onReviewPage = $onReviewPage" - {
+        TransportArranger.values.foreach {
+          case value@(GoodsOwner | Other) =>
+            // Only GoodsOwner or Other contain the VAT reg row
+            "must render four rows" - {
+              s"when TransportArranger value is $value" in new Test {
+                implicit val request: DataRequest[_] = dataRequest(
+                  FakeRequest(),
+                  emptyUserAnswers
+                    .set(TransportArrangerPage, value)
+                    .set(TransportArrangerVatPage, "beans")
+                )
+                helper.summaryList(onReviewPage)(request, msgs).rows.length mustBe 4
+              }
+            }
+          case value =>
+            "must render three rows" - {
+              s"when TransportArranger value is $value" in new Test {
+                implicit val request: DataRequest[_] = dataRequest(
+                  FakeRequest(),
+                  emptyUserAnswers
+                    .set(TransportArrangerPage, value)
+                    .set(TransportArrangerVatPage, "beans")
+                )
+                helper.summaryList(onReviewPage)(request, msgs).rows.length mustBe 3
+              }
+            }
         }
-      case value =>
-        "must render three rows" - {
-          s"when TransportArranger value is $value" in new Test {
-            implicit val request: DataRequest[_] = dataRequest(
-              FakeRequest(),
-              emptyUserAnswers
-                .set(TransportArrangerPage, value)
-                .set(TransportArrangerVatPage, "beans")
-            )
-            helper.summaryList()(request, msgs).rows.length mustBe 3
-          }
-        }
+      }
     }
+
   }
 }
