@@ -16,10 +16,13 @@
 
 package forms.sections.info
 
+import base.SpecBase
+import fixtures.messages.sections.info.ChangeDestinationTypeMessages
 import forms.behaviours.BooleanFieldBehaviours
 import play.api.data.FormError
+import play.api.i18n.Messages
 
-class ChangeDestinationTypeFormProviderSpec extends BooleanFieldBehaviours {
+class ChangeDestinationTypeFormProviderSpec extends SpecBase with BooleanFieldBehaviours {
 
   val requiredKey = "changeDestinationType.error.required"
   val invalidKey = "error.boolean"
@@ -41,5 +44,21 @@ class ChangeDestinationTypeFormProviderSpec extends BooleanFieldBehaviours {
       fieldName,
       requiredError = FormError(fieldName, requiredKey)
     )
+  }
+
+  "Error messages" - {
+
+    Seq(ChangeDestinationTypeMessages.English).foreach { messagesForLang =>
+
+      implicit val msgs: Messages = messages(Seq(messagesForLang.lang))
+
+      s"when rendering with lang code of '${messagesForLang.lang}'" - {
+
+        "have the correct mandatory wording" in {
+
+          msgs(requiredKey) mustBe messagesForLang.errorRequired
+        }
+      }
+    }
   }
 }

@@ -28,6 +28,8 @@ object ChangeDestinationTypeMessages {
     val legend: String = "Do you want to change the destination type for this movement?"
 
     val noOption: String = "No, I want to keep the destination type the same"
+
+    val errorRequired: String = "Select yes if you want to change the destination type"
   }
 
   object English extends ViewMessages with BaseEnglish
