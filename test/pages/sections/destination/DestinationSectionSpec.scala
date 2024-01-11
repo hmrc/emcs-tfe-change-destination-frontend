@@ -22,6 +22,7 @@ import models.requests.DataRequest
 import models.sections.ReviewAnswer.{ChangeAnswers, KeepAnswers}
 import models.sections.info.movementScenario.MovementScenario
 import models.sections.info.movementScenario.MovementScenario._
+import pages.QuestionPage
 import pages.sections.info.DestinationTypePage
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
@@ -144,7 +145,7 @@ class DestinationSectionSpec extends SpecBase with UserAddressFixtures with Json
                 .set(DestinationAddressPage, testUserAddress)
                 .set(DestinationReviewPage, ChangeAnswers)
 
-              Seq(
+              Seq[QuestionPage[_]](
                 DestinationConsigneeDetailsPage,
                 DestinationBusinessNamePage,
                 DestinationAddressPage

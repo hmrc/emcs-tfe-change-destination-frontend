@@ -8,13 +8,8 @@ echo "" >> ../conf/app.routes
 echo "GET        /$className;format="decap"$                       controllers.$className$Controller.onPageLoad()" >> ../conf/app.routes
 
 echo "Adding messages to conf.messages"
-echo "" >> ../conf/messages.en
-echo "$className;format="decap"$.title = $className;format="decap"$" >> ../conf/messages.en
-echo "$className;format="decap"$.heading = $className;format="decap"$" >> ../conf/messages.en
-
-echo "Adding messages to Welsh conf.messages"
-echo "" >> ../conf/messages.cy
-echo "$className;format="decap"$.title = $className;format="decap"$" >> ../conf/messages.cy
-echo "$className;format="decap"$.heading = $className;format="decap"$" >> ../conf/messages.cy
+echo "" >> ../conf/messages
+echo "$className;format="decap"$.title = $className;format="decap"$" >> ../conf/messages
+echo "$className;format="decap"$.heading = $className;format="decap"$" >> ../conf/messages
 
 echo "Migration $className;format="snake"$ completed"

@@ -1,12 +1,13 @@
 package controllers
 
+import controllers.BaseNavigationController
 import controllers.actions._
 import forms.$className$FormProvider
 import javax.inject.Inject
 import models.Mode
 import navigation.Navigator
 import pages.$className$Page
-import play.api.i18n.{I18nSupport, MessagesApi}
+import play.api.i18n.MessagesApi
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import services.UserAnswersService
 import views.html.$className$View
@@ -18,7 +19,6 @@ class $className$Controller @Inject()(
                                        override val userAnswersService: UserAnswersService,
                                        override val navigator: Navigator,
                                        override val auth: AuthAction,
-                                       override val withMovement: MovementAction,
                                        override val getData: DataRetrievalAction,
                                        override val requireData: DataRequiredAction,
                                        override val userAllowList: UserAllowListAction,

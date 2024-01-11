@@ -18,8 +18,6 @@ package controllers.sections.info
 
 import controllers.BaseController
 import controllers.actions._
-import models.NormalMode
-import models.UserType.NorthernIrelandWarehouseKeeper
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 
 import javax.inject.Inject
@@ -29,11 +27,7 @@ class InfoIndexController @Inject()(val userAllowList: UserAllowListAction,
                                     val controllerComponents: MessagesControllerComponents) extends BaseController {
 
   def onPageLoad(ern: String, arc: String): Action[AnyContent] =
-    (auth(ern, arc) andThen userAllowList) { implicit request =>
-      if (request.userTypeFromErn == NorthernIrelandWarehouseKeeper) {
-        Redirect(controllers.sections.info.routes.DispatchPlaceController.onPreDraftPageLoad(ern, arc, NormalMode))
-      } else {
-        Redirect(controllers.sections.info.routes.DestinationTypeController.onPreDraftPageLoad(ern, arc, NormalMode))
-      }
+    (auth(ern, arc) andThen userAllowList) {
+      Redirect(controllers.sections.info.routes.ChangeTypeController.onPageLoad(ern, arc))
     }
 }

@@ -58,5 +58,17 @@ trait BasePreDraftNavigationController extends BaseNavigationController with Log
   private def savePreDraft[A](page: QuestionPage[A], answer: A)
                              (implicit request: DataRequest[_], format: Format[A]): Future[UserAnswers] =
     savePreDraft(page, answer, request.userAnswers)
+
+  def createDraftEntryAndRedirect[A](page: QuestionPage[A], answer: A)(implicit request: DataRequest[_], fmt: Format[A]): Future[Result] = {
+
+    val updatedAnswers = request.userAnswers.set(page, answer)
+
+    for {
+      _ <- userAnswersService.set(updatedAnswers)
+      _ <- preDraftService.clear(updatedAnswers.ern, request.arc)
+    } yield {
+      Redirect(navigator.nextPage(page, NormalMode, updatedAnswers))
+    }
+  }
 }
 

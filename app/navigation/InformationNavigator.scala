@@ -19,6 +19,7 @@ package navigation
 import controllers.routes
 import models._
 import models.requests.DataRequest
+import models.sections.info.ChangeType.Consignee
 import pages._
 import pages.sections.info._
 import play.api.mvc.Call
@@ -32,7 +33,16 @@ import javax.inject.{Inject, Singleton}
 @Singleton
 class InformationNavigator @Inject()() extends BaseNavigator {
 
-  private val normalRoutes: Page => UserAnswers => Call = {
+  private def normalRoutes(implicit request: DataRequest[_]): Page => UserAnswers => Call = {
+
+    case ChangeTypePage => (userAnswers: UserAnswers) =>
+      userAnswers.get(ChangeTypePage) match {
+          case Some(Consignee) =>
+            //TODO: Redirect to COD-02
+            testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+          case _ =>
+            controllers.routes.DraftMovementController.onPageLoad(request.ern, request.arc)
+        }
 
     case DispatchPlacePage =>
       (userAnswers: UserAnswers) => controllers.sections.info.routes.DestinationTypeController.onPreDraftPageLoad(userAnswers.ern, userAnswers.arc, NormalMode)
@@ -62,7 +72,7 @@ class InformationNavigator @Inject()() extends BaseNavigator {
 
   override def nextPage(page: Page, mode: Mode, userAnswers: UserAnswers)(implicit request: DataRequest[_]): Call = mode match {
     case NormalMode =>
-      normalRoutes(page)(userAnswers)
+      normalRoutes(request)(page)(userAnswers)
     case CheckMode =>
       checkRouteMap(page)(userAnswers)
     case ReviewMode =>

@@ -23,6 +23,8 @@ site.item = item
 site.noResultsFound = No results found
 site.divider = or
 
+arc.subHeading = Change of destination for {0}
+
 country.austria = Austria
 country.belgium = Belgium
 country.bulgaria = Bulgaria
@@ -1389,3 +1391,11 @@ itemsAddToList.error.required = Select yes if you need to add another item
 transportUnitCheckAnswers.title = Check your answers
 transportUnitCheckAnswers.heading = Check your answers
 transportUnitCheckAnswers.heading.transportUnits = Transport units
+
+changeType.title = What do you want to change about this movement?
+changeType.heading = What do you want to change about this movement?
+changeType.consignee = I want to change the consignee
+changeType.destination = I want to keep the consignee the same and change the place of destination
+changeType.exportOffice = I want to keep the consignee the same and change the office of export
+changeType.return = I want to return the goods to the consignor’s place of dispatch
+changeType.error.required = Select what you want to change about the movement

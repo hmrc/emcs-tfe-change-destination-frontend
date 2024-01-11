@@ -7,7 +7,7 @@ import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.$className$View
 
 class $className$Controller @Inject()(
-                                       val messagesApi: MessagesApi,
+                                       override val messagesApi: MessagesApi,
                                        val controllerComponents: MessagesControllerComponents,
                                        view: $className$View
                                      ) extends FrontendBaseController with I18nSupport {

@@ -10,7 +10,7 @@
         govukButton: GovukButton,
         h1: components.h1,
         h2: components.h2,
-        continueOrExit: components.continueOrExit
+        saveAndContinue: components.saveAndContinue
 )
 
 @(form: Form[_], mode: Mode)(implicit request: DataRequest[_], messages: Messages)
@@ -37,11 +37,11 @@
             }
         ))}
 
-        @continueOrExit()
+        @saveAndContinue()
 
     }
 }
 
 @{
-    //$COVERAGE-OFF$
+    //\$COVERAGE-OFF\$
 }
