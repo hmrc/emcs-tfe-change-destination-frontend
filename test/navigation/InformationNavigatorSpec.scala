@@ -48,11 +48,10 @@ class InformationNavigatorSpec extends SpecBase {
 
         "when the answer is `Consignee`" - {
 
-          //TODO: Route to COD-02
           "must go to Under Construction" in {
 
             navigator.nextPage(ChangeTypePage, NormalMode, emptyUserAnswers.set(ChangeTypePage, Consignee)) mustBe
-              testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+              controllers.sections.info.routes.ChangeDestinationTypeController.onPageLoad(testErn, testArc)
           }
         }
 
@@ -68,6 +67,39 @@ class InformationNavigatorSpec extends SpecBase {
           }
         }
       }
+
+      "for the ChangeDestinationType page" - {
+
+        "must go to the New Destination Type page" - {
+
+          "when the user answers yes" in {
+            //TODO: redirect to COD-03
+            val userAnswers = emptyUserAnswers.set(ChangeDestinationTypePage, true)
+            navigator.nextPage(ChangeDestinationTypePage, NormalMode, userAnswers) mustBe
+              testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+          }
+        }
+
+        "must go to the Task List page" - {
+
+          "when the user answers no" in {
+
+            val userAnswers = emptyUserAnswers.set(ChangeDestinationTypePage, false)
+            navigator.nextPage(ChangeDestinationTypePage, NormalMode, userAnswers) mustBe
+              controllers.routes.DraftMovementController.onPageLoad(testErn, testArc)
+          }
+        }
+
+        "must go to the Change Destination Type page" - {
+
+          "when there is no user answers" in {
+
+            navigator.nextPage(ChangeDestinationTypePage, NormalMode, emptyUserAnswers) mustBe
+              controllers.sections.info.routes.ChangeDestinationTypeController.onPageLoad(testErn, testArc)
+          }
+        }
+      }
+
 
       "for the DispatchPlace page" - {
 

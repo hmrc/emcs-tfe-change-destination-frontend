@@ -128,5 +128,19 @@ class ChangeDestinationTypeControllerSpec extends SpecBase with MockUserAnswersS
       contentAsString(result) mustEqual view(boundForm, summaryListHelper.summaryList(), submitRoute).toString
     }
 
+    "must redirect to Index for a GET if no existing data is found" in new Fixture(None) {
+      val result = controller.onPageLoad(testErn, testArc)(request)
+
+      status(result) mustEqual SEE_OTHER
+      redirectLocation(result).value mustEqual controllers.routes.IndexController.onPageLoad(testErn, testArc).url
+    }
+
+    "must redirect to Index for a POST if no existing data is found" in new Fixture(None) {
+      val result = controller.onSubmit(testErn, testArc)(request.withFormUrlEncodedBody(("value", "false")))
+
+      status(result) mustEqual SEE_OTHER
+      redirectLocation(result).value mustEqual controllers.routes.IndexController.onPageLoad(testErn, testArc).url
+    }
+
   }
 }
