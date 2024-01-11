@@ -43,7 +43,7 @@
                 @govukErrorSummary(ErrorSummaryViewModel(form, errorLinkOverrides = Map("value" -> s"value.${erroredFields.headOption.getOrElse("day")}")))
             }
 
-            @h2(messages("movementInformation.subHeading"), "govuk-caption-xl", hiddenContent = Some(messages("subHeading.hidden"))))
+            @h2(messages("movementInformation.subHeading"), "govuk-caption-xl", hiddenContent = Some(messages("subHeading.hidden")))
 
             @h1("dispatchDetails.heading")
 

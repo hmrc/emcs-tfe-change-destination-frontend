@@ -38,11 +38,22 @@ class InformationNavigator @Inject()() extends BaseNavigator {
     case ChangeTypePage => (userAnswers: UserAnswers) =>
       userAnswers.get(ChangeTypePage) match {
           case Some(Consignee) =>
-            //TODO: Redirect to COD-02
-            testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+            controllers.sections.info.routes.ChangeDestinationTypeController.onPageLoad(userAnswers.ern, userAnswers.arc)
           case _ =>
             controllers.routes.DraftMovementController.onPageLoad(request.ern, request.arc)
         }
+
+    case ChangeDestinationTypePage =>
+      (userAnswers: UserAnswers) => userAnswers.get(ChangeDestinationTypePage) match {
+        case Some(wantsToChangeDestinationType) =>
+          if(wantsToChangeDestinationType) {
+            //TODO: redirect to COD-03
+            testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+          } else {
+            controllers.routes.DraftMovementController.onPageLoad(userAnswers.ern, userAnswers.arc)
+          }
+        case _ => controllers.sections.info.routes.ChangeDestinationTypeController.onPageLoad(userAnswers.ern, userAnswers.arc)
+      }
 
     case DispatchPlacePage =>
       (userAnswers: UserAnswers) => controllers.sections.info.routes.DestinationTypeController.onPreDraftPageLoad(userAnswers.ern, userAnswers.arc, NormalMode)
@@ -78,4 +89,5 @@ class InformationNavigator @Inject()() extends BaseNavigator {
     case ReviewMode =>
       reviewRouteMap(page)(userAnswers)
   }
+
 }

@@ -41,7 +41,6 @@ trait AuthActionHelper {
   def authorisedDataRequestWithUpToDateMovementAsync(ern: String, arc: String)(block: DataRequest[_] => Future[Result]): Action[AnyContent] =
     authedDataRequestUpToDate(ern, arc).async(block)
 
-
   private def authedDataRequestFromCache(ern: String, arc: String) = authedDataRequest(ern, arc, withMovement.fromCache(arc))
 
   def authorisedDataRequestWithCachedMovement(ern: String, arc: String)(block: DataRequest[_] => Result): Action[AnyContent] =

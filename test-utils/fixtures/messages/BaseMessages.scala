@@ -37,6 +37,7 @@ trait BaseMessages { _: i18n =>
   val transportUnitsSection: String = s"$hiddenSectionContent Transport units"
   val journeyTypeSection: String = s"$hiddenSectionContent Journey type"
   val guarantorSection: String = s"$hiddenSectionContent Guarantor"
+  val changeOfDestinationSection: String => String = arc =>s"$hiddenSectionContent Change of destination for $arc"
 
   def lrnSubheading(lrn: String): String = s"Change destination for $lrn"
   val continue = "Continue"
