@@ -65,9 +65,7 @@ class ChangeDestinationTypeController @Inject()(
           case value@true =>
             savePreDraftAndRedirect(ChangeDestinationTypePage, value, NormalMode)
           case value@false =>
-            userAnswersService.set(request.userAnswers.set(ChangeDestinationTypePage, value)).flatMap { _ =>
-              savePreDraftAndRedirect(ChangeDestinationTypePage, value, NormalMode)
-            }
+            createDraftEntryAndRedirect(ChangeDestinationTypePage, value)
         }
       )
     }

@@ -21,10 +21,10 @@ import controllers.actions.FakeMovementAction
 import controllers.actions.predraft.FakePreDraftRetrievalAction
 import forms.sections.info.ChangeTypeFormProvider
 import mocks.services.{MockPreDraftService, MockUserAnswersService}
+import models.UserAnswers
 import models.requests.DataRequest
 import models.sections.info.ChangeType
 import models.sections.info.ChangeType.{Consignee, ExportOffice}
-import models.{NormalMode, UserAnswers}
 import navigation.FakeNavigators.FakeInfoNavigator
 import pages.sections.info.ChangeTypePage
 import play.api.mvc.AnyContentAsEmpty

@@ -108,7 +108,7 @@ class ChangeDestinationTypeControllerSpec extends SpecBase with MockUserAnswersS
 
         MockUserAnswersService.set(expectedAnswers).returns(Future.successful(expectedAnswers))
 
-        MockPreDraftService.set(expectedAnswers).returns(Future.successful(true))
+        MockPreDraftService.clear(testErn, testArc).returns(Future.successful(true))
 
         val result = controller.onSubmit(testErn, testArc)(request.withFormUrlEncodedBody(("value", "false")))
 

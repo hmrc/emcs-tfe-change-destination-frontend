@@ -37,7 +37,7 @@
             @govukErrorSummary(ErrorSummaryViewModel(form))
         }
 
-        @h2(messages("changeDestination.section", request.arc), "govuk-caption-xl", hiddenContent = Some(messages("subHeading.hidden")))
+        @h2(messages("arc.subHeading", request.arc), "govuk-caption-xl", hiddenContent = Some(messages("subHeading.hidden")))
         @h1(messages("changeDestinationType.heading"), classes = "govuk-heading-l")
 
         @govukSummaryList(summaryList)
