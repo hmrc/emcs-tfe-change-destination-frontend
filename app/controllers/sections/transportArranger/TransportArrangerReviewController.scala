@@ -57,8 +57,7 @@ class TransportArrangerReviewController @Inject()(
     authorisedDataRequestWithUpToDateMovementAsync(ern, arc) { implicit request =>
       formProvider().bindFromRequest().fold(
         renderView(BadRequest, _),
-        value =>
-          saveAndRedirect(TransportArrangerReviewPage, value, NormalMode)
+        saveAndRedirect(TransportArrangerReviewPage, _, NormalMode)
       )
     }
 
