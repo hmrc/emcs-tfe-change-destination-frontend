@@ -79,7 +79,7 @@ class DispatchPlaceControllerSpec extends SpecBase with MockUserAnswersService w
       }
 
       "with a Great Britain ERN" - {
-        lazy val destinationTypeRoute = controllers.sections.info.routes.DestinationTypeController.onPreDraftSubmit(testGreatBritainErn, testArc, NormalMode).url
+        lazy val destinationTypeRoute = controllers.sections.info.routes.DestinationTypeController.onPreDraftSubmit(testGreatBritainErn, testArc).url
 
         "must redirect to the destination type page (CAM-INFO08)" in new Fixture(userAnswers = Some(greatBritainUserAnswers)) {
           val result = controller.onPreDraftPageLoad(testGreatBritainErn, testArc, NormalMode)(request)

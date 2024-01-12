@@ -20,7 +20,7 @@ import controllers.BasePreDraftNavigationController
 import controllers.actions._
 import controllers.actions.predraft.{PreDraftAuthActionHelper, PreDraftDataRequiredAction, PreDraftDataRetrievalAction}
 import forms.sections.info.DestinationTypeFormProvider
-import models.Mode
+import models.NormalMode
 import models.UserType.NorthernIrelandWarehouseKeeper
 import models.requests.DataRequest
 import models.sections.info.DispatchPlace.GreatBritain
@@ -52,31 +52,33 @@ class DestinationTypeController @Inject()(
                                            val userAllowList: UserAllowListAction
                                          ) extends BasePreDraftNavigationController with AuthActionHelper with PreDraftAuthActionHelper {
 
-  def onPreDraftPageLoad(ern: String, arc: String, mode: Mode): Action[AnyContent] =
+  def onPreDraftPageLoad(ern: String, arc: String): Action[AnyContent] =
     authorisedWithPreDraftDataUpToDateMovementAsync(ern, arc) { implicit request =>
-      renderView(Ok, fillForm(DestinationTypePage, formProvider()), mode)
+      renderView(Ok, fillForm(DestinationTypePage, formProvider()))
     }
 
-  def onPreDraftSubmit(ern: String, arc: String, mode: Mode): Action[AnyContent] =
+  def onPreDraftSubmit(ern: String, arc: String): Action[AnyContent] =
     authorisedWithPreDraftDataUpToDateMovementAsync(ern, arc) { implicit request =>
       formProvider().bindFromRequest().fold(
         formWithErrors =>
-          renderView(BadRequest, formWithErrors, mode),
+          renderView(BadRequest, formWithErrors),
         value =>
-          savePreDraftAndRedirect(DestinationTypePage, value, mode)
+          createDraftEntryAndRedirect(DestinationTypePage, value)
       )
     }
 
-  // TODO should the mode be removed here?
-  private[info] def renderView(status: Status, form: Form[_], mode: Mode)(implicit request: DataRequest[_]): Future[Result] = {
+  private[info] def renderView(status: Status, form: Form[_])(implicit request: DataRequest[_]): Future[Result] = {
     Future.successful(
       // TODO should request.dispatchPlace be optional here? There is no logic in the copydeck?
       request.dispatchPlace match {
+        case _ if request.userTypeFromErn != NorthernIrelandWarehouseKeeper =>
+          // GB ERN or XIRC ERN
+          status(view(GreatBritain, form, controllers.sections.info.routes.DestinationTypeController.onPreDraftSubmit(request.ern, request.arc)))
         case Some(dispatchPlace) =>
-          status(view(dispatchPlace, form, controllers.sections.info.routes.DestinationTypeController.onPreDraftSubmit(request.ern, request.arc, mode)))
+          status(view(dispatchPlace, form, controllers.sections.info.routes.DestinationTypeController.onPreDraftSubmit(request.ern, request.arc)))
         case None =>
           //  dispatchPlace is unknown
-          Redirect(controllers.sections.info.routes.DispatchPlaceController.onPreDraftPageLoad(request.ern, request.arc, mode))
+          Redirect(controllers.sections.info.routes.DispatchPlaceController.onPreDraftPageLoad(request.ern, request.arc, NormalMode))
       }
     )
   }

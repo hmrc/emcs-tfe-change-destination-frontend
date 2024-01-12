@@ -19,7 +19,6 @@ package views.sections.info
 import base.SpecBase
 import fixtures.messages.sections.info.DestinationTypeMessages
 import forms.sections.info.DestinationTypeFormProvider
-import models.NormalMode
 import models.requests.DataRequest
 import models.sections.info.DispatchPlace.GreatBritain
 import org.jsoup.Jsoup
@@ -48,7 +47,7 @@ class DestinationTypeViewSpec extends SpecBase with ViewBehaviours {
              lazy val view = app.injector.instanceOf[DestinationTypeView]
               val form = app.injector.instanceOf[DestinationTypeFormProvider].apply()
 
-              implicit val doc: Document = Jsoup.parse(view(GreatBritain, form, controllers.sections.info.routes.DestinationTypeController.onPreDraftSubmit(request.ern, testArc, NormalMode)).toString())
+              implicit val doc: Document = Jsoup.parse(view(GreatBritain, form, controllers.sections.info.routes.DestinationTypeController.onPreDraftSubmit(request.ern, testArc)).toString())
 
               behave like pageWithExpectedElementsAndMessages(Seq(
                 Selectors.title -> messagesForLanguage.titleMovement,
@@ -67,7 +66,7 @@ class DestinationTypeViewSpec extends SpecBase with ViewBehaviours {
              lazy val view = app.injector.instanceOf[DestinationTypeView]
               val form = app.injector.instanceOf[DestinationTypeFormProvider].apply()
 
-              implicit val doc: Document = Jsoup.parse(view(GreatBritain, form, controllers.sections.info.routes.DestinationTypeController.onPreDraftSubmit(request.ern, testArc, NormalMode)).toString())
+              implicit val doc: Document = Jsoup.parse(view(GreatBritain, form, controllers.sections.info.routes.DestinationTypeController.onPreDraftSubmit(request.ern, testArc)).toString())
 
               behave like pageWithExpectedElementsAndMessages(Seq(
                 Selectors.title -> messagesForLanguage.titleImport,

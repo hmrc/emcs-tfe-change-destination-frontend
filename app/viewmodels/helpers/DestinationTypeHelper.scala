@@ -21,7 +21,7 @@ import models.UserType._
 import models.requests.DataRequest
 import models.response.InvalidUserTypeException
 import models.sections.info.DispatchPlace
-import models.sections.info.DispatchPlace.GreatBritain
+import models.sections.info.DispatchPlace.{GreatBritain, NorthernIreland}
 import models.sections.info.movementScenario.MovementScenario
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
@@ -53,7 +53,9 @@ class DestinationTypeHelper extends Logging {
         MovementScenario.valuesUk.map(radioOption)
       case NorthernIrelandWarehouseKeeper if dispatchPlace == GreatBritain =>
         MovementScenario.valuesUk.map(radioOption)
-      case NorthernIrelandWarehouseKeeper | NorthernIrelandRegisteredConsignor  => // TODO how to get 'NI radio option selected' from CAM-INFO 01, request.userAnswers ?
+      case NorthernIrelandWarehouseKeeper if dispatchPlace == NorthernIreland =>
+        MovementScenario.valuesEu.map(radioOption)
+      case NorthernIrelandRegisteredConsignor =>
         MovementScenario.valuesEu.map(radioOption)
       case userType: UserType =>
         logger.error(s"[options] invalid UserType for COD journey: $userType")

@@ -21,7 +21,7 @@ import controllers.actions._
 import controllers.actions.predraft.{PreDraftAuthActionHelper, PreDraftDataRequiredAction, PreDraftDataRetrievalAction}
 import forms.sections.info.DispatchPlaceFormProvider
 import models.requests.DataRequest
-import models.{Mode, NormalMode}
+import models.Mode
 import navigation.InformationNavigator
 import pages.sections.info.DispatchPlacePage
 import play.api.data.Form
@@ -78,7 +78,7 @@ class DispatchPlaceController @Inject()(
       f
     } else {
       Future.successful(
-        Redirect(controllers.sections.info.routes.DestinationTypeController.onPreDraftPageLoad(request.ern, request.arc, NormalMode))
+        Redirect(controllers.sections.info.routes.DestinationTypeController.onPreDraftPageLoad(request.ern, request.arc))
       )
     }
 }
