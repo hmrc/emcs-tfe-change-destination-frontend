@@ -49,14 +49,10 @@ class DestinationTypeHelper extends Logging {
   def options(dispatchPlace: DispatchPlace)(implicit request: DataRequest[_], messages: Messages): Seq[RadioItem] = {
     // Note: __RC can only do imports, __WK can only do exports
     request.userTypeFromErn match {
-      case GreatBritainWarehouseKeeper | GreatBritainRegisteredConsignor =>
-        MovementScenario.valuesUk.map(radioOption)
-      case NorthernIrelandWarehouseKeeper if dispatchPlace == GreatBritain =>
-        MovementScenario.valuesUk.map(radioOption)
-      case NorthernIrelandWarehouseKeeper if dispatchPlace == NorthernIreland =>
-        MovementScenario.valuesEu.map(radioOption)
-      case NorthernIrelandRegisteredConsignor =>
-        MovementScenario.valuesEu.map(radioOption)
+      case GreatBritainWarehouseKeeper | GreatBritainRegisteredConsignor => MovementScenario.valuesUk.map(radioOption)
+      case NorthernIrelandWarehouseKeeper if dispatchPlace == GreatBritain => MovementScenario.valuesUk.map(radioOption)
+      case NorthernIrelandWarehouseKeeper if dispatchPlace == NorthernIreland => MovementScenario.valuesEu.map(radioOption)
+      case NorthernIrelandRegisteredConsignor => MovementScenario.valuesEu.map(radioOption)
       case userType: UserType =>
         logger.error(s"[options] invalid UserType for COD journey: $userType")
         throw InvalidUserTypeException(s"[DestinationTypeHelper][options] invalid UserType for COD journey: $userType")
