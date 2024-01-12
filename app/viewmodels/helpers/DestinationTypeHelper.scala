@@ -16,7 +16,6 @@
 
 package viewmodels.helpers
 
-import models.UserType
 import models.UserType._
 import models.requests.DataRequest
 import models.response.InvalidUserTypeException
