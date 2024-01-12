@@ -28,7 +28,7 @@ import viewmodels.implicits._
 
 object FirstTransporterAddressSummary {
 
-  def row(showActionLinks: Boolean)(implicit request: DataRequest[_], messages: Messages): SummaryListRow = {
+  def row(onReviewPage: Boolean)(implicit request: DataRequest[_], messages: Messages): SummaryListRow = {
 
     val value: Content = request.userAnswers.get(FirstTransporterAddressPage).fold[Content] {
       Text(messages("site.notProvided"))
@@ -45,7 +45,7 @@ object FirstTransporterAddressSummary {
     SummaryListRowViewModel(
       key = "address.firstTransporterAddress.checkYourAnswers.label",
       value = ValueViewModel(value),
-      actions = if (!showActionLinks) Seq() else Seq(
+      actions = if (onReviewPage) Seq() else Seq(
         ActionItemViewModel(
           content = "site.change",
           href = controllers.sections.firstTransporter.routes.FirstTransporterAddressController.onPageLoad(

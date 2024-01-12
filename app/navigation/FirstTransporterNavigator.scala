@@ -18,16 +18,18 @@ package navigation
 
 import controllers.routes
 import models.requests.DataRequest
+import models.sections.ReviewAnswer.{ChangeAnswers, KeepAnswers}
 import models.{CheckMode, Mode, NormalMode, ReviewMode, UserAnswers}
 import pages._
-import pages.sections.firstTransporter.{FirstTransporterAddressPage, FirstTransporterCheckAnswersPage, FirstTransporterNamePage, FirstTransporterVatPage}
+import pages.sections.firstTransporter.{FirstTransporterAddressPage, FirstTransporterCheckAnswersPage, FirstTransporterNamePage, FirstTransporterReviewPage, FirstTransporterVatPage}
 import play.api.mvc.Call
 
 import javax.inject.Inject
 
+//noinspection ScalaStyle
 class FirstTransporterNavigator @Inject() extends BaseNavigator {
 
-  private val normalRoutes: Page => UserAnswers => Call = {
+  private def normalRoutes(implicit request: DataRequest[_]): Page => UserAnswers => Call = {
 
     case FirstTransporterNamePage => (userAnswers: UserAnswers) =>
       controllers.sections.firstTransporter.routes.FirstTransporterVatController.onPageLoad(userAnswers.ern, userAnswers.arc, NormalMode)
@@ -41,6 +43,13 @@ class FirstTransporterNavigator @Inject() extends BaseNavigator {
     case FirstTransporterCheckAnswersPage => (userAnswers: UserAnswers) =>
       routes.DraftMovementController.onPageLoad(userAnswers.ern, userAnswers.arc)
 
+    case FirstTransporterReviewPage => (userAnswers: UserAnswers) =>
+      userAnswers.get(FirstTransporterReviewPage) match {
+        case Some(ChangeAnswers) => controllers.sections.firstTransporter.routes.FirstTransporterNameController.onPageLoad(userAnswers.ern, userAnswers.arc, NormalMode)
+        case Some(KeepAnswers) => routes.DraftMovementController.onPageLoad(userAnswers.ern, userAnswers.arc)
+        case _ => controllers.sections.firstTransporter.routes.FirstTransporterReviewController.onPageLoad(userAnswers.ern, userAnswers.arc)
+      }
+
     case _ => (userAnswers: UserAnswers) =>
       controllers.sections.firstTransporter.routes.FirstTransporterCheckAnswersController.onPageLoad(userAnswers.ern, userAnswers.arc)
   }
@@ -52,7 +61,7 @@ class FirstTransporterNavigator @Inject() extends BaseNavigator {
           userAnswers.get(FirstTransporterVatPage).isEmpty ||
           userAnswers.get(FirstTransporterAddressPage).isEmpty
       ) {
-        normalRoutes(FirstTransporterNamePage)(userAnswers)
+        normalRoutes(request)(FirstTransporterNamePage)(userAnswers)
       } else {
         controllers.sections.firstTransporter.routes.FirstTransporterCheckAnswersController.onPageLoad(userAnswers.ern, userAnswers.arc)
       }
@@ -67,7 +76,7 @@ class FirstTransporterNavigator @Inject() extends BaseNavigator {
 
   override def nextPage(page: Page, mode: Mode, userAnswers: UserAnswers)(implicit request: DataRequest[_]): Call = mode match {
     case NormalMode =>
-      normalRoutes(page)(userAnswers)
+      normalRoutes(request)(page)(userAnswers)
     case CheckMode =>
       checkRoutes(request)(page)(userAnswers)
     case ReviewMode =>

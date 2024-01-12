@@ -38,12 +38,12 @@ class FirstTransporterAddressSummarySpec extends SpecBase with Matchers {
 
         implicit val msgs: Messages = app.injector.instanceOf[MessagesApi].preferred(Seq(messagesForLanguage.lang))
 
-        "when the show action link boolean is true" - {
+        "when the onReviewPage boolean is false" - {
 
           "when there's no answer in the user answers or 801" in {
             implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers, movementDetails = maxGetMovementResponse.copy(firstTransporterTrader = None))
 
-            FirstTransporterAddressSummary.row(showActionLinks = true) mustBe
+            FirstTransporterAddressSummary.row(onReviewPage = false) mustBe
               SummaryListRowViewModel(
                 key = messagesForLanguage.cyaLabel,
                 value = Value(Text(messagesForLanguage.notProvided)),
@@ -63,7 +63,7 @@ class FirstTransporterAddressSummarySpec extends SpecBase with Matchers {
 
             implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers)
 
-            FirstTransporterAddressSummary.row(showActionLinks = true) mustBe
+            FirstTransporterAddressSummary.row(onReviewPage = false) mustBe
               SummaryListRowViewModel(
                 key = messagesForLanguage.cyaLabel,
                 value = Value(HtmlContent(
@@ -86,7 +86,7 @@ class FirstTransporterAddressSummarySpec extends SpecBase with Matchers {
           "when there is an answer" in {
             implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(FirstTransporterAddressPage, testUserAddress))
 
-            FirstTransporterAddressSummary.row(showActionLinks = true) mustBe
+            FirstTransporterAddressSummary.row(onReviewPage = false) mustBe
               SummaryListRowViewModel(
                 key = messagesForLanguage.cyaLabel,
                 value = Value(HtmlContent(
@@ -107,12 +107,12 @@ class FirstTransporterAddressSummarySpec extends SpecBase with Matchers {
           }
         }
 
-        "when the show action link boolean is false" - {
+        "when the onReviewPage boolean is true" - {
 
           "when there's no answer in the user answers or 801" in {
             implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers, movementDetails = maxGetMovementResponse.copy(firstTransporterTrader = None))
 
-            FirstTransporterAddressSummary.row(showActionLinks = false) mustBe
+            FirstTransporterAddressSummary.row(onReviewPage = true) mustBe
               SummaryListRowViewModel(
                 key = messagesForLanguage.cyaLabel,
                 value = Value(Text(messagesForLanguage.notProvided)),
@@ -126,7 +126,7 @@ class FirstTransporterAddressSummarySpec extends SpecBase with Matchers {
 
             implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers)
 
-            FirstTransporterAddressSummary.row(showActionLinks = false) mustBe
+            FirstTransporterAddressSummary.row(onReviewPage = true) mustBe
               SummaryListRowViewModel(
                 key = messagesForLanguage.cyaLabel,
                 value = Value(HtmlContent(
@@ -143,7 +143,7 @@ class FirstTransporterAddressSummarySpec extends SpecBase with Matchers {
           "when there is an answer" in {
             implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(FirstTransporterAddressPage, testUserAddress))
 
-            FirstTransporterAddressSummary.row(showActionLinks = false) mustBe
+            FirstTransporterAddressSummary.row(onReviewPage = true) mustBe
               SummaryListRowViewModel(
                 key = messagesForLanguage.cyaLabel,
                 value = Value(HtmlContent(

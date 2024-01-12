@@ -53,6 +53,7 @@ class FirstTransporterVatViewSpec extends SpecBase with ViewBehaviours {
 
           behave like pageWithExpectedElementsAndMessages(Seq(
             Selectors.title -> messagesForLanguage.title,
+            Selectors.subHeadingCaptionSelector -> messagesForLanguage.firstTransporterSection,
             Selectors.h1 -> messagesForLanguage.heading,
             Selectors.hint -> messagesForLanguage.hint,
             Selectors.link(1) -> messagesForLanguage.nonGbVatLink,

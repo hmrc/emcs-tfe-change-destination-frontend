@@ -48,7 +48,7 @@ class FirstTransporterIndexControllerSpec extends SpecBase with MockUserAnswersS
 
   "FirstTransporterIndexController" - {
     "when FirstTransporterSection.isCompleted" - {
-      "must redirect to the CYA controller" in new Fixture(Some(
+      "must redirect to the Review controller" in new Fixture(Some(
         emptyUserAnswers
           .set(FirstTransporterNamePage, "")
           .set(FirstTransporterVatPage, "")
@@ -59,13 +59,13 @@ class FirstTransporterIndexControllerSpec extends SpecBase with MockUserAnswersS
 
         status(result) mustEqual SEE_OTHER
         redirectLocation(result) mustBe
-          Some(controllers.sections.firstTransporter.routes.FirstTransporterCheckAnswersController.onPageLoad(testErn, testArc).url)
+          Some(controllers.sections.firstTransporter.routes.FirstTransporterReviewController.onPageLoad(testErn, testArc).url)
       }
 
     }
 
     "when FirstTransporterSection.needsReview" - {
-      "must redirect to the CYA controller" in new Fixture(Some(
+      "must redirect to the Review controller" in new Fixture(Some(
         emptyUserAnswers
           .set(FirstTransporterNamePage, "")
           .set(FirstTransporterVatPage, "")
@@ -75,7 +75,7 @@ class FirstTransporterIndexControllerSpec extends SpecBase with MockUserAnswersS
 
         status(result) mustEqual SEE_OTHER
         redirectLocation(result) mustBe
-          Some(controllers.sections.firstTransporter.routes.FirstTransporterCheckAnswersController.onPageLoad(testErn, testArc).url)
+          Some(controllers.sections.firstTransporter.routes.FirstTransporterReviewController.onPageLoad(testErn, testArc).url)
       }
     }
 

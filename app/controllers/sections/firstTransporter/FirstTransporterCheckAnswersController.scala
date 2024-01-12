@@ -46,7 +46,7 @@ class FirstTransporterCheckAnswersController @Inject()(
   def onPageLoad(ern: String, arc: String): Action[AnyContent] =
     authorisedDataRequestWithUpToDateMovement(ern, arc) { implicit request =>
       Ok(view(
-        cyaHelper.summaryList(),
+        cyaHelper.summaryList(onReviewPage = false),
         controllers.sections.firstTransporter.routes.FirstTransporterCheckAnswersController.onSubmit(ern, arc)
       ))
     }
