@@ -21,9 +21,9 @@ import fixtures.messages.{BaseEnglish, BaseMessages, i18n}
 object DestinationTypeMessages {
   sealed trait ViewMessages extends BaseMessages {
     _: i18n =>
-    val headingMovement = "What is the destination type for this movement?"
+    val headingMovement = "What is the new destination type for this movement?"
     val titleMovement = titleHelper(headingMovement)
-    val headingImport = "What is the destination type for this import?"
+    val headingImport = "What is the new destination type for this import?"
     val titleImport = titleHelper(headingImport)
     val taxWarehouseInGb = "Tax warehouse in Great Britain"
     val cyaLabel: String = "Destination type"

@@ -43,7 +43,7 @@ class DestinationTypeHelper extends Logging {
     case GreatBritainRegisteredConsignor | NorthernIrelandRegisteredConsignor => messages("destinationType.heading.import")
     case userType =>
       logger.error(s"[heading] invalid UserType for COD journey: $userType")
-      throw InvalidUserTypeException(s"[DestinationTypeHelper][heading] invalid UserType for CAM journey: $userType")
+      throw InvalidUserTypeException(s"[DestinationTypeHelper][heading] invalid UserType for COD journey: $userType")
   }
 
   def options(dispatchPlace: DispatchPlace)(implicit request: DataRequest[_], messages: Messages): Seq[RadioItem] = {
