@@ -53,7 +53,7 @@ class DestinationTypeHelper extends Logging {
       case NorthernIrelandWarehouseKeeper if dispatchPlace == GreatBritain => MovementScenario.valuesUk.map(radioOption)
       case NorthernIrelandWarehouseKeeper if dispatchPlace == NorthernIreland => MovementScenario.valuesEu.map(radioOption)
       case NorthernIrelandRegisteredConsignor => MovementScenario.valuesEu.map(radioOption)
-      case userType: UserType =>
+      case userType =>
         logger.error(s"[options] invalid UserType for COD journey: $userType")
         throw InvalidUserTypeException(s"[DestinationTypeHelper][options] invalid UserType for COD journey: $userType")
     }
