@@ -69,7 +69,6 @@ class DestinationTypeController @Inject()(
 
   private[info] def renderView(status: Status, form: Form[_])(implicit request: DataRequest[_]): Future[Result] = {
     Future.successful(
-      // TODO should request.dispatchPlace be optional here? There is no logic in the copydeck?
       request.dispatchPlace match {
         case _ if request.userTypeFromErn != NorthernIrelandWarehouseKeeper =>
           // GB ERN or XIRC ERN

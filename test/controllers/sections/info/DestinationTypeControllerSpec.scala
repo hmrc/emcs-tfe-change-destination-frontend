@@ -106,7 +106,7 @@ class DestinationTypeControllerSpec extends SpecBase with MockUserAnswersService
               controllers.sections.info.routes.DestinationTypeController.onPreDraftSubmit("GBWK123", testArc)
             )(getRequest, messages(getRequest)).toString
         }
-        "when the request contains a XIRC ERN" in new Fixture(None, ern = "XIRC123") { // TODO fix/remove test
+        "when the request contains a XIRC ERN" in new Fixture(None, ern = "XIRC123") {
           status(getResult) mustEqual OK
           contentAsString(getResult) mustEqual
             view(
