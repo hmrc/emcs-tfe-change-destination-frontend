@@ -17,7 +17,7 @@
 package models.sections.info
 
 import models.requests.DataRequest
-import models.sections.info.movementScenario.DestinationType.{Export, dutyPaidDestinationTypes}
+import models.sections.info.movementScenario.DestinationType.Export
 import models.{Enumerable, WithName}
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.Aliases.Text

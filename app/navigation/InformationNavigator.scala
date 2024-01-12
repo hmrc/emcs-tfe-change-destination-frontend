@@ -47,8 +47,7 @@ class InformationNavigator @Inject()() extends BaseNavigator {
       (userAnswers: UserAnswers) => userAnswers.get(ChangeDestinationTypePage) match {
         case Some(wantsToChangeDestinationType) =>
           if(wantsToChangeDestinationType) {
-            //TODO: redirect to COD-03
-            testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+            controllers.sections.info.routes.DestinationTypeController.onPreDraftPageLoad(userAnswers.ern, userAnswers.arc, NormalMode)
           } else {
             controllers.routes.DraftMovementController.onPageLoad(userAnswers.ern, userAnswers.arc)
           }

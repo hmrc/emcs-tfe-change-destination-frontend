@@ -73,10 +73,9 @@ class InformationNavigatorSpec extends SpecBase {
         "must go to the New Destination Type page" - {
 
           "when the user answers yes" in {
-            //TODO: redirect to COD-03
             val userAnswers = emptyUserAnswers.set(ChangeDestinationTypePage, true)
             navigator.nextPage(ChangeDestinationTypePage, NormalMode, userAnswers) mustBe
-              testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+              controllers.sections.info.routes.DestinationTypeController.onPreDraftPageLoad(testErn, testArc, NormalMode)
           }
         }
 
