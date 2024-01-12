@@ -114,7 +114,7 @@ class InformationNavigatorSpec extends SpecBase {
         "must go to the Invoice Details page" in {
 
           navigator.nextPage(DestinationTypePage, NormalMode, emptyUserAnswers) mustBe
-            controllers.sections.info.routes.InvoiceDetailsController.onPreDraftPageLoad(testErn, testArc, NormalMode)
+            controllers.routes.DraftMovementController.onPageLoad(testErn, testArc)
         }
       }
 
