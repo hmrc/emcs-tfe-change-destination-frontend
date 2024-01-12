@@ -1399,3 +1399,10 @@ changeType.destination = I want to keep the consignee the same and change the pl
 changeType.exportOffice = I want to keep the consignee the same and change the office of export
 changeType.return = I want to return the goods to the consignor’s place of dispatch
 changeType.error.required = Select what you want to change about the movement
+
+changeDestinationType.title = Current destination type
+changeDestinationType.heading = Current destination type
+changeDestinationType.summaryList.key = Destination type
+changeDestinationType.legend = Do you want to change the destination type for this movement?
+changeDestinationType.no = No, I want to keep the destination type the same
+changeDestinationType.error.required = Select yes if you want to change the destination type

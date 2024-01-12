@@ -42,7 +42,7 @@ class TransportUnitGiveMoreInformationChoiceViewSpec extends SpecBase with ViewB
         implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
         implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), emptyUserAnswers)
 
-       lazy val view = app.injector.instanceOf[TransportUnitGiveMoreInformationChoiceView]
+        lazy val view = app.injector.instanceOf[TransportUnitGiveMoreInformationChoiceView]
         val form = app.injector.instanceOf[TransportUnitGiveMoreInformationChoiceFormProvider].apply(Container)
 
         implicit val doc: Document = Jsoup.parse(

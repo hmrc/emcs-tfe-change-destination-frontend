@@ -44,7 +44,6 @@ trait PreDraftAuthActionHelper {
   def authorisedWithPreDraftDataUpToDateMovementAsync(ern: String, arc: String)(block: DataRequest[_] => Future[Result]): Action[AnyContent] =
     authorisedWithPreDraftDataUpToDateMovement(ern, arc).async(block)
 
-
   private def authedCache(ern: String, arc: String) =
     authorised(ern, arc, withMovement.fromCache(arc))
 

@@ -22,3 +22,6 @@ POST        /trader/:ern/movement/:arc/info/invoice-details/change              
 
 GET         /trader/:ern/movement/:arc/info/change-consignee                     controllers.sections.info.ChangeTypeController.onPageLoad(ern: String, arc: String)
 POST        /trader/:ern/movement/:arc/info/change-consignee                     controllers.sections.info.ChangeTypeController.onSubmit(ern: String, arc: String)
+
+GET         /trader/:ern/movement/:arc/info/change-destination-type	             controllers.sections.info.ChangeDestinationTypeController.onPageLoad(ern: String, arc: String)
+POST        /trader/:ern/movement/:arc/info/change-destination-type              controllers.sections.info.ChangeDestinationTypeController.onSubmit(ern: String, arc: String)

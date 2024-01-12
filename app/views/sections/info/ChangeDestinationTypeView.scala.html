@@ -1,5 +1,5 @@
 @*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,7 +15,6 @@
  *@
 
 @import models.requests.DataRequest
-@import viewmodels.LegendSize
 
 @this(
         layout: templates.Layout,
@@ -23,30 +22,38 @@
         govukErrorSummary: GovukErrorSummary,
         govukRadios: GovukRadios,
         govukButton: GovukButton,
+        govukSummaryList: GovukSummaryList,
         h1: components.h1,
-        h2: components.h2,
-        continueOrExit: components.continueOrExit
+        h2: components.h2
 )
 
-@(form: Form[_], mode: Mode)(implicit request: DataRequest[_], messages: Messages)
+@(form: Form[_], summaryList: SummaryList, action: Call)(implicit request: DataRequest[_], messages: Messages)
 
-@layout(pageTitle = title(form, messages("guarantorRequired.title")), maybeShowActiveTrader = maybeShowActiveTrader(request)) {
+@layout(pageTitle = title(form, messages("changeDestinationType.title")), maybeShowActiveTrader = maybeShowActiveTrader(request)) {
 
-    @formHelper(action = controllers.sections.guarantor.routes.GuarantorRequiredController.onSubmit(request.ern, request.arc, mode), 'autoComplete -> "off") {
+    @formHelper(action = action, 'autoComplete -> "off") {
 
         @if(form.errors.nonEmpty) {
             @govukErrorSummary(ErrorSummaryViewModel(form))
         }
 
-        @h2(messages("guarantor.subHeading"), "govuk-caption-xl", hiddenContent = Some(messages("subHeading.hidden")))
+        @h2(messages("arc.subHeading", request.arc), "govuk-caption-xl", hiddenContent = Some(messages("subHeading.hidden")))
+        @h1(messages("changeDestinationType.heading"), classes = "govuk-heading-l")
+
+        @govukSummaryList(summaryList)
+
         @govukRadios(
             RadiosViewModel.yesNo(
                 field = form("value"),
-                legend = LegendViewModel(Text(messages("guarantorRequired.heading"))).asPageHeading(LegendSize.Large)
+                legend = LegendViewModel(Text(messages("changeDestinationType.legend"))).withCssClass("govuk-fieldset__legend--m"),
+                yesMessageKey = "site.yes",
+                noMessageKey = "changeDestinationType.no"
             )
         )
 
-        @continueOrExit()
+        @govukButton(
+            ButtonViewModel(messages("site.continue"))
+        )
     }
 }
 
