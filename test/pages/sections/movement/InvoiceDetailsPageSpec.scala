@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package pages.sections.info
+package pages.sections.movement
 
 import base.SpecBase
 import models.sections.info.InvoiceDetailsModel

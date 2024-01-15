@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,23 +14,15 @@
  * limitations under the License.
  */
 
-package pages.sections.info
+package pages.sections.movement
 
 import models.requests.DataRequest
-import models.sections.info.InvoiceDetailsModel
 import pages.QuestionPage
 import play.api.libs.json.JsPath
 
-import java.time.LocalDate
+case object MovementReviewAnswersPage extends QuestionPage[Boolean] {
+  override val toString: String = "movementReviewAnswers"
+  override val path: JsPath = JsPath \ toString
 
-case object InvoiceDetailsPage extends QuestionPage[InvoiceDetailsModel] {
-  override val toString: String = "invoiceDetails"
-  override val path: JsPath = InfoSection.path \ toString
-
-  override def getValueFromIE801(implicit request: DataRequest[_]): Option[InvoiceDetailsModel] = {
-    request.movementDetails.eadEsad.invoiceDate.map { invoiceDateAsString =>
-      val invoiceDate = LocalDate.parse(invoiceDateAsString)
-      InvoiceDetailsModel(request.movementDetails.eadEsad.invoiceNumber, invoiceDate)
-    }
-  }
+  override def getValueFromIE801(implicit request: DataRequest[_]): Option[Boolean] = None
 }

@@ -22,6 +22,7 @@ import models.requests.DataRequest
 import models.sections.info.ChangeType.Consignee
 import pages._
 import pages.sections.info._
+import pages.sections.movement.InvoiceDetailsPage
 import play.api.mvc.Call
 
 import javax.inject.{Inject, Singleton}

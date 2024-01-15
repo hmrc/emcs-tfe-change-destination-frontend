@@ -1,0 +1,10 @@
+
+GET         /trader/:ern/movement/:arc/movement/invoice-details                      controllers.sections.movement.InvoiceDetailsController.onPreDraftPageLoad(ern: String, arc: String, mode: Mode = NormalMode)
+POST        /trader/:ern/movement/:arc/movement/invoice-details                      controllers.sections.movement.InvoiceDetailsController.onPreDraftSubmit(ern: String, arc: String, mode: Mode = NormalMode)
+GET         /trader/:ern/movement/:arc/movement/invoice-details/change               controllers.sections.movement.InvoiceDetailsController.onPreDraftPageLoad(ern: String, arc: String, mode: Mode = CheckMode)
+POST        /trader/:ern/movement/:arc/movement/invoice-details/change               controllers.sections.movement.InvoiceDetailsController.onPreDraftSubmit(ern: String, arc: String, mode: Mode = CheckMode)
+
+GET         /trader/:ern/movement/:arc/movement/review-answers                       controllers.sections.movement.MovementReviewAnswersController.onPageLoad(ern: String, arc: String, mode: Mode = NormalMode)
+POST        /trader/:ern/movement/:arc/movement/review-answers                       controllers.sections.movement.MovementReviewAnswersController.onSubmit(ern: String, arc: String, mode: Mode = NormalMode)
+GET         /trader/:ern/movement/:arc/movement/review-answers/change                controllers.sections.movement.MovementReviewAnswersController.onPageLoad(ern: String, arc: String, mode: Mode = CheckMode)
+POST        /trader/:ern/movement/:arc/movement/review-answers/change                controllers.sections.movement.MovementReviewAnswersController.onSubmit(ern: String, arc: String, mode: Mode = CheckMode)

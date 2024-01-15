@@ -8,11 +8,6 @@ POST        /trader/:ern/movement/:arc/info/dispatch-details                    
 GET         /trader/:ern/movement/:arc/info/dispatch-details/change              controllers.sections.info.DispatchDetailsController.onPreDraftPageLoad(ern: String, arc: String, mode: Mode = CheckMode)
 POST        /trader/:ern/movement/:arc/info/dispatch-details/change              controllers.sections.info.DispatchDetailsController.onPreDraftSubmit(ern: String, arc: String, mode: Mode = CheckMode)
 
-GET         /trader/:ern/movement/:arc/info/invoice-details                      controllers.sections.info.InvoiceDetailsController.onPreDraftPageLoad(ern: String, arc: String, mode: Mode = NormalMode)
-POST        /trader/:ern/movement/:arc/info/invoice-details                      controllers.sections.info.InvoiceDetailsController.onPreDraftSubmit(ern: String, arc: String, mode: Mode = NormalMode)
-GET         /trader/:ern/movement/:arc/info/invoice-details/change               controllers.sections.info.InvoiceDetailsController.onPreDraftPageLoad(ern: String, arc: String, mode: Mode = CheckMode)
-POST        /trader/:ern/movement/:arc/info/invoice-details/change               controllers.sections.info.InvoiceDetailsController.onPreDraftSubmit(ern: String, arc: String, mode: Mode = CheckMode)
-
 GET         /trader/:ern/movement/:arc/info/change-consignee                     controllers.sections.info.ChangeTypeController.onPageLoad(ern: String, arc: String)
 POST        /trader/:ern/movement/:arc/info/change-consignee                     controllers.sections.info.ChangeTypeController.onSubmit(ern: String, arc: String)
 

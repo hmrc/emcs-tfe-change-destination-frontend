@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package fixtures.messages.sections.info
+package fixtures.messages.sections.movement
 
 import fixtures.messages.{BaseEnglish, BaseMessages, i18n}
 

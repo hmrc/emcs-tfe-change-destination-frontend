@@ -24,6 +24,7 @@ import models.sections.info.ChangeType
 import models.sections.info.ChangeType.Consignee
 import pages._
 import pages.sections.info._
+import pages.sections.movement.InvoiceDetailsPage
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 

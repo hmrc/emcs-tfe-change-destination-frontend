@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-package views.sections.info
+package views.sections.movement
 
 import base.SpecBase
-import fixtures.messages.sections.info.InvoiceDetailsMessages
-import forms.sections.info.InvoiceDetailsFormProvider
+import fixtures.messages.sections.movement.InvoiceDetailsMessages
+import forms.sections.movement.InvoiceDetailsFormProvider
 import models.requests.DataRequest
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
@@ -26,7 +26,7 @@ import play.api.i18n.Messages
 import play.api.mvc.Call
 import play.api.test.FakeRequest
 import utils.DateTimeUtils
-import views.html.sections.info.InvoiceDetailsView
+import views.html.sections.movement.InvoiceDetailsView
 import views.{BaseSelectors, ViewBehaviours}
 
 import java.time.LocalDate

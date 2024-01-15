@@ -23,6 +23,7 @@ trait BaseMessages { _: i18n =>
   val hiddenSectionContent: String = "This section is"
   val infoSection: String => String = s"$hiddenSectionContent Change of destination for " + _
   val movementInformationSection: String = s"$hiddenSectionContent Movement information"
+  val movementDetailsSection: String = s"$hiddenSectionContent Movement details"
   val consigneeInformationSection = s"$hiddenSectionContent Consignee information"
   val transportArrangerSection: String = s"$hiddenSectionContent Transport arranger"
   val dispatchSection: String = s"$hiddenSectionContent Place of dispatch information"

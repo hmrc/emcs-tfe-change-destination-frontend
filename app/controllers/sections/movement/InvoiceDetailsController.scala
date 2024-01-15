@@ -14,35 +14,32 @@
  * limitations under the License.
  */
 
-package controllers.sections.info
+package controllers.sections.movement
 
-import controllers.BasePreDraftNavigationController
+import controllers.BaseNavigationController
 import controllers.actions._
-import controllers.actions.predraft.{PreDraftAuthActionHelper, PreDraftDataRequiredAction, PreDraftDataRetrievalAction}
-import forms.sections.info.InvoiceDetailsFormProvider
+import controllers.actions.predraft.{PreDraftDataRequiredAction, PreDraftDataRetrievalAction}
+import forms.sections.movement.InvoiceDetailsFormProvider
 import models.Mode
 import models.requests.DataRequest
 import models.sections.info.InvoiceDetailsModel
-import navigation.InformationNavigator
+import navigation.MovementNavigator
 import pages.QuestionPage
-import pages.sections.info.InvoiceDetailsPage
+import pages.sections.movement.InvoiceDetailsPage
 import play.api.data.Form
 import play.api.i18n.MessagesApi
 import play.api.mvc._
-import services.{PreDraftService, UserAnswersService}
+import services.UserAnswersService
 import utils.{DateTimeUtils, TimeMachine}
-import views.html.sections.info.InvoiceDetailsView
+import views.html.sections.movement.InvoiceDetailsView
 
 import javax.inject.Inject
 import scala.concurrent.Future
 
 class InvoiceDetailsController @Inject()(
                                           override val messagesApi: MessagesApi,
-                                          val preDraftService: PreDraftService,
-                                          val navigator: InformationNavigator,
+                                          val navigator: MovementNavigator,
                                           val auth: AuthAction,
-                                          val getPreDraftData: PreDraftDataRetrievalAction,
-                                          val requirePreDraftData: PreDraftDataRequiredAction,
                                           val getData: DataRetrievalAction,
                                           val requireData: DataRequiredAction,
                                           val userAllowList: UserAllowListAction,
@@ -52,32 +49,32 @@ class InvoiceDetailsController @Inject()(
                                           val controllerComponents: MessagesControllerComponents,
                                           view: InvoiceDetailsView,
                                           timeMachine: TimeMachine
-                                        ) extends BasePreDraftNavigationController with AuthActionHelper with PreDraftAuthActionHelper with DateTimeUtils {
+                                        ) extends BaseNavigationController with AuthActionHelper with DateTimeUtils {
 
   def onPreDraftPageLoad(ern: String, arc: String,  mode: Mode): Action[AnyContent] =
-    authorisedWithPreDraftDataUpToDateMovementAsync(ern, arc) { implicit request =>
+    authorisedDataRequestWithUpToDateMovementAsync(ern, arc) { implicit request =>
       renderView(
         Ok,
         InvoiceDetailsPage,
         fillForm(InvoiceDetailsPage, formProvider()),
-        controllers.sections.info.routes.InvoiceDetailsController.onPreDraftSubmit(ern, arc, mode),
+        controllers.sections.movement.routes.InvoiceDetailsController.onPreDraftSubmit(ern, arc, mode),
         mode
       )
     }
 
   def onPreDraftSubmit(ern: String, arc: String, mode: Mode): Action[AnyContent] =
-    authorisedWithPreDraftDataUpToDateMovementAsync(ern, arc) { implicit request =>
+    authorisedDataRequestWithUpToDateMovementAsync(ern, arc) { implicit request =>
       formProvider().bindFromRequest().fold(
         formWithErrors =>
           renderView(
             BadRequest,
             InvoiceDetailsPage,
             formWithErrors,
-            controllers.sections.info.routes.InvoiceDetailsController.onPreDraftSubmit(ern, arc, mode),
+            controllers.sections.movement.routes.InvoiceDetailsController.onPreDraftSubmit(ern, arc, mode),
             mode
           ),
         value =>
-          savePreDraftAndRedirect(InvoiceDetailsPage, value, mode)
+          saveAndRedirect(InvoiceDetailsPage, value, mode)
       )
     }
 
