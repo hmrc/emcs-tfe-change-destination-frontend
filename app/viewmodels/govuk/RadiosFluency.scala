@@ -36,8 +36,8 @@ trait RadiosFluency {
                legend: Legend
              )(implicit messages: Messages): Radios =
       apply(
-        field    = field,
-        items    = items,
+        field = field,
+        items = items,
         fieldset = FieldsetViewModel(legend)
       )
 
@@ -47,9 +47,9 @@ trait RadiosFluency {
                fieldset: Fieldset
              )(implicit messages: Messages): Radios =
       Radios(
-        fieldset     = Some(fieldset),
-        name         = field.name,
-        items        = items map (item => item copy (checked = field.value.isDefined && field.value == item.value)),
+        fieldset = Some(fieldset),
+        name = field.name,
+        items = items map (item => item copy (checked = field.value.isDefined && field.value == item.value)),
         errorMessage = errorMessage(field)
       )
 
@@ -58,7 +58,7 @@ trait RadiosFluency {
                legend: Legend
              )(implicit messages: Messages): Radios =
       yesNo(
-        field    = field,
+        field = field,
         fieldset = FieldsetViewModel(legend)
       )
 
@@ -69,21 +69,21 @@ trait RadiosFluency {
 
       val items = Seq(
         RadioItem(
-          id      = Some(field.id),
-          value   = Some("true"),
+          id = Some(field.id),
+          value = Some("true"),
           content = Text(messages("site.yes"))
         ),
         RadioItem(
-          id      = Some(s"${field.id}-no"),
-          value   = Some("false"),
+          id = Some(s"${field.id}-no"),
+          value = Some("false"),
           content = Text(messages("site.no"))
         )
       )
 
       apply(
-        field    = field,
+        field = field,
         fieldset = fieldset,
-        items    = items
+        items = items
       ).inline()
     }
 
@@ -110,6 +110,32 @@ trait RadiosFluency {
         field = field,
         fieldset = FieldsetViewModel(legend),
         items = items
+      ).inline()
+    }
+
+    def yesNoWithCustomValues(
+                               field: Field,
+                               legend: Legend,
+                               yesValue: String,
+                               noValue: String
+                             )(implicit messages: Messages): Radios = {
+      val items = Seq(
+        RadioItem(
+          id = Some(field.id),
+          value = Some(yesValue),
+          content = Text(messages("site.yes"))
+        ),
+        RadioItem(
+          id = Some(s"${field.id}-no"),
+          value = Some(noValue),
+          content = Text(messages("site.no"))
+        )
+      )
+
+      apply(
+        field = field,
+        items = items,
+        legend = legend
       ).inline()
     }
   }

@@ -19,6 +19,7 @@ package navigation
 import base.SpecBase
 import controllers.routes
 import models.requests.DataRequest
+import models.sections.ReviewAnswer.{ChangeAnswers, KeepAnswers}
 import models.{CheckMode, NormalMode, ReviewMode, UserAddress}
 import pages._
 import pages.sections.firstTransporter._
@@ -76,6 +77,33 @@ class FirstTransporterNavigatorSpec extends SpecBase {
           routes.DraftMovementController.onPageLoad(testErn, testArc)
       }
 
+    }
+
+    "for the FirstTransporterReviewPage" - {
+
+      "must go to FirstTransporterNamePage (CAM-FT01)" - {
+
+        "when the user answers yes (change answers)" in {
+          navigator.nextPage(FirstTransporterReviewPage, NormalMode, emptyUserAnswers.set(FirstTransporterReviewPage, ChangeAnswers)) mustBe
+            controllers.sections.firstTransporter.routes.FirstTransporterNameController.onPageLoad(testErn, testArc, NormalMode)
+        }
+      }
+
+      "must go to the task list" - {
+
+        "when the user answers no (keep answers)" in {
+          navigator.nextPage(FirstTransporterReviewPage, NormalMode, emptyUserAnswers.set(FirstTransporterReviewPage, KeepAnswers)) mustBe
+            routes.DraftMovementController.onPageLoad(testErn, testArc)
+        }
+      }
+
+      "must go back to the FirstTransporterReviewPage (COD-07)" - {
+
+        "when the user has no answer" in {
+          navigator.nextPage(FirstTransporterReviewPage, NormalMode, emptyUserAnswers) mustBe
+            controllers.sections.firstTransporter.routes.FirstTransporterReviewController.onPageLoad(testErn, testArc)
+        }
+      }
     }
 
   }

@@ -14,11 +14,19 @@
  * limitations under the License.
  */
 
-package pages.sections.firstTransporter
+package fixtures.messages.sections.firstTransporter
 
-import pages.ReviewPage
-import play.api.libs.json.JsPath
+import fixtures.messages.{BaseEnglish, BaseMessages, i18n}
 
-case object FirstTransporterReviewPage extends ReviewPage {
-  override val path: JsPath = FirstTransporterSection.path \ toString
+object FirstTransporterReviewMessages {
+  sealed trait ViewMessages extends BaseMessages { _: i18n =>
+    val heading = "Section summary"
+    val title = titleHelper(s"$heading - First transporter")
+
+    val legend = "Do you need to change any details in this section?"
+
+    val errorRequired: String = "Select yes if you need to change any of these details"
+  }
+
+  object English extends ViewMessages with BaseEnglish
 }

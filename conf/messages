@@ -1406,3 +1406,8 @@ changeDestinationType.summaryList.key = Destination type
 changeDestinationType.legend = Do you want to change the destination type for this movement?
 changeDestinationType.no = No, I want to keep the destination type the same
 changeDestinationType.error.required = Select yes if you want to change the destination type
+
+firstTransporterReview.title = Section summary - First transporter
+firstTransporterReview.heading = Section summary
+firstTransporterReview.legend = Do you need to change any details in this section?
+firstTransporterReview.error.required = Select yes if you need to change any of these details

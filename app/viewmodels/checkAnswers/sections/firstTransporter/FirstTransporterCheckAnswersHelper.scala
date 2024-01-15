@@ -25,12 +25,12 @@ import javax.inject.Inject
 
 class FirstTransporterCheckAnswersHelper @Inject()() {
 
-  def summaryList()(implicit request: DataRequest[_], messages: Messages): SummaryList =
+  def summaryList(onReviewPage: Boolean)(implicit request: DataRequest[_], messages: Messages): SummaryList =
     SummaryListViewModel(
       rows = Seq(
-        FirstTransporterNameSummary.row(showActionLinks = true),
-        FirstTransporterVatSummary.row(showActionLinks = true),
-        FirstTransporterAddressSummary.row(showActionLinks = true)
+        FirstTransporterNameSummary.row(onReviewPage),
+        FirstTransporterVatSummary.row(onReviewPage),
+        FirstTransporterAddressSummary.row(onReviewPage)
       )
     ).withCssClass("govuk-!-margin-bottom-9")
 }

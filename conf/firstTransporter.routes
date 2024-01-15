@@ -18,3 +18,6 @@ POST        /trader/:ern/movement/:arc/first-transporter/address/change        c
 
 GET         /trader/:ern/movement/:arc/first-transporter/check-answers         controllers.sections.firstTransporter.FirstTransporterCheckAnswersController.onPageLoad(ern: String, arc: String)
 POST        /trader/:ern/movement/:arc/first-transporter/check-answers         controllers.sections.firstTransporter.FirstTransporterCheckAnswersController.onSubmit(ern: String, arc: String)
+
+GET        /trader/:ern/movement/:arc/first-transporter/review-answers         controllers.sections.firstTransporter.FirstTransporterReviewController.onPageLoad(ern: String, arc: String)
+POST       /trader/:ern/movement/:arc/first-transporter/review-answers         controllers.sections.firstTransporter.FirstTransporterReviewController.onSubmit(ern: String, arc: String)
