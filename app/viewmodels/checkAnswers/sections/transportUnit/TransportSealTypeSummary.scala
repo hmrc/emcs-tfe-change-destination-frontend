@@ -28,12 +28,12 @@ import viewmodels.implicits._
 
 object TransportSealTypeSummary {
 
-  def row(idx: Index)(implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] = {
+  def row(idx: Index, onReviewPage: Boolean)(implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] = {
     request.userAnswers.get(TransportSealChoicePage(idx)).filter(identity).map { _ =>
       SummaryListRowViewModel(
         key = "transportSealType.sealType.checkYourAnswersLabel",
         value = ValueViewModel(getValue(idx)),
-        actions = Seq(
+        actions = if(onReviewPage) Seq() else Seq(
           ActionItemViewModel(
             "site.change",
             routes.TransportSealTypeController.onPageLoad(request.userAnswers.ern, request.userAnswers.arc, idx, CheckMode).url,

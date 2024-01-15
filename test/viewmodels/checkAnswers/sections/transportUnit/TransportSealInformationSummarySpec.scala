@@ -50,37 +50,37 @@ class TransportSealInformationSummarySpec extends SpecBase with Matchers with Tr
 
             implicit lazy val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), emptyUserAnswers)
 
-            TransportSealInformationSummary.row(testIndex1) mustBe None
+            TransportSealInformationSummary.row(testIndex1, onReviewPage = false) mustBe None
           }
         }
 
         "when there's an answer" - {
 
-          s"must output no rows if TransportSealChoicePage is false" in {
+          "must output no rows if TransportSealChoicePage is false" in {
             implicit lazy val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), emptyUserAnswers
               .set(TransportSealTypePage(testIndex1), transportSealTypeModelMax)
               .set(TransportSealChoicePage(testIndex1), false)
             )
 
-            TransportSealInformationSummary.row(testIndex1) mustBe None
+            TransportSealInformationSummary.row(testIndex1, onReviewPage = false) mustBe None
           }
 
-          s"must output no rows if TransportSealChoicePage is not present" in {
+          "must output no rows if TransportSealChoicePage is not present" in {
             implicit lazy val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), emptyUserAnswers
               .set(TransportSealTypePage(testIndex1), transportSealTypeModelMax)
             )
 
-            TransportSealInformationSummary.row(testIndex1) mustBe None
+            TransportSealInformationSummary.row(testIndex1, onReviewPage = false) mustBe None
           }
 
-          s"must output the expected row for TransportSealInformation if TransportSealChoicePage is true" in {
+          "must output the expected row for TransportSealInformation if TransportSealChoicePage is true" in {
 
             implicit lazy val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), emptyUserAnswers
               .set(TransportSealTypePage(testIndex1), transportSealTypeModelMax)
               .set(TransportSealChoicePage(testIndex1), true)
             )
 
-            TransportSealInformationSummary.row(testIndex1) mustBe
+            TransportSealInformationSummary.row(testIndex1, onReviewPage = false) mustBe
               Some(
                 SummaryListRowViewModel(
                   key = messagesForLanguage.moreInfoCYA,
@@ -95,34 +95,52 @@ class TransportSealInformationSummarySpec extends SpecBase with Matchers with Tr
                 )
               )
           }
+
+          "must output the expected row for TransportSealInformation if TransportSealChoicePage is true - " +
+            "with no change link when on review page" in {
+
+            implicit lazy val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), emptyUserAnswers
+              .set(TransportSealTypePage(testIndex1), transportSealTypeModelMax)
+              .set(TransportSealChoicePage(testIndex1), true)
+            )
+
+            TransportSealInformationSummary.row(testIndex1, onReviewPage = true) mustBe
+              Some(
+                SummaryListRowViewModel(
+                  key = messagesForLanguage.moreInfoCYA,
+                  value = Value(Text(transportSealTypeModelMax.moreInfo.value)),
+                  actions = Seq()
+                )
+              )
+          }
         }
 
         "when there's an answer but no more information has been added" - {
-          s"must output no rows if TransportSealChoicePage is false" in {
+          "must output no rows if TransportSealChoicePage is false" in {
             implicit lazy val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), emptyUserAnswers
               .set(TransportSealTypePage(testIndex1), transportSealTypeModelMin)
               .set(TransportSealChoicePage(testIndex1), false)
             )
 
-            TransportSealInformationSummary.row(testIndex1) mustBe None
+            TransportSealInformationSummary.row(testIndex1, onReviewPage = false) mustBe None
           }
 
-          s"must output no rows if TransportSealChoicePage is not present" in {
+          "must output no rows if TransportSealChoicePage is not present" in {
             implicit lazy val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), emptyUserAnswers
               .set(TransportSealTypePage(testIndex1), transportSealTypeModelMin)
             )
 
-            TransportSealInformationSummary.row(testIndex1) mustBe None
+            TransportSealInformationSummary.row(testIndex1, onReviewPage = false) mustBe None
           }
 
-          s"must output a row with a link to add more information and TransportSealChoicePage is true" in {
+          "must output a row with a link to add more information and TransportSealChoicePage is true" in {
 
             implicit lazy val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), emptyUserAnswers
               .set(TransportSealTypePage(testIndex1), transportSealTypeModelMin)
               .set(TransportSealChoicePage(testIndex1), true)
             )
 
-            TransportSealInformationSummary.row(testIndex1) mustBe
+            TransportSealInformationSummary.row(testIndex1, onReviewPage = false) mustBe
               Some(
                 SummaryListRowViewModel(
                   key = messagesForLanguage.moreInfoCYA,
@@ -130,6 +148,22 @@ class TransportSealInformationSummarySpec extends SpecBase with Matchers with Tr
                     link = controllers.sections.transportUnit.routes.TransportSealTypeController.onPageLoad(testErn, testArc, testIndex1, CheckMode).url,
                     messageKey = messagesForLanguage.moreInfoCYAAddInfo
                   )))
+                )
+              )
+          }
+
+          "must output a row with no link to add more information and TransportSealChoicePage is true - when on review page" in {
+
+            implicit lazy val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), emptyUserAnswers
+              .set(TransportSealTypePage(testIndex1), transportSealTypeModelMin)
+              .set(TransportSealChoicePage(testIndex1), true)
+            )
+
+            TransportSealInformationSummary.row(testIndex1, onReviewPage = true) mustBe
+              Some(
+                SummaryListRowViewModel(
+                  key = messagesForLanguage.moreInfoCYA,
+                  value = ValueViewModel(Text(messagesForLanguage.notProvided))
                 )
               )
           }

@@ -26,7 +26,7 @@ import navigation.TransportUnitNavigator
 import pages.sections.journeyType.HowMovementTransportedPage
 import pages.sections.transportUnit._
 import play.api.i18n.MessagesApi
-import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
+import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
 import queries.TransportUnitsCount
 import services.UserAnswersService
 
@@ -48,26 +48,36 @@ class TransportUnitIndexController @Inject()(
   def onPageLoad(ern: String, arc: String): Action[AnyContent] =
     authorisedDataRequestWithUpToDateMovementAsync(ern, arc) { implicit request =>
       val userAnswersWith801TransportUnits = populateTransportUnitsFrom801IfEmpty
-      (userAnswersWith801TransportUnits.get(TransportUnitsCount), request.userAnswers.get(HowMovementTransportedPage)) match {
-        case (_, Some(FixedTransportInstallations)) =>
-          Future(Redirect(
-            controllers.sections.transportUnit.routes.TransportUnitCheckAnswersController.onPageLoad(request.ern, request.arc)
-          ))
-        case (None | Some(0), _) =>
-          Future(Redirect(
-            controllers.sections.transportUnit.routes.TransportUnitTypeController.onPageLoad(request.ern, request.arc, Index(0), NormalMode)
-          ))
-        case _ =>
-          lazy val redirectCall = Redirect(
-            controllers.sections.transportUnit.routes.TransportUnitsAddToListController.onPageLoad(request.ern, request.arc)
-          )
-          if(userAnswersWith801TransportUnits == request.userAnswers) {
-            Future(redirectCall)
-          } else {
-            userAnswersService.set(userAnswersWith801TransportUnits).map(_ => redirectCall)
-          }
+      if (TransportUnitsSection.needsReview) {
+        saveAnswersAndRedirect(Redirect(
+          controllers.sections.transportUnit.routes.TransportUnitsReviewController.onPageLoad(request.ern, request.arc)
+        ))(userAnswersWith801TransportUnits)
+      } else {
+        (userAnswersWith801TransportUnits.get(TransportUnitsCount), request.userAnswers.get(HowMovementTransportedPage)) match {
+          case (_, Some(FixedTransportInstallations)) =>
+            Future(Redirect(
+              controllers.sections.transportUnit.routes.TransportUnitCheckAnswersController.onPageLoad(request.ern, request.arc)
+            ))
+          case (None | Some(0), _) =>
+            Future(Redirect(
+              controllers.sections.transportUnit.routes.TransportUnitTypeController.onPageLoad(request.ern, request.arc, Index(0), NormalMode)
+            ))
+          case _ =>
+            lazy val redirectCall = Redirect(
+              controllers.sections.transportUnit.routes.TransportUnitsAddToListController.onPageLoad(request.ern, request.arc)
+            )
+            saveAnswersAndRedirect(redirectCall)(userAnswersWith801TransportUnits)
+        }
       }
     }
+
+  private def saveAnswersAndRedirect(call: Result)(userAnswersToSave: UserAnswers)(implicit request: DataRequest[_]): Future[Result] = {
+    if (userAnswersToSave == request.userAnswers) {
+      Future(call)
+    } else {
+      userAnswersService.set(userAnswersToSave).map(_ => call)
+    }
+  }
 
   private def populateTransportUnitsFrom801IfEmpty()(implicit request: DataRequest[_]): UserAnswers = {
     request.userAnswers.get(TransportUnitsCount) match {

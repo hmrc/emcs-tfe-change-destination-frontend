@@ -32,27 +32,27 @@ import javax.inject.Inject
 
 class TransportUnitsAddToListHelper @Inject()(implicit link: views.html.components.link) {
 
-  def allTransportUnitsSummary()(implicit request: DataRequest[_], messages: Messages): Seq[SummaryList] = {
+  def allTransportUnitsSummary(onReviewPage: Boolean)(implicit request: DataRequest[_], messages: Messages): Seq[SummaryList] = {
     request.userAnswers.get(TransportUnitsCount) match {
-      case Some(value) => (0 until value).map(int => summaryList(Index(int)))
+      case Some(value) => (0 until value).map(int => summaryList(Index(int), onReviewPage))
       case None => Nil
     }
   }
 
-  private def summaryList(idx: Index)(implicit request: DataRequest[_], messages: Messages): SummaryList = {
+  private def summaryList(idx: Index, onReviewPage: Boolean)(implicit request: DataRequest[_], messages: Messages): SummaryList = {
     val isTransportUnitAFixedTransportInstallation = request.userAnswers.get(TransportUnitTypePage(idx)).contains(FixedTransport)
     SummaryListViewModel(
       rows = Seq(
-        Some(TransportUnitTypeSummary.row(idx)),
-        if (!isTransportUnitAFixedTransportInstallation) Some(TransportUnitIdentitySummary.row(idx)) else None,
-        if (!isTransportUnitAFixedTransportInstallation) Some(TransportSealChoiceSummary.row(idx)) else None,
-        if (!isTransportUnitAFixedTransportInstallation) Some(TransportSealTypeSummary.row(idx)) else None,
-        if (!isTransportUnitAFixedTransportInstallation) Some(TransportSealInformationSummary.row(idx)) else None,
-        if (!isTransportUnitAFixedTransportInstallation) Some(TransportUnitGiveMoreInformationSummary.row(idx)) else None
+        Some(TransportUnitTypeSummary.row(idx, onReviewPage)),
+        if (!isTransportUnitAFixedTransportInstallation) Some(TransportUnitIdentitySummary.row(idx, onReviewPage)) else None,
+        if (!isTransportUnitAFixedTransportInstallation) Some(TransportSealChoiceSummary.row(idx, onReviewPage)) else None,
+        if (!isTransportUnitAFixedTransportInstallation) Some(TransportSealTypeSummary.row(idx, onReviewPage)) else None,
+        if (!isTransportUnitAFixedTransportInstallation) Some(TransportSealInformationSummary.row(idx, onReviewPage)) else None,
+        if (!isTransportUnitAFixedTransportInstallation) Some(TransportUnitGiveMoreInformationSummary.row(idx, onReviewPage)) else None
       ).flatMap(_.flatten)
     ).copy(card = Some(Card(
       title = Some(CardTitle(Text(messages("transportUnitsAddToList.transportUnitCardTitle", idx.displayIndex)))),
-      actions = Some(Actions(items = Seq(
+      actions = Some(Actions(items = if(onReviewPage) Seq() else Seq(
         ActionItemViewModel(
           content = Text(messages("site.remove")),
           href = transportUnitRoutes.TransportUnitRemoveUnitController.onPageLoad(request.userAnswers.ern, request.userAnswers.arc, idx).url,

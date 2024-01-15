@@ -20,6 +20,7 @@ import base.SpecBase
 import controllers.actions.{FakeDataRetrievalAction, FakeMovementAction}
 import mocks.services.MockUserAnswersService
 import models.response.emcsTfe.TransportDetailsModel
+import models.sections.ReviewAnswer.ChangeAnswers
 import models.sections.journeyType.HowMovementTransported.{FixedTransportInstallations, RoadTransport}
 import models.sections.transportUnit.TransportUnitType.Container
 import models.sections.transportUnit.{TransportSealTypeModel, TransportUnitType}
@@ -54,8 +55,31 @@ class TransportUnitIndexControllerSpec extends SpecBase with MockUserAnswersServ
 
   "TransportUnitIndex Controller" - {
 
+    "must redirect to the transport unit review answers page (COD-08) when the section needs reviewing" in new Test(
+      Some(emptyUserAnswers), transportUnits = Seq(maxGetMovementResponse.transportDetails.head.copy(transportUnitCode = "1"))
+    ) {
+      val expectedUserAnswers = emptyUserAnswers
+        .set(TransportUnitTypePage(testIndex1), Container)
+        .set(TransportSealChoicePage(testIndex1), true)
+        .set(TransportUnitGiveMoreInformationChoicePage(testIndex1), true)
+        .set(TransportUnitGiveMoreInformationPage(testIndex1), Some("TransportDetailsComplementaryInformation1"))
+        .set(TransportSealTypePage(testIndex1), TransportSealTypeModel("TransportDetailsCommercialSealIdentification1", Some("TransportDetailsSealInformation1")))
+        .set(TransportUnitIdentityPage(testIndex1), "TransportDetailsIdentityOfTransportUnits1")
+
+      MockUserAnswersService.set(expectedUserAnswers).returns(Future.successful(expectedUserAnswers))
+
+      val result = controller.onPageLoad(testErn, testArc)(request)
+
+      status(result) mustEqual SEE_OTHER
+      redirectLocation(result).value mustBe
+        routes.TransportUnitsReviewController.onPageLoad(testErn, testArc).url
+    }
+
     "must redirect to the transport unit check answers page (CAM-TU09) when the journey type is " +
-      "Fixed Transport Installations" in new Test(Some(emptyUserAnswers.set(HowMovementTransportedPage, FixedTransportInstallations))) {
+      "Fixed Transport Installations" in new Test(Some(emptyUserAnswers
+      .set(HowMovementTransportedPage, FixedTransportInstallations)
+      .set(TransportUnitsReviewPage, ChangeAnswers)
+    )) {
 
       val result = controller.onPageLoad(testErn, testArc)(request)
 
@@ -64,7 +88,9 @@ class TransportUnitIndexControllerSpec extends SpecBase with MockUserAnswersServ
         routes.TransportUnitCheckAnswersController.onPageLoad(testErn, testArc).url
     }
 
-    "must redirect to the transport unit type page (CAM-TU01) when no transport units answered" in new Test(Some(emptyUserAnswers)) {
+    "must redirect to the transport unit type page (CAM-TU01) when no transport units answered" in new Test(Some(
+      emptyUserAnswers.set(TransportUnitsReviewPage, ChangeAnswers)
+    )) {
 
       val result = controller.onPageLoad(testErn, testArc)(request)
 
@@ -76,6 +102,7 @@ class TransportUnitIndexControllerSpec extends SpecBase with MockUserAnswersServ
       emptyUserAnswers
         .set(HowMovementTransportedPage, RoadTransport)
         .set(TransportUnitsCount, Seq.empty)
+        .set(TransportUnitsReviewPage, ChangeAnswers)
     )) {
 
       val result = controller.onPageLoad(testErn, testArc)(request)
@@ -89,6 +116,7 @@ class TransportUnitIndexControllerSpec extends SpecBase with MockUserAnswersServ
       emptyUserAnswers
         .set(HowMovementTransportedPage, RoadTransport)
         .set(TransportUnitTypePage(testIndex1), TransportUnitType.Vehicle)
+        .set(TransportUnitsReviewPage, ChangeAnswers)
     )) {
       val result = controller.onPageLoad(testErn, testArc)(request)
 
@@ -100,12 +128,14 @@ class TransportUnitIndexControllerSpec extends SpecBase with MockUserAnswersServ
       "adding any 801 TU's when none are present in the user answers (prevents index out of bounds when adding new TU's)" in new Test(
       Some(emptyUserAnswers
         .set(HowMovementTransportedPage, RoadTransport)
+        .set(TransportUnitsReviewPage, ChangeAnswers)
       ), transportUnits = Seq(maxGetMovementResponse.transportDetails.head.copy(transportUnitCode = "1"))
     ) {
       val result = controller.onPageLoad(testErn, testArc)(request)
 
       val expectedUserAnswers = emptyUserAnswers
         .set(HowMovementTransportedPage, RoadTransport)
+        .set(TransportUnitsReviewPage, ChangeAnswers)
         .set(TransportUnitTypePage(testIndex1), Container)
         .set(TransportSealChoicePage(testIndex1), true)
         .set(TransportUnitGiveMoreInformationChoicePage(testIndex1), true)
@@ -124,12 +154,14 @@ class TransportUnitIndexControllerSpec extends SpecBase with MockUserAnswersServ
       "setting only TransportSealTypePage when TransportUnitIdentity is not provided" in new Test(
       Some(emptyUserAnswers
         .set(HowMovementTransportedPage, RoadTransport)
+        .set(TransportUnitsReviewPage, ChangeAnswers)
       ), transportUnits = Seq(maxGetMovementResponse.transportDetails.head.copy(transportUnitCode = "1", identityOfTransportUnits = None))
     ) {
       val result = controller.onPageLoad(testErn, testArc)(request)
 
       val expectedUserAnswers = emptyUserAnswers
         .set(HowMovementTransportedPage, RoadTransport)
+        .set(TransportUnitsReviewPage, ChangeAnswers)
         .set(TransportUnitTypePage(testIndex1), Container)
         .set(TransportSealChoicePage(testIndex1), true)
         .set(TransportUnitGiveMoreInformationChoicePage(testIndex1), true)
@@ -147,12 +179,14 @@ class TransportUnitIndexControllerSpec extends SpecBase with MockUserAnswersServ
       "setting only TransportUnitIdentityPage when Transport Seal Info is not provided" in new Test(
       Some(emptyUserAnswers
         .set(HowMovementTransportedPage, RoadTransport)
+        .set(TransportUnitsReviewPage, ChangeAnswers)
       ), transportUnits = Seq(maxGetMovementResponse.transportDetails.head.copy(transportUnitCode = "1", commercialSealIdentification = None))
     ) {
       val result = controller.onPageLoad(testErn, testArc)(request)
 
       val expectedUserAnswers = emptyUserAnswers
         .set(HowMovementTransportedPage, RoadTransport)
+        .set(TransportUnitsReviewPage, ChangeAnswers)
         .set(TransportUnitTypePage(testIndex1), Container)
         .set(TransportSealChoicePage(testIndex1), false)
         .set(TransportUnitGiveMoreInformationChoicePage(testIndex1), true)

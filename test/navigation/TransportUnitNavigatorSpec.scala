@@ -21,6 +21,7 @@ import controllers.routes
 import controllers.sections.transportUnit.{routes => transportUnitRoutes}
 import fixtures.TransportUnitFixtures
 import models.requests.DataRequest
+import models.sections.ReviewAnswer.{ChangeAnswers, KeepAnswers}
 import models.sections.journeyType.HowMovementTransported
 import models.sections.journeyType.HowMovementTransported.FixedTransportInstallations
 import models.sections.transportUnit.TransportUnitType.{FixedTransport, Tractor}
@@ -213,6 +214,33 @@ class TransportUnitNavigatorSpec extends SpecBase with TransportUnitFixtures {
 
           navigator.nextPage(TransportUnitsAddToListPage, NormalMode, userAnswers) mustBe
             routes.DraftMovementController.onPageLoad(testErn, testArc)
+        }
+      }
+    }
+
+    "for the TransportUnitsReviewPage" - {
+
+      "must go to TransportUnitAddToListPage (CAM-TU07)" - {
+
+        "when the user answers yes (change answers)" in {
+          navigator.nextPage(TransportUnitsReviewPage, NormalMode, emptyUserAnswers.set(TransportUnitsReviewPage, ChangeAnswers)) mustBe
+            controllers.sections.transportUnit.routes.TransportUnitsAddToListController.onPageLoad(testErn, testArc)
+        }
+      }
+
+      "must go to the task list" - {
+
+        "when the user answers no (keep answers)" in {
+          navigator.nextPage(TransportUnitsReviewPage, NormalMode, emptyUserAnswers.set(TransportUnitsReviewPage, KeepAnswers)) mustBe
+            routes.DraftMovementController.onPageLoad(testErn, testArc)
+        }
+      }
+
+      "must go back to the TransportUnitsReviewPage (COD-08)" - {
+
+        "when the user has no answer" in {
+          navigator.nextPage(TransportUnitsReviewPage, NormalMode, emptyUserAnswers) mustBe
+            controllers.sections.transportUnit.routes.TransportUnitsReviewController.onPageLoad(testErn, testArc)
         }
       }
     }

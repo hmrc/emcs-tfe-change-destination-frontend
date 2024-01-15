@@ -46,7 +46,7 @@ class TransportSealChoiceSummarySpec extends SpecBase with Matchers with Transpo
 
             implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers)
 
-            TransportSealChoiceSummary.row(testIndex1) mustBe
+            TransportSealChoiceSummary.row(testIndex1, onReviewPage = false) mustBe
               Some(
                 SummaryListRowViewModel(
                   key = messagesForLanguage.cyaLabel,
@@ -61,15 +61,29 @@ class TransportSealChoiceSummarySpec extends SpecBase with Matchers with Transpo
                 )
               )
           }
+
+          "must output a row with not provided - with no change link when on review page" in {
+
+            implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers)
+
+            TransportSealChoiceSummary.row(testIndex1, onReviewPage = true) mustBe
+              Some(
+                SummaryListRowViewModel(
+                  key = messagesForLanguage.cyaLabel,
+                  value = Value(Text(messagesForLanguage.notProvided)),
+                  actions = Seq()
+                )
+              )
+          }
         }
 
         "when there's an answer" - {
 
-          s"must output the expected row for TransportSealChoice" in {
+          "must output the expected row for TransportSealChoice - when not on review page" in {
 
             implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(TransportSealChoicePage(testIndex1), true))
 
-            TransportSealChoiceSummary.row(testIndex1) mustBe
+            TransportSealChoiceSummary.row(testIndex1, onReviewPage = false) mustBe
               Some(
                 SummaryListRowViewModel(
                   key = messagesForLanguage.cyaLabel,
@@ -81,6 +95,20 @@ class TransportSealChoiceSummarySpec extends SpecBase with Matchers with Transpo
                       id = "changeTransportSealChoice1"
                     ).withVisuallyHiddenText(messagesForLanguage.moreInfoCyaChangeHidden)
                   )
+                )
+              )
+          }
+
+          "must output the expected row for TransportSealChoice - when on review page" in {
+
+            implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(TransportSealChoicePage(testIndex1), true))
+
+            TransportSealChoiceSummary.row(testIndex1, onReviewPage = true) mustBe
+              Some(
+                SummaryListRowViewModel(
+                  key = messagesForLanguage.cyaLabel,
+                  value = Value(Text("Yes")),
+                  actions = Seq()
                 )
               )
           }
