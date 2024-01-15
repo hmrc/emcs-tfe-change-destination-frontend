@@ -32,5 +32,5 @@ class FirstTransporterCheckAnswersHelper @Inject()() {
         FirstTransporterVatSummary.row(onReviewPage),
         FirstTransporterAddressSummary.row(onReviewPage)
       )
-    ).withCssClass(" govuk-!-margin-bottom-9")
+    ).withCssClass("govuk-!-margin-bottom-9")
 }
