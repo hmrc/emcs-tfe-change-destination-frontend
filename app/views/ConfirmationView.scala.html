@@ -27,60 +27,88 @@
         p: components.p,
         link: components.link,
         h2: components.h2,
+        insetText: components.insetText,
+        bullets: components.bullets,
         appConfig: AppConfig,
         govukSummaryList: GovukSummaryList
 )
 
-@(reference: String, dateOfSubmission: LocalDate, exciseEnquiriesLink: String, returnToAccountLink: String, feedbackLink: String)(implicit request: DataRequest[_], messages: Messages)
+@(reference: String, dateOfSubmission: LocalDate, hasConsigneeChanged: Boolean, exciseEnquiriesLink: String, returnToAccountLink: String, feedbackLink: String)(implicit request: DataRequest[_], messages: Messages)
 
 @layout(pageTitle = titleNoForm(messages("confirmation.title")), maybeShowActiveTrader = maybeShowActiveTrader(request), showBackLink = false) {
 
-    @confirmationPanel("confirmation.heading")
+  @confirmationPanel("confirmation.heading")
 
-    @h2("confirmation.movementInformation")
+  @h2("confirmation.movementInformation")
 
-    @govukSummaryList(SummaryList(
-        rows = Seq(
-            SummaryListRow(
-                key = Key(Text(messages("confirmation.localReferenceNumber"))),
-                value = Value(Text(reference))
-            ),
-            SummaryListRow(
-                key = Key(Text(messages("confirmation.dateOfSubmission"))),
-                value = Value(Text(dateOfSubmission.format(DateTimeFormatter.ofPattern("dd LLLL yyyy"))))
-            )
-        )
-    ))
+  @govukSummaryList(SummaryList(
+    rows = Seq(
+      SummaryListRow(
+        key = Key(Text(messages("confirmation.arc"))),
+        value = Value(Text(reference))
+      ),
+      SummaryListRow(
+        key = Key(Text(messages("confirmation.dateOfSubmission"))),
+        value = Value(Text(dateOfSubmission.format(DateTimeFormatter.ofPattern("dd LLLL yyyy"))))
+      )
+    )
+  ))
 
-    <p class="govuk-body no-print"><a class="govuk-link" href="javascript:if(window.print)window.print()" id="print-page">@messages("confirmation.printLink")</a> @messages("confirmation.printMessage")</p>
+  <p class="govuk-body no-print"><a class="govuk-link" href="javascript:if(window.print)window.print()" id="print-page">@messages("confirmation.printLink")</a> @messages("confirmation.printMessage")</p>
 
-    @h2("confirmation.whatHappensNext")
-    <p class="govuk-body">@messages("confirmation.p1")</p>
-    <p class="govuk-body">
-        @messages("confirmation.p2.beforeLink")
-        @link(
-            exciseEnquiriesLink,
-            "confirmation.p2.link",
-            opensInNewTab = true,
-            id = Some("contactHmrc")
-        )
-        @messages("confirmation.p2.afterLink")
-    </p>
-    <p class="govuk-body">@messages("confirmation.p3")</p>
-    <p class="govuk-body">@messages("confirmation.p4")</p>
-
-    <p class="govuk-body no-print govuk-!-margin-top-8 govuk-!-margin-bottom-8"><a class="govuk-link" href=@returnToAccountLink>@messages("confirmation.returnToAccountLink")</a></p>
-    @p(classes = "govuk-body no-print") {
-        @link(
-            feedbackLink,
-            "confirmation.feedbackLink",
-            opensInNewTab = true,
-            id = Some("feedbackSurvey")
-        )
-        @messages("confirmation.feedbackText")
+  @h2("confirmation.whatHappensNext")
+  @p() {
+    @messages(if(hasConsigneeChanged) "confirmation.p1.differentConsignee" else "confirmation.p1.sameConsignee")
+  }
+  @insetText() {
+    @p() {
+      @messages("confirmation.inset.p1")
     }
+    @bullets(Seq(
+      Html(messages("confirmation.inset.list.1")),
+      Html(messages("confirmation.inset.list.2"))
+    ))
+  }
+  @p() {
+    @messages("confirmation.p2")
+  }
+  @p() {
+    @messages("confirmation.p3")
+  }
+
+  @h2(msg = "confirmation.explainDelay.h2")
+  @p() {
+    @messages("confirmation.explainDelay.p")
+  }
+  @if(hasConsigneeChanged) {
+    @h2(msg = "confirmation.unsuccessfulSubmission.h2")
+    @p() {
+      @messages("confirmation.unsuccessfulSubmission.p1")
+    }
+    @p() {
+      @messages("confirmation.unsuccessfulSubmission.p2")
+    }
+    @p() {
+      @messages("confirmation.unsuccessfulSubmission.p3")
+    }
+  }
+  @p() {
+    @messages("confirmation.contactHMRC")
+  }
+
+
+  <p class="govuk-body no-print govuk-!-margin-top-8 govuk-!-margin-bottom-8"><a class="govuk-link" href=@returnToAccountLink>@messages("confirmation.returnToAccountLink")</a></p>
+  @p(classes = "govuk-body no-print") {
+    @link(
+      feedbackLink,
+      "confirmation.feedbackLink",
+      opensInNewTab = true,
+      id = Some("feedbackSurvey")
+    )
+    @messages("confirmation.feedbackText")
+  }
 }
 
 @{
-    //$COVERAGE-OFF$
+  //$COVERAGE-OFF$
 }

@@ -1,5 +1,5 @@
 @*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,13 +15,14 @@
  *@
 
 @this(
-        govukDetails: GovukDetails
+        govUkInsetText: GovukInsetText
 )
 
-@(summary: String)(content: Html)(implicit messages: Messages)
+@(id: Option[String] = None, classes: String = "")(content: Html)(implicit messages: Messages)
 
-@govukDetails(Details(
-  summary = Text(messages(summary)),
+@govUkInsetText(InsetText(
+  id = id,
+  classes = classes,
   content = HtmlContent(content)
 ))
 

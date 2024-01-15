@@ -18,7 +18,9 @@ package controllers
 
 import config.AppConfig
 import controllers.actions._
+import models.requests.DataRequest
 import pages.DeclarationPage
+import pages.sections.consignee._
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
@@ -44,8 +46,9 @@ class ConfirmationController @Inject()(
       request.userAnswers.get(DeclarationPage) match {
         case Some(submissionTimestamp) =>
           Ok(view(
-            reference = request.arc, //TODO: Check with UX what this should really be in future
+            reference = request.arc,
             dateOfSubmission = submissionTimestamp.toLocalDate,
+            hasConsigneeChanged = hasConsigneeChanged(),
             exciseEnquiriesLink = config.exciseGuidance,
             returnToAccountLink = config.emcsTfeHomeUrl,
             feedbackLink = config.feedbackFrontendSurveyUrl
@@ -55,4 +58,12 @@ class ConfirmationController @Inject()(
           Redirect(routes.JourneyRecoveryController.onPageLoad())
       }
     }
+
+  //TODO: could be made simpler when consignee flow built?
+  private def hasConsigneeChanged()(implicit request: DataRequest[_]): Boolean =
+    request.userAnswers.get(ConsigneeExcisePage) != ConsigneeExcisePage.getValueFromIE801 ||
+      request.userAnswers.get(ConsigneeExemptOrganisationPage) != ConsigneeExemptOrganisationPage.getValueFromIE801 ||
+      request.userAnswers.get(ConsigneeBusinessNamePage) != ConsigneeBusinessNamePage.getValueFromIE801 ||
+      request.userAnswers.get(ConsigneeAddressPage) != ConsigneeAddressPage.getValueFromIE801 ||
+      request.userAnswers.get(ConsigneeExportVatPage) != ConsigneeExportVatPage.getValueFromIE801
 }
