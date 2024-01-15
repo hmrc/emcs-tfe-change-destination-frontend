@@ -67,7 +67,7 @@ class FirstTransporterReviewControllerSpec extends SpecBase with MockUserAnswers
 
   "FirstTransporterReview Controller" - {
 
-    "must return OK and the correct view for a GET" in new Test(Some(emptyUserAnswers)) {
+    "must return OK and the correct view for a GET" in new Test {
       val result = controller.onPageLoad(testErn, testArc)(request)
 
       status(result) mustEqual OK
@@ -83,7 +83,7 @@ class FirstTransporterReviewControllerSpec extends SpecBase with MockUserAnswers
       contentAsString(result) mustEqual view(form.fill(KeepAnswers), helper.summaryList(onReviewPage = true), submitCall).toString()
     }
 
-    "must redirect to the next page when valid data is submitted" in new Test(Some(emptyUserAnswers)) {
+    "must redirect to the next page when valid data is submitted" in new Test {
 
       MockUserAnswersService.set().returns(Future.successful(emptyUserAnswers))
 
@@ -93,7 +93,7 @@ class FirstTransporterReviewControllerSpec extends SpecBase with MockUserAnswers
       redirectLocation(result).value mustEqual testOnwardRoute.url
     }
 
-    "must return a Bad Request and errors when invalid data is submitted" in new Test(Some(emptyUserAnswers)) {
+    "must return a Bad Request and errors when invalid data is submitted" in new Test {
       val boundForm = form.bind(Map("value" -> ""))
 
       val result = controller.onSubmit(testErn, testArc)(request.withFormUrlEncodedBody(("value", "")))
