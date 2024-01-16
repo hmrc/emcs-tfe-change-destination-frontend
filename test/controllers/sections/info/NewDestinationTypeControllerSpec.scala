@@ -21,7 +21,6 @@ import controllers.actions.predraft.FakePreDraftRetrievalAction
 import controllers.actions.{FakeDataRetrievalAction, FakeMovementAction}
 import forms.sections.info.NewDestinationTypeFormProvider
 import mocks.services.{MockPreDraftService, MockUserAnswersService}
-import models.NormalMode
 import models.requests.DataRequest
 import models.sections.info.DispatchPlace
 import models.sections.info.DispatchPlace.{GreatBritain, NorthernIreland}

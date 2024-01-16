@@ -22,7 +22,7 @@ import models.UserType._
 import models.requests.DataRequest
 import models.response.emcsTfe.GuarantorType.NoGuarantor
 import models.response.emcsTfe.{HeaderEadEsadModel, MovementGuaranteeModel}
-import models.response.{InvalidUserTypeException, MissingMandatoryPage}
+import models.response.InvalidUserTypeException
 import models.sections.ReviewAnswer.ChangeAnswers
 import models.sections.info.DispatchPlace
 import models.sections.info.DispatchPlace.{GreatBritain, NorthernIreland}
