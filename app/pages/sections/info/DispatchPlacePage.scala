@@ -25,5 +25,13 @@ case object DispatchPlacePage extends QuestionPage[DispatchPlace] {
   override val toString: String = "dispatchPlace"
   override val path: JsPath = InfoSection.path \ toString
 
-  override def getValueFromIE801(implicit request: DataRequest[_]): Option[DispatchPlace] = None // TODO: update
+  override def getValueFromIE801(implicit request: DataRequest[_]): Option[DispatchPlace] = {
+    val placeIdentifierChars = 2
+
+    request.movementDetails.competentAuthorityDispatchOfficeReferenceNumber.map(_.take(placeIdentifierChars)) match {
+      case Some(DispatchPlace.GreatBritain.toString) => Some(DispatchPlace.GreatBritain)
+      case Some(DispatchPlace.NorthernIreland.toString) => Some(DispatchPlace.NorthernIreland)
+      case _ => None
+    }
+  }
 }

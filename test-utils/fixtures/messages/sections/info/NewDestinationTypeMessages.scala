@@ -18,7 +18,7 @@ package fixtures.messages.sections.info
 
 import fixtures.messages.{BaseEnglish, BaseMessages, i18n}
 
-object DestinationTypeMessages {
+object NewDestinationTypeMessages {
   sealed trait ViewMessages extends BaseMessages {
     _: i18n =>
     val headingMovement = "What is the new destination type for this movement?"

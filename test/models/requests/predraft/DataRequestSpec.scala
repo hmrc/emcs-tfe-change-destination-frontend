@@ -47,19 +47,15 @@ class DataRequestSpec extends SpecBase {
 
   "dispatchPlace" - {
     Seq(
-      ("GB", Some(GreatBritain)),
-      ("XI", Some(NorthernIreland)),
-      ("beans", None)
+      ("GB", GreatBritain),
+      ("XI", NorthernIreland),
     ).foreach {
       case (dp, res) =>
         s"when provided DISPATCH_PLACE $dp" - {
           s"must return $res" in {
             val request = dataRequest(
               request = FakeRequest(),
-              answers = res match {
-                case Some(dp) => emptyUserAnswers.set(DispatchPlacePage, dp)
-                case None => emptyUserAnswers
-               }
+              answers = emptyUserAnswers.set(DispatchPlacePage, res)
             )
 
             request.dispatchPlace mustBe res
@@ -68,9 +64,9 @@ class DataRequestSpec extends SpecBase {
 
     }
     "when no DISPATCH_PLACE is present" - {
-      "must return None" in {
+      "must return value from IE801" in {
         val request = dataRequest(FakeRequest())
-        request.dispatchPlace mustBe None
+        request.dispatchPlace mustBe GreatBritain
       }
     }
   }

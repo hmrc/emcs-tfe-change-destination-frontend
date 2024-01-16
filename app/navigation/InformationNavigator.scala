@@ -48,7 +48,7 @@ class InformationNavigator @Inject()() extends BaseNavigator {
       (userAnswers: UserAnswers) => userAnswers.get(ChangeDestinationTypePage) match {
         case Some(wantsToChangeDestinationType) =>
           if(wantsToChangeDestinationType) {
-            controllers.sections.info.routes.DestinationTypeController.onPreDraftPageLoad(userAnswers.ern, userAnswers.arc)
+            controllers.sections.info.routes.NewDestinationTypeController.onPreDraftPageLoad(userAnswers.ern, userAnswers.arc)
           } else {
             controllers.routes.DraftMovementController.onPageLoad(userAnswers.ern, userAnswers.arc)
           }
@@ -56,7 +56,7 @@ class InformationNavigator @Inject()() extends BaseNavigator {
       }
 
     case DispatchPlacePage =>
-      (userAnswers: UserAnswers) => controllers.sections.info.routes.DestinationTypeController.onPreDraftPageLoad(userAnswers.ern, userAnswers.arc)
+      (userAnswers: UserAnswers) => controllers.sections.info.routes.NewDestinationTypeController.onPreDraftPageLoad(userAnswers.ern, userAnswers.arc)
 
     case DestinationTypePage =>
       (userAnswers: UserAnswers) => controllers.routes.DraftMovementController.onPageLoad(userAnswers.ern, userAnswers.arc)

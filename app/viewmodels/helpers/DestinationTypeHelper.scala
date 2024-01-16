@@ -30,16 +30,16 @@ import utils.Logging
 class DestinationTypeHelper extends Logging {
 
   def title(implicit request: DataRequest[_], messages: Messages): String = request.userTypeFromErn match {
-    case GreatBritainWarehouseKeeper | NorthernIrelandWarehouseKeeper => messages("destinationType.title.movement")
-    case GreatBritainRegisteredConsignor | NorthernIrelandRegisteredConsignor => messages("destinationType.title.import")
+    case GreatBritainWarehouseKeeper | NorthernIrelandWarehouseKeeper => messages("newDestinationType.title.movement")
+    case GreatBritainRegisteredConsignor | NorthernIrelandRegisteredConsignor => messages("newDestinationType.title.import")
     case userType =>
       logger.error(s"[title] invalid UserType for COD journey: $userType")
       throw InvalidUserTypeException(s"[DestinationTypeHelper][title] invalid UserType for COD journey: $userType")
   }
 
   def heading(implicit request: DataRequest[_], messages: Messages): String = request.userTypeFromErn match {
-    case GreatBritainWarehouseKeeper | NorthernIrelandWarehouseKeeper => messages("destinationType.heading.movement")
-    case GreatBritainRegisteredConsignor | NorthernIrelandRegisteredConsignor => messages("destinationType.heading.import")
+    case GreatBritainWarehouseKeeper | NorthernIrelandWarehouseKeeper => messages("newDestinationType.heading.movement")
+    case GreatBritainRegisteredConsignor | NorthernIrelandRegisteredConsignor => messages("newDestinationType.heading.import")
     case userType =>
       logger.error(s"[heading] invalid UserType for COD journey: $userType")
       throw InvalidUserTypeException(s"[DestinationTypeHelper][heading] invalid UserType for COD journey: $userType")
@@ -59,7 +59,7 @@ class DestinationTypeHelper extends Logging {
   }
 
   private[helpers] def radioOption(value: MovementScenario)(implicit messages: Messages): RadioItem = RadioItem(
-    content = Text(messages(s"destinationType.${value.toString}")),
+    content = Text(messages(s"newDestinationType.${value.toString}")),
     value = Some(value.toString),
     id = Some(s"value_${value.toString}")
   )

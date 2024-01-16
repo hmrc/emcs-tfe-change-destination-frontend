@@ -25,11 +25,11 @@ import models.sections.info.movementScenario.MovementScenario
 import play.api.data.FormError
 import play.api.test.FakeRequest
 
-class DestinationTypeFormProviderSpec extends OptionFieldBehaviours with SpecBase {
+class NewDestinationTypeFormProviderSpec extends OptionFieldBehaviours with SpecBase {
 
   implicit val dataRequest: DataRequest[_] = dataRequest(FakeRequest())
 
-  val form = new DestinationTypeFormProvider()()
+  val form = new NewDestinationTypeFormProvider()()
 
   ".value" - {
 
@@ -45,7 +45,7 @@ class DestinationTypeFormProviderSpec extends OptionFieldBehaviours with SpecBas
     Seq("GBWK", "XIWK").foreach {
       ern =>
         s"for ERN starting with $ern" - {
-          val form = new DestinationTypeFormProvider()()(dataRequest(FakeRequest(), ern = s"${ern}123"))
+          val form = new NewDestinationTypeFormProvider()()(dataRequest(FakeRequest(), ern = s"${ern}123"))
           val requiredKey = "destinationType.error.required.movement"
           behave like mandatoryField(
             form,
@@ -58,7 +58,7 @@ class DestinationTypeFormProviderSpec extends OptionFieldBehaviours with SpecBas
     Seq("GBRC", "XIRC").foreach {
       ern =>
         s"for ERN starting with $ern" - {
-          val form = new DestinationTypeFormProvider()()(dataRequest(FakeRequest(), ern = s"${ern}123"))
+          val form = new NewDestinationTypeFormProvider()()(dataRequest(FakeRequest(), ern = s"${ern}123"))
           val requiredKey = "destinationType.error.required.import"
           behave like mandatoryField(
             form,
@@ -71,18 +71,18 @@ class DestinationTypeFormProviderSpec extends OptionFieldBehaviours with SpecBas
     "for ERN starting with anything else" - {
       "not bind when key is not present at all" in {
         val result = intercept[InvalidUserTypeException] {
-          val form = new DestinationTypeFormProvider()()(dataRequest(FakeRequest(), ern = "GB00123"))
+          val form = new NewDestinationTypeFormProvider()()(dataRequest(FakeRequest(), ern = "GB00123"))
           form.bind(emptyForm).apply(fieldName)
         }
-        result.getMessage mustEqual s"[DestinationTypeFormProvider][apply] invalid UserType for COD journey: $GreatBritainWarehouse"
+        result.getMessage mustEqual s"[NewDestinationTypeFormProvider][apply] invalid UserType for COD journey: $GreatBritainWarehouse"
       }
 
       "not bind blank values" in {
         val result = intercept[InvalidUserTypeException] {
-          val form = new DestinationTypeFormProvider()()(dataRequest(FakeRequest(), ern = "GB00123"))
+          val form = new NewDestinationTypeFormProvider()()(dataRequest(FakeRequest(), ern = "GB00123"))
           form.bind(Map(fieldName -> "")).apply(fieldName)
         }
-        result.getMessage mustEqual s"[DestinationTypeFormProvider][apply] invalid UserType for COD journey: $GreatBritainWarehouse"
+        result.getMessage mustEqual s"[NewDestinationTypeFormProvider][apply] invalid UserType for COD journey: $GreatBritainWarehouse"
       }
     }
   }

@@ -17,8 +17,8 @@
 package views.sections.info
 
 import base.SpecBase
-import fixtures.messages.sections.info.DestinationTypeMessages
-import forms.sections.info.DestinationTypeFormProvider
+import fixtures.messages.sections.info.NewDestinationTypeMessages
+import forms.sections.info.NewDestinationTypeFormProvider
 import models.requests.DataRequest
 import models.sections.info.DispatchPlace.GreatBritain
 import org.jsoup.Jsoup
@@ -26,16 +26,16 @@ import org.jsoup.nodes.Document
 import play.api.i18n.Messages
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
-import views.html.sections.info.DestinationTypeView
+import views.html.sections.info.NewDestinationTypeView
 import views.{BaseSelectors, ViewBehaviours}
 
-class DestinationTypeViewSpec extends SpecBase with ViewBehaviours {
+class NewDestinationTypeViewSpec extends SpecBase with ViewBehaviours {
 
   object Selectors extends BaseSelectors
 
-  "Destination Type view" - {
+  "New Destination Type view" - {
 
-    Seq(DestinationTypeMessages.English).foreach { messagesForLanguage =>
+    Seq(NewDestinationTypeMessages.English).foreach { messagesForLanguage =>
 
       s"when being rendered in lang code of '${messagesForLanguage.lang.code}'" - {
         Seq("GBWK", "XIWK").foreach {
@@ -44,10 +44,10 @@ class DestinationTypeViewSpec extends SpecBase with ViewBehaviours {
               implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
               implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), ern = s"${ern}123")
 
-             lazy val view = app.injector.instanceOf[DestinationTypeView]
-              val form = app.injector.instanceOf[DestinationTypeFormProvider].apply()
+             lazy val view = app.injector.instanceOf[NewDestinationTypeView]
+              val form = app.injector.instanceOf[NewDestinationTypeFormProvider].apply()
 
-              implicit val doc: Document = Jsoup.parse(view(GreatBritain, form, controllers.sections.info.routes.DestinationTypeController.onPreDraftSubmit(request.ern, testArc)).toString())
+              implicit val doc: Document = Jsoup.parse(view(GreatBritain, form, controllers.sections.info.routes.NewDestinationTypeController.onPreDraftSubmit(request.ern, testArc)).toString())
 
               behave like pageWithExpectedElementsAndMessages(Seq(
                 Selectors.title -> messagesForLanguage.titleMovement,
@@ -63,10 +63,10 @@ class DestinationTypeViewSpec extends SpecBase with ViewBehaviours {
               implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
               implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), ern = s"${ern}123")
 
-             lazy val view = app.injector.instanceOf[DestinationTypeView]
-              val form = app.injector.instanceOf[DestinationTypeFormProvider].apply()
+             lazy val view = app.injector.instanceOf[NewDestinationTypeView]
+              val form = app.injector.instanceOf[NewDestinationTypeFormProvider].apply()
 
-              implicit val doc: Document = Jsoup.parse(view(GreatBritain, form, controllers.sections.info.routes.DestinationTypeController.onPreDraftSubmit(request.ern, testArc)).toString())
+              implicit val doc: Document = Jsoup.parse(view(GreatBritain, form, controllers.sections.info.routes.NewDestinationTypeController.onPreDraftSubmit(request.ern, testArc)).toString())
 
               behave like pageWithExpectedElementsAndMessages(Seq(
                 Selectors.title -> messagesForLanguage.titleImport,

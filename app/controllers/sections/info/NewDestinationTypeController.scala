@@ -19,8 +19,7 @@ package controllers.sections.info
 import controllers.BasePreDraftNavigationController
 import controllers.actions._
 import controllers.actions.predraft.{PreDraftAuthActionHelper, PreDraftDataRequiredAction, PreDraftDataRetrievalAction}
-import forms.sections.info.DestinationTypeFormProvider
-import models.NormalMode
+import forms.sections.info.NewDestinationTypeFormProvider
 import models.UserType.NorthernIrelandWarehouseKeeper
 import models.requests.DataRequest
 import models.sections.info.DispatchPlace.GreatBritain
@@ -30,27 +29,27 @@ import play.api.data.Form
 import play.api.i18n.MessagesApi
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
 import services.{PreDraftService, UserAnswersService}
-import views.html.sections.info.DestinationTypeView
+import views.html.sections.info.NewDestinationTypeView
 
 import javax.inject.Inject
 import scala.concurrent.Future
 
-class DestinationTypeController @Inject()(
-                                           override val messagesApi: MessagesApi,
-                                           val preDraftService: PreDraftService,
-                                           val navigator: InformationNavigator,
-                                           val userAnswersService: UserAnswersService,
-                                           val auth: AuthAction,
-                                           val getPreDraftData: PreDraftDataRetrievalAction,
-                                           val requirePreDraftData: PreDraftDataRequiredAction,
-                                           val getData: DataRetrievalAction,
-                                           val requireData: DataRequiredAction,
-                                           val withMovement: MovementAction,
-                                           formProvider: DestinationTypeFormProvider,
-                                           val controllerComponents: MessagesControllerComponents,
-                                           view: DestinationTypeView,
-                                           val userAllowList: UserAllowListAction
-                                         ) extends BasePreDraftNavigationController with AuthActionHelper with PreDraftAuthActionHelper {
+class NewDestinationTypeController @Inject()(
+                                              override val messagesApi: MessagesApi,
+                                              val preDraftService: PreDraftService,
+                                              val navigator: InformationNavigator,
+                                              val userAnswersService: UserAnswersService,
+                                              val auth: AuthAction,
+                                              val getPreDraftData: PreDraftDataRetrievalAction,
+                                              val requirePreDraftData: PreDraftDataRequiredAction,
+                                              val getData: DataRetrievalAction,
+                                              val requireData: DataRequiredAction,
+                                              val withMovement: MovementAction,
+                                              formProvider: NewDestinationTypeFormProvider,
+                                              val controllerComponents: MessagesControllerComponents,
+                                              view: NewDestinationTypeView,
+                                              val userAllowList: UserAllowListAction
+                                            ) extends BasePreDraftNavigationController with AuthActionHelper with PreDraftAuthActionHelper {
 
   def onPreDraftPageLoad(ern: String, arc: String): Action[AnyContent] =
     authorisedWithPreDraftDataUpToDateMovementAsync(ern, arc) { implicit request =>
@@ -72,12 +71,10 @@ class DestinationTypeController @Inject()(
       request.dispatchPlace match {
         case _ if request.userTypeFromErn != NorthernIrelandWarehouseKeeper =>
           // GB ERN or XIRC ERN
-          status(view(GreatBritain, form, controllers.sections.info.routes.DestinationTypeController.onPreDraftSubmit(request.ern, request.arc)))
-        case Some(dispatchPlace) =>
-          status(view(dispatchPlace, form, controllers.sections.info.routes.DestinationTypeController.onPreDraftSubmit(request.ern, request.arc)))
-        case None =>
-          //  dispatchPlace is unknown
-          Redirect(controllers.sections.info.routes.DispatchPlaceController.onPreDraftPageLoad(request.ern, request.arc, NormalMode))
+          status(view(GreatBritain, form, controllers.sections.info.routes.NewDestinationTypeController.onPreDraftSubmit(request.ern, request.arc)))
+        case dispatchPlace =>
+          // XIWK ERN
+          status(view(dispatchPlace, form, controllers.sections.info.routes.NewDestinationTypeController.onPreDraftSubmit(request.ern, request.arc)))
       }
     )
   }

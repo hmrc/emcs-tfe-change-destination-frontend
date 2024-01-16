@@ -17,7 +17,7 @@
 package viewmodels.helpers
 
 import base.SpecBase
-import fixtures.messages.sections.info.DestinationTypeMessages
+import fixtures.messages.sections.info.NewDestinationTypeMessages
 import models.UserType.{NorthernIrelandWarehouse, Unknown}
 import models.requests.DataRequest
 import models.response.InvalidUserTypeException
@@ -31,7 +31,7 @@ class DestinationTypeHelperSpec extends SpecBase {
   lazy val helper = new DestinationTypeHelper()
 
 
-  Seq(DestinationTypeMessages.English).foreach { messagesForLanguage =>
+  Seq(NewDestinationTypeMessages.English).foreach { messagesForLanguage =>
     s"when being rendered in lang code of ${messagesForLanguage.lang.code}" - {
       implicit lazy val msgs: Messages = messages(Seq(messagesForLanguage.lang))
 

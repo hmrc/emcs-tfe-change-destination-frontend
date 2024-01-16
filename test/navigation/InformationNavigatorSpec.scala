@@ -75,7 +75,7 @@ class InformationNavigatorSpec extends SpecBase {
           "when the user answers yes" in {
             val userAnswers = emptyUserAnswers.set(ChangeDestinationTypePage, true)
             navigator.nextPage(ChangeDestinationTypePage, NormalMode, userAnswers) mustBe
-              controllers.sections.info.routes.DestinationTypeController.onPreDraftPageLoad(testErn, testArc)
+              controllers.sections.info.routes.NewDestinationTypeController.onPreDraftPageLoad(testErn, testArc)
           }
         }
 
@@ -102,16 +102,16 @@ class InformationNavigatorSpec extends SpecBase {
 
       "for the DispatchPlace page" - {
 
-        "must go to the Destination Type page" in {
+        "must go to the New Destination Type page" in {
 
           navigator.nextPage(DispatchPlacePage, NormalMode, emptyUserAnswers) mustBe
-            controllers.sections.info.routes.DestinationTypeController.onPreDraftPageLoad(testErn, testArc)
+            controllers.sections.info.routes.NewDestinationTypeController.onPreDraftPageLoad(testErn, testArc)
         }
       }
 
-      "for the DestinationType page" - {
+      "for the NewDestinationType page" - {
 
-        "must go to the Invoice Details page" in {
+        "must go to the Task List page" in {
 
           navigator.nextPage(DestinationTypePage, NormalMode, emptyUserAnswers) mustBe
             controllers.routes.DraftMovementController.onPageLoad(testErn, testArc)

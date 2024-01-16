@@ -1,12 +1,7 @@
 GET         /trader/:ern/movement/:arc/info                                      controllers.sections.info.InfoIndexController.onPageLoad(ern: String, arc: String)
 
-GET         /trader/:ern/movement/:arc/info/dispatch-place                       controllers.sections.info.DispatchPlaceController.onPreDraftPageLoad(ern: String, arc: String, mode: Mode = NormalMode)
-POST        /trader/:ern/movement/:arc/info/dispatch-place                       controllers.sections.info.DispatchPlaceController.onPreDraftSubmit(ern: String, arc: String, mode: Mode = NormalMode)
-GET         /trader/:ern/movement/:arc/info/dispatch-place/change                controllers.sections.info.DispatchPlaceController.onPreDraftPageLoad(ern: String, arc: String, mode: Mode = CheckMode)
-POST        /trader/:ern/movement/:arc/info/dispatch-place/change                controllers.sections.info.DispatchPlaceController.onPreDraftSubmit(ern: String, arc: String, mode: Mode = CheckMode)
-
-GET         /trader/:ern/movement/:arc/info/new-destination-type                 controllers.sections.info.DestinationTypeController.onPreDraftPageLoad(ern: String, arc: String)
-POST        /trader/:ern/movement/:arc/info/new-destination-type                 controllers.sections.info.DestinationTypeController.onPreDraftSubmit(ern: String, arc: String)
+GET         /trader/:ern/movement/:arc/info/new-destination-type                 controllers.sections.info.NewDestinationTypeController.onPreDraftPageLoad(ern: String, arc: String)
+POST        /trader/:ern/movement/:arc/info/new-destination-type                 controllers.sections.info.NewDestinationTypeController.onPreDraftSubmit(ern: String, arc: String)
 
 GET         /trader/:ern/movement/:arc/info/dispatch-details                     controllers.sections.info.DispatchDetailsController.onPreDraftPageLoad(ern: String, arc: String, mode: Mode = NormalMode)
 POST        /trader/:ern/movement/:arc/info/dispatch-details                     controllers.sections.info.DispatchDetailsController.onPreDraftSubmit(ern: String, arc: String, mode: Mode = NormalMode)
