@@ -20,6 +20,7 @@ import base.SpecBase
 import controllers.routes
 import models._
 import models.requests.DataRequest
+import models.sections.ReviewAnswer.{ChangeAnswers, KeepAnswers}
 import models.sections.journeyType.HowMovementTransported.{AirTransport, Other}
 import pages._
 import pages.sections.journeyType._
@@ -125,6 +126,34 @@ class JourneyTypeNavigatorSpec extends SpecBase {
             routes.DraftMovementController.onPageLoad(testErn, testArc)
         }
       }
+
+      "for the JourneyTypeReviewPage" - {
+
+        "must go to HowMovementTransportedController" - {
+
+          "when the user answers yes (change answers)" in {
+            navigator.nextPage(JourneyTypeReviewPage, NormalMode, emptyUserAnswers.set(JourneyTypeReviewPage, ChangeAnswers)) mustBe
+              controllers.sections.journeyType.routes.HowMovementTransportedController.onPageLoad(testErn, testArc, NormalMode)
+          }
+        }
+
+        "must go to the task list" - {
+
+          "when the user answers no" in {
+            navigator.nextPage(JourneyTypeReviewPage, NormalMode, emptyUserAnswers.set(JourneyTypeReviewPage, KeepAnswers)) mustBe
+              routes.DraftMovementController.onPageLoad(testErn, testArc)
+          }
+        }
+
+        "must go back to the JourneyTypeReviewPage" - {
+
+          "when the user has no answer" in {
+            navigator.nextPage(JourneyTypeReviewPage, NormalMode, emptyUserAnswers) mustBe
+              controllers.sections.journeyType.routes.JourneyTypeReviewController.onPageLoad(testErn, testArc)
+          }
+        }
+      }
+
     }
 
     "in Check mode" - {

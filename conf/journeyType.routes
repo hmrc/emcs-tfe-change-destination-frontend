@@ -22,3 +22,6 @@ POST        /trader/:ern/movement/:arc/journey-type/time/hours/change           
 
 GET         /trader/:ern/movement/:arc/journey-type/journey-check-answers                          controllers.sections.journeyType.CheckYourAnswersJourneyTypeController.onPageLoad(ern: String, arc: String)
 POST        /trader/:ern/movement/:arc/journey-type/journey-check-answers                          controllers.sections.journeyType.CheckYourAnswersJourneyTypeController.onSubmit(ern: String, arc: String)
+
+GET        /trader/:ern/movement/:arc/journey-type/review-answers                                  controllers.sections.journeyType.JourneyTypeReviewController.onPageLoad(ern: String, arc: String)
+POST       /trader/:ern/movement/:arc/journey-type/review-answers                                  controllers.sections.journeyType.JourneyTypeReviewController.onSubmit(ern: String, arc: String)

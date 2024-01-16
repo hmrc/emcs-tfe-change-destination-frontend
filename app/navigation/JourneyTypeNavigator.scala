@@ -19,6 +19,7 @@ package navigation
 import controllers.routes
 import controllers.sections.journeyType.{routes => jtRoutes}
 import models.requests.DataRequest
+import models.sections.ReviewAnswer.{ChangeAnswers, KeepAnswers}
 import models.sections.journeyType.HowMovementTransported.Other
 import models.{CheckMode, Mode, NormalMode, ReviewMode, UserAnswers}
 import pages.Page
@@ -30,6 +31,7 @@ import javax.inject.{Inject, Singleton}
 @Singleton
 class JourneyTypeNavigator @Inject()() extends BaseNavigator {
 
+  //noinspection ScalaStyle - Cyclomatic Complexity
   private def normalRoutes(implicit request: DataRequest[_]): Page => UserAnswers => Call = {
     case HowMovementTransportedPage =>
       (userAnswers: UserAnswers) =>
@@ -54,6 +56,13 @@ class JourneyTypeNavigator @Inject()() extends BaseNavigator {
 
     case CheckYourAnswersJourneyTypePage => (userAnswers: UserAnswers) =>
       routes.DraftMovementController.onPageLoad(userAnswers.ern, userAnswers.arc)
+
+    case JourneyTypeReviewPage => (userAnswers: UserAnswers) =>
+      userAnswers.get(JourneyTypeReviewPage) match {
+        case Some(ChangeAnswers) => controllers.sections.journeyType.routes.HowMovementTransportedController.onPageLoad(userAnswers.ern, userAnswers.arc, NormalMode)
+        case Some(KeepAnswers) => routes.DraftMovementController.onPageLoad(userAnswers.ern, userAnswers.arc)
+        case _ => controllers.sections.journeyType.routes.JourneyTypeReviewController.onPageLoad(userAnswers.ern, userAnswers.arc)
+      }
 
     case _ => (userAnswers: UserAnswers) =>
       jtRoutes.CheckYourAnswersJourneyTypeController.onPageLoad(userAnswers.ern, userAnswers.arc)

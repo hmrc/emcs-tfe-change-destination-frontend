@@ -46,7 +46,7 @@ class CheckYourAnswersJourneyTypeController @Inject()(
   def onPageLoad(ern: String, arc: String): Action[AnyContent] =
     authorisedDataRequestWithUpToDateMovement(ern, arc) { implicit request =>
       Ok(view(
-        checkYourAnswersJourneyTypeHelper.summaryList(),
+        checkYourAnswersJourneyTypeHelper.summaryList(false),
         controllers.sections.journeyType.routes.CheckYourAnswersJourneyTypeController.onSubmit(ern, arc)
       ))
     }

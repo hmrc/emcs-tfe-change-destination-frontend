@@ -50,7 +50,7 @@ class JourneyTypeIndexControllerSpec extends SpecBase with MockUserAnswersServic
   "JourneyTypeIndexController" - {
 
     "when JourneyTypeSection.isCompleted" - {
-      "must redirect to the CYA controller" in new Test(Some(
+      "must redirect to the review controller" in new Test(Some(
         emptyUserAnswers
           .set(HowMovementTransportedPage, SeaTransport)
           .set(GiveInformationOtherTransportPage, "information")
@@ -61,12 +61,12 @@ class JourneyTypeIndexControllerSpec extends SpecBase with MockUserAnswersServic
 
         status(result) mustEqual SEE_OTHER
         redirectLocation(result) mustBe
-          Some(controllers.sections.journeyType.routes.CheckYourAnswersJourneyTypeController.onPageLoad(testErn, testArc).url)
+          Some(controllers.sections.journeyType.routes.JourneyTypeReviewController.onPageLoad(testErn, testArc).url)
       }
     }
 
     "when JourneyTypeSection.needsReview" - {
-      "must redirect to the CYA controller" in new Test(Some(
+      "must redirect to the Review controller" in new Test(Some(
         emptyUserAnswers
           .set(HowMovementTransportedPage, SeaTransport)
           .set(GiveInformationOtherTransportPage, "information")
@@ -76,7 +76,7 @@ class JourneyTypeIndexControllerSpec extends SpecBase with MockUserAnswersServic
 
         status(result) mustEqual SEE_OTHER
         redirectLocation(result) mustBe
-          Some(controllers.sections.journeyType.routes.CheckYourAnswersJourneyTypeController.onPageLoad(testErn, testArc).url)
+          Some(controllers.sections.journeyType.routes.JourneyTypeReviewController.onPageLoad(testErn, testArc).url)
       }
     }
 

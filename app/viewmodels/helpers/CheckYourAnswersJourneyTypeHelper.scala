@@ -26,13 +26,13 @@ import javax.inject.Inject
 
 class CheckYourAnswersJourneyTypeHelper @Inject()() {
 
-  def summaryList()(implicit request: DataRequest[_], messages: Messages): SummaryList =
+  def summaryList(onReviewPage: Boolean)(implicit request: DataRequest[_], messages: Messages): SummaryList =
     SummaryListViewModel(
       rows = Seq(
-        HowMovementTransportedSummary.row(),
-        GiveInformationOtherTransportSummary.row(),
-        JourneyTimeDaysSummary.row(),
-        JourneyTimeHoursSummary.row()
+        HowMovementTransportedSummary.row(onReviewPage),
+        GiveInformationOtherTransportSummary.row(onReviewPage),
+        JourneyTimeDaysSummary.row(onReviewPage),
+        JourneyTimeHoursSummary.row(onReviewPage)
       ).flatten
     ).withCssClass("govuk-!-margin-bottom-9")
 }

@@ -27,7 +27,7 @@ import viewmodels.implicits._
 
 object HowMovementTransportedSummary {
 
-  def row()(implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] =
+  def row(onReviewPage: Boolean)(implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] =
     request.userAnswers.get(HowMovementTransportedPage).map {
       answer =>
 
@@ -40,7 +40,7 @@ object HowMovementTransportedSummary {
         SummaryListRowViewModel(
           key = "howMovementTransported.checkYourAnswers.label",
           value = value,
-          actions = Seq(
+          actions = if (!onReviewPage) {Seq(
             ActionItemViewModel(
               content = "site.change",
               href = controllers.sections.journeyType.routes.HowMovementTransportedController.onPageLoad(
@@ -50,7 +50,7 @@ object HowMovementTransportedSummary {
               ).url,
               id = HowMovementTransportedPage
             ).withVisuallyHiddenText(messages("howMovementTransported.change.hidden"))
-          )
+          )} else Seq()
         )
     }
 }

@@ -45,7 +45,7 @@ class GiveInformationOtherTransportSummarySpec extends SpecBase with Matchers {
 
             implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers, movementDetails = maxGetMovementResponse.copy(transportMode = TransportModeModel("ModeCode", None)))
 
-            GiveInformationOtherTransportSummary.row() mustBe None
+            GiveInformationOtherTransportSummary.row(false) mustBe None
           }
         }
 
@@ -55,7 +55,7 @@ class GiveInformationOtherTransportSummarySpec extends SpecBase with Matchers {
 
             implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers)
 
-            GiveInformationOtherTransportSummary.row() mustBe
+            GiveInformationOtherTransportSummary.row(false) mustBe
               Some(
                 SummaryListRowViewModel(
                   key = messagesForLanguage.cyaLabel,
@@ -74,13 +74,13 @@ class GiveInformationOtherTransportSummarySpec extends SpecBase with Matchers {
 
         "when there's an answer" - {
 
-          "when the show action link boolean is true" - {
+          "when the onReviewPage is set to false" - {
 
             "must output the expected row" in {
 
               implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(GiveInformationOtherTransportPage, "some text"))
 
-              GiveInformationOtherTransportSummary.row() mustBe
+              GiveInformationOtherTransportSummary.row(false) mustBe
                 Some(
                   SummaryListRowViewModel(
                     key = messagesForLanguage.cyaLabel,
@@ -92,6 +92,22 @@ class GiveInformationOtherTransportSummarySpec extends SpecBase with Matchers {
                         id = GiveInformationOtherTransportPage
                       ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHidden)
                     )
+                  )
+                )
+            }
+          }
+          "when the onReviewPage is set to true" - {
+
+            "must output the expected row" in {
+
+              implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(GiveInformationOtherTransportPage, "some text"))
+
+              GiveInformationOtherTransportSummary.row(true) mustBe
+                Some(
+                  SummaryListRowViewModel(
+                    key = messagesForLanguage.cyaLabel,
+                    value = Value(Text("some text")),
+                    actions = Seq()
                   )
                 )
             }
