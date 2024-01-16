@@ -19,6 +19,7 @@ package navigation
 import controllers.routes
 import controllers.sections.transportUnit.{routes => transportUnitRoutes}
 import models.requests.DataRequest
+import models.sections.ReviewAnswer.{ChangeAnswers, KeepAnswers}
 import models.sections.journeyType.HowMovementTransported.FixedTransportInstallations
 import models.sections.transportUnit.TransportUnitType.FixedTransport
 import models.sections.transportUnit.TransportUnitsAddToListModel
@@ -72,6 +73,13 @@ class TransportUnitNavigator @Inject() extends BaseNavigator {
           routes.DraftMovementController.onPageLoad(answers.ern, answers.arc)
         case _ =>
           controllers.routes.JourneyRecoveryController.onPageLoad()
+      }
+
+    case TransportUnitsReviewPage => (userAnswers: UserAnswers) =>
+      userAnswers.get(TransportUnitsReviewPage) match {
+        case Some(ChangeAnswers) => controllers.sections.transportUnit.routes.TransportUnitsAddToListController.onPageLoad(userAnswers.ern, userAnswers.arc)
+        case Some(KeepAnswers) => routes.DraftMovementController.onPageLoad(userAnswers.ern, userAnswers.arc)
+        case _ => controllers.sections.transportUnit.routes.TransportUnitsReviewController.onPageLoad(userAnswers.ern, userAnswers.arc)
       }
 
     case _ =>

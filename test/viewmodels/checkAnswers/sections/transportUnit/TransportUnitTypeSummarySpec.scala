@@ -52,7 +52,7 @@ class TransportUnitTypeSummarySpec extends SpecBase with Matchers {
 
           "when there's an answer" - {
 
-            s"must output the expected row for FixedTransport" in {
+            "must output the expected row for FixedTransport" in {
 
               implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(TransportUnitTypePage(testIndex1), TransportUnitType.FixedTransport))
 
@@ -76,7 +76,7 @@ class TransportUnitTypeSummarySpec extends SpecBase with Matchers {
 
               implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers)
 
-              TransportUnitTypeSummary.row(testIndex1) mustBe None
+              TransportUnitTypeSummary.row(testIndex1, onReviewPage = false) mustBe None
             }
           }
 
@@ -90,11 +90,11 @@ class TransportUnitTypeSummarySpec extends SpecBase with Matchers {
               ("Vehicle", TransportUnitType.Vehicle)
             ).foreach {
               case (name, transportUnitType) =>
-                s"must output the expected row for $name" in {
+                s"must output the expected row for $name - with a change link when not on review page" in {
 
                   implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(TransportUnitTypePage(testIndex1), transportUnitType))
 
-                  TransportUnitTypeSummary.row(testIndex1) mustBe
+                  TransportUnitTypeSummary.row(testIndex1, onReviewPage = false) mustBe
                     Some(
                       SummaryListRowViewModel(
                         key = messagesForLanguage.addToListLabel,
@@ -106,6 +106,20 @@ class TransportUnitTypeSummarySpec extends SpecBase with Matchers {
                             id = "changeTransportUnitType1"
                           ).withVisuallyHiddenText(messagesForLanguage.addToListChangeHidden)
                         )
+                      )
+                    )
+                }
+
+                s"must output the expected row for $name - with no change link when on review page" in {
+
+                  implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(TransportUnitTypePage(testIndex1), transportUnitType))
+
+                  TransportUnitTypeSummary.row(testIndex1, onReviewPage = true) mustBe
+                    Some(
+                      SummaryListRowViewModel(
+                        key = messagesForLanguage.addToListLabel,
+                        value = Value(Text(messagesForLanguage.addToListValue(transportUnitType))),
+                        actions = Seq()
                       )
                     )
                 }

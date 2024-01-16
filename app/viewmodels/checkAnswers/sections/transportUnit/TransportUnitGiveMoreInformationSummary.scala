@@ -30,13 +30,13 @@ import viewmodels.implicits._
 
 object TransportUnitGiveMoreInformationSummary {
 
-  def row(idx: Index)(implicit request: DataRequest[_], messages: Messages, link: views.html.components.link): Option[SummaryListRow] = {
+  def row(idx: Index, onReviewPage: Boolean)(implicit request: DataRequest[_], messages: Messages, link: views.html.components.link): Option[SummaryListRow] = {
     val optMoreInformation = request.userAnswers.get(TransportUnitGiveMoreInformationPage(idx)).flatten
     Some(SummaryListRowViewModel(
       key = "transportUnitGiveMoreInformation.checkYourAnswersLabel",
       value = ValueViewModel(getValue(optMoreInformation,
-        controllers.sections.transportUnit.routes.TransportUnitGiveMoreInformationController.onPageLoad(request.userAnswers.ern, request.userAnswers.arc, idx, CheckMode))),
-      actions = {
+        controllers.sections.transportUnit.routes.TransportUnitGiveMoreInformationController.onPageLoad(request.userAnswers.ern, request.userAnswers.arc, idx, CheckMode), onReviewPage)),
+      actions = if(onReviewPage) Seq() else {
         Seq(
           optMoreInformation.map(_ =>
             ActionItemViewModel(
@@ -50,7 +50,14 @@ object TransportUnitGiveMoreInformationSummary {
     ))
   }
 
-  private def getValue(optValue: Option[String], redirectUrl: Call)(implicit messages: Messages, link: views.html.components.link): Content =
-    optValue.fold[Content](HtmlContent(link(redirectUrl.url, messages("transportUnitGiveMoreInformation.checkYourAnswersValue"))))(value => Text(value))
+  private def getValue(optValue: Option[String], redirectUrl: Call, onReviewPage: Boolean)
+                      (implicit messages: Messages, link: views.html.components.link): Content =
+    optValue.fold[Content]({
+      if(onReviewPage) {
+        Text(messages("site.notProvided"))
+      } else {
+        HtmlContent(link(redirectUrl.url, messages("transportUnitGiveMoreInformation.checkYourAnswersValue")))
+      }
+    })(value => Text(value))
 
 }

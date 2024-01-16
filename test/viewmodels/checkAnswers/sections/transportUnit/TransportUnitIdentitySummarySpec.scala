@@ -45,7 +45,7 @@ class TransportUnitIdentitySummarySpec extends SpecBase with Matchers {
 
             implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers, movementDetails = maxGetMovementResponse.copy(transportDetails = Seq.empty))
 
-            TransportUnitIdentitySummary.row(testIndex1) mustBe
+            TransportUnitIdentitySummary.row(testIndex1, onReviewPage = false) mustBe
               Some(
                 SummaryListRowViewModel(
                   key = messagesForLanguage.cyaLabel,
@@ -60,6 +60,20 @@ class TransportUnitIdentitySummarySpec extends SpecBase with Matchers {
                 )
               )
           }
+
+          "must output row with answer not provided with no change link - when on review page" in {
+
+            implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers, movementDetails = maxGetMovementResponse.copy(transportDetails = Seq.empty))
+
+            TransportUnitIdentitySummary.row(testIndex1, onReviewPage = true) mustBe
+              Some(
+                SummaryListRowViewModel(
+                  key = messagesForLanguage.cyaLabel,
+                  value = Value(Text(messagesForLanguage.notProvided)),
+                  actions = Seq()
+                )
+              )
+          }
         }
 
         "when there's an answer" - {
@@ -68,7 +82,7 @@ class TransportUnitIdentitySummarySpec extends SpecBase with Matchers {
 
             implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(TransportUnitIdentityPage(testIndex1), "testName"))
 
-            TransportUnitIdentitySummary.row(testIndex1) mustBe
+            TransportUnitIdentitySummary.row(testIndex1, onReviewPage = false) mustBe
               Some(
                 SummaryListRowViewModel(
                   key = messagesForLanguage.cyaLabel,
@@ -80,6 +94,20 @@ class TransportUnitIdentitySummarySpec extends SpecBase with Matchers {
                       id = "changeTransportUnitIdentity1"
                     ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHidden)
                   )
+                )
+              )
+          }
+
+          "must output the expected row with no change link - when on review page" in {
+
+            implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(TransportUnitIdentityPage(testIndex1), "testName"))
+
+            TransportUnitIdentitySummary.row(testIndex1, onReviewPage = true) mustBe
+              Some(
+                SummaryListRowViewModel(
+                  key = messagesForLanguage.cyaLabel,
+                  value = Value(Text("testName")),
+                  actions = Seq()
                 )
               )
           }

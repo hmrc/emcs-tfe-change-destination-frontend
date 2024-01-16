@@ -38,3 +38,6 @@ POST       /trader/:ern/movement/:arc/transport-units/add-to-list               
 
 GET        /trader/:ern/movement/:arc/transport-units/transport-unit/:idx/remove                                      controllers.sections.transportUnit.TransportUnitRemoveUnitController.onPageLoad(ern: String, arc: String, idx: Index)
 POST       /trader/:ern/movement/:arc/transport-units/transport-unit/:idx/remove                                      controllers.sections.transportUnit.TransportUnitRemoveUnitController.onSubmit(ern: String, arc: String, idx: Index)
+
+GET        /trader/:ern/movement/:arc/transport-units/review-answers                                                   controllers.sections.transportUnit.TransportUnitsReviewController.onPageLoad(ern: String, arc: String)
+POST       /trader/:ern/movement/:arc/transport-units/review-answers                                                   controllers.sections.transportUnit.TransportUnitsReviewController.onSubmit(ern: String, arc: String)

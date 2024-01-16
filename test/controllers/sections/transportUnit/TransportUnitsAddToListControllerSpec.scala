@@ -52,7 +52,10 @@ class TransportUnitsAddToListControllerSpec extends SpecBase with MockUserAnswer
   class Test(userAnswers: Option[UserAnswers]) {
     lazy val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest()
 
-    lazy val fullCheckAnswers: Seq[SummaryList] = helper.allTransportUnitsSummary()(dataRequest(request, userAnswers.getOrElse(emptyUserAnswers), movementDetails = maxGetMovementResponse.copy(transportDetails = Seq.empty)), messages(request))
+    lazy val fullCheckAnswers: Seq[SummaryList] = helper.allTransportUnitsSummary(onReviewPage = false)(
+      dataRequest(request, userAnswers.getOrElse(emptyUserAnswers), movementDetails = maxGetMovementResponse.copy(transportDetails = Seq.empty)),
+      messages(request)
+    )
 
     lazy val controller = new TransportUnitsAddToListController(
       messagesApi,

@@ -52,7 +52,7 @@ class TransportUnitsAddToListController @Inject()(
     authorisedDataRequestWithUpToDateMovement(ern, arc) { implicit request =>
       val form = onMax(ifMax = None, ifNotMax = Some(fillForm(TransportUnitsAddToListPage, formProvider())))
 
-      Ok(view(form, summaryHelper.allTransportUnitsSummary(), NormalMode))
+      Ok(view(form, summaryHelper.allTransportUnitsSummary(onReviewPage = false), NormalMode))
     }
 
   def onSubmit(ern: String, arc: String): Action[AnyContent] =
@@ -61,7 +61,7 @@ class TransportUnitsAddToListController @Inject()(
         ifMax = Future.successful(Redirect(controllers.routes.DraftMovementController.onPageLoad(ern, arc))),
         ifNotMax = formProvider().bindFromRequest().fold(
           formWithErrors =>
-            Future.successful(BadRequest(view(Some(formWithErrors), summaryHelper.allTransportUnitsSummary(), NormalMode))),
+            Future.successful(BadRequest(view(Some(formWithErrors), summaryHelper.allTransportUnitsSummary(onReviewPage = false), NormalMode))),
           {
             case TransportUnitsAddToListModel.Yes =>
               userAnswersService.set(request.userAnswers.remove(TransportUnitsAddToListPage))

@@ -21,11 +21,12 @@ import fixtures.messages.sections.transportUnit.TransportUnitAddToListMessages
 import forms.sections.transportUnit.TransportUnitsAddToListFormProvider
 import models.NormalMode
 import models.requests.DataRequest
-import models.sections.transportUnit.TransportSealTypeModel
+import models.sections.transportUnit.{TransportSealTypeModel, TransportUnitsAddToListModel}
 import models.sections.transportUnit.TransportUnitType.{FixedTransport, Tractor}
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import pages.sections.transportUnit._
+import play.api.data.Form
 import play.api.i18n.Messages
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
@@ -42,6 +43,10 @@ class TransportUnitAddToListViewSpec extends SpecBase with ViewBehaviours {
     val errorField: String = "p.govuk-error-message"
     val removeItemLink: Int => String =  index => s"#removeTransportUnit$index"
   }
+
+  lazy val view: TransportUnitsAddToListView = app.injector.instanceOf[TransportUnitsAddToListView]
+  val form: Form[TransportUnitsAddToListModel] = app.injector.instanceOf[TransportUnitsAddToListFormProvider].apply()
+  val helper: TransportUnitsAddToListHelper = app.injector.instanceOf[TransportUnitsAddToListHelper]
 
   "TransportUnitAddToListView" - {
 
@@ -61,14 +66,10 @@ class TransportUnitAddToListViewSpec extends SpecBase with ViewBehaviours {
 
         implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), userAnswers)
 
-       lazy val view = app.injector.instanceOf[TransportUnitsAddToListView]
-        val form = app.injector.instanceOf[TransportUnitsAddToListFormProvider].apply()
-        val helper = app.injector.instanceOf[TransportUnitsAddToListHelper].allTransportUnitsSummary()
-
         implicit val doc: Document = Jsoup.parse(
           view(
             optionalForm = Some(form),
-            transportUnits = helper,
+            transportUnits =  helper.allTransportUnitsSummary(onReviewPage = false),
             mode = NormalMode
           ).toString())
 
@@ -100,14 +101,10 @@ class TransportUnitAddToListViewSpec extends SpecBase with ViewBehaviours {
 
         implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), userAnswers)
 
-       lazy val view = app.injector.instanceOf[TransportUnitsAddToListView]
-        val form = app.injector.instanceOf[TransportUnitsAddToListFormProvider].apply()
-        val helper = app.injector.instanceOf[TransportUnitsAddToListHelper].allTransportUnitsSummary()
-
         implicit val doc: Document = Jsoup.parse(
           view(
             optionalForm = Some(form.bind(Map("value" -> ""))),
-            transportUnits = helper,
+            transportUnits = helper.allTransportUnitsSummary(onReviewPage = false),
             mode = NormalMode
           ).toString())
 
@@ -147,14 +144,11 @@ class TransportUnitAddToListViewSpec extends SpecBase with ViewBehaviours {
 
         implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), userAnswers)
 
-       lazy val view = app.injector.instanceOf[TransportUnitsAddToListView]
-        val form = app.injector.instanceOf[TransportUnitsAddToListFormProvider].apply()
-        val helper = app.injector.instanceOf[TransportUnitsAddToListHelper].allTransportUnitsSummary()
 
         implicit val doc: Document = Jsoup.parse(
           view(
             optionalForm = Some(form),
-            transportUnits = helper,
+            transportUnits = helper.allTransportUnitsSummary(onReviewPage = false),
             mode = NormalMode
           ).toString())
 
@@ -193,13 +187,10 @@ class TransportUnitAddToListViewSpec extends SpecBase with ViewBehaviours {
 
         implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), userAnswers)
 
-       lazy val view = app.injector.instanceOf[TransportUnitsAddToListView]
-        val helper = app.injector.instanceOf[TransportUnitsAddToListHelper].allTransportUnitsSummary()
-
         implicit val doc: Document = Jsoup.parse(
           view(
             optionalForm = None,
-            transportUnits = helper,
+            transportUnits = helper.allTransportUnitsSummary(onReviewPage = false),
             mode = NormalMode
           ).toString())
 
