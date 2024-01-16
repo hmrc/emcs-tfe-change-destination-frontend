@@ -48,7 +48,7 @@ class ConfirmationController @Inject()(
           Ok(view(
             reference = request.arc,
             dateOfSubmission = submissionTimestamp.toLocalDate,
-            hasConsigneeChanged = hasConsigneeChanged(),
+            hasConsigneeChanged = ConsigneeSection.hasConsigneeChanged,
             exciseEnquiriesLink = config.exciseGuidance,
             returnToAccountLink = config.emcsTfeHomeUrl,
             feedbackLink = config.feedbackFrontendSurveyUrl
@@ -58,12 +58,4 @@ class ConfirmationController @Inject()(
           Redirect(routes.JourneyRecoveryController.onPageLoad())
       }
     }
-
-  //TODO: could be made simpler when consignee flow built?
-  private def hasConsigneeChanged()(implicit request: DataRequest[_]): Boolean =
-    request.userAnswers.get(ConsigneeExcisePage) != ConsigneeExcisePage.getValueFromIE801 ||
-      request.userAnswers.get(ConsigneeExemptOrganisationPage) != ConsigneeExemptOrganisationPage.getValueFromIE801 ||
-      request.userAnswers.get(ConsigneeBusinessNamePage) != ConsigneeBusinessNamePage.getValueFromIE801 ||
-      request.userAnswers.get(ConsigneeAddressPage) != ConsigneeAddressPage.getValueFromIE801 ||
-      request.userAnswers.get(ConsigneeExportVatPage) != ConsigneeExportVatPage.getValueFromIE801
 }

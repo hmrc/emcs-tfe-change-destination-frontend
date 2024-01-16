@@ -129,4 +129,47 @@ class ConsigneeSectionSpec extends SpecBase with Enumerable.Implicits {
       }
     }
   }
+
+  "hasConsigneeChanged" - {
+    "should return true" - {
+      /*      isDifferentFromIE801(ConsigneeExcisePage),
+      isDifferentFromIE801(ConsigneeExemptOrganisationPage),
+      isDifferentFromIE801(ConsigneeBusinessNamePage),
+      isDifferentFromIE801(ConsigneeAddressPage),
+      isDifferentFromIE801(ConsigneeExportVatPage)*/
+      Seq(
+        ConsigneeExcisePage -> emptyUserAnswers.set(ConsigneeExcisePage, "excise number changed"),
+        ConsigneeExemptOrganisationPage -> emptyUserAnswers.set(ConsigneeExemptOrganisationPage, ExemptOrganisationDetailsModel("member state changed", "certificate serial number changed")),
+        ConsigneeBusinessNamePage -> emptyUserAnswers.set(ConsigneeBusinessNamePage, "business name changed"),
+        ConsigneeAddressPage -> emptyUserAnswers.set(ConsigneeAddressPage, testUserAddress),
+        ConsigneeExportVatPage -> emptyUserAnswers.set(ConsigneeExportVatPage, ConsigneeExportVat(ConsigneeExportVatType.YesVatNumber, Some("vat number changed"), None))
+      ).foreach { pageToUserAnswers =>
+
+        s"when the answer for ${pageToUserAnswers._1} has changed" in {
+
+          ConsigneeSection.hasConsigneeChanged(dataRequest(FakeRequest(), pageToUserAnswers._2)) mustBe true
+        }
+      }
+    }
+
+    "should return false" - {
+
+      "when all the user answers are the same as 801" in {
+
+        val userAnswers = emptyUserAnswers
+          .set(ConsigneeExcisePage, maxGetMovementResponse.consigneeTrader.get.traderExciseNumber.get)
+          .set(ConsigneeExemptOrganisationPage, ExemptOrganisationDetailsModel(maxGetMovementResponse.memberStateCode.get, maxGetMovementResponse.serialNumberOfCertificateOfExemption.get))
+          .set(ConsigneeBusinessNamePage, maxGetMovementResponse.consigneeTrader.get.traderName.get)
+          .set(ConsigneeAddressPage, maxGetMovementResponse.consigneeTrader.get.address.map(UserAddress.userAddressFromTraderAddress).get)
+          .set(ConsigneeExportVatPage, ConsigneeExportVat(ConsigneeExportVatType.YesEoriNumber, None, Some(maxGetMovementResponse.consigneeTrader.get.eoriNumber.get)))
+
+        ConsigneeSection.hasConsigneeChanged(dataRequest(FakeRequest(), userAnswers)) mustBe false
+      }
+
+      "when there are no user answers for the Consignee section" in {
+
+        ConsigneeSection.hasConsigneeChanged(dataRequest(FakeRequest())) mustBe false
+      }
+    }
+  }
 }
