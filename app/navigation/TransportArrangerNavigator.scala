@@ -18,6 +18,7 @@ package navigation
 
 import controllers.routes
 import models.requests.DataRequest
+import models.sections.ReviewAnswer.{ChangeAnswers, KeepAnswers}
 import models.sections.transportArranger.TransportArranger.{GoodsOwner, Other}
 import models.{CheckMode, Mode, NormalMode, ReviewMode, UserAnswers}
 import pages.Page
@@ -26,6 +27,7 @@ import play.api.mvc.Call
 
 import javax.inject.Inject
 
+//noinspection ScalaStyle
 class TransportArrangerNavigator @Inject() extends BaseNavigator {
 
   private def normalRoutes(implicit request: DataRequest[_]): Page => UserAnswers => Call = {
@@ -51,6 +53,13 @@ class TransportArrangerNavigator @Inject() extends BaseNavigator {
 
     case TransportArrangerCheckAnswersPage => (userAnswers: UserAnswers) =>
       routes.DraftMovementController.onPageLoad(userAnswers.ern, userAnswers.arc)
+
+    case TransportArrangerReviewPage => (userAnswers: UserAnswers) =>
+      userAnswers.get(TransportArrangerReviewPage) match {
+        case Some(ChangeAnswers) => controllers.sections.transportArranger.routes.TransportArrangerController.onPageLoad(userAnswers.ern, userAnswers.arc, NormalMode)
+        case Some(KeepAnswers) => routes.DraftMovementController.onPageLoad(userAnswers.ern, userAnswers.arc)
+        case _ => controllers.sections.transportArranger.routes.TransportArrangerReviewController.onPageLoad(userAnswers.ern, userAnswers.arc)
+      }
 
     case _ => (userAnswers: UserAnswers) =>
       controllers.sections.transportArranger.routes.TransportArrangerCheckAnswersController.onPageLoad(userAnswers.ern, userAnswers.arc)

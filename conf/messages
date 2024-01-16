@@ -1416,3 +1416,8 @@ transportUnitsReview.title = Section summary - Transport units
 transportUnitsReview.heading = Section summary
 transportUnitsReview.legend = Do you need to change any details in this section?
 transportUnitsReview.error.required = Select yes if you need to change any of these details
+
+transportArrangerReview.title = Section summary - Transport arranger
+transportArrangerReview.heading = Section summary
+transportArrangerReview.legend = Do you need to change any details in this section?
+transportArrangerReview.error.required = Select yes if you need to change any of these details

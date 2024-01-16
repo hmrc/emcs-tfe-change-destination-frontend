@@ -51,7 +51,7 @@ class TransportArrangerAddressSummarySpec extends SpecBase {
 
               val userAddressFrom801 = UserAddress(Some("TransportArrangerTraderStreetNumber"), "TransportArrangerTraderStreetName", "TransportArrangerTraderCity", "TransportArrangerTraderPostcode")
 
-              TransportArrangerAddressSummary.row() mustBe
+              TransportArrangerAddressSummary.row(onReviewPage = false) mustBe
                 SummaryListRowViewModel(
                   key = messagesForLanguage.cyaLabel,
                   value = Value(HtmlContent(
@@ -70,6 +70,30 @@ class TransportArrangerAddressSummarySpec extends SpecBase {
                   )
                 )
             }
+
+            "and the user is on the review page" - {
+
+              "must output a row with no change link" in {
+
+                implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(TransportArrangerPage, GoodsOwner))
+
+                val userAddressFrom801 = UserAddress(Some("TransportArrangerTraderStreetNumber"), "TransportArrangerTraderStreetName", "TransportArrangerTraderCity", "TransportArrangerTraderPostcode")
+
+
+                TransportArrangerAddressSummary.row(onReviewPage = true) mustBe
+                  SummaryListRowViewModel(
+                    key = messagesForLanguage.cyaLabel,
+                    value = Value(HtmlContent(
+                      HtmlFormat.fill(Seq(
+                        Html(userAddressFrom801.property.fold("")(_ + " ") + userAddressFrom801.street + "<br>"),
+                        Html(userAddressFrom801.town + "<br>"),
+                        Html(userAddressFrom801.postcode),
+                      ))
+                    )),
+                    actions = Seq()
+                  )
+              }
+            }
           }
 
           "when there's an answer" - {
@@ -81,7 +105,7 @@ class TransportArrangerAddressSummarySpec extends SpecBase {
                 .set(TransportArrangerAddressPage, testUserAddress)
               )
 
-              TransportArrangerAddressSummary.row() mustBe
+              TransportArrangerAddressSummary.row(onReviewPage = false) mustBe
                 SummaryListRowViewModel(
                   key = messagesForLanguage.cyaLabel,
                   value = Value(HtmlContent(
@@ -100,6 +124,30 @@ class TransportArrangerAddressSummarySpec extends SpecBase {
                   )
                 )
             }
+
+            "and the user is on the review page" - {
+
+              "must output a row with no change link" in {
+
+                implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers
+                  .set(TransportArrangerPage, Other)
+                  .set(TransportArrangerAddressPage, testUserAddress)
+                )
+
+                TransportArrangerAddressSummary.row(onReviewPage = true) mustBe
+                  SummaryListRowViewModel(
+                    key = messagesForLanguage.cyaLabel,
+                    value = Value(HtmlContent(
+                      HtmlFormat.fill(Seq(
+                        Html(testUserAddress.property.fold("")(_ + " ") + testUserAddress.street + "<br>"),
+                        Html(testUserAddress.town + "<br>"),
+                        Html(testUserAddress.postcode),
+                      ))
+                    )),
+                    actions = Seq()
+                  )
+              }
+            }
           }
         }
 
@@ -111,12 +159,27 @@ class TransportArrangerAddressSummarySpec extends SpecBase {
 
               implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(TransportArrangerPage, Consignor))
 
-              TransportArrangerAddressSummary.row() mustBe
+              TransportArrangerAddressSummary.row(onReviewPage = false) mustBe
                 SummaryListRowViewModel(
                   key = messagesForLanguage.cyaLabel,
                   value = Value(Text(messagesForLanguage.sectionNotComplete("Consignor"))),
                   actions = Seq()
                 )
+            }
+
+            "and the user is on the review page" - {
+
+              "must output a row with no change link" in {
+
+                implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(TransportArrangerPage, Consignor))
+
+                TransportArrangerAddressSummary.row(onReviewPage = true) mustBe
+                  SummaryListRowViewModel(
+                    key = messagesForLanguage.cyaLabel,
+                    value = Value(Text(messagesForLanguage.sectionNotComplete("Consignor"))),
+                    actions = Seq()
+                  )
+              }
             }
           }
 
@@ -129,7 +192,7 @@ class TransportArrangerAddressSummarySpec extends SpecBase {
                 .set(ConsignorAddressPage, testUserAddress)
               )
 
-              TransportArrangerAddressSummary.row() mustBe
+              TransportArrangerAddressSummary.row(onReviewPage = false) mustBe
                 SummaryListRowViewModel(
                   key = messagesForLanguage.cyaLabel,
                   value = Value(HtmlContent(
@@ -141,6 +204,30 @@ class TransportArrangerAddressSummarySpec extends SpecBase {
                   )),
                   actions = Seq()
                 )
+            }
+
+            "and the user is on the review page" - {
+
+              "must output a row with no change link" in {
+
+                implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers
+                  .set(TransportArrangerPage, Consignor)
+                  .set(ConsignorAddressPage, testUserAddress)
+                )
+
+                TransportArrangerAddressSummary.row(onReviewPage = true) mustBe
+                  SummaryListRowViewModel(
+                    key = messagesForLanguage.cyaLabel,
+                    value = Value(HtmlContent(
+                      HtmlFormat.fill(Seq(
+                        Html(testUserAddress.property.fold("")(_ + " ") + testUserAddress.street + "<br>"),
+                        Html(testUserAddress.town + "<br>"),
+                        Html(testUserAddress.postcode),
+                      ))
+                    )),
+                    actions = Seq()
+                  )
+              }
             }
           }
         }
@@ -157,12 +244,31 @@ class TransportArrangerAddressSummarySpec extends SpecBase {
                 movementDetails = maxGetMovementResponse.copy(consigneeTrader = None)
               )
 
-              TransportArrangerAddressSummary.row() mustBe
+              TransportArrangerAddressSummary.row(onReviewPage = false) mustBe
                 SummaryListRowViewModel(
                   key = messagesForLanguage.cyaLabel,
                   value = Value(Text(messagesForLanguage.sectionNotComplete("Consignee"))),
                   actions = Seq()
                 )
+            }
+
+            "and the user is on the review page" - {
+
+              "must output a row with no change link" in {
+
+                implicit lazy val request = dataRequest(
+                  FakeRequest(),
+                  emptyUserAnswers.set(TransportArrangerPage, Consignee),
+                  movementDetails = maxGetMovementResponse.copy(consigneeTrader = None)
+                )
+
+                TransportArrangerAddressSummary.row(onReviewPage = true) mustBe
+                  SummaryListRowViewModel(
+                    key = messagesForLanguage.cyaLabel,
+                    value = Value(Text(messagesForLanguage.sectionNotComplete("Consignee"))),
+                    actions = Seq()
+                  )
+              }
             }
           }
 
@@ -175,7 +281,7 @@ class TransportArrangerAddressSummarySpec extends SpecBase {
                 .set(ConsigneeAddressPage, testUserAddress)
               )
 
-              TransportArrangerAddressSummary.row() mustBe
+              TransportArrangerAddressSummary.row(onReviewPage = false) mustBe
                 SummaryListRowViewModel(
                   key = messagesForLanguage.cyaLabel,
                   value = Value(HtmlContent(
@@ -187,6 +293,30 @@ class TransportArrangerAddressSummarySpec extends SpecBase {
                   )),
                   actions = Seq()
                 )
+            }
+
+            "and the user is on the review page" - {
+
+              "must output a row with no change link" in {
+
+                implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers
+                  .set(TransportArrangerPage, Consignee)
+                  .set(ConsigneeAddressPage, testUserAddress)
+                )
+
+                TransportArrangerAddressSummary.row(onReviewPage = true) mustBe
+                  SummaryListRowViewModel(
+                    key = messagesForLanguage.cyaLabel,
+                    value = Value(HtmlContent(
+                      HtmlFormat.fill(Seq(
+                        Html(testUserAddress.property.fold("")(_ + " ") + testUserAddress.street + "<br>"),
+                        Html(testUserAddress.town + "<br>"),
+                        Html(testUserAddress.postcode),
+                      ))
+                    )),
+                    actions = Seq()
+                  )
+              }
             }
           }
         }

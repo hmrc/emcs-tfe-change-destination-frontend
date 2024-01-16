@@ -14,11 +14,20 @@
  * limitations under the License.
  */
 
-package pages.sections.transportArranger
+package fixtures.messages.sections.transportArranger
 
-import pages.ReviewPage
-import play.api.libs.json.JsPath
+import fixtures.messages.{BaseEnglish, BaseMessages, i18n}
 
-case object TransportArrangerReviewPage extends ReviewPage {
-  override val path: JsPath = TransportArrangerSection.path \ toString
+object TransportArrangerReviewMessages {
+
+  sealed trait ViewMessages extends BaseMessages { _: i18n =>
+    val title: String = titleHelper("Section summary - Transport arranger")
+    val heading = "Section summary"
+
+    val legend: String = "Do you need to change any details in this section?"
+
+    val errorRequired: String = "Select yes if you need to change any of these details"
+  }
+
+  object English extends ViewMessages with BaseEnglish
 }

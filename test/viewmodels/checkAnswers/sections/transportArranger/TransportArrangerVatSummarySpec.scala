@@ -38,13 +38,29 @@ class TransportArrangerVatSummarySpec extends SpecBase with Matchers {
 
         implicit val msgs: Messages = app.injector.instanceOf[MessagesApi].preferred(Seq(messagesForLanguage.lang))
 
+        "when user is on the review page and TransportArranger is GoodsOwner or Other" - {
+
+          "must output a row with no change link" in {
+
+            implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(TransportArrangerPage, GoodsOwner))
+
+            TransportArrangerVatSummary.row(onReviewPage = true) mustBe Some(
+              SummaryListRowViewModel(
+                key = messagesForLanguage.cyaLabel,
+                value = Value(Text("TransportArrangerTraderVatNumber")),
+                actions = Seq()
+              )
+            )
+          }
+        }
+
         "when TransportArranger is NOT GoodsOwner or Other" - {
 
           "must output no row" in {
 
             implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(TransportArrangerPage, Consignor))
 
-            TransportArrangerVatSummary.row() mustBe None
+            TransportArrangerVatSummary.row(onReviewPage = false) mustBe None
           }
         }
 
@@ -56,7 +72,7 @@ class TransportArrangerVatSummarySpec extends SpecBase with Matchers {
 
               implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(TransportArrangerPage, GoodsOwner))
 
-              TransportArrangerVatSummary.row() mustBe
+              TransportArrangerVatSummary.row(onReviewPage = false) mustBe
                 Some(
                   SummaryListRowViewModel(
                     key = messagesForLanguage.cyaLabel,
@@ -82,7 +98,7 @@ class TransportArrangerVatSummarySpec extends SpecBase with Matchers {
                 .set(TransportArrangerVatPage, testVatNumber)
               )
 
-              TransportArrangerVatSummary.row() mustBe
+              TransportArrangerVatSummary.row(onReviewPage = false) mustBe
                 Some(
                   SummaryListRowViewModel(
                     key = messagesForLanguage.cyaLabel,

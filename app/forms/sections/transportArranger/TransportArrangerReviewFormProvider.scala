@@ -14,11 +14,17 @@
  * limitations under the License.
  */
 
-package pages.sections.transportArranger
+package forms.sections.transportArranger
 
-import pages.ReviewPage
-import play.api.libs.json.JsPath
+import javax.inject.Inject
+import forms.mappings.Mappings
+import models.sections.ReviewAnswer
+import play.api.data.Form
 
-case object TransportArrangerReviewPage extends ReviewPage {
-  override val path: JsPath = TransportArrangerSection.path \ toString
+class TransportArrangerReviewFormProvider @Inject() extends Mappings {
+
+  def apply(): Form[ReviewAnswer] =
+    Form(
+      "value" -> enumerable[ReviewAnswer]("transportArrangerReview.error.required")
+    )
 }

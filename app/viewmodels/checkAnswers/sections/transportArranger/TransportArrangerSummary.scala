@@ -26,14 +26,14 @@ import viewmodels.implicits._
 
 object TransportArrangerSummary {
 
-  def row()(implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] =
+  def row(onReviewPage: Boolean)(implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] =
     request.userAnswers.get(TransportArrangerPage).map {
       answer =>
 
         SummaryListRowViewModel(
           key = "transportArranger.checkYourAnswers.label",
           value = ValueViewModel(messages(s"transportArranger.$answer")),
-          actions = Seq(
+          actions = if(onReviewPage) Seq.empty else Seq(
             ActionItemViewModel(
               content = "site.change",
               href = controllers.sections.transportArranger.routes.TransportArrangerController.onPageLoad(

@@ -19,6 +19,7 @@ package navigation
 import base.SpecBase
 import controllers.routes
 import models.requests.DataRequest
+import models.sections.ReviewAnswer.{ChangeAnswers, KeepAnswers}
 import models.sections.transportArranger.TransportArranger.{Consignee, Consignor, GoodsOwner, Other}
 import models.{CheckMode, NormalMode, ReviewMode}
 import pages.Page
@@ -115,6 +116,27 @@ class TransportArrangerNavigatorSpec extends SpecBase {
 
           navigator.nextPage(TransportArrangerCheckAnswersPage, NormalMode, emptyUserAnswers) mustBe
             routes.DraftMovementController.onPageLoad(testErn, testArc)
+        }
+      }
+
+      "for the TransportArrangerReviewPage" - {
+
+        "must go to the CAM-TA01 when the user answers yes (change answers)" in {
+
+          navigator.nextPage(TransportArrangerReviewPage, NormalMode, emptyUserAnswers.set(TransportArrangerReviewPage, ChangeAnswers)) mustBe
+            controllers.sections.transportArranger.routes.TransportArrangerController.onPageLoad(testErn, testArc, NormalMode)
+        }
+
+        "must go to the task list page when the user answers no (keep answers)" in {
+
+          navigator.nextPage(TransportArrangerReviewPage, NormalMode, emptyUserAnswers.set(TransportArrangerReviewPage, KeepAnswers)) mustBe
+            routes.DraftMovementController.onPageLoad(testErn, testArc)
+        }
+
+        "must go back to the review page when the user doesn't have an answer" in {
+
+          navigator.nextPage(TransportArrangerReviewPage, NormalMode, emptyUserAnswers) mustBe
+            controllers.sections.transportArranger.routes.TransportArrangerReviewController.onPageLoad(testErn, testArc)
         }
       }
     }
