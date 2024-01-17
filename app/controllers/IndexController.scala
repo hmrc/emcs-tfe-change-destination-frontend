@@ -19,11 +19,11 @@ package controllers
 import controllers.actions._
 import forms.ContinueDraftFormProvider
 import models.UserAnswers
+import models.requests.OptionalDataRequest
 import pages.DeclarationPage
 import play.api.i18n.MessagesApi
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
 import services.{PreDraftService, UserAnswersService}
-import uk.gov.hmrc.http.HeaderCarrier
 import views.html.ContinueDraftView
 
 import javax.inject.Inject
@@ -41,19 +41,17 @@ class IndexController @Inject()(override val messagesApi: MessagesApi,
                                 view: ContinueDraftView) extends BaseController {
 
   def onPageLoad(ern: String, arc: String): Action[AnyContent] =
-    (authAction(ern, arc) andThen userAllowed andThen withMovement.upToDate(arc) andThen getData).async { implicit request =>
+    (authAction(ern, arc) andThen userAllowed andThen withMovement.fromCache(arc) andThen getData).async { implicit request =>
       request.userAnswers match {
-        case Some(ans) if ans.getFromUserAnswersOnly(DeclarationPage).isDefined =>
-          reinitialiseAndRedirect(UserAnswers(request.ern, request.arc))
-        case Some(ans) if ans.data.fields.nonEmpty =>
+        case Some(ans) if ans.data.fields.nonEmpty && ans.getFromUserAnswersOnly(DeclarationPage).isEmpty =>
           Future.successful(Ok(view(formProvider(), routes.IndexController.onSubmit(ern, arc))))
         case _ =>
-          reinitialiseAndRedirect(UserAnswers(request.ern, request.arc))
+          reinitialiseAndRedirect
       }
     }
 
   def onSubmit(ern: String, arc: String): Action[AnyContent] =
-    (authAction(ern, arc) andThen userAllowed andThen withMovement.upToDate(arc) andThen getData).async { implicit request =>
+    (authAction(ern, arc) andThen userAllowed andThen withMovement.fromCache(arc) andThen getData).async { implicit request =>
       formProvider().bindFromRequest().fold(
         formWithErrors =>
           Future.successful(BadRequest(view(formWithErrors, routes.IndexController.onSubmit(ern, arc)))),
@@ -61,17 +59,19 @@ class IndexController @Inject()(override val messagesApi: MessagesApi,
           if (continueDraft) {
             Future(Redirect(controllers.routes.DraftMovementController.onPageLoad(ern, arc)))
           } else {
-            reinitialiseAndRedirect(UserAnswers(request.ern, request.arc))
+            reinitialiseAndRedirect
           }
         }
       )
     }
 
-  private def reinitialiseAndRedirect(answers: UserAnswers)(implicit hc: HeaderCarrier): Future[Result] =
+  private def reinitialiseAndRedirect(implicit request: OptionalDataRequest[_]): Future[Result] = {
+    val answers = UserAnswers(request.ern, request.arc)
     preDraftService.set(answers).flatMap { _ =>
       userAnswersService.set(answers).map { _ =>
         Redirect(controllers.sections.info.routes.InfoIndexController.onPageLoad(answers.ern, answers.arc))
       }
     }
+  }
 
 }
