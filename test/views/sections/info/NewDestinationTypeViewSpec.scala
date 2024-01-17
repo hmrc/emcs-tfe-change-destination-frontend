@@ -20,7 +20,7 @@ import base.SpecBase
 import fixtures.messages.sections.info.NewDestinationTypeMessages
 import forms.sections.info.NewDestinationTypeFormProvider
 import models.requests.DataRequest
-import models.sections.info.DispatchPlace.GreatBritain
+import models.sections.info.DispatchPlace.{GreatBritain, NorthernIreland}
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import play.api.i18n.Messages
@@ -37,45 +37,64 @@ class NewDestinationTypeViewSpec extends SpecBase with ViewBehaviours {
 
     Seq(NewDestinationTypeMessages.English).foreach { messagesForLanguage =>
 
-      s"when being rendered in lang code of '${messagesForLanguage.lang.code}'" - {
-        Seq("GBWK", "XIWK").foreach {
-          ern =>
-            s"for ERN starting with $ern" - {
-              implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
-              implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), ern = s"${ern}123")
+      Seq("GBWK", "XIWK").foreach {
+        ern =>
+          s"for ERN starting with $ern, and dispatch place GB" - {
+            implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
+            implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), ern = s"${ern}123")
 
-             lazy val view = app.injector.instanceOf[NewDestinationTypeView]
-              val form = app.injector.instanceOf[NewDestinationTypeFormProvider].apply()
+            lazy val view = app.injector.instanceOf[NewDestinationTypeView]
+            val form = app.injector.instanceOf[NewDestinationTypeFormProvider].apply()
 
-              implicit val doc: Document = Jsoup.parse(view(GreatBritain, form, controllers.sections.info.routes.NewDestinationTypeController.onPreDraftSubmit(request.ern, testArc)).toString())
+            implicit val doc: Document = Jsoup.parse(
+              view(GreatBritain, form, controllers.sections.info.routes.NewDestinationTypeController.onPreDraftSubmit(request.ern, testArc)).toString()
+            )
 
-              behave like pageWithExpectedElementsAndMessages(Seq(
-                Selectors.title -> messagesForLanguage.titleMovement,
-                Selectors.h1 -> messagesForLanguage.headingMovement,
-                Selectors.h2(1) -> messagesForLanguage.movementInformationSection,
-                Selectors.button -> messagesForLanguage.continue
-              ))
-            }
-        }
-        Seq("GBRC", "XIRC").foreach {
-          ern =>
-            s"for ERN starting with $ern" - {
-              implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
-              implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), ern = s"${ern}123")
+            behave like pageWithExpectedElementsAndMessages(Seq(
+              Selectors.title -> messagesForLanguage.titleMovement,
+              Selectors.h1 -> messagesForLanguage.headingMovement,
+              Selectors.h2(1) -> messagesForLanguage.movementInformationSection,
+              Selectors.button -> messagesForLanguage.continue,
+              Selectors.radioButton(1) -> messagesForLanguage.exportWithCustomsDeclarationLodgedInTheUk,
+              Selectors.radioButton(2) -> messagesForLanguage.gbTaxWarehouse,
+            ))
+          }
+      }
 
-             lazy val view = app.injector.instanceOf[NewDestinationTypeView]
-              val form = app.injector.instanceOf[NewDestinationTypeFormProvider].apply()
+      Seq(
+        ("XIWK", messagesForLanguage.headingMovement, messagesForLanguage.titleMovement),
+        ("XIRC", messagesForLanguage.headingImport, messagesForLanguage.titleImport)
+      ).foreach {
+        ernWithExpectedHeadingHeadingAndTitle =>
+          val (ern, expectedHeading, expectedTitle) = ernWithExpectedHeadingHeadingAndTitle
 
-              implicit val doc: Document = Jsoup.parse(view(GreatBritain, form, controllers.sections.info.routes.NewDestinationTypeController.onPreDraftSubmit(request.ern, testArc)).toString())
+          s"for ERN starting with ${ern}, dispatch place NI" - {
+            implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
+            implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), ern = s"${ern}123")
 
-              behave like pageWithExpectedElementsAndMessages(Seq(
-                Selectors.title -> messagesForLanguage.titleImport,
-                Selectors.h1 -> messagesForLanguage.headingImport,
-                Selectors.h2(1) -> messagesForLanguage.movementInformationSection,
-                Selectors.button -> messagesForLanguage.continue
-              ))
-            }
-        }
+            lazy val view = app.injector.instanceOf[NewDestinationTypeView]
+            val form = app.injector.instanceOf[NewDestinationTypeFormProvider].apply()
+
+            implicit val doc: Document = Jsoup.parse(
+              view(NorthernIreland, form, controllers.sections.info.routes.NewDestinationTypeController.onPreDraftSubmit(request.ern, testArc)).toString()
+            )
+
+            behave like pageWithExpectedElementsAndMessages(Seq(
+              Selectors.title -> expectedTitle,
+              Selectors.h1 -> expectedHeading,
+              Selectors.h2(1) -> messagesForLanguage.movementInformationSection,
+              Selectors.button -> messagesForLanguage.continue,
+              Selectors.radioButton(1) -> messagesForLanguage.directDelivery,
+              Selectors.radioButton(2) -> messagesForLanguage.exemptedOrganisation,
+              Selectors.radioButton(3) -> messagesForLanguage.exportWithCustomsDeclarationLodgedInTheEu,
+              Selectors.radioButton(4) -> messagesForLanguage.exportWithCustomsDeclarationLodgedInTheUk,
+              Selectors.radioButton(5) -> messagesForLanguage.registeredConsignee,
+              Selectors.radioButton(6) -> messagesForLanguage.euTaxWarehouse,
+              Selectors.radioButton(7) -> messagesForLanguage.gbTaxWarehouse,
+              Selectors.radioButton(8) -> messagesForLanguage.temporaryRegisteredConsignee,
+              Selectors.radioButton(9) -> messagesForLanguage.unknownDestination,
+            ))
+          }
       }
     }
   }
