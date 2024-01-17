@@ -19,9 +19,10 @@ package pages.sections.consignee
 import models.Enumerable
 import models.requests.DataRequest
 import models.sections.info.movementScenario.MovementScenario.UnknownDestination
+import pages.QuestionPage
 import pages.sections.Section
 import pages.sections.info.DestinationTypePage
-import play.api.libs.json.{JsObject, JsPath, Reads}
+import play.api.libs.json.{Format, JsObject, JsPath, Reads}
 import viewmodels.taskList._
 
 import scala.annotation.unused
@@ -78,4 +79,18 @@ case object ConsigneeSection extends Section[JsObject] with Enumerable.Implicits
       case Some(value) if value != UnknownDestination => true
       case _ => false
     }
+
+  def hasConsigneeChanged(implicit request: DataRequest[_]): Boolean = {
+
+    def isDifferentFromIE801[A](page: QuestionPage[A])(implicit format: Format[A]) =
+      request.userAnswers.get(page) != page.getValueFromIE801
+
+    Seq(
+      isDifferentFromIE801(ConsigneeExcisePage),
+      isDifferentFromIE801(ConsigneeExemptOrganisationPage),
+      isDifferentFromIE801(ConsigneeBusinessNamePage),
+      isDifferentFromIE801(ConsigneeAddressPage),
+      isDifferentFromIE801(ConsigneeExportVatPage)
+    ).contains(true)
+  }
 }

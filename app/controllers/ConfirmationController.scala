@@ -19,6 +19,7 @@ package controllers
 import config.AppConfig
 import controllers.actions._
 import pages.DeclarationPage
+import pages.sections.consignee._
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
@@ -44,8 +45,9 @@ class ConfirmationController @Inject()(
       request.userAnswers.get(DeclarationPage) match {
         case Some(submissionTimestamp) =>
           Ok(view(
-            reference = request.arc, //TODO: Check with UX what this should really be in future
+            reference = request.arc,
             dateOfSubmission = submissionTimestamp.toLocalDate,
+            hasConsigneeChanged = ConsigneeSection.hasConsigneeChanged,
             exciseEnquiriesLink = config.exciseGuidance,
             returnToAccountLink = config.emcsTfeHomeUrl,
             feedbackLink = config.feedbackFrontendSurveyUrl

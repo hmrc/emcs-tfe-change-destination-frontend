@@ -19,10 +19,12 @@ package controllers
 import base.SpecBase
 import config.AppConfig
 import controllers.actions.{FakeDataRetrievalAction, FakeMovementAction}
-import models.UserAnswers
 import models.requests.DataRequest
+import models.sections.consignee.{ConsigneeExportVat, ConsigneeExportVatType}
+import models.{ExemptOrganisationDetailsModel, UserAnswers}
 import org.scalamock.scalatest.MockFactory
 import pages.DeclarationPage
+import pages.sections.consignee._
 import play.api.Application
 import play.api.i18n.Messages
 import play.api.inject.guice.GuiceApplicationBuilder
@@ -83,10 +85,38 @@ class ConfirmationControllerSpec extends SpecBase with MockFactory {
         contentAsString(result) mustEqual view(
           reference = testArc,
           dateOfSubmission = testSubmissionDate.toLocalDate,
+          hasConsigneeChanged = false,
           exciseEnquiriesLink = testExciseEnquiriesLink,
           returnToAccountLink = testReturnToAccountLink,
           feedbackLink = s"$testFeedbackBaseUrl/feedback/$testDeskproName/beta"
         ).toString()
+      }
+
+      Seq(ConsigneeExcisePage -> testUserAnswers.set(ConsigneeExcisePage, "changed"),
+        ConsigneeExemptOrganisationPage -> testUserAnswers.set(ConsigneeExemptOrganisationPage, ExemptOrganisationDetailsModel("changed", "changed")),
+        ConsigneeBusinessNamePage -> testUserAnswers.set(ConsigneeBusinessNamePage, "changed"),
+        ConsigneeAddressPage -> testUserAnswers.set(ConsigneeAddressPage, testUserAddress),
+        ConsigneeExportVatPage -> testUserAnswers.set(ConsigneeExportVatPage, ConsigneeExportVat(ConsigneeExportVatType.YesVatNumber, Some("changed"), None))).foreach { pageAndAnswers =>
+        s"must return OK and the correct view for a GET - when the answer has changed from the 801 for ${pageAndAnswers._1}" in {
+          implicit val req: DataRequest[AnyContentAsEmpty.type] = dataRequest(
+            request = request,
+            answers = pageAndAnswers._2
+          )
+
+          implicit val messagesInstance: Messages = messages(req)
+
+          val result = getController(pageAndAnswers._2).onPageLoad(testErn, testArc)(req)
+
+          status(result) mustEqual OK
+          contentAsString(result) mustEqual view(
+            reference = testArc,
+            dateOfSubmission = testSubmissionDate.toLocalDate,
+            hasConsigneeChanged = true,
+            exciseEnquiriesLink = testExciseEnquiriesLink,
+            returnToAccountLink = testReturnToAccountLink,
+            feedbackLink = s"$testFeedbackBaseUrl/feedback/$testDeskproName/beta"
+          ).toString()
+        }
       }
     }
 

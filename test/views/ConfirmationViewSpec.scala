@@ -28,9 +28,17 @@ import views.html.ConfirmationView
 
 import java.time.format.DateTimeFormatter
 
+//noinspection ScalaStyle
 class ConfirmationViewSpec extends SpecBase with ViewBehaviours {
 
-  object Selectors extends BaseSelectors
+  object Selectors extends BaseSelectors {
+    val insetTextParagraph = "#main-content .govuk-inset-text p"
+    val insetTextListItem: Int => String = index => s"#main-content .govuk-inset-text ul li:nth-of-type($index)"
+  }
+
+  implicit lazy val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), emptyUserAnswers)
+
+  lazy val view: ConfirmationView = app.injector.instanceOf[ConfirmationView]
 
   "ConfirmationView" - {
 
@@ -38,16 +46,14 @@ class ConfirmationViewSpec extends SpecBase with ViewBehaviours {
 
       s"when being rendered in lang code of '${messagesForLanguage.lang.code}'" - {
 
-        "when movement was Satisfactory" - {
+        "when the consignee hasn't changed" - {
 
           implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
-          implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), emptyUserAnswers)
-
-          val view = app.injector.instanceOf[ConfirmationView]
 
           implicit val doc: Document = Jsoup.parse(view(
             testConfirmationReference,
             testSubmissionDate.toLocalDate,
+            hasConsigneeChanged = false,
             "testUrl1",
             "testUrl2",
             "testUrl3"
@@ -59,17 +65,67 @@ class ConfirmationViewSpec extends SpecBase with ViewBehaviours {
             Selectors.h2(1) -> messagesForLanguage.movementInformationHeader,
             Selectors.p(1) -> messagesForLanguage.printText,
             Selectors.h2(2) -> messagesForLanguage.whatHappensNextHeader,
-            Selectors.p(2) -> messagesForLanguage.p1,
+            Selectors.p(2) -> messagesForLanguage.p1ConsigneeSame,
+            Selectors.insetTextParagraph -> messagesForLanguage.insetP,
+            Selectors.insetTextListItem(1) -> messagesForLanguage.insetBullet1,
+            Selectors.insetTextListItem(2) -> messagesForLanguage.insetBullet2,
             Selectors.p(3) -> messagesForLanguage.p2,
             Selectors.p(4) -> messagesForLanguage.p3,
-            Selectors.p(5) -> messagesForLanguage.p4,
-            Selectors.p(6) -> messagesForLanguage.returnToAccountLink,
-            Selectors.p(7) -> messagesForLanguage.feedbackLink,
+            Selectors.h2(3) -> messagesForLanguage.explainDelayHeader,
+            Selectors.p(5) -> messagesForLanguage.explainDelayP,
+            Selectors.p(6) -> messagesForLanguage.p4,
+            Selectors.p(7) -> messagesForLanguage.returnToAccountLink,
+            Selectors.p(8) -> messagesForLanguage.feedbackLink,
           ))
 
           "have correct summary list" in {
             val summaryList = doc.getElementsByClass("govuk-summary-list").first
-            summaryList.getElementsByClass("govuk-summary-list__key").get(0).text mustBe messagesForLanguage.localReferenceNumber
+            summaryList.getElementsByClass("govuk-summary-list__key").get(0).text mustBe messagesForLanguage.arc
+            summaryList.getElementsByClass("govuk-summary-list__value").get(0).text mustBe testConfirmationReference
+            summaryList.getElementsByClass("govuk-summary-list__key").get(1).text mustBe messagesForLanguage.dateOfSubmission
+            summaryList.getElementsByClass("govuk-summary-list__value").get(1).text mustBe testSubmissionDate.toLocalDate.format(DateTimeFormatter.ofPattern("dd LLLL yyyy"))
+          }
+        }
+
+        "when the consignee has changed" - {
+
+          implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
+
+          implicit val doc: Document = Jsoup.parse(view(
+            testConfirmationReference,
+            testSubmissionDate.toLocalDate,
+            hasConsigneeChanged = true,
+            "testUrl1",
+            "testUrl2",
+            "testUrl3"
+          ).toString())
+
+          behave like pageWithExpectedElementsAndMessages(Seq(
+            Selectors.title -> messagesForLanguage.title,
+            Selectors.h1 -> messagesForLanguage.heading,
+            Selectors.h2(1) -> messagesForLanguage.movementInformationHeader,
+            Selectors.p(1) -> messagesForLanguage.printText,
+            Selectors.h2(2) -> messagesForLanguage.whatHappensNextHeader,
+            Selectors.p(2) -> messagesForLanguage.p1ConsigneeChanged,
+            Selectors.insetTextParagraph -> messagesForLanguage.insetP,
+            Selectors.insetTextListItem(1) -> messagesForLanguage.insetBullet1,
+            Selectors.insetTextListItem(2) -> messagesForLanguage.insetBullet2,
+            Selectors.p(3) -> messagesForLanguage.p2,
+            Selectors.p(4) -> messagesForLanguage.p3,
+            Selectors.h2(3) -> messagesForLanguage.explainDelayHeader,
+            Selectors.p(5) -> messagesForLanguage.explainDelayP,
+            Selectors.h2(4) -> messagesForLanguage.submissionUnsuccessfulHeader,
+            Selectors.p(6) -> messagesForLanguage.submissionUnsuccessfulP1,
+            Selectors.p(7) -> messagesForLanguage.submissionUnsuccessfulP2,
+            Selectors.p(8) -> messagesForLanguage.submissionUnsuccessfulP3,
+            Selectors.p(9) -> messagesForLanguage.p4,
+            Selectors.p(10) -> messagesForLanguage.returnToAccountLink,
+            Selectors.p(11) -> messagesForLanguage.feedbackLink,
+          ))
+
+          "have correct summary list" in {
+            val summaryList = doc.getElementsByClass("govuk-summary-list").first
+            summaryList.getElementsByClass("govuk-summary-list__key").get(0).text mustBe messagesForLanguage.arc
             summaryList.getElementsByClass("govuk-summary-list__value").get(0).text mustBe testConfirmationReference
             summaryList.getElementsByClass("govuk-summary-list__key").get(1).text mustBe messagesForLanguage.dateOfSubmission
             summaryList.getElementsByClass("govuk-summary-list__value").get(1).text mustBe testSubmissionDate.toLocalDate.format(DateTimeFormatter.ofPattern("dd LLLL yyyy"))
