@@ -132,11 +132,6 @@ class ConsigneeSectionSpec extends SpecBase with Enumerable.Implicits {
 
   "hasConsigneeChanged" - {
     "should return true" - {
-      /*      isDifferentFromIE801(ConsigneeExcisePage),
-      isDifferentFromIE801(ConsigneeExemptOrganisationPage),
-      isDifferentFromIE801(ConsigneeBusinessNamePage),
-      isDifferentFromIE801(ConsigneeAddressPage),
-      isDifferentFromIE801(ConsigneeExportVatPage)*/
       Seq(
         ConsigneeExcisePage -> emptyUserAnswers.set(ConsigneeExcisePage, "excise number changed"),
         ConsigneeExemptOrganisationPage -> emptyUserAnswers.set(ConsigneeExemptOrganisationPage, ExemptOrganisationDetailsModel("member state changed", "certificate serial number changed")),
