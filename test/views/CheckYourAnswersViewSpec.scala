@@ -49,7 +49,7 @@ class CheckYourAnswersViewSpec extends SpecBase with ViewBehaviours {
 
         behave like pageWithExpectedElementsAndMessages(Seq(
           Selectors.title -> messagesForLanguage.title,
-          Selectors.h2(1) -> messagesForLanguage.lrnSubheading(testArc),
+          Selectors.h2(1) -> messagesForLanguage.changeOfDestinationSection(testArc),
           Selectors.h1 -> messagesForLanguage.heading
         ))
       }

@@ -49,6 +49,13 @@ final case class UserAnswers(ern: String,
     this.copy(data = newAnswers)
   }
 
+  def getFromUserAnswersOnly[A](page: Gettable[A])(implicit rds: Reads[A]): Option[A] =
+    Reads.optionNoError(Reads.at(page.path))
+      .reads(data)
+      .asOpt
+      .flatten
+
+
   def get[A](page: Gettable[A])(implicit dataRequest: DataRequest[_], rds: Reads[A]): Option[A] =
     Reads.optionNoError(Reads.at(page.path))
       .reads(data)

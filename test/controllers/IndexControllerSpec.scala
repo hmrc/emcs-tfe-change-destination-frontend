@@ -17,33 +17,124 @@
 package controllers
 
 import base.SpecBase
+import controllers.actions.{FakeDataRetrievalAction, FakeMovementAction}
+import forms.ContinueDraftFormProvider
 import mocks.services.{MockPreDraftService, MockUserAnswersService}
 import models.UserAnswers
+import models.sections.info.ChangeType.ExportOffice
+import pages.DeclarationPage
+import pages.sections.info.ChangeTypePage
+import play.api.data.Form
+import play.api.mvc.{AnyContentAsEmpty, Call}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
+import views.html.ContinueDraftView
 
+import java.time.LocalDateTime
 import scala.concurrent.Future
 
 class IndexControllerSpec extends SpecBase with MockPreDraftService with MockUserAnswersService {
 
+  lazy val formProvider: ContinueDraftFormProvider = app.injector.instanceOf[ContinueDraftFormProvider]
+
+  lazy val form: Form[Boolean] = formProvider()
+
+  lazy val view: ContinueDraftView = app.injector.instanceOf[ContinueDraftView]
+
+  lazy val submitCall: Call = controllers.routes.IndexController.onSubmit(testErn, testArc)
+
+  class Test(userAnswers: Option[UserAnswers]) {
+
+    lazy val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest()
+
+    lazy val controller = new IndexController(
+      messagesApi,
+      mockPreDraftService,
+      mockUserAnswersService,
+      new FakeDataRetrievalAction(userAnswers, Some(testMinTraderKnownFacts)),
+      new FakeMovementAction(maxGetMovementResponse),
+      fakeAuthAction,
+      fakeUserAllowListAction,
+      messagesControllerComponents,
+      formProvider,
+      view
+    )
+  }
+
   "Index Controller" - {
-    "must redirect to the info Index controller" in {
-      lazy val testController = new IndexController(
-        messagesApi,
-        mockPreDraftService,
-        mockUserAnswersService,
-        fakeAuthAction,
-        fakeUserAllowListAction,
-        messagesControllerComponents
-      )
 
-      MockPreDraftService.set(UserAnswers(testNorthernIrelandErn, testSessionId)).returns(Future.successful(true))
+    ".onPageLoad" - {
 
-      val request = FakeRequest()
-      val result = testController.onPageLoad(testNorthernIrelandErn, testArc)(request)
+      "must reinitialise the draft" - {
 
-      status(result) mustEqual SEE_OTHER
-      redirectLocation(result) mustBe Some(controllers.sections.info.routes.InfoIndexController.onPageLoad(testNorthernIrelandErn, testArc).url)
+        "when the user has previously submitted a change of destination" in new Test(Some(
+          emptyUserAnswers.set(DeclarationPage, LocalDateTime.now())
+        )) {
+
+          MockPreDraftService.set(emptyUserAnswers).returns(Future.successful(true))
+          MockUserAnswersService.set(emptyUserAnswers).returns(Future.successful(emptyUserAnswers))
+
+          val result = controller.onPageLoad(testErn, testArc)(request)
+
+          status(result) mustEqual SEE_OTHER
+          redirectLocation(result).value mustBe controllers.sections.info.routes.InfoIndexController.onPageLoad(testErn, testArc).url
+        }
+
+        "the users answers are empty" in new Test(Some(emptyUserAnswers)) {
+
+          MockPreDraftService.set(emptyUserAnswers).returns(Future.successful(true))
+          MockUserAnswersService.set(emptyUserAnswers).returns(Future.successful(emptyUserAnswers))
+
+          val result = controller.onPageLoad(testErn, testArc)(request)
+
+          status(result) mustEqual SEE_OTHER
+          redirectLocation(result).value mustBe controllers.sections.info.routes.InfoIndexController.onPageLoad(testErn, testArc).url
+        }
+      }
+
+      "must show the continue draft page" - {
+
+        "when the user answers are not empty" in new Test(Some(
+          emptyUserAnswers.set(ChangeTypePage, ExportOffice)
+        )) {
+
+          val result = controller.onPageLoad(testErn, testArc)(request)
+
+          status(result) mustEqual OK
+          contentAsString(result) mustEqual view(form, submitCall)(optionalDataRequest(request), messages(request)).toString
+        }
+      }
+    }
+
+    ".onSubmit" - {
+
+      "must return a Bad Request and errors when invalid data is submitted" in new Test(Some(emptyUserAnswers)) {
+        val boundForm = form.bind(Map("value" -> ""))
+
+        val result = controller.onSubmit(testErn, testArc)(request.withFormUrlEncodedBody(("value", "")))
+
+        status(result) mustEqual BAD_REQUEST
+        contentAsString(result) mustEqual view(boundForm, submitCall)(optionalDataRequest(request), messages(request)).toString
+      }
+
+      "must redirect to the Task List page when the user clicks 'Continue draft'" in new Test(Some(emptyUserAnswers)) {
+
+        val result = controller.onSubmit(testErn, testArc)(request.withFormUrlEncodedBody(("value", "true")))
+
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual controllers.routes.DraftMovementController.onPageLoad(testErn, testArc).url
+      }
+
+      "must redirect to the Info index and reinitialise the user answers when the user clicks 'Start a new CoD'" in new Test(Some(emptyUserAnswers)) {
+
+        MockPreDraftService.set(emptyUserAnswers).returns(Future.successful(true))
+        MockUserAnswersService.set(emptyUserAnswers).returns(Future.successful(emptyUserAnswers))
+
+        val result = controller.onSubmit(testErn, testArc)(request.withFormUrlEncodedBody(("value", "false")))
+
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual controllers.sections.info.routes.InfoIndexController.onPageLoad(testErn, testArc).url
+      }
     }
   }
 }

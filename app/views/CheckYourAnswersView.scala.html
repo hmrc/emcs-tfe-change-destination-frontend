@@ -30,7 +30,7 @@
 
     @formHelper(submitAction) {
 
-     @h1("checkYourAnswers.heading", Some(messages("lrn.subHeading", request.arc)), "govuk-heading-l")
+     @h1("checkYourAnswers.heading", Some(messages("arc.subHeading", request.arc)), "govuk-heading-l", hiddenContent = Some(messages("subHeading.hidden")))
 
      @govukSummaryList(list)
 

@@ -22,7 +22,7 @@ import controllers.actions.predraft.PreDraftDataRequiredAction
 import fixtures.{BaseFixtures, GetMovementResponseFixtures}
 import handlers.ErrorHandler
 import models.UserAnswers
-import models.requests.{DataRequest, MovementRequest, UserRequest}
+import models.requests.{DataRequest, MovementRequest, OptionalDataRequest, UserRequest}
 import models.response.emcsTfe.GetMovementResponse
 import org.scalatest.OptionValues
 import org.scalatest.concurrent.ScalaFutures
@@ -66,4 +66,11 @@ trait SpecBase extends AnyFreeSpec
                      movementDetails: GetMovementResponse = maxGetMovementResponse
                     ): DataRequest[A] =
     DataRequest(movementRequest(request, ern, movementDetails), answers, testMinTraderKnownFacts)
+
+  def optionalDataRequest[A](request: Request[A],
+                             optAnswers: Option[UserAnswers] = None,
+                             ern: String = testErn,
+                             movementDetails: GetMovementResponse = maxGetMovementResponse
+                            ): OptionalDataRequest[A] =
+    OptionalDataRequest(movementRequest(request, ern, movementDetails), optAnswers, Some(testMinTraderKnownFacts))
 }

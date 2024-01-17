@@ -16,7 +16,7 @@
 
 package views
 
-import models.requests.DataRequest
+import models.requests.{DataRequest, OptionalDataRequest}
 import play.api.data.Form
 import play.api.i18n.Messages
 import viewmodels.traderInfo.TraderInfo
@@ -42,7 +42,15 @@ object ViewUtils {
   }
 
   def maybeShowActiveTrader(request: DataRequest[_]): Option[TraderInfo] =
-    Option.when(request.request.request.hasMultipleErns) {
+    Option.when(request.hasMultipleErns) {
       TraderInfo(request.traderKnownFacts.traderName, request.ern)
     }
+
+  def maybeShowActiveTrader(request: OptionalDataRequest[_]): Option[TraderInfo] = {
+    Option.when(request.hasMultipleErns) {
+      request.traderKnownFacts.map { traderKnownFacts =>
+        TraderInfo(traderKnownFacts.traderName, request.ern)
+      }
+    }.flatten
+  }
 }

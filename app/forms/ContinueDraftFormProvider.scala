@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,17 +14,17 @@
  * limitations under the License.
  */
 
-package models.requests
+package forms
 
-import models.{TraderKnownFacts, UserAnswers}
-import play.api.mvc.WrappedRequest
+import javax.inject.Inject
 
-case class OptionalDataRequest[A](request: MovementRequest[A],
-                                  userAnswers: Option[UserAnswers],
-                                  traderKnownFacts: Option[TraderKnownFacts]) extends WrappedRequest[A](request) {
-  val internalId = request.internalId
-  val ern = request.ern
-  val arc = request.arc
+import forms.mappings.Mappings
+import play.api.data.Form
 
-  lazy val hasMultipleErns: Boolean = request.request.hasMultipleErns
+class ContinueDraftFormProvider @Inject() extends Mappings {
+
+  def apply(): Form[Boolean] =
+    Form(
+      "value" -> boolean("continueDraft.error.required")
+    )
 }

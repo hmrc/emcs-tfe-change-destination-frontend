@@ -189,6 +189,59 @@ class UserAnswersSpec extends SpecBase {
       }
     }
 
+    "when calling .getFromUserAnswersOnly(page)" - {
+
+      "when no data exists for that page" - {
+
+       "must return None" in {
+          emptyUserAnswers.getFromUserAnswersOnly(TestPage()) mustBe None
+        }
+      }
+
+      "when data exists for that page" - {
+
+        "must Some(data)" in {
+          val withData = emptyUserAnswers.copy(data = Json.obj(
+            "TestPage" -> "foo"
+          ))
+          withData.getFromUserAnswersOnly(TestPage()) mustBe Some("foo")
+        }
+      }
+
+      "when getting data at a subPath with indexes" - {
+
+        "must return the answer at the subPath" in {
+
+          val withData = emptyUserAnswers.copy(data = Json.obj(
+            "items" -> Json.arr(
+              Json.obj("TestPage" -> "foo"),
+              Json.obj("TestPage" -> "bar"),
+              Json.obj("TestPage" -> "wizz")
+            )
+          ))
+          withData.getFromUserAnswersOnly(TestPage(__ \ "items" \ 0)) mustBe Some("foo")
+        }
+      }
+
+      "when setting at a subPath which contains nested indexes" - {
+
+        "must store the answer at the subPath" in {
+          val withData = emptyUserAnswers.copy(data = Json.obj(
+            "items" -> Json.arr(
+              Json.obj(
+                "subItems" -> Json.arr(
+                  Json.obj("TestPage" -> "foo"),
+                  Json.obj("TestPage" -> "bar"),
+                  Json.obj("TestPage" -> "wizz")
+                )
+              )
+            )
+          ))
+          withData.getFromUserAnswersOnly(TestPage(__ \ "items" \ 0 \ "subItems" \ 0)) mustBe Some("foo")
+        }
+      }
+    }
+
     "when calling .get(Derivable)" - {
       object TestDerivable extends Derivable[Seq[JsObject], Int] {
         override val path: JsPath = JsPath \ "items"
