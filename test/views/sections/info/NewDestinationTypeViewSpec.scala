@@ -53,7 +53,7 @@ class NewDestinationTypeViewSpec extends SpecBase with ViewBehaviours {
             behave like pageWithExpectedElementsAndMessages(Seq(
               Selectors.title -> messagesForLanguage.titleMovement,
               Selectors.h1 -> messagesForLanguage.headingMovement,
-              Selectors.h2(1) -> messagesForLanguage.movementInformationSection,
+              Selectors.h2(1) -> messagesForLanguage.changeOfDestinationSection(testArc),
               Selectors.button -> messagesForLanguage.continue,
               Selectors.radioButton(1) -> messagesForLanguage.exportWithCustomsDeclarationLodgedInTheUk,
               Selectors.radioButton(2) -> messagesForLanguage.gbTaxWarehouse,
@@ -82,7 +82,7 @@ class NewDestinationTypeViewSpec extends SpecBase with ViewBehaviours {
             behave like pageWithExpectedElementsAndMessages(Seq(
               Selectors.title -> expectedTitle,
               Selectors.h1 -> expectedHeading,
-              Selectors.h2(1) -> messagesForLanguage.movementInformationSection,
+              Selectors.h2(1) -> messagesForLanguage.changeOfDestinationSection(testArc),
               Selectors.button -> messagesForLanguage.continue,
               Selectors.radioButton(1) -> messagesForLanguage.directDelivery,
               Selectors.radioButton(2) -> messagesForLanguage.exemptedOrganisation,

@@ -33,21 +33,23 @@
 )
 
 @(dispatchPlace: DispatchPlace, form: Form[_], action: Call)(implicit request: DataRequest[_], messages: Messages)
+@radioOptions = @{ destinationTypeHelper.options(dispatchPlace) }
+
 
 @layout(pageTitle = title(form, destinationTypeHelper.title), maybeShowActiveTrader = maybeShowActiveTrader(request)) {
 
     @formHelper(action = action, Symbol("autoComplete") -> "off") {
 
         @if(form.errors.nonEmpty) {
-            @govukErrorSummary(ErrorSummaryViewModel(form, errorLinkOverrides = Map("value" -> "value_0")))
+            @govukErrorSummary(ErrorSummaryViewModel(form, errorLinkOverrides = Map("value" -> radioOptions.head.id.get)))
         }
 
-        @h2(messages("movementInformation.subHeading"), "govuk-caption-xl", hiddenContent = Some(messages("subHeading.hidden")))
+        @h2(messages("arc.subHeading", request.arc), "govuk-caption-l", hiddenContent = Some(messages("subHeading.hidden")))
         @govukRadios(
             RadiosViewModel(
                 field = form("value"),
                 legend = LegendViewModel(Text(messages(destinationTypeHelper.heading))).asPageHeading(LegendSize.Large),
-                items = destinationTypeHelper.options(dispatchPlace)
+                items = radioOptions
             )
         )
 
