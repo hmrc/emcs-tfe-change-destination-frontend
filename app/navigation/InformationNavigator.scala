@@ -55,9 +55,6 @@ class InformationNavigator @Inject()() extends BaseNavigator {
         case _ => controllers.sections.info.routes.ChangeDestinationTypeController.onPageLoad(userAnswers.ern, userAnswers.arc)
       }
 
-    case DispatchPlacePage =>
-      (userAnswers: UserAnswers) => controllers.sections.info.routes.NewDestinationTypeController.onPreDraftPageLoad(userAnswers.ern, userAnswers.arc)
-
     case DestinationTypePage =>
       (userAnswers: UserAnswers) => controllers.routes.DraftMovementController.onPageLoad(userAnswers.ern, userAnswers.arc)
 

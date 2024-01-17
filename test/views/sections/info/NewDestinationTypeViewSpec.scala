@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -65,8 +65,8 @@ class NewDestinationTypeViewSpec extends SpecBase with ViewBehaviours {
         ("XIWK", messagesForLanguage.headingMovement, messagesForLanguage.titleMovement),
         ("XIRC", messagesForLanguage.headingImport, messagesForLanguage.titleImport)
       ).foreach {
-        ernWithExpectedHeadingHeadingAndTitle =>
-          val (ern, expectedHeading, expectedTitle) = ernWithExpectedHeadingHeadingAndTitle
+        ernWithExpectedHeadingAndTitle =>
+          val (ern, expectedHeading, expectedTitle) = ernWithExpectedHeadingAndTitle
 
           s"for ERN starting with ${ern}, dispatch place NI" - {
             implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))

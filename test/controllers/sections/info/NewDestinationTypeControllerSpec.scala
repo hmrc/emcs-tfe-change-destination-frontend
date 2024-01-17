@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -84,7 +84,7 @@ class NewDestinationTypeControllerSpec extends SpecBase with MockUserAnswersServ
     lazy val postResult: Future[Result] = controller.onPreDraftSubmit(ern, testArc)(postRequest)
   }
 
-  "DestinationTypeController" - {
+  "NewDestinationTypeController" - {
     "onPreDraftPageLoad" - {
       "must render the view" - {
         "when the request contains a GBRC ERN" in new Fixture(None, ern = "GBRC123") {

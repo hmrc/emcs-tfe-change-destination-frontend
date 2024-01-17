@@ -99,16 +99,6 @@ class InformationNavigatorSpec extends SpecBase {
         }
       }
 
-
-      "for the DispatchPlace page" - {
-
-        "must go to the New Destination Type page" in {
-
-          navigator.nextPage(DispatchPlacePage, NormalMode, emptyUserAnswers) mustBe
-            controllers.sections.info.routes.NewDestinationTypeController.onPreDraftPageLoad(testErn, testArc)
-        }
-      }
-
       "for the NewDestinationType page" - {
 
         "must go to the Task List page" in {
