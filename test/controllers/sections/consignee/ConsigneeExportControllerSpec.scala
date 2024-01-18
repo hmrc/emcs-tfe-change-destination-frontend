@@ -21,6 +21,7 @@ import controllers.actions.{FakeDataRetrievalAction, FakeMovementAction}
 import controllers.routes
 import forms.sections.consignee.ConsigneeExportFormProvider
 import mocks.services.MockUserAnswersService
+import models.response.emcsTfe.GetMovementResponse
 import models.sections.consignee.{ConsigneeExportVat, ConsigneeExportVatType}
 import models.{NormalMode, UserAnswers}
 import navigation.FakeNavigators.FakeConsigneeNavigator
@@ -45,7 +46,10 @@ class ConsigneeExportControllerSpec extends SpecBase with MockUserAnswersService
   lazy val consigneeExportRouteSubmit: String =
     controllers.sections.consignee.routes.ConsigneeExportController.onSubmit(testErn, testArc, NormalMode).url
 
-  class Fixture(optUserAnswers: Option[UserAnswers] = Some(emptyUserAnswers)) {
+  class Fixture(
+                 optUserAnswers: Option[UserAnswers] = Some(emptyUserAnswers),
+                 getMovementResponse: GetMovementResponse = maxGetMovementResponse
+               ) {
     val request = FakeRequest(GET, consigneeExportRoute)
 
     lazy val testController = new ConsigneeExportController(
@@ -55,7 +59,7 @@ class ConsigneeExportControllerSpec extends SpecBase with MockUserAnswersService
       fakeAuthAction,
       new FakeDataRetrievalAction(optUserAnswers, Some(testMinTraderKnownFacts)),
       dataRequiredAction,
-      new FakeMovementAction(maxGetMovementResponse),
+      new FakeMovementAction(getMovementResponse),
       fakeUserAllowListAction,
       formProvider,
       messagesControllerComponents,
@@ -66,11 +70,15 @@ class ConsigneeExportControllerSpec extends SpecBase with MockUserAnswersService
 
   "ConsigneeExport Controller" - {
     "onPageLoad" - {
-      "must return OK and the correct view for a GET" in new Fixture() {
+      "must return OK and the correct view for a GET" in new Fixture(getMovementResponse = maxGetMovementResponse.copy(
+        consigneeTrader = maxGetMovementResponse.consigneeTrader.map(_.copy(
+          eoriNumber = None
+        ))
+      )) {
         val result = testController.onPageLoad(testErn, testArc, NormalMode)(request)
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, NormalMode)(dataRequest(request), messages(request)).toString
+        contentAsString(result) mustEqual view(form.fill(false), NormalMode)(dataRequest(request), messages(request)).toString
       }
 
       "must populate the view correctly on a GET when the question has previously been answered" in new Fixture(Some(userAnswers)) {
@@ -83,7 +91,11 @@ class ConsigneeExportControllerSpec extends SpecBase with MockUserAnswersService
 
     "onSubmit" - {
 
-      "must redirect to the next page when valid data is submitted - data is new" in new Fixture() {
+      "must redirect to the next page when valid data is submitted - data is new" in new Fixture(getMovementResponse = maxGetMovementResponse.copy(
+        consigneeTrader = maxGetMovementResponse.consigneeTrader.map(_.copy(
+          eoriNumber = None
+        ))
+      )) {
         MockUserAnswersService.set().returns(Future.successful(emptyUserAnswers))
 
         val req = FakeRequest(POST, consigneeExportRouteSubmit).withFormUrlEncodedBody(("value", "true"))

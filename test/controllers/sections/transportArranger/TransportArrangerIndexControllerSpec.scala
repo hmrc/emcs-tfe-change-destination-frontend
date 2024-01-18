@@ -19,9 +19,10 @@ package controllers.sections.transportArranger
 import base.SpecBase
 import controllers.actions.{FakeDataRetrievalAction, FakeMovementAction}
 import mocks.services.MockUserAnswersService
-import models.sections.ReviewAnswer.KeepAnswers
-import models.sections.transportArranger.TransportArranger.Consignor
-import models.{UserAddress, UserAnswers}
+import models.response.emcsTfe.GetMovementResponse
+import models.sections.ReviewAnswer.{ChangeAnswers, KeepAnswers}
+import models.sections.transportArranger.TransportArranger.{Consignor, GoodsOwner}
+import models.{NormalMode, UserAddress, UserAnswers}
 import navigation.FakeNavigators.FakeTransportArrangerNavigator
 import pages.sections.consignor.ConsignorAddressPage
 import pages.sections.transportArranger._
@@ -32,7 +33,7 @@ import play.api.test.{FakeRequest, Helpers}
 
 class TransportArrangerIndexControllerSpec extends SpecBase with MockUserAnswersService {
 
-  class Test(val userAnswers: Option[UserAnswers] = Some(emptyUserAnswers)) {
+  class Test(val userAnswers: Option[UserAnswers] = Some(emptyUserAnswers), movementResponse: GetMovementResponse = maxGetMovementResponse) {
 
     lazy val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest()
 
@@ -42,7 +43,7 @@ class TransportArrangerIndexControllerSpec extends SpecBase with MockUserAnswers
       fakeAuthAction,
       new FakeDataRetrievalAction(userAnswers, Some(testMinTraderKnownFacts)),
       dataRequiredAction,
-      new FakeMovementAction(maxGetMovementResponse),
+      new FakeMovementAction(movementResponse),
       fakeUserAllowListAction,
       Helpers.stubMessagesControllerComponents()
     )
@@ -50,7 +51,7 @@ class TransportArrangerIndexControllerSpec extends SpecBase with MockUserAnswers
 
   "TransportArrangerIndexController" - {
     "when TransportArrangerSection.isCompleted" - {
-      "must redirect to the Review controller" in new Test(Some(
+      "must redirect to the CYA controller" in new Test(Some(
         emptyUserAnswers
           .set(TransportArrangerPage, Consignor)
           .set(ConsignorAddressPage, UserAddress(None, "", "", ""))
@@ -59,13 +60,14 @@ class TransportArrangerIndexControllerSpec extends SpecBase with MockUserAnswers
         val result = controller.onPageLoad(testErn, testArc)(request)
 
         status(result) mustEqual SEE_OTHER
-        redirectLocation(result) mustBe
-          Some(controllers.sections.transportArranger.routes.TransportArrangerReviewController.onPageLoad(testErn, testArc).url)
+        redirectLocation(result).value mustBe
+          routes.TransportArrangerCheckAnswersController.onPageLoad(testErn, testArc).url
       }
     }
 
     "when TransportArrangerSection.needsReview" - {
-      "must redirect to the Review controller" in new Test(Some(
+
+      "must redirect to TransportArrangerReviewAnswerPage" in new Test(Some(
         emptyUserAnswers
           .set(TransportArrangerPage, Consignor)
           .set(ConsignorAddressPage, UserAddress(None, "", "", ""))
@@ -73,8 +75,26 @@ class TransportArrangerIndexControllerSpec extends SpecBase with MockUserAnswers
         val result = controller.onPageLoad(testErn, testArc)(request)
 
         status(result) mustEqual SEE_OTHER
-        redirectLocation(result) mustBe
-          Some(controllers.sections.transportArranger.routes.TransportArrangerReviewController.onPageLoad(testErn, testArc).url)
+        redirectLocation(result).value mustBe
+          controllers.sections.transportArranger.routes.TransportArrangerReviewController.onPageLoad(testErn, testArc).url
+      }
+    }
+
+    "when TransportArrangerSection is not complete (in theory this should never happen because data always exists in IE801)" - {
+
+      "must redirect to TransportArrangerPage" in new Test(Some(
+        emptyUserAnswers
+          .set(TransportArrangerReviewPage, ChangeAnswers)),
+        maxGetMovementResponse.copy(
+          transportArrangerTrader = None,
+          headerEadEsad = maxGetMovementResponse.headerEadEsad.copy(transportArrangement = GoodsOwner)
+        )
+      ) {
+        val result = controller.onPageLoad(testErn, testArc)(request)
+
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustBe
+          routes.TransportArrangerController.onPageLoad(testErn, testArc, NormalMode).url
       }
     }
   }

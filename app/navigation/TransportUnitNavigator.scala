@@ -70,7 +70,7 @@ class TransportUnitNavigator @Inject() extends BaseNavigator {
         case Some(TransportUnitsAddToListModel.Yes) =>
           transportUnitRoutes.TransportUnitTypeController.onPageLoad(answers.ern, answers.arc, Index(answers.get(TransportUnitsCount).getOrElse(0)), NormalMode)
         case Some(TransportUnitsAddToListModel.NoMoreToCome | TransportUnitsAddToListModel.MoreToCome) =>
-          routes.DraftMovementController.onPageLoad(answers.ern, answers.arc)
+          routes.TaskListController.onPageLoad(answers.ern, answers.arc)
         case _ =>
           controllers.routes.JourneyRecoveryController.onPageLoad()
       }
@@ -78,7 +78,7 @@ class TransportUnitNavigator @Inject() extends BaseNavigator {
     case TransportUnitsReviewPage => (userAnswers: UserAnswers) =>
       userAnswers.get(TransportUnitsReviewPage) match {
         case Some(ChangeAnswers) => controllers.sections.transportUnit.routes.TransportUnitsAddToListController.onPageLoad(userAnswers.ern, userAnswers.arc)
-        case Some(KeepAnswers) => routes.DraftMovementController.onPageLoad(userAnswers.ern, userAnswers.arc)
+        case Some(KeepAnswers) => routes.TaskListController.onPageLoad(userAnswers.ern, userAnswers.arc)
         case _ => controllers.sections.transportUnit.routes.TransportUnitsReviewController.onPageLoad(userAnswers.ern, userAnswers.arc)
       }
 

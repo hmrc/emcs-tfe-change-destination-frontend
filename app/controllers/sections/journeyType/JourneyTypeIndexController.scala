@@ -39,11 +39,15 @@ class JourneyTypeIndexController @Inject()(
 
   def onPageLoad(ern: String, arc: String): Action[AnyContent] =
     authorisedDataRequestWithUpToDateMovement(ern, arc) { implicit request =>
-      if (JourneyTypeSection.isCompleted || JourneyTypeSection.needsReview) {
-        Redirect(controllers.sections.journeyType.routes.JourneyTypeReviewController.onPageLoad(ern, arc))
-      } else {
-        Redirect(controllers.sections.journeyType.routes.HowMovementTransportedController.onPageLoad(ern, arc, NormalMode))
-      }
+      Redirect(
+        if(JourneyTypeSection.needsReview) {
+          controllers.sections.journeyType.routes.JourneyTypeReviewController.onPageLoad(ern, arc)
+        } else if (JourneyTypeSection.isCompleted) {
+          controllers.sections.journeyType.routes.CheckYourAnswersJourneyTypeController.onPageLoad(ern, arc)
+        } else {
+          controllers.sections.journeyType.routes.HowMovementTransportedController.onPageLoad(ern, arc, NormalMode)
+        }
+      )
     }
 
 }

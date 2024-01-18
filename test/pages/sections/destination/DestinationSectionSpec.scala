@@ -19,7 +19,6 @@ package pages.sections.destination
 import base.SpecBase
 import fixtures.UserAddressFixtures
 import models.requests.DataRequest
-import models.sections.ReviewAnswer.{ChangeAnswers, KeepAnswers}
 import models.sections.info.movementScenario.MovementScenario
 import models.sections.info.movementScenario.MovementScenario._
 import pages.QuestionPage
@@ -34,18 +33,6 @@ class DestinationSectionSpec extends SpecBase with UserAddressFixtures with Json
   val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest()
 
   "status" - {
-
-    "must return Complete" - {
-      "when keep answers has been selected" in {
-        implicit val dr: DataRequest[_] =
-          dataRequest(FakeRequest(),
-            emptyUserAnswers
-              .set(DestinationReviewPage, KeepAnswers)
-          )
-        DestinationSection.isCompleted mustBe true
-      }
-    }
-
     "when shouldStartFlowAtDestinationWarehouseExcise" - {
       "must return Completed" - {
         "when mandatory pages have an answer and DestinationConsigneeDetailsPage = true, and the section has been reviewed" in {
@@ -63,7 +50,6 @@ class DestinationSectionSpec extends SpecBase with UserAddressFixtures with Json
                 .set(DestinationTypePage, destinationTypePageAnswer)
                 .set(DestinationWarehouseExcisePage, "")
                 .set(DestinationConsigneeDetailsPage, true)
-                .set(DestinationReviewPage, ChangeAnswers)
               )
 
               DestinationSection.status mustBe Completed
@@ -87,7 +73,6 @@ class DestinationSectionSpec extends SpecBase with UserAddressFixtures with Json
                 .set(DestinationConsigneeDetailsPage, false)
                 .set(DestinationBusinessNamePage, "")
                 .set(DestinationAddressPage, testUserAddress)
-                .set(DestinationReviewPage, ChangeAnswers)
               )
 
               DestinationSection.status mustBe Completed
@@ -111,7 +96,7 @@ class DestinationSectionSpec extends SpecBase with UserAddressFixtures with Json
                 .set(DestinationTypePage, destinationTypePageAnswer)
                 .set(DestinationWarehouseExcisePage, "")
                 .set(DestinationConsigneeDetailsPage, true)
-                .set(DestinationReviewPage, ChangeAnswers)
+
 
               Seq(
                 DestinationConsigneeDetailsPage,
@@ -143,7 +128,7 @@ class DestinationSectionSpec extends SpecBase with UserAddressFixtures with Json
                 .set(DestinationConsigneeDetailsPage, false)
                 .set(DestinationBusinessNamePage, "")
                 .set(DestinationAddressPage, testUserAddress)
-                .set(DestinationReviewPage, ChangeAnswers)
+
 
               Seq[QuestionPage[_]](
                 DestinationConsigneeDetailsPage,
@@ -173,8 +158,7 @@ class DestinationSectionSpec extends SpecBase with UserAddressFixtures with Json
               )
 
               implicit val dr: DataRequest[_] = dataRequest(request, emptyUserAnswers
-                .set(DestinationTypePage, destinationTypePageAnswer)
-                .set(DestinationReviewPage, ChangeAnswers),
+                .set(DestinationTypePage, destinationTypePageAnswer),
                 movementDetails = maxGetMovementResponse.copy(deliveryPlaceTrader = None)
               )
 
@@ -203,7 +187,6 @@ class DestinationSectionSpec extends SpecBase with UserAddressFixtures with Json
                 .set(DestinationTypePage, destinationTypePageAnswer)
                 .set(DestinationDetailsChoicePage, true)
                 .set(DestinationConsigneeDetailsPage, true)
-                .set(DestinationReviewPage, ChangeAnswers)
               )
 
               DestinationSection.status mustBe Completed
@@ -229,7 +212,6 @@ class DestinationSectionSpec extends SpecBase with UserAddressFixtures with Json
                 .set(DestinationConsigneeDetailsPage, false)
                 .set(DestinationBusinessNamePage, "")
                 .set(DestinationAddressPage, testUserAddress)
-                .set(DestinationReviewPage, ChangeAnswers)
               )
 
               DestinationSection.status mustBe Completed
@@ -252,7 +234,6 @@ class DestinationSectionSpec extends SpecBase with UserAddressFixtures with Json
               implicit val dr: DataRequest[_] = dataRequest(request, emptyUserAnswers
                 .set(DestinationTypePage, destinationTypePageAnswer)
                 .set(DestinationDetailsChoicePage, false)
-                .set(DestinationReviewPage, ChangeAnswers)
               )
 
               DestinationSection.status mustBe Completed
@@ -279,7 +260,7 @@ class DestinationSectionSpec extends SpecBase with UserAddressFixtures with Json
                 .set(DestinationConsigneeDetailsPage, false)
                 .set(DestinationBusinessNamePage, "")
                 .set(DestinationAddressPage, testUserAddress)
-                .set(DestinationReviewPage, ChangeAnswers)
+
 
               Seq(DestinationBusinessNamePage, DestinationAddressPage).foreach {
                 page =>
@@ -307,7 +288,6 @@ class DestinationSectionSpec extends SpecBase with UserAddressFixtures with Json
               implicit val dr: DataRequest[_] = dataRequest(request, emptyUserAnswers
                 .set(DestinationTypePage, destinationTypePageAnswer)
                 .set(DestinationDetailsChoicePage, true)
-                .set(DestinationReviewPage, ChangeAnswers)
               )
 
               DestinationSection.status mustBe InProgress
@@ -329,7 +309,6 @@ class DestinationSectionSpec extends SpecBase with UserAddressFixtures with Json
               implicit val dr: DataRequest[_] = dataRequest(request, emptyUserAnswers
                 .set(DestinationTypePage, destinationTypePageAnswer)
                 .set(DestinationWarehouseVatPage, "")
-                .set(DestinationReviewPage, ChangeAnswers)
               )
 
               DestinationSection.status mustBe InProgress
@@ -351,8 +330,7 @@ class DestinationSectionSpec extends SpecBase with UserAddressFixtures with Json
               )
 
               implicit val dr: DataRequest[_] = dataRequest(request, emptyUserAnswers
-                .set(DestinationTypePage, destinationTypePageAnswer)
-                .set(DestinationReviewPage, ChangeAnswers),
+                .set(DestinationTypePage, destinationTypePageAnswer),
                 movementDetails = maxGetMovementResponse.copy(deliveryPlaceTrader = None)
               )
 
@@ -377,7 +355,6 @@ class DestinationSectionSpec extends SpecBase with UserAddressFixtures with Json
                 .set(DestinationTypePage, destinationTypePageAnswer)
                 .set(DestinationBusinessNamePage, "")
                 .set(DestinationAddressPage, testUserAddress)
-                .set(DestinationReviewPage, ChangeAnswers)
               )
 
               DestinationSection.status mustBe Completed
@@ -400,7 +377,7 @@ class DestinationSectionSpec extends SpecBase with UserAddressFixtures with Json
                 .set(DestinationTypePage, destinationTypePageAnswer)
                 .set(DestinationBusinessNamePage, "")
                 .set(DestinationAddressPage, testUserAddress)
-                .set(DestinationReviewPage, ChangeAnswers)
+
 
 
               Seq(DestinationBusinessNamePage, DestinationAddressPage).foreach {
@@ -426,8 +403,7 @@ class DestinationSectionSpec extends SpecBase with UserAddressFixtures with Json
                 s"shouldStartFlowAtDestinationBusinessName returned false for MovementScenario $destinationTypePageAnswer"
               )
               implicit val dr: DataRequest[_] = dataRequest(request, emptyUserAnswers
-                .set(DestinationTypePage, destinationTypePageAnswer)
-                .set(DestinationReviewPage, ChangeAnswers),
+                .set(DestinationTypePage, destinationTypePageAnswer),
                 movementDetails = maxGetMovementResponse.copy(deliveryPlaceTrader = None)
               )
 
@@ -450,8 +426,7 @@ class DestinationSectionSpec extends SpecBase with UserAddressFixtures with Json
                 .set(DestinationConsigneeDetailsPage, false)
                 .set(DestinationDetailsChoicePage, true)
                 .set(DestinationWarehouseExcisePage, "")
-                .set(DestinationWarehouseVatPage, "")
-                .set(DestinationReviewPage, ChangeAnswers),
+                .set(DestinationWarehouseVatPage, ""),
                 movementDetails = maxGetMovementResponse.copy(deliveryPlaceTrader = None)
               )
 
@@ -462,7 +437,7 @@ class DestinationSectionSpec extends SpecBase with UserAddressFixtures with Json
 
     "when DestinationTypePage is missing" - {
       "must return NotStarted" in {
-        DestinationSection.status(dataRequest(request, emptyUserAnswers.set(DestinationReviewPage, ChangeAnswers), movementDetails = maxGetMovementResponse.copy(deliveryPlaceTrader = None))) mustBe NotStarted
+        DestinationSection.status(dataRequest(request, emptyUserAnswers, movementDetails = maxGetMovementResponse.copy(deliveryPlaceTrader = None))) mustBe NotStarted
       }
     }
   }

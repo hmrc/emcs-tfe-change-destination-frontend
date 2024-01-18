@@ -18,41 +18,22 @@ package pages.sections.consignor
 
 import base.SpecBase
 import models.requests.DataRequest
-import models.sections.ReviewAnswer.{ChangeAnswers, KeepAnswers}
 import play.api.test.FakeRequest
 
 class ConsignorSectionSpec extends SpecBase {
 
   "isCompleted" - {
     "should return true" - {
-      "when keep answers has been selected" in {
-        implicit val dr: DataRequest[_] =
-          dataRequest(FakeRequest(),
-            emptyUserAnswers
-              .set(ConsignorReviewPage, KeepAnswers)
-          )
-        ConsignorSection.isCompleted mustBe true
-      }
-
       "an answer for ConsignorAddressPage has been provided" in {
-        implicit val dr: DataRequest[_] =
-          dataRequest(FakeRequest(),
-            emptyUserAnswers
-              .set(ConsignorAddressPage, testUserAddress)
-              .set(ConsignorReviewPage, ChangeAnswers)
-          )
+        implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), emptyUserAnswers.set(ConsignorAddressPage, testUserAddress))
         ConsignorSection.isCompleted mustBe true
       }
     }
 
-    "should return false" - {
-      "when no answer for ConsignorAddressPage has been provided" in {
-        implicit val dr: DataRequest[_] =
-          dataRequest(FakeRequest(),
-            emptyUserAnswers
-              .set(ConsignorReviewPage, ChangeAnswers)
-          )
-        ConsignorSection.isCompleted mustBe false
+    "should return true" - {
+      "when no answer for ConsignorAddressPage has been provided (retrieved from IE801)" in {
+        implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), emptyUserAnswers)
+        ConsignorSection.isCompleted mustBe true
       }
     }
   }

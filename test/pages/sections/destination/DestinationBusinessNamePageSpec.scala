@@ -17,31 +17,13 @@
 package pages.sections.destination
 
 import base.SpecBase
-import models.response.emcsTfe.TraderModel
 import play.api.test.FakeRequest
 
 class DestinationBusinessNamePageSpec extends SpecBase {
-  val deliverPlaceTrader: TraderModel = maxGetMovementResponse.deliveryPlaceTrader.get
 
   "getValueFromIE801" - {
-    "must return Some(_)" - {
-      "when deliver place trader exists and has a name" in {
-        DestinationBusinessNamePage.getValueFromIE801(dataRequest(FakeRequest())) mustBe deliverPlaceTrader.traderName
-      }
-    }
-    "must return None" - {
-      "when deliver place trader exists and has no name" in {
-        DestinationBusinessNamePage.getValueFromIE801(dataRequest(
-          FakeRequest(),
-          movementDetails = maxGetMovementResponse.copy(deliveryPlaceTrader = Some(deliverPlaceTrader.copy(traderName = None)))
-        )) mustBe None
-      }
-      "when delivery place trader doesn't exist" in {
-        DestinationBusinessNamePage.getValueFromIE801(dataRequest(
-          FakeRequest(),
-          movementDetails = maxGetMovementResponse.copy(deliveryPlaceTrader = None)
-        )) mustBe None
-      }
+    "must return None" in {
+      DestinationBusinessNamePage.getValueFromIE801(dataRequest(FakeRequest())) mustBe None
     }
   }
 }

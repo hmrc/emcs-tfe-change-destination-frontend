@@ -19,7 +19,7 @@ package viewmodels.checkAnswers.sections.destination
 import base.SpecBase
 import fixtures.UserAddressFixtures
 import fixtures.messages.sections.destination.DestinationAddressMessages
-import models.{CheckMode, UserAddress}
+import models.CheckMode
 import org.scalatest.matchers.must.Matchers
 import pages.sections.consignee.ConsigneeAddressPage
 import pages.sections.destination.{DestinationAddressPage, DestinationConsigneeDetailsPage}
@@ -40,39 +40,13 @@ class DestinationAddressSummarySpec extends SpecBase with Matchers with UserAddr
 
         implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
 
-        "when there's no answer in the user answers (defaulting to 801)" - {
-
-          "must output the 801 data" in {
-
-            val userAddressFrom801 = UserAddress(Some("DeliveryPlaceTraderStreetNumber"), "DeliveryPlaceTraderStreetName", "DeliveryPlaceTraderCity", "DeliveryPlaceTraderPostcode")
-
-            implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers)
-
-            DestinationAddressSummary.row() mustBe SummaryListRowViewModel(
-              key = messagesForLanguage.cyaLabel,
-              value = Value(userAddressFrom801.toCheckYourAnswersFormat),
-              actions = Seq(
-                ActionItemViewModel(
-                  content = messagesForLanguage.change,
-                  href = controllers.sections.destination.routes.DestinationAddressController.onPageLoad(testErn, testArc, CheckMode).url,
-                  id = "changeDestinationAddress"
-                ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHidden)
-              )
-            )
-
-          }
-        }
-
         "when the DestinationConsigneeDetailsPage has been answered no" - {
 
-          "when there is no Destination Address given (in either 801 or user answers)" - {
+          "when there is no Destination Address given in user answers" - {
 
             s"must output ${messagesForLanguage.cyaDestinationNotProvided}" in {
 
-              implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers
-                .set(DestinationConsigneeDetailsPage, false),
-                movementDetails = maxGetMovementResponse.copy(deliveryPlaceTrader = None)
-              )
+              implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(DestinationConsigneeDetailsPage, false))
 
               DestinationAddressSummary.row() mustBe SummaryListRowViewModel(
                 key = messagesForLanguage.cyaLabel,

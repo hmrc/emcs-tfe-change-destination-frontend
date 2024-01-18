@@ -20,12 +20,15 @@ import base.SpecBase
 import fixtures.messages.sections.guarantor.GuarantorNameMessages
 import fixtures.messages.sections.guarantor.GuarantorNameMessages.ViewMessages
 import models.requests.DataRequest
+import models.response.emcsTfe.GuarantorType.NoGuarantor
 import models.response.emcsTfe.{GuarantorType, MovementGuaranteeModel}
 import models.sections.guarantor.GuarantorArranger.{Consignee, Consignor, GoodsOwner, Transporter}
+import models.sections.info.movementScenario.MovementScenario.ExportWithCustomsDeclarationLodgedInTheUk
 import models.{CheckMode, Mode, NormalMode}
 import org.scalatest.matchers.must.Matchers
 import pages.sections.consignee.ConsigneeBusinessNamePage
 import pages.sections.guarantor.{GuarantorArrangerPage, GuarantorNamePage, GuarantorRequiredPage}
+import pages.sections.info.DestinationTypePage
 import play.api.i18n.Messages
 import play.api.test.FakeRequest
 import uk.gov.hmrc.govukfrontend.views.Aliases.{Key, Value}
@@ -58,7 +61,12 @@ class GuarantorNameSummarySpec extends SpecBase with Matchers {
 
         "and there is no answer for the GuarantorRequiredPage" - {
           "then must not return a row" in {
-            implicit lazy val request: DataRequest[_] = dataRequest(FakeRequest(), emptyUserAnswers)
+            implicit lazy val request: DataRequest[_] = dataRequest(
+              request = FakeRequest(),
+              answers = emptyUserAnswers
+                .set(DestinationTypePage, ExportWithCustomsDeclarationLodgedInTheUk),
+              movementDetails = maxGetMovementResponse.copy(movementGuarantee = MovementGuaranteeModel(NoGuarantor, None))
+            )
 
             GuarantorNameSummary.row mustBe None
           }
@@ -66,7 +74,13 @@ class GuarantorNameSummarySpec extends SpecBase with Matchers {
 
         "and there is a GuarantorRequiredPage answer of `no`" - {
           "then must not return a row" in {
-            implicit lazy val request: DataRequest[_] = dataRequest(FakeRequest(), emptyUserAnswers.set(GuarantorRequiredPage, false))
+            implicit lazy val request: DataRequest[_] = dataRequest(
+              request = FakeRequest(),
+              answers = emptyUserAnswers
+                .set(DestinationTypePage, ExportWithCustomsDeclarationLodgedInTheUk)
+                .set(GuarantorRequiredPage, false),
+              movementDetails = maxGetMovementResponse.copy(movementGuarantee = MovementGuaranteeModel(NoGuarantor, None))
+            )
 
             GuarantorNameSummary.row mustBe None
           }
@@ -80,9 +94,13 @@ class GuarantorNameSummarySpec extends SpecBase with Matchers {
               implicit lazy val request: DataRequest[_] = dataRequest(
                 FakeRequest(),
                 emptyUserAnswers
+                  .set(DestinationTypePage, ExportWithCustomsDeclarationLodgedInTheUk)
                   .set(GuarantorRequiredPage, true)
                   .set(GuarantorArrangerPage, Consignee),
-                movementDetails = maxGetMovementResponse.copy(consigneeTrader = None)
+                movementDetails = maxGetMovementResponse.copy(
+                  movementGuarantee = MovementGuaranteeModel(NoGuarantor, None),
+                  consigneeTrader = None
+                )
               )
 
               GuarantorNameSummary.row mustBe expectedRow(messagesForLanguage.consigneeNameNotProvided, false)
@@ -92,9 +110,11 @@ class GuarantorNameSummarySpec extends SpecBase with Matchers {
               implicit lazy val request: DataRequest[_] = dataRequest(
                 FakeRequest(),
                 emptyUserAnswers
+                  .set(DestinationTypePage, ExportWithCustomsDeclarationLodgedInTheUk)
                   .set(GuarantorRequiredPage, true)
                   .set(GuarantorArrangerPage, Consignee)
-                  .set(ConsigneeBusinessNamePage, "consignee name here")
+                  .set(ConsigneeBusinessNamePage, "consignee name here"),
+                movementDetails = maxGetMovementResponse.copy(movementGuarantee = MovementGuaranteeModel(NoGuarantor, None))
               )
 
               GuarantorNameSummary.row mustBe expectedRow("consignee name here", false)
@@ -106,8 +126,10 @@ class GuarantorNameSummarySpec extends SpecBase with Matchers {
               implicit lazy val request: DataRequest[_] = dataRequest(
                 FakeRequest(),
                 emptyUserAnswers
+                  .set(DestinationTypePage, ExportWithCustomsDeclarationLodgedInTheUk)
                   .set(GuarantorRequiredPage, true)
-                  .set(GuarantorArrangerPage, Consignor)
+                  .set(GuarantorArrangerPage, Consignor),
+                movementDetails = maxGetMovementResponse.copy(movementGuarantee = MovementGuaranteeModel(NoGuarantor, None))
               )
 
               GuarantorNameSummary.row mustBe expectedRow(testMinTraderKnownFacts.traderName, false)
@@ -120,6 +142,7 @@ class GuarantorNameSummarySpec extends SpecBase with Matchers {
               implicit lazy val request: DataRequest[_] = dataRequest(
                 FakeRequest(),
                 emptyUserAnswers
+                  .set(DestinationTypePage, ExportWithCustomsDeclarationLodgedInTheUk)
                   .set(GuarantorRequiredPage, true)
                   .set(GuarantorArrangerPage, GoodsOwner),
                 movementDetails = maxGetMovementResponse.copy(movementGuarantee = MovementGuaranteeModel(GuarantorType.Owner, None))
@@ -132,9 +155,11 @@ class GuarantorNameSummarySpec extends SpecBase with Matchers {
               implicit lazy val request: DataRequest[_] = dataRequest(
                 FakeRequest(),
                 emptyUserAnswers
+                  .set(DestinationTypePage, ExportWithCustomsDeclarationLodgedInTheUk)
                   .set(GuarantorRequiredPage, true)
                   .set(GuarantorArrangerPage, GoodsOwner)
-                  .set(GuarantorNamePage, "guarantor name here")
+                  .set(GuarantorNamePage, "guarantor name here"),
+                movementDetails = maxGetMovementResponse.copy(movementGuarantee = MovementGuaranteeModel(NoGuarantor, None))
               )
 
               GuarantorNameSummary.row mustBe expectedRow("guarantor name here", true)
@@ -147,6 +172,7 @@ class GuarantorNameSummarySpec extends SpecBase with Matchers {
               implicit lazy val request: DataRequest[_] = dataRequest(
                 FakeRequest(),
                 emptyUserAnswers
+                  .set(DestinationTypePage, ExportWithCustomsDeclarationLodgedInTheUk)
                   .set(GuarantorRequiredPage, true)
                   .set(GuarantorArrangerPage, Transporter),
                 movementDetails = maxGetMovementResponse.copy(movementGuarantee = MovementGuaranteeModel(GuarantorType.Transporter, None))
@@ -159,6 +185,7 @@ class GuarantorNameSummarySpec extends SpecBase with Matchers {
               implicit lazy val request: DataRequest[_] = dataRequest(
                 FakeRequest(),
                 emptyUserAnswers
+                  .set(DestinationTypePage, ExportWithCustomsDeclarationLodgedInTheUk)
                   .set(GuarantorRequiredPage, true)
                   .set(GuarantorArrangerPage, Transporter)
                   .set(GuarantorNamePage, "transporter name here")

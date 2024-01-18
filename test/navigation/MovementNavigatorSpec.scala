@@ -65,7 +65,7 @@ class MovementNavigatorSpec extends SpecBase {
               .set(MovementReviewPage, KeepAnswers)
 
             navigator.nextPage(MovementReviewPage, NormalMode, userAnswers) mustBe
-              controllers.routes.DraftMovementController.onPageLoad(testErn, testArc)
+              controllers.routes.TaskListController.onPageLoad(testErn, testArc)
           }
         }
       }
@@ -82,7 +82,7 @@ class MovementNavigatorSpec extends SpecBase {
 
         "must go to the Task List page" in {
           navigator.nextPage(MovementCheckAnswersPage, NormalMode, emptyUserAnswers) mustBe
-            controllers.routes.DraftMovementController.onPageLoad(testErn, testArc)
+            controllers.routes.TaskListController.onPageLoad(testErn, testArc)
         }
       }
     }
@@ -101,7 +101,7 @@ class MovementNavigatorSpec extends SpecBase {
           pages.foreach {
             page =>
               navigator.nextPage(page, CheckMode, emptyUserAnswers) mustBe
-                routes.DraftMovementController.onPageLoad(testErn, testArc)
+                routes.TaskListController.onPageLoad(testErn, testArc)
           }
         }
       }

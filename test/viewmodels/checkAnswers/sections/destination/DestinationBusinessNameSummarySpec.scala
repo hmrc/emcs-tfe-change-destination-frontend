@@ -38,7 +38,7 @@ class DestinationBusinessNameSummarySpec extends SpecBase with Matchers {
 
         implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
 
-        "when there's no answer in the user answers or in 801" - {
+        "when there's no answer in the user answers" - {
 
           "must output row with 'Not provided' and change link" in {
 
@@ -59,37 +59,13 @@ class DestinationBusinessNameSummarySpec extends SpecBase with Matchers {
           }
         }
 
-        "when there's no answer in the user answers (defaulting to 801)" - {
-
-          "must output the expected row" in {
-
-            implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers)
-
-            DestinationBusinessNameSummary.row() mustBe SummaryListRowViewModel(
-              key = messagesForLanguage.cyaLabel,
-              value = Value(Text("DeliveryPlaceTraderName")),
-              actions = Seq(
-                ActionItemViewModel(
-                  content = messagesForLanguage.change,
-                  href = controllers.sections.destination.routes.DestinationBusinessNameController.onPageLoad(testErn, testArc, CheckMode).url,
-                  id = "changeDestinationBusinessName"
-                ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHidden)
-              )
-            )
-
-          }
-        }
-
         "when the DestinationConsigneeDetailsPage has been answered no" - {
 
-          "when there is no Destination BusinessName given in the 801 response or user answers" - {
+          "when there is no Destination BusinessName given in the user answers" - {
 
             s"must output ${messagesForLanguage.cyaDestinationNotProvided}" in {
 
-              implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers
-                .set(DestinationConsigneeDetailsPage, false),
-                movementDetails = maxGetMovementResponse.copy(deliveryPlaceTrader = None)
-              )
+              implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(DestinationConsigneeDetailsPage, false))
 
               DestinationBusinessNameSummary.row() mustBe SummaryListRowViewModel(
                 key = messagesForLanguage.cyaLabel,

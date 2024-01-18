@@ -52,12 +52,12 @@ class TransportArrangerNavigator @Inject() extends BaseNavigator {
       controllers.sections.transportArranger.routes.TransportArrangerCheckAnswersController.onPageLoad(userAnswers.ern, userAnswers.arc)
 
     case TransportArrangerCheckAnswersPage => (userAnswers: UserAnswers) =>
-      routes.DraftMovementController.onPageLoad(userAnswers.ern, userAnswers.arc)
+      routes.TaskListController.onPageLoad(userAnswers.ern, userAnswers.arc)
 
     case TransportArrangerReviewPage => (userAnswers: UserAnswers) =>
       userAnswers.get(TransportArrangerReviewPage) match {
         case Some(ChangeAnswers) => controllers.sections.transportArranger.routes.TransportArrangerController.onPageLoad(userAnswers.ern, userAnswers.arc, NormalMode)
-        case Some(KeepAnswers) => routes.DraftMovementController.onPageLoad(userAnswers.ern, userAnswers.arc)
+        case Some(KeepAnswers) => routes.TaskListController.onPageLoad(userAnswers.ern, userAnswers.arc)
         case _ => controllers.sections.transportArranger.routes.TransportArrangerReviewController.onPageLoad(userAnswers.ern, userAnswers.arc)
       }
 

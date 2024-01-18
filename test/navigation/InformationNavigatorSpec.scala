@@ -62,7 +62,7 @@ class InformationNavigatorSpec extends SpecBase {
             "must go to Task List page" in {
 
               navigator.nextPage(ChangeTypePage, NormalMode, emptyUserAnswers.set(ChangeTypePage, changeType)) mustBe
-                controllers.routes.DraftMovementController.onPageLoad(testErn, testArc)
+                controllers.routes.TaskListController.onPageLoad(testErn, testArc)
             }
           }
         }
@@ -85,7 +85,7 @@ class InformationNavigatorSpec extends SpecBase {
 
             val userAnswers = emptyUserAnswers.set(ChangeDestinationTypePage, false)
             navigator.nextPage(ChangeDestinationTypePage, NormalMode, userAnswers) mustBe
-              controllers.routes.DraftMovementController.onPageLoad(testErn, testArc)
+              controllers.routes.TaskListController.onPageLoad(testErn, testArc)
           }
         }
 
@@ -104,16 +104,16 @@ class InformationNavigatorSpec extends SpecBase {
         "must go to the Task List page" in {
 
           navigator.nextPage(DestinationTypePage, NormalMode, emptyUserAnswers) mustBe
-            controllers.routes.DraftMovementController.onPageLoad(testErn, testArc)
+            controllers.routes.TaskListController.onPageLoad(testErn, testArc)
         }
       }
 
       "for the Dispatch Details page" - {
 
-        "must go to the DraftMovement" in {
+        "must go to the TaskList" in {
 
           navigator.nextPage(DispatchDetailsPage(), NormalMode, emptyUserAnswers) mustBe
-            routes.DraftMovementController.onPageLoad(testErn, testArc)
+            routes.TaskListController.onPageLoad(testErn, testArc)
         }
       }
     }
@@ -131,7 +131,7 @@ class InformationNavigatorSpec extends SpecBase {
           pages.foreach {
             page =>
               navigator.nextPage(page, CheckMode, emptyUserAnswers) mustBe
-                routes.DraftMovementController.onPageLoad(testErn, testArc)
+                routes.TaskListController.onPageLoad(testErn, testArc)
           }
         }
       }

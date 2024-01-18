@@ -58,7 +58,7 @@ class TransportUnitsAddToListController @Inject()(
   def onSubmit(ern: String, arc: String): Action[AnyContent] =
     authorisedDataRequestWithUpToDateMovementAsync(ern, arc) { implicit request =>
       onMax(
-        ifMax = Future.successful(Redirect(controllers.routes.DraftMovementController.onPageLoad(ern, arc))),
+        ifMax = Future.successful(Redirect(controllers.routes.TaskListController.onPageLoad(ern, arc))),
         ifNotMax = formProvider().bindFromRequest().fold(
           formWithErrors =>
             Future.successful(BadRequest(view(Some(formWithErrors), summaryHelper.allTransportUnitsSummary(onReviewPage = false), NormalMode))),

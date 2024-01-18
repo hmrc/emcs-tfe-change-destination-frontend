@@ -16,18 +16,19 @@
 
 @import models.requests.DataRequest
 @import pages.sections.consignee.ConsigneeBusinessNamePage
-@import viewmodels.helpers.draftMovement.DraftMovementHelper
 @import viewmodels.taskList.TaskList
+@import viewmodels.helpers.TaskListHelper
 
 @this(
         layout: templates.Layout,
         govukSummaryList: GovukSummaryList,
         formHelper: FormWithCSRF,
         h1: components.h1,
+        h2: components.h2,
         p: components.p,
         link: components.link,
         taskList: components.taskList,
-        helper: DraftMovementHelper,
+        helper: TaskListHelper,
         saveAndContinue: components.saveAndContinue
 )
 
@@ -35,16 +36,15 @@
 
 @layout(pageTitle = titleNoForm(helper.heading), maybeShowActiveTrader = maybeShowActiveTrader(request)) {
 
-    @h1(helper.heading, Some(messages("draftMovement.subHeading")), "govuk-heading-l")
-    @p("govuk-body govuk-!-margin-bottom-0") {
-        @messages("draftMovement.lrn", request.arc)
-    }
+    @h2(messages("arc.subHeading", request.arc), "govuk-caption-l", hiddenContent = Some(messages("subHeading.hidden")))
+    @h1(helper.heading, classes = "govuk-heading-l")
+
     @p("govuk-body govuk-!-margin-bottom-7") {
-        @messages("draftMovement.consignee", request.userAnswers.get(ConsigneeBusinessNamePage).getOrElse(messages("draftMovement.notProvided")))
+        @messages("taskList.lrn", request.movementDetails.localReferenceNumber)
     }
 
     @p("govuk-body govuk-!-margin-bottom-9") {
-        @link(testOnly.controllers.routes.UnderConstructionController.onPageLoad().url, "draftMovement.delete", id = Some("delete-draft"))
+        @link(testOnly.controllers.routes.UnderConstructionController.onPageLoad().url, "taskList.delete", id = Some("delete-draft"))
     }
 
     @taskList(TaskList(helper.sections))

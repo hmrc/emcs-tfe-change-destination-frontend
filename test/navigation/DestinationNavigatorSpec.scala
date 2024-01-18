@@ -134,7 +134,7 @@ class DestinationNavigatorSpec extends SpecBase {
         "must go to tasklist page" in {
 
           navigator.nextPage(DestinationCheckAnswersPage, NormalMode, emptyUserAnswers) mustBe
-            controllers.routes.DraftMovementController.onPageLoad(testErn, testArc)
+            controllers.routes.TaskListController.onPageLoad(testErn, testArc)
         }
       }
     }

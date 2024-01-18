@@ -115,7 +115,7 @@ class TransportArrangerNavigatorSpec extends SpecBase {
         "must go to the next Section" in {
 
           navigator.nextPage(TransportArrangerCheckAnswersPage, NormalMode, emptyUserAnswers) mustBe
-            routes.DraftMovementController.onPageLoad(testErn, testArc)
+            routes.TaskListController.onPageLoad(testErn, testArc)
         }
       }
 
@@ -130,7 +130,7 @@ class TransportArrangerNavigatorSpec extends SpecBase {
         "must go to the task list page when the user answers no (keep answers)" in {
 
           navigator.nextPage(TransportArrangerReviewPage, NormalMode, emptyUserAnswers.set(TransportArrangerReviewPage, KeepAnswers)) mustBe
-            routes.DraftMovementController.onPageLoad(testErn, testArc)
+            routes.TaskListController.onPageLoad(testErn, testArc)
         }
 
         "must go back to the review page when the user doesn't have an answer" in {

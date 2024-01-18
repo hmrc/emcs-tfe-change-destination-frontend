@@ -41,12 +41,12 @@ class FirstTransporterNavigator @Inject() extends BaseNavigator {
       controllers.sections.firstTransporter.routes.FirstTransporterCheckAnswersController.onPageLoad(userAnswers.ern, userAnswers.arc)
 
     case FirstTransporterCheckAnswersPage => (userAnswers: UserAnswers) =>
-      routes.DraftMovementController.onPageLoad(userAnswers.ern, userAnswers.arc)
+      routes.TaskListController.onPageLoad(userAnswers.ern, userAnswers.arc)
 
     case FirstTransporterReviewPage => (userAnswers: UserAnswers) =>
       userAnswers.get(FirstTransporterReviewPage) match {
         case Some(ChangeAnswers) => controllers.sections.firstTransporter.routes.FirstTransporterNameController.onPageLoad(userAnswers.ern, userAnswers.arc, NormalMode)
-        case Some(KeepAnswers) => routes.DraftMovementController.onPageLoad(userAnswers.ern, userAnswers.arc)
+        case Some(KeepAnswers) => routes.TaskListController.onPageLoad(userAnswers.ern, userAnswers.arc)
         case _ => controllers.sections.firstTransporter.routes.FirstTransporterReviewController.onPageLoad(userAnswers.ern, userAnswers.arc)
       }
 

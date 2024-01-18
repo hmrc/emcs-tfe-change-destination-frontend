@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-package viewmodels.helpers.draftMovement
+package viewmodels.helpers
 
 import models.UserType._
 import models.requests.DataRequest
 import models.response.{InvalidUserTypeException, MissingMandatoryPage}
-import models.sections.info.movementScenario.MovementScenario._
+import models.sections.info.movementScenario.MovementScenario.{ExportWithCustomsDeclarationLodgedInTheUk, _}
 import pages.sections.consignee.ConsigneeSection
 import pages.sections.destination.DestinationSection
 import pages.sections.exportInformation.ExportInformationSection
@@ -36,40 +36,40 @@ import viewmodels.taskList._
 
 import javax.inject.Inject
 
-class DraftMovementHelper @Inject()() extends Logging {
+class TaskListHelper @Inject()() extends Logging {
 
   // disable for "line too long" warnings
   // noinspection ScalaStyle
   def heading(implicit request: DataRequest[_], messages: Messages): String =
     (request.userTypeFromErn, request.userAnswers.get(DestinationTypePage)) match {
       case (GreatBritainWarehouseKeeper, Some(GbTaxWarehouse)) =>
-        messages("draftMovement.heading.gbTaxWarehouseTo", messages(Seq(s"draftMovement.heading.$GbTaxWarehouse", s"destinationType.$GbTaxWarehouse")))
+        messages("taskList.heading.gbTaxWarehouseTo", messages(Seq(s"taskList.heading.$GbTaxWarehouse", s"destinationType.$GbTaxWarehouse")))
 
       case (NorthernIrelandWarehouseKeeper, Some(destinationType@(GbTaxWarehouse | EuTaxWarehouse | DirectDelivery | RegisteredConsignee | TemporaryRegisteredConsignee | ExemptedOrganisation | UnknownDestination))) =>
         request.userAnswers.get(DispatchPlacePage) match {
           case Some(value) =>
-            messages("draftMovement.heading.dispatchPlaceTo", messages(s"dispatchPlace.$value"), messages(Seq(s"draftMovement.heading.$destinationType", s"destinationType.$destinationType")))
+            messages("taskList.heading.dispatchPlaceTo", messages(s"dispatchPlace.$value"), messages(Seq(s"taskList.heading.$destinationType", s"destinationType.$destinationType")))
           case None =>
             logger.error(s"[heading] Missing mandatory page $DispatchPlacePage for $NorthernIrelandWarehouseKeeper")
             throw MissingMandatoryPage(s"[heading] Missing mandatory page $DispatchPlacePage for $NorthernIrelandWarehouseKeeper")
         }
 
       case (GreatBritainRegisteredConsignor | NorthernIrelandRegisteredConsignor, Some(destinationType)) =>
-        messages("draftMovement.heading.importFor", messages(s"destinationType.$destinationType"))
+        messages("taskList.heading.importFor", messages(s"destinationType.$destinationType"))
 
       case (GreatBritainWarehouseKeeper | NorthernIrelandWarehouseKeeper, Some(destinationType@(ExportWithCustomsDeclarationLodgedInTheUk | ExportWithCustomsDeclarationLodgedInTheEu))) =>
         messages(s"destinationType.$destinationType")
 
       case (userType, destinationType) =>
         logger.error(s"[heading] invalid UserType and destinationType combination for CAM journey: $userType | $destinationType")
-        throw InvalidUserTypeException(s"[DraftMovementHelper][heading] invalid UserType and destinationType combination for CAM journey: $userType | $destinationType")
+        throw InvalidUserTypeException(s"[TaskListHelper][heading] invalid UserType and destinationType combination for CAM journey: $userType | $destinationType")
     }
 
-  private[draftMovement] def movementSection(implicit request: DataRequest[_], messages: Messages): TaskListSection = TaskListSection(
-    sectionHeading = messages("draftMovement.section.movement"),
+  private[helpers] def movementSection(implicit request: DataRequest[_], messages: Messages): TaskListSection = TaskListSection(
+    sectionHeading = messages("taskList.section.movement"),
     rows = Seq(
       TaskListSectionRow(
-        taskName = messages("draftMovement.section.movement.movementDetails"),
+        taskName = messages("taskList.section.movement.movementDetails"),
         id = "movementDetails",
         link = Some(controllers.sections.movement.routes.MovementIndexController.onPageLoad(request.ern, request.arc).url),
         section = Some(MovementSection),
@@ -79,13 +79,13 @@ class DraftMovementHelper @Inject()() extends Logging {
   )
 
   //noinspection ScalaStyle
-  private[draftMovement] def deliverySection(implicit request: DataRequest[_], messages: Messages): TaskListSection = {
+  private[helpers] def deliverySection(implicit request: DataRequest[_], messages: Messages): TaskListSection = {
     TaskListSection(
-      sectionHeading = messages("draftMovement.section.delivery"),
+      sectionHeading = messages("taskList.section.delivery"),
       rows = Seq(
         if (ConsigneeSection.canBeCompletedForTraderAndDestinationType) {
           Some(TaskListSectionRow(
-            taskName = messages("draftMovement.section.delivery.consignee"),
+            taskName = messages("taskList.section.delivery.consignee"),
             id = "consignee",
             link = Some(controllers.sections.consignee.routes.ConsigneeIndexController.onPageLoad(request.ern, request.arc).url),
             section = Some(ConsigneeSection),
@@ -96,7 +96,7 @@ class DraftMovementHelper @Inject()() extends Logging {
         },
         if (DestinationSection.canBeCompletedForTraderAndDestinationType) {
           Some(TaskListSectionRow(
-            taskName = messages("draftMovement.section.delivery.destination"),
+            taskName = messages("taskList.section.delivery.destination"),
             id = "destination",
             link = Some(controllers.sections.destination.routes.DestinationIndexController.onPageLoad(request.ern, request.arc).url),
             section = Some(DestinationSection),
@@ -107,7 +107,7 @@ class DraftMovementHelper @Inject()() extends Logging {
         },
         if (ExportInformationSection.canBeCompletedForTraderAndDestinationType) {
           Some(TaskListSectionRow(
-            taskName = messages("draftMovement.section.delivery.export"),
+            taskName = messages("taskList.section.delivery.export"),
             id = "export",
             link = Some(controllers.sections.exportInformation.routes.ExportInformationIndexController.onPageLoad(request.ern, request.arc).url),
             section = Some(ExportInformationSection),
@@ -120,48 +120,51 @@ class DraftMovementHelper @Inject()() extends Logging {
     )
   }
 
-  private[draftMovement] def guarantorSection(implicit request: DataRequest[_], messages: Messages): TaskListSection = {
-    TaskListSection(
-      sectionHeading = messages("draftMovement.section.guarantor"),
-      rows = Seq(
-        Some(TaskListSectionRow(
-          taskName = messages("draftMovement.section.guarantor.guarantor"),
-          id = "guarantor",
-          link = Some(controllers.sections.guarantor.routes.GuarantorIndexController.onPageLoad(request.ern, request.arc).url),
-          section = Some(GuarantorSection),
-          status = Some(GuarantorSection.status)
-        ))
-      ).flatten
-    )
-  }
 
-  private[draftMovement] def transportSection(implicit request: DataRequest[_], messages: Messages): TaskListSection = {
+
+  private[helpers] def guarantorSection(implicit request: DataRequest[_], messages: Messages): Option[TaskListSection] =
+    Option.when(GuarantorSection.requiresGuarantorToBeProvided) {
+      TaskListSection(
+        sectionHeading = messages("taskList.section.guarantor"),
+        rows = Seq(
+          Some(TaskListSectionRow(
+            taskName = messages("taskList.section.guarantor.guarantor"),
+            id = "guarantor",
+            link = Some(controllers.sections.guarantor.routes.GuarantorIndexController.onPageLoad(request.ern, request.arc).url),
+            section = Some(GuarantorSection),
+            status = Some(GuarantorSection.status)
+          ))
+        ).flatten
+      )
+    }
+
+  private[helpers] def transportSection(implicit request: DataRequest[_], messages: Messages): TaskListSection = {
     TaskListSection(
-      sectionHeading = messages("draftMovement.section.transport"),
+      sectionHeading = messages("taskList.section.transport"),
       rows = Seq(
         Some(TaskListSectionRow(
-          taskName = messages("draftMovement.section.transport.journeyType"),
+          taskName = messages("taskList.section.transport.journeyType"),
           id = "journeyType",
           link = Some(controllers.sections.journeyType.routes.JourneyTypeIndexController.onPageLoad(request.ern, request.arc).url),
           section = Some(JourneyTypeSection),
           status = Some(JourneyTypeSection.status)
         )),
         Some(TaskListSectionRow(
-          taskName = messages("draftMovement.section.transport.transportArranger"),
+          taskName = messages("taskList.section.transport.transportArranger"),
           id = "transportArranger",
           link = Some(controllers.sections.transportArranger.routes.TransportArrangerIndexController.onPageLoad(request.ern, request.arc).url),
           section = Some(TransportArrangerSection),
           status = Some(TransportArrangerSection.status)
         )),
         Some(TaskListSectionRow(
-          taskName = messages("draftMovement.section.transport.firstTransporter"),
+          taskName = messages("taskList.section.transport.firstTransporter"),
           id = "firstTransporter",
           link = Some(controllers.sections.firstTransporter.routes.FirstTransporterIndexController.onPageLoad(request.ern, request.arc).url),
           section = Some(FirstTransporterSection),
           status = Some(FirstTransporterSection.status)
         )),
         Some(TaskListSectionRow(
-          taskName = messages("draftMovement.section.transport.units"),
+          taskName = messages("taskList.section.transport.units"),
           id = "units",
           link = Some(controllers.sections.transportUnit.routes.TransportUnitIndexController.onPageLoad(request.ern, request.arc).url),
           section = Some(TransportUnitsSection),
@@ -172,13 +175,13 @@ class DraftMovementHelper @Inject()() extends Logging {
   }
 
   private def sectionsExceptSubmit(implicit request: DataRequest[_], messages: Messages): Seq[TaskListSection] = Seq(
-    movementSection,
-    deliverySection,
+    Some(movementSection),
+    Some(deliverySection),
     guarantorSection,
-    transportSection
-  )
+    Some(transportSection)
+  ).flatten
 
-  private[draftMovement] def submitSection(sectionsExceptSubmit: Seq[TaskListSection])
+  private[helpers] def submitSection(sectionsExceptSubmit: Seq[TaskListSection])
                                           (implicit request: DataRequest[_], messages: Messages): TaskListSection = {
 
     val rows: Seq[TaskListSectionRow] = sectionsExceptSubmit.flatMap(_.rows).filter(_.section.exists(_.canBeCompletedForTraderAndDestinationType))
@@ -186,9 +189,9 @@ class DraftMovementHelper @Inject()() extends Logging {
     val completed: Boolean = rows.nonEmpty && rows.forall(_.status.contains(Completed))
 
     TaskListSection(
-      sectionHeading = messages("draftMovement.section.submit"),
+      sectionHeading = messages("taskList.section.submit"),
       rows = Seq(TaskListSectionRow(
-        taskName = messages("draftMovement.section.submit.reviewAndSubmit"),
+        taskName = messages("taskList.section.submit.reviewAndSubmit"),
         id = "submit",
         link = if (completed) Some(controllers.routes.DeclarationController.onPageLoad(request.ern, request.arc).url) else None,
         section = None,

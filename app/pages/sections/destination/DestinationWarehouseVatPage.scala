@@ -24,5 +24,5 @@ case object DestinationWarehouseVatPage extends QuestionPage[String] {
   override val toString: String = "destinationWarehouseVat"
   override val path: JsPath = DestinationSection.path \ toString
 
-  override def getValueFromIE801(implicit request: DataRequest[_]): Option[String] = None // TODO: update
+  override def getValueFromIE801(implicit request: DataRequest[_]): Option[String] = None
 }

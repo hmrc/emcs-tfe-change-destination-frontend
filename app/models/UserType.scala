@@ -35,6 +35,18 @@ object UserType {
     override def isGreatBritainErn: Boolean = false
   }
 
+  case object NorthernIrelandCertifiedConsignor extends UserType {
+    override def isNorthernIrelandErn: Boolean = true
+
+    override def isGreatBritainErn: Boolean = false
+  }
+
+  case object NorthernIrelandTemporaryCertifiedConsignor extends UserType {
+    override def isNorthernIrelandErn: Boolean = true
+
+    override def isGreatBritainErn: Boolean = false
+  }
+
   case object GreatBritainWarehouseKeeper extends UserType {
     override def isNorthernIrelandErn: Boolean = false
 
@@ -71,6 +83,8 @@ object UserType {
     ern.take(ERN_PREFIX_LENGTH).toUpperCase match {
       case "GBRC" => GreatBritainRegisteredConsignor
       case "XIRC" => NorthernIrelandRegisteredConsignor
+      case "XIPA" => NorthernIrelandCertifiedConsignor
+      case "XIPC" => NorthernIrelandTemporaryCertifiedConsignor
       case "GBWK" => GreatBritainWarehouseKeeper
       case "XIWK" => NorthernIrelandWarehouseKeeper
       case "XI00" => NorthernIrelandWarehouse

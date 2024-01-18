@@ -23,8 +23,10 @@ import models.CheckMode
 import models.requests.DataRequest
 import models.response.emcsTfe.{GuarantorType, MovementGuaranteeModel}
 import models.sections.guarantor.GuarantorArranger.{Consignee, Consignor, GoodsOwner, Transporter}
+import models.sections.info.movementScenario.MovementScenario.ExportWithCustomsDeclarationLodgedInTheUk
 import org.scalatest.matchers.must.Matchers
 import pages.sections.guarantor.{GuarantorArrangerPage, GuarantorRequiredPage, GuarantorVatPage}
+import pages.sections.info.DestinationTypePage
 import play.api.i18n.Messages
 import play.api.test.FakeRequest
 import uk.gov.hmrc.govukfrontend.views.Aliases.Value
@@ -57,7 +59,11 @@ class GuarantorVatSummarySpec extends SpecBase with Matchers {
 
         "and there is no answer for the GuarantorRequiredPage" - {
           "then must not return a row" in {
-            implicit lazy val request: DataRequest[_] = dataRequest(FakeRequest(), emptyUserAnswers)
+            implicit lazy val request: DataRequest[_] = dataRequest(
+              FakeRequest(),
+              emptyUserAnswers
+                .set(DestinationTypePage, ExportWithCustomsDeclarationLodgedInTheUk)
+            )
 
             GuarantorVatSummary.row mustBe None
           }
@@ -65,7 +71,12 @@ class GuarantorVatSummarySpec extends SpecBase with Matchers {
 
         "and there is a GuarantorRequiredPage answer of `no`" - {
           "then must not return a row" in {
-            implicit lazy val request: DataRequest[_] = dataRequest(FakeRequest(), emptyUserAnswers.set(GuarantorRequiredPage, false))
+            implicit lazy val request: DataRequest[_] = dataRequest(
+              FakeRequest(),
+              emptyUserAnswers
+                .set(DestinationTypePage, ExportWithCustomsDeclarationLodgedInTheUk)
+                .set(GuarantorRequiredPage, false)
+            )
 
             GuarantorVatSummary.row mustBe None
           }
@@ -78,6 +89,7 @@ class GuarantorVatSummarySpec extends SpecBase with Matchers {
               implicit lazy val request: DataRequest[_] = dataRequest(
                 FakeRequest(),
                 emptyUserAnswers
+                  .set(DestinationTypePage, ExportWithCustomsDeclarationLodgedInTheUk)
                   .set(GuarantorRequiredPage, true)
                   .set(GuarantorArrangerPage, Consignee)
               )
@@ -91,6 +103,7 @@ class GuarantorVatSummarySpec extends SpecBase with Matchers {
               implicit lazy val request: DataRequest[_] = dataRequest(
                 FakeRequest(),
                 emptyUserAnswers
+                  .set(DestinationTypePage, ExportWithCustomsDeclarationLodgedInTheUk)
                   .set(GuarantorRequiredPage, true)
                   .set(GuarantorArrangerPage, Consignor)
               )
@@ -105,6 +118,7 @@ class GuarantorVatSummarySpec extends SpecBase with Matchers {
                 implicit lazy val request: DataRequest[_] = dataRequest(
                   FakeRequest(),
                   emptyUserAnswers
+                    .set(DestinationTypePage, ExportWithCustomsDeclarationLodgedInTheUk)
                     .set(GuarantorRequiredPage, true)
                     .set(GuarantorArrangerPage, GoodsOwner),
                   movementDetails = maxGetMovementResponse.copy(movementGuarantee = MovementGuaranteeModel(GuarantorType.Owner, None))
@@ -119,6 +133,7 @@ class GuarantorVatSummarySpec extends SpecBase with Matchers {
                 implicit lazy val request: DataRequest[_] = dataRequest(
                   FakeRequest(),
                   emptyUserAnswers
+                    .set(DestinationTypePage, ExportWithCustomsDeclarationLodgedInTheUk)
                     .set(GuarantorRequiredPage, true)
                     .set(GuarantorArrangerPage, GoodsOwner)
                     .set(GuarantorVatPage,"VAT123")
@@ -135,6 +150,7 @@ class GuarantorVatSummarySpec extends SpecBase with Matchers {
                 implicit lazy val request: DataRequest[_] = dataRequest(
                   FakeRequest(),
                   emptyUserAnswers
+                    .set(DestinationTypePage, ExportWithCustomsDeclarationLodgedInTheUk)
                     .set(GuarantorRequiredPage, true)
                     .set(GuarantorArrangerPage, Transporter),
                   movementDetails = maxGetMovementResponse.copy(movementGuarantee = MovementGuaranteeModel(GuarantorType.Transporter, None))
@@ -150,6 +166,7 @@ class GuarantorVatSummarySpec extends SpecBase with Matchers {
                 implicit lazy val request: DataRequest[_] = dataRequest(
                   FakeRequest(),
                   emptyUserAnswers
+                    .set(DestinationTypePage, ExportWithCustomsDeclarationLodgedInTheUk)
                     .set(GuarantorRequiredPage, true)
                     .set(GuarantorArrangerPage, Transporter)
                     .set(GuarantorVatPage, "TRAN123")

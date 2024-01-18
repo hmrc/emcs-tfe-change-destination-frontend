@@ -17,7 +17,7 @@ GET         /account/sign-out-survey                          controllers.auth.S
 GET         /trader/:ern/movement/:arc                        controllers.IndexController.onPageLoad(ern: String, arc: String)
 POST        /trader/:ern/movement/:arc                        controllers.IndexController.onSubmit(ern: String, arc: String)
 
-GET         /trader/:ern/movement/:arc/draft-movement         controllers.DraftMovementController.onPageLoad(ern: String, arc: String)
+GET         /trader/:ern/movement/:arc/draft-change         controllers.TaskListController.onPageLoad(ern: String, arc: String)
 
 GET         /trader/:ern/movement/:arc/check-answers          controllers.CheckYourAnswersController.onPageLoad(ern: String, arc: String)
 POST        /trader/:ern/movement/:arc/check-answers          controllers.CheckYourAnswersController.onSubmit(ern: String, arc: String)
@@ -28,6 +28,7 @@ GET         /trader/:ern/movement/:arc/declaration            controllers.Declar
 POST        /trader/:ern/movement/:arc/declaration            controllers.DeclarationController.onSubmit(ern: String, arc: String)
 
 ->          /                                                 info.Routes
+->          /                                                 movement.Routes
 ->          /                                                 consignee.Routes
 ->          /                                                 journeyType.Routes
 ->          /                                                 transportArranger.Routes

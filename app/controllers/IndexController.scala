@@ -57,7 +57,7 @@ class IndexController @Inject()(override val messagesApi: MessagesApi,
           Future.successful(BadRequest(view(formWithErrors, routes.IndexController.onSubmit(ern, arc)))),
         continueDraft => {
           if (continueDraft) {
-            Future(Redirect(controllers.routes.DraftMovementController.onPageLoad(ern, arc)))
+            Future(Redirect(controllers.routes.TaskListController.onPageLoad(ern, arc)))
           } else {
             reinitialiseAndRedirect
           }

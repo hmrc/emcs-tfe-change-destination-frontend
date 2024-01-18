@@ -97,22 +97,12 @@ class ConsigneeNavigatorSpec extends SpecBase {
               controllers.sections.consignee.routes.ConsigneeExciseController.onPageLoad(testErn, testArc, NormalMode)
           }
         }
+      }
 
-        "from ConsigneeExemptOrganisationPage to ConsigneeBusinessName" in {
+      "from ConsigneeExemptOrganisationPage to ConsigneeBusinessName" in {
 
-          navigator.nextPage(ConsigneeExemptOrganisationPage, NormalMode, emptyUserAnswers) mustBe
-            controllers.sections.consignee.routes.ConsigneeBusinessNameController.onPageLoad(testErn, testArc, NormalMode)
-        }
-
-        "must go to the journey recovery" - {
-
-          "when there is no answer'" in {
-            val userAnswers = emptyUserAnswers
-
-            navigator.nextPage(ConsigneeExportPage, NormalMode, userAnswers) mustBe
-              controllers.routes.JourneyRecoveryController.onPageLoad()
-          }
-        }
+        navigator.nextPage(ConsigneeExemptOrganisationPage, NormalMode, emptyUserAnswers) mustBe
+          controllers.sections.consignee.routes.ConsigneeBusinessNameController.onPageLoad(testErn, testArc, NormalMode)
       }
 
       "for the ConsigneeExportVatPage" - {
@@ -149,7 +139,7 @@ class ConsigneeNavigatorSpec extends SpecBase {
       "for the CheckAnswersConsignee page" - {
         "must go to the tasklist" in {
           navigator.nextPage(CheckAnswersConsigneePage, NormalMode, emptyUserAnswers) mustBe
-            routes.DraftMovementController.onPageLoad(testErn, testArc)
+            routes.TaskListController.onPageLoad(testErn, testArc)
         }
       }
     }

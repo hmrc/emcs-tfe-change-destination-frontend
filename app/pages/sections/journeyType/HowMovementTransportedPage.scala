@@ -25,8 +25,6 @@ case object HowMovementTransportedPage extends QuestionPage[HowMovementTransport
   override val toString: String = "howMovementTransported"
   override val path: JsPath = JourneyTypeSection.path \ toString
 
-  override def getValueFromIE801(implicit request: DataRequest[_]): Option[HowMovementTransported] = {
-    // TODO: check
+  override def getValueFromIE801(implicit request: DataRequest[_]): Option[HowMovementTransported] =
     JsString(request.movementDetails.transportMode.transportModeCode).asOpt[HowMovementTransported]
-  }
 }

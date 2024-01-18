@@ -25,5 +25,7 @@ case object GuarantorNamePage extends QuestionPage[String] {
   override val path: JsPath = GuarantorSection.path \ toString
 
   override def getValueFromIE801(implicit request: DataRequest[_]): Option[String] =
-    request.movementDetails.movementGuarantee.guarantorTrader.flatMap(_.headOption.flatMap(_.traderName)) // TODO: check headOption
+    if (GuarantorSection.requiresGuarantorToBeProvided) None else {
+      request.movementDetails.movementGuarantee.guarantorTrader.flatMap(_.headOption.flatMap(_.traderName))
+    }
 }

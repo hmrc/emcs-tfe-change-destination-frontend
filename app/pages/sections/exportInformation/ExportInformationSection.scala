@@ -28,12 +28,10 @@ case object ExportInformationSection extends Section[JsObject] with Enumerable.I
   override val path: JsPath = JsPath \ "exportInformation"
 
   override def status(implicit request: DataRequest[_]): TaskListStatus =
-    sectionHasBeenReviewed(ExportInformationReviewPage) {
-      if (request.userAnswers.get(ExportCustomsOfficePage).nonEmpty) {
-        Completed
-      } else {
-        NotStarted
-      }
+    if (request.userAnswers.get(ExportCustomsOfficePage).nonEmpty) {
+      Completed
+    } else {
+      NotStarted
     }
 
   override def canBeCompletedForTraderAndDestinationType(implicit request: DataRequest[_]): Boolean =

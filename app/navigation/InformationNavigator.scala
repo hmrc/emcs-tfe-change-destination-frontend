@@ -41,7 +41,7 @@ class InformationNavigator @Inject()() extends BaseNavigator {
           case Some(Consignee) =>
             controllers.sections.info.routes.ChangeDestinationTypeController.onPageLoad(userAnswers.ern, userAnswers.arc)
           case _ =>
-            controllers.routes.DraftMovementController.onPageLoad(request.ern, request.arc)
+            controllers.routes.TaskListController.onPageLoad(request.ern, request.arc)
         }
 
     case ChangeDestinationTypePage =>
@@ -50,16 +50,16 @@ class InformationNavigator @Inject()() extends BaseNavigator {
           if(wantsToChangeDestinationType) {
             controllers.sections.info.routes.NewDestinationTypeController.onPreDraftPageLoad(userAnswers.ern, userAnswers.arc)
           } else {
-            controllers.routes.DraftMovementController.onPageLoad(userAnswers.ern, userAnswers.arc)
+            controllers.routes.TaskListController.onPageLoad(userAnswers.ern, userAnswers.arc)
           }
         case _ => controllers.sections.info.routes.ChangeDestinationTypeController.onPageLoad(userAnswers.ern, userAnswers.arc)
       }
 
     case DestinationTypePage =>
-      (userAnswers: UserAnswers) => controllers.routes.DraftMovementController.onPageLoad(userAnswers.ern, userAnswers.arc)
+      (userAnswers: UserAnswers) => controllers.routes.TaskListController.onPageLoad(userAnswers.ern, userAnswers.arc)
 
     case DispatchDetailsPage(_) =>
-      (userAnswers: UserAnswers) => controllers.routes.DraftMovementController.onPageLoad(userAnswers.ern, userAnswers.arc)
+      (userAnswers: UserAnswers) => controllers.routes.TaskListController.onPageLoad(userAnswers.ern, userAnswers.arc)
 
     case _ =>
       (userAnswers: UserAnswers) => controllers.routes.IndexController.onPageLoad(userAnswers.ern, userAnswers.arc)
@@ -67,7 +67,7 @@ class InformationNavigator @Inject()() extends BaseNavigator {
 
   private[navigation] val checkRouteMap: Page => UserAnswers => Call = {
     case _ =>
-      (userAnswers: UserAnswers) => controllers.routes.DraftMovementController.onPageLoad(userAnswers.ern, userAnswers.arc)
+      (userAnswers: UserAnswers) => controllers.routes.TaskListController.onPageLoad(userAnswers.ern, userAnswers.arc)
   }
 
   private[navigation] val reviewRouteMap: Page => UserAnswers => Call = {

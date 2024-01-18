@@ -107,7 +107,7 @@ class DeclarationControllerSpec extends SpecBase with MockUserAnswersService wit
 //          val res = controller.onSubmit(ern, testArc)(request)
 //
 //          status(res) mustBe SEE_OTHER
-//          redirectLocation(res) mustBe Some(routes.DraftMovementController.onPageLoad(ern, testArc).url)
+//          redirectLocation(res) mustBe Some(routes.TaskListController.onPageLoad(ern, testArc).url)
 //        }
 //        "must return a InternalServerError when something else goes wrong" in new Test() {
 //          MockAppConfig.destinationOfficeSuffix.throws(new Exception("test error"))

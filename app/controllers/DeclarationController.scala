@@ -74,7 +74,7 @@ class DeclarationController @Inject()(
 //    Try(SubmitChangeDestinationModel.apply) match {
 //      case Failure(exception: MissingMandatoryPage) =>
 //        logger.warn(s"[withSubmitChangeDestinationModel] MissingMandatoryPage error thrown: ${exception.message}")
-//        Future.successful(Redirect(routes.DraftMovementController.onPageLoad(request.ern, request.arc)))
+//        Future.successful(Redirect(routes.TaskListController.onPageLoad(request.ern, request.arc)))
 //
 //      case Failure(exception) =>
 //        logger.error(s"[withSubmitChangeDestinationModel]Error thrown when creating request model to submit: ${exception.getMessage}")

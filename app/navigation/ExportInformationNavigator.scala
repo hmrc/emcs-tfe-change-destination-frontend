@@ -33,7 +33,7 @@ class ExportInformationNavigator @Inject() extends BaseNavigator {
       controllers.sections.exportInformation.routes.ExportInformationCheckAnswersController.onPageLoad(userAnswers.ern, userAnswers.arc)
 
     case ExportInformationCheckAnswersPage => (userAnswers: UserAnswers) =>
-      routes.DraftMovementController.onPageLoad(userAnswers.ern, userAnswers.arc)
+      routes.TaskListController.onPageLoad(userAnswers.ern, userAnswers.arc)
 
     case _ => (userAnswers: UserAnswers) =>
       controllers.sections.exportInformation.routes.ExportInformationCheckAnswersController.onPageLoad(userAnswers.ern, userAnswers.arc)

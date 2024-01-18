@@ -20,12 +20,14 @@ import models.UserAddress
 import models.requests.DataRequest
 import models.sections.guarantor.GuarantorArranger
 import models.sections.info.movementScenario.MovementScenario
+import models.sections.info.movementScenario.MovementScenario.UnknownDestination
 import models.sections.transportArranger.TransportArranger
 import pages.sections.consignee._
 import pages.sections.consignor._
 import pages.sections.destination._
 import pages.sections.firstTransporter._
 import pages.sections.guarantor._
+import pages.sections.info.DestinationTypePage
 import pages.sections.transportArranger._
 import play.api.libs.json.{Format, Json}
 import utils.ModelConstructorHelpers
@@ -40,9 +42,7 @@ case class TraderModel(traderExciseNumber: Option[String],
 object TraderModel extends ModelConstructorHelpers {
 
   def applyConsignee(implicit request: DataRequest[_]): Option[TraderModel] = {
-    if (ConsigneeSection.canBeCompletedForTraderAndDestinationType) {
-      val consigneeAddress: UserAddress = mandatoryPage(ConsigneeAddressPage)
-
+    if(request.userAnswers.get(DestinationTypePage).contains(UnknownDestination)) None else {
       Some(TraderModel(
         // Consignee section has multiple entry points.
         // If the ConsigneeExcisePage is defined, use that, otherwise use the VAT number entered on the ConsigneeExportVatPage.
@@ -52,12 +52,10 @@ object TraderModel extends ModelConstructorHelpers {
           case _ => None
         },
         traderName = Some(mandatoryPage(ConsigneeBusinessNamePage)),
-        address = Some(AddressModel.fromUserAddress(consigneeAddress)),
+        address = Some(AddressModel.fromUserAddress(mandatoryPage(ConsigneeAddressPage))),
         vatNumber = None,
         eoriNumber = request.userAnswers.get(ConsigneeExportVatPage).flatMap(_.eoriNumber)
       ))
-    } else {
-      None
     }
   }
 

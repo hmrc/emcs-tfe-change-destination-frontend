@@ -23,15 +23,15 @@ import pages.sections.info.DestinationTypePage
 import play.api.Play.materializer
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import views.html.DraftMovementView
+import views.html.TaskListView
 
-class DraftMovementControllerSpec extends SpecBase {
+class TaskListControllerSpec extends SpecBase {
   "onPageLoad" - {
 
     val userAnswers = emptyUserAnswers.set(DestinationTypePage, MovementScenario.GbTaxWarehouse)
-    lazy val view = app.injector.instanceOf[DraftMovementView]
+    lazy val view = app.injector.instanceOf[TaskListView]
 
-    lazy val testController = new DraftMovementController(
+    lazy val testController = new TaskListController(
       messagesApi,
       fakeAuthAction,
       fakeUserAllowListAction,
@@ -42,7 +42,7 @@ class DraftMovementControllerSpec extends SpecBase {
       view
     )
 
-    lazy val request = FakeRequest(GET, routes.DraftMovementController.onPageLoad(testErn, testArc).url)
+    lazy val request = FakeRequest(GET, routes.TaskListController.onPageLoad(testErn, testArc).url)
 
     "must render the page" in {
       lazy val result = testController.onPageLoad(testErn, testArc)(request)

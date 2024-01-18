@@ -118,7 +118,7 @@ class GuarantorNavigatorSpec extends SpecBase {
       "for GuarantorCheckAnswersPage" - {
         "must goto the tasklist page" in {
           navigator.nextPage(GuarantorCheckAnswersPage, NormalMode, emptyUserAnswers) mustBe
-            routes.DraftMovementController.onPageLoad(testErn, testArc)
+            routes.TaskListController.onPageLoad(testErn, testArc)
         }
       }
     }

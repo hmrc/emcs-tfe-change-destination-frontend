@@ -58,7 +58,7 @@ class ConsigneeNavigator @Inject() extends BaseNavigator {
       (userAnswers: UserAnswers) => controllers.sections.consignee.routes.CheckYourAnswersConsigneeController.onPageLoad(userAnswers.ern, userAnswers.arc)
 
     case CheckAnswersConsigneePage =>
-      (userAnswers: UserAnswers) => routes.DraftMovementController.onPageLoad(userAnswers.ern, userAnswers.arc)
+      (userAnswers: UserAnswers) => routes.TaskListController.onPageLoad(userAnswers.ern, userAnswers.arc)
 
     case _ =>
       (userAnswers: UserAnswers) => controllers.sections.consignee.routes.CheckYourAnswersConsigneeController.onPageLoad(userAnswers.ern, userAnswers.arc)

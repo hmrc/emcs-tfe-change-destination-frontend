@@ -21,6 +21,7 @@ import models.response.InvalidGuarantorTypeException
 import models.response.emcsTfe.GuarantorType._
 import models.response.emcsTfe.{GetMovementResponse, GuarantorType, TraderModel}
 import models.sections.guarantor.GuarantorArranger
+import models.sections.guarantor.GuarantorArranger.{NoGuarantorRequired, NoGuarantorRequiredUkToEu}
 import play.api.test.FakeRequest
 
 class GuarantorArrangerPageSpec extends SpecBase {
@@ -60,10 +61,23 @@ class GuarantorArrangerPageSpec extends SpecBase {
       }
     }
 
-    "must return None" - {
-      "when guarantor trader is NoGuarantor" in {
-        GuarantorArrangerPage.getValueFromIE801(dataRequest(FakeRequest(),
-          movementDetails = movementResponseWithGuaranteeSet(NoGuarantor))) mustBe None
+    "must return Some(NoGuarantorRequiredUkToEu)" - {
+      "when guarantor trader is NoGuarantor and destination type is UKtoEU" in {
+        GuarantorArrangerPage.getValueFromIE801(dataRequest(
+          request = FakeRequest(),
+          answers = emptyUserAnswers,
+          ern = testNorthernIrelandErn,
+          movementDetails = movementResponseWithGuaranteeSet(NoGuarantor))) mustBe Some(NoGuarantorRequiredUkToEu)
+      }
+    }
+
+    "must return Some(NoGuarantorRequired)" - {
+      "when guarantor trader is NoGuarantor and destination type is NOT UKtoEU" in {
+        GuarantorArrangerPage.getValueFromIE801(dataRequest(
+          request = FakeRequest(),
+          answers = emptyUserAnswers,
+          ern = testErn,
+          movementDetails = movementResponseWithGuaranteeSet(NoGuarantor))) mustBe Some(NoGuarantorRequired)
       }
     }
 

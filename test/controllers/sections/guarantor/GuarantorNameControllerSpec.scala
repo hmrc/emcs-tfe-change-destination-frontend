@@ -22,9 +22,11 @@ import forms.sections.guarantor.GuarantorNameFormProvider
 import mocks.services.MockUserAnswersService
 import models.response.emcsTfe.{GuarantorType, MovementGuaranteeModel}
 import models.sections.guarantor.GuarantorArranger.{Consignee, GoodsOwner}
+import models.sections.info.movementScenario.MovementScenario.ExportWithCustomsDeclarationLodgedInTheUk
 import models.{NormalMode, UserAnswers}
 import navigation.FakeNavigators.FakeGuarantorNavigator
 import pages.sections.guarantor.{GuarantorArrangerPage, GuarantorNamePage}
+import pages.sections.info.DestinationTypePage
 import play.api.data.Form
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
@@ -105,7 +107,9 @@ class GuarantorNameControllerSpec extends SpecBase with MockUserAnswersService {
       redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
     }
 
-    "must redirect to the guarantor index controller for a GET if no guarantor arranger value is found" in new Fixture() {
+    "must redirect to the guarantor index controller for a GET if no guarantor arranger value is found (and guarantor should be provided)" in new Fixture(
+      Some(emptyUserAnswers.set(DestinationTypePage, ExportWithCustomsDeclarationLodgedInTheUk))
+    ) {
       val result = testController.onPageLoad(testErn, testArc, NormalMode)(request)
 
       status(result) mustEqual SEE_OTHER

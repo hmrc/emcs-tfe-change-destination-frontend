@@ -43,7 +43,7 @@ class DestinationIndexController @Inject()(
     authorisedDataRequestWithUpToDateMovement(ern, arc) { implicit request =>
       withAnswer(DestinationTypePage) {
         implicit destinationTypePageAnswer =>
-          if (DestinationSection.isCompleted || DestinationSection.needsReview) {
+          if (DestinationSection.isCompleted) {
             Redirect(routes.DestinationCheckAnswersController.onPageLoad(ern, arc))
           } else {
             if (DestinationSection.shouldStartFlowAtDestinationWarehouseExcise) {
@@ -54,7 +54,7 @@ class DestinationIndexController @Inject()(
               Redirect(routes.DestinationBusinessNameController.onPageLoad(ern, arc, NormalMode))
             } else {
               logger.info(s"[onPageLoad] Invalid DestinationTypePage answer $destinationTypePageAnswer not allowed on Place of Destination flow")
-              Redirect(controllers.routes.DraftMovementController.onPageLoad(ern, arc))
+              Redirect(controllers.routes.TaskListController.onPageLoad(ern, arc))
             }
           }
       }

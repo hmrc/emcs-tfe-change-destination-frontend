@@ -39,10 +39,14 @@ class FirstTransporterIndexController @Inject()(
 
   def onPageLoad(ern: String, arc: String): Action[AnyContent] =
     authorisedDataRequestWithUpToDateMovement(ern, arc) { implicit request =>
-      if (FirstTransporterSection.isCompleted || FirstTransporterSection.needsReview) {
-        Redirect(controllers.sections.firstTransporter.routes.FirstTransporterReviewController.onPageLoad(ern, arc))
-      } else {
-        Redirect(controllers.sections.firstTransporter.routes.FirstTransporterNameController.onPageLoad(ern, arc, NormalMode))
-      }
+      Redirect(
+        if(FirstTransporterSection.needsReview) {
+          controllers.sections.firstTransporter.routes.FirstTransporterReviewController.onPageLoad(ern, arc)
+        } else if (FirstTransporterSection.isCompleted) {
+          controllers.sections.firstTransporter.routes.FirstTransporterCheckAnswersController.onPageLoad(ern, arc)
+        } else {
+          controllers.sections.firstTransporter.routes.FirstTransporterNameController.onPageLoad(ern, arc, NormalMode)
+        }
+      )
     }
 }

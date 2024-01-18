@@ -57,7 +57,7 @@ class GuarantorNavigator @Inject() extends BaseNavigator {
       controllers.sections.guarantor.routes.GuarantorCheckAnswersController.onPageLoad(userAnswers.ern, userAnswers.arc)
 
     case GuarantorCheckAnswersPage => (userAnswers: UserAnswers) =>
-      routes.DraftMovementController.onPageLoad(userAnswers.ern, userAnswers.arc)
+      routes.TaskListController.onPageLoad(userAnswers.ern, userAnswers.arc)
 
     case _ =>
       (userAnswers: UserAnswers) =>

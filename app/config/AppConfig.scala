@@ -71,7 +71,7 @@ class AppConfig @Inject()(servicesConfig: ServicesConfig, configuration: Configu
       configuration.get[String]("urls.emcsTfeHome")
     }
 
-  def returnToDraft(implicit request: DataRequest[_]): String = controllers.routes.DraftMovementController.onPageLoad(request.ern, request.arc).url
+  def returnToDraft(implicit request: DataRequest[_]): String = controllers.routes.TaskListController.onPageLoad(request.ern, request.arc).url
 
   private def redirectToFeedbackSurvey: Boolean = isEnabled(RedirectToFeedbackSurvey)
 

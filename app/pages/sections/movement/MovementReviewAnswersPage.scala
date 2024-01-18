@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-package pages.sections.guarantor
+package pages.sections.movement
 
 import pages.ReviewPage
 import play.api.libs.json.JsPath
 
-case object GuarantorReviewPage extends ReviewPage {
-  override val path: JsPath = GuarantorSection.path \ toString
+case object MovementReviewAnswersPage extends ReviewPage {
+  override val path: JsPath = MovementSection.path \ toString
 }

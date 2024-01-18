@@ -18,7 +18,9 @@ package pages.sections.consignee
 
 import models.UserAddress
 import models.requests.DataRequest
+import models.sections.info.ChangeType.Consignee
 import pages.QuestionPage
+import pages.sections.info.ChangeTypePage
 import play.api.libs.json.JsPath
 
 case object ConsigneeAddressPage extends QuestionPage[UserAddress] {
@@ -26,5 +28,9 @@ case object ConsigneeAddressPage extends QuestionPage[UserAddress] {
   override val path: JsPath = ConsigneeSection.path \ toString
 
   override def getValueFromIE801(implicit request: DataRequest[_]): Option[UserAddress] =
-    request.movementDetails.consigneeTrader.flatMap(_.address.map(UserAddress.userAddressFromTraderAddress))
+    request.userAnswers.get(ChangeTypePage) match {
+      case Some(Consignee) => None
+      case _ => request.movementDetails.consigneeTrader.flatMap(_.address.map(UserAddress.userAddressFromTraderAddress))
+    }
+
 }

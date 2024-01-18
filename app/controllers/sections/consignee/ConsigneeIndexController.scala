@@ -50,7 +50,7 @@ class ConsigneeIndexController @Inject()(override val messagesApi: MessagesApi,
           destinationTypePageAnswer =>
             val ur: UserRequest[_] = dataRequest.request.request
 
-            if (ConsigneeSection.isCompleted || ConsigneeSection.needsReview) {
+            if (ConsigneeSection.isCompleted) {
               Redirect(controllers.sections.consignee.routes.CheckYourAnswersConsigneeController.onPageLoad(ern, arc))
             } else {
               if (shouldStartFlowFromConsigneeExemptOrganisation(destinationTypePageAnswer)) {
@@ -62,7 +62,7 @@ class ConsigneeIndexController @Inject()(override val messagesApi: MessagesApi,
               } else {
                 logger.info(s"[onPageLoad] Combination of UserType ${ur.userTypeFromErn} and" +
                   s" DestinationTypePage answer $destinationTypePageAnswer not allowed on Consignee flow")
-                Redirect(controllers.routes.DraftMovementController.onPageLoad(ern, arc))
+                Redirect(controllers.routes.TaskListController.onPageLoad(ern, arc))
               }
             }
         }

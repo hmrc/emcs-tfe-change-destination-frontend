@@ -18,17 +18,13 @@ package pages.sections.exportInformation
 
 import base.SpecBase
 import models.requests.DataRequest
-import models.sections.ReviewAnswer.ChangeAnswers
 import play.api.test.FakeRequest
 
 class ExportInformationSectionSpec extends SpecBase {
   "isCompleted" - {
     "must return true" - {
       "when finished" in {
-        implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), emptyUserAnswers
-          .set(ExportCustomsOfficePage, "")
-          .set(ExportInformationReviewPage, ChangeAnswers)
-        )
+        implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), emptyUserAnswers.set(ExportCustomsOfficePage, ""))
         ExportInformationSection.isCompleted mustBe true
       }
     }
@@ -37,7 +33,7 @@ class ExportInformationSectionSpec extends SpecBase {
       "when not finished" in {
         implicit val dr: DataRequest[_] = dataRequest(
           FakeRequest(),
-          emptyUserAnswers.set(ExportInformationReviewPage, ChangeAnswers),
+          emptyUserAnswers,
           movementDetails = maxGetMovementResponse.copy(deliveryPlaceCustomsOfficeReferenceNumber = None)
         )
         ExportInformationSection.isCompleted mustBe false
