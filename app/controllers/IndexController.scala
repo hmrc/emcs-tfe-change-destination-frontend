@@ -16,28 +16,62 @@
 
 package controllers
 
-import controllers.actions.{AuthAction, UserAllowListAction}
+import controllers.actions._
+import forms.ContinueDraftFormProvider
 import models.UserAnswers
+import models.requests.OptionalDataRequest
+import pages.DeclarationPage
 import play.api.i18n.MessagesApi
-import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
+import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
 import services.{PreDraftService, UserAnswersService}
+import views.html.ContinueDraftView
 
 import javax.inject.Inject
+import scala.concurrent.Future
 
 class IndexController @Inject()(override val messagesApi: MessagesApi,
                                 val preDraftService: PreDraftService,
                                 val userAnswersService: UserAnswersService,
+                                val getData: DataRetrievalAction,
+                                val withMovement: MovementAction,
                                 authAction: AuthAction,
                                 userAllowed: UserAllowListAction,
-                                val controllerComponents: MessagesControllerComponents) extends BaseController {
+                                val controllerComponents: MessagesControllerComponents,
+                                formProvider: ContinueDraftFormProvider,
+                                view: ContinueDraftView) extends BaseController {
 
   def onPageLoad(ern: String, arc: String): Action[AnyContent] =
-    (authAction(ern, arc) andThen userAllowed).async {
-
-      // clear down any in flight pre draft and start again
-      preDraftService.set(UserAnswers(ern, arc)).map { _ =>
-        Redirect(controllers.sections.info.routes.InfoIndexController.onPageLoad(ern, arc))
+    (authAction(ern, arc) andThen userAllowed andThen withMovement.fromCache(arc) andThen getData).async { implicit request =>
+      request.userAnswers match {
+        case Some(ans) if ans.data.fields.nonEmpty && ans.getFromUserAnswersOnly(DeclarationPage).isEmpty =>
+          Future.successful(Ok(view(formProvider(), routes.IndexController.onSubmit(ern, arc))))
+        case _ =>
+          reinitialiseAndRedirect
       }
     }
+
+  def onSubmit(ern: String, arc: String): Action[AnyContent] =
+    (authAction(ern, arc) andThen userAllowed andThen withMovement.fromCache(arc) andThen getData).async { implicit request =>
+      formProvider().bindFromRequest().fold(
+        formWithErrors =>
+          Future.successful(BadRequest(view(formWithErrors, routes.IndexController.onSubmit(ern, arc)))),
+        continueDraft => {
+          if (continueDraft) {
+            Future(Redirect(controllers.routes.DraftMovementController.onPageLoad(ern, arc)))
+          } else {
+            reinitialiseAndRedirect
+          }
+        }
+      )
+    }
+
+  private def reinitialiseAndRedirect(implicit request: OptionalDataRequest[_]): Future[Result] = {
+    val answers = UserAnswers(request.ern, request.arc)
+    preDraftService.set(answers).flatMap { _ =>
+      userAnswersService.set(answers).map { _ =>
+        Redirect(controllers.sections.info.routes.InfoIndexController.onPageLoad(answers.ern, answers.arc))
+      }
+    }
+  }
 
 }

@@ -33,6 +33,8 @@ case class DataRequest[A](request: MovementRequest[A],
   val arc: String = request.arc
   val movementDetails: GetMovementResponse = request.movementDetails
 
+  lazy val hasMultipleErns: Boolean = request.request.hasMultipleErns
+
   lazy val userTypeFromErn: UserType = request.userTypeFromErn
 
   lazy val isNorthernIrelandErn: Boolean = userTypeFromErn.isNorthernIrelandErn

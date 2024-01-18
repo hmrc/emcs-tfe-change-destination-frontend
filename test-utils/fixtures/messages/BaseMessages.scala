@@ -40,7 +40,6 @@ trait BaseMessages { _: i18n =>
   val guarantorSection: String = s"$hiddenSectionContent Guarantor"
   val changeOfDestinationSection: String => String = arc =>s"$hiddenSectionContent Change of destination for $arc"
 
-  def lrnSubheading(lrn: String): String = s"Change destination for $lrn"
   val continue = "Continue"
   val confirmAnswers = "Confirm answers"
   val notProvided = "Not provided"
