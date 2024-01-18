@@ -46,7 +46,7 @@ class JourneyTypeCheckAnswersHelperSpec extends SpecBase with MockFactory {
             .set(HowMovementTransportedPage, AirTransport)
             .set(JourneyTimeHoursPage, hours)
         )
-        helper.summaryList()(request, msgs).rows.length mustBe 3
+        helper.summaryList(false)(request, msgs).rows.length mustBe 3
       }
     }
     "must render three rows" - {
@@ -59,7 +59,7 @@ class JourneyTypeCheckAnswersHelperSpec extends SpecBase with MockFactory {
             .set(JourneyTimeDaysPage, days),
           movementDetails = maxGetMovementResponse.copy(journeyTime = "4 days")
         )
-        helper.summaryList()(request, msgs).rows.length mustBe 3
+        helper.summaryList(false)(request, msgs).rows.length mustBe 3
       }
     }
   }

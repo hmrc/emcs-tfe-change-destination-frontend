@@ -17,7 +17,7 @@
 package mocks.viewmodels
 
 import models.requests.DataRequest
-import org.scalamock.handlers.CallHandler2
+import org.scalamock.handlers.CallHandler3
 import org.scalamock.scalatest.MockFactory
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryList
@@ -25,11 +25,11 @@ import viewmodels.helpers.CheckYourAnswersJourneyTypeHelper
 
 trait MockCheckYourAnswersJourneyTypeHelper extends MockFactory {
 
-  lazy val MockCheckYourAnswersJourneyTypeHelper: CheckYourAnswersJourneyTypeHelper = mock[CheckYourAnswersJourneyTypeHelper]
+  lazy val mockCheckYourAnswersJourneyTypeHelper: CheckYourAnswersJourneyTypeHelper = mock[CheckYourAnswersJourneyTypeHelper]
 
   object MockCheckAnswersJourneyTypeHelper {
 
-    def summaryList(): CallHandler2[DataRequest[_], Messages, SummaryList] =
-      (MockCheckYourAnswersJourneyTypeHelper.summaryList()(_: DataRequest[_], _: Messages)).expects(*, *)
+    def summaryList(): CallHandler3[Boolean, DataRequest[_], Messages, SummaryList] =
+      (mockCheckYourAnswersJourneyTypeHelper.summaryList(_: Boolean)(_: DataRequest[_], _: Messages)).expects(*, *, *)
   }
 }

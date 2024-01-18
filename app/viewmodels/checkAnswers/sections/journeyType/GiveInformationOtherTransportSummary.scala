@@ -27,14 +27,14 @@ import viewmodels.implicits._
 
 object GiveInformationOtherTransportSummary {
 
-  def row()(implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] =
+  def row(onReviewPage: Boolean)(implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] =
     request.userAnswers.get(GiveInformationOtherTransportPage).map {
       answer =>
 
         SummaryListRowViewModel(
           key = "giveInformationOtherTransport.checkYourAnswers.label",
           value = ValueViewModel(HtmlFormat.escape(answer).toString),
-          actions = Seq(
+          actions = if (!onReviewPage) {Seq(
             ActionItemViewModel(
               content = "site.change",
               href = controllers.sections.journeyType.routes.GiveInformationOtherTransportController.onPageLoad(
@@ -45,7 +45,7 @@ object GiveInformationOtherTransportSummary {
               id = GiveInformationOtherTransportPage
             )
               .withVisuallyHiddenText(messages("giveInformationOtherTransport.change.hidden"))
-          )
+          )} else Seq()
         )
     }
 }

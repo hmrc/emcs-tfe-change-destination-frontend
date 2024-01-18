@@ -49,7 +49,7 @@ class CheckYourAnswersJourneyTypeControllerSpec extends SpecBase with SummaryLis
       dataRequiredAction,
       new FakeMovementAction(maxGetMovementResponse),
       fakeUserAllowListAction,
-      MockCheckYourAnswersJourneyTypeHelper,
+      mockCheckYourAnswersJourneyTypeHelper,
       Helpers.stubMessagesControllerComponents(),
       view
     )

@@ -1435,3 +1435,9 @@ transportArrangerReview.title = Section summary - Transport arranger
 transportArrangerReview.heading = Section summary
 transportArrangerReview.legend = Do you need to change any details in this section?
 transportArrangerReview.error.required = Select yes if you need to change any of these details
+
+journeyTypeReview.title = Section summary - Journey type
+journeyTypeReview.heading = Section summary
+journeyTypeReview.legend = Do you need to change any details in this section?
+journeyTypeReview.error.required = Select yes if you need to change any of these details
+

@@ -26,20 +26,20 @@ import viewmodels.implicits._
 
 object JourneyTimeHoursSummary {
 
-  def row()(implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] = {
+  def row(onReviewPage: Boolean)(implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] = {
     val answers = request.userAnswers
     answers.get(JourneyTimeHoursPage).map {
       answer =>
         SummaryListRowViewModel(
           key = "journeyTimeHours.checkYourAnswersLabel",
           value = ValueViewModel(messages("journeyTimeHours.checkYourAnswersValue", answer.toString)),
-          actions = Seq(
+          actions = if (!onReviewPage) {Seq(
             ActionItemViewModel(
               content = "site.change",
               href = controllers.sections.journeyType.routes.JourneyTimeHoursController.onPageLoad(answers.ern, answers.arc, CheckMode).url,
               id = "journeyTimeHours"
             ).withVisuallyHiddenText(messages("journeyTimeHours.change.hidden"))
-          )
+          )} else Seq()
         )
     }
   }

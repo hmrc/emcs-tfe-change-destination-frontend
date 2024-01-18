@@ -44,30 +44,48 @@ class JourneyTimeHoursSummarySpec extends SpecBase with Matchers {
 
             implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers, movementDetails = maxGetMovementResponse.copy(journeyTime = "1 days"))
 
-            JourneyTimeHoursSummary.row() mustBe None
+            JourneyTimeHoursSummary.row(false) mustBe None
           }
         }
 
         "when there's an answer" - {
 
+            "when onReviewPage is set to false" - {
+
+              "must output the expected row" in {
+
+                implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(JourneyTimeHoursPage, 1))
+
+                JourneyTimeHoursSummary.row(false) mustBe Some(
+                  SummaryListRowViewModel(
+                    key = messagesForLanguage.cyaLabel,
+                    value = Value(Text(messagesForLanguage.cyaValue(1))),
+                    actions = Seq(
+                      ActionItemViewModel(
+                        content = messagesForLanguage.change,
+                        href = controllers.sections.journeyType.routes.JourneyTimeHoursController.onPageLoad(testErn, testArc, CheckMode).url,
+                        id = "journeyTimeHours"
+                      ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHidden)
+                    )
+                  )
+                )
+              }
+            }
+          "when onReviewPage is set to true" - {
+
             "must output the expected row" in {
 
               implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(JourneyTimeHoursPage, 1))
 
-              JourneyTimeHoursSummary.row() mustBe Some(
+              JourneyTimeHoursSummary.row(true) mustBe Some(
                 SummaryListRowViewModel(
                   key = messagesForLanguage.cyaLabel,
                   value = Value(Text(messagesForLanguage.cyaValue(1))),
-                  actions = Seq(
-                    ActionItemViewModel(
-                      content = messagesForLanguage.change,
-                      href = controllers.sections.journeyType.routes.JourneyTimeHoursController.onPageLoad(testErn, testArc, CheckMode).url,
-                      id = "journeyTimeHours"
-                    ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHidden)
-                  )
+                  actions = Seq()
                 )
               )
             }
+          }
           }
         }
       }
