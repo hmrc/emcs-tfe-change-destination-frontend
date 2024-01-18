@@ -14,22 +14,11 @@
  * limitations under the License.
  */
 
-package viewmodels.checkAnswers.sections.movement
+package pages.sections.movement
 
-import models.requests.DataRequest
-import play.api.i18n.Messages
-import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryList
-import viewmodels.govuk.summarylist._
+import pages.Page
 
-import javax.inject.Inject
+object MovementCheckAnswersPage extends Page {
+  override val toString: String = "movementCheckAnswersPage"
 
-class MovementReviewAnswersHelper @Inject()() {
-
-  def summaryList()(implicit request: DataRequest[_], messages: Messages): SummaryList =
-    SummaryListViewModel(
-      rows = Seq(
-        InvoiceDetailsReferenceSummary.row(),
-        InvoiceDetailsDateSummary.row()
-      ).flatten
-    ).withCssClass("govuk-!-margin-bottom-9")
 }

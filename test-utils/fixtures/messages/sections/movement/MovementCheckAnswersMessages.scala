@@ -18,16 +18,12 @@ package fixtures.messages.sections.movement
 
 import fixtures.messages.{BaseEnglish, BaseMessages, i18n}
 
-object MovementReviewMessages {
+object MovementCheckAnswersMessages {
 
   sealed trait ViewMessages extends BaseMessages { _: i18n =>
 
-    val heading = "Section summary"
-    val title = titleHelper(s"$heading - Movement details")
-    val invoiceReference = "Invoice reference"
-    val invoiceDate = "Invoice date of issue"
-    val legend = "Do you need to change any details in this section?"
-    val errorRequired = "Select yes if you need to change any of these details"
+    val heading = "Check your answers"
+    val title: String = titleHelper(heading)
   }
 
   object English extends ViewMessages with BaseEnglish

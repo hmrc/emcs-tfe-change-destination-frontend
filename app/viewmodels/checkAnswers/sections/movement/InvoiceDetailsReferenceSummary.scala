@@ -25,13 +25,20 @@ import viewmodels.implicits._
 
 object InvoiceDetailsReferenceSummary {
 
-  def row()(implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] =
+  def row(onReviewPage: Boolean)(implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] =
 
     request.userAnswers.get(InvoiceDetailsPage).map { answer =>
 
       SummaryListRowViewModel(
         key = messages(s"invoiceDetails.invoice-reference.checkYourAnswersLabel"),
-        value = ValueViewModel(answer.reference)
+        value = ValueViewModel(answer.reference),
+        actions = if(onReviewPage) Seq() else Seq(
+          ActionItemViewModel(
+            "site.change",
+            controllers.sections.movement.routes.InvoiceDetailsController.onPageLoad(request.ern, request.arc).url,
+            id = "changeInvoiceReference"
+          ).withVisuallyHiddenText(messages("invoiceDetails.invoice-reference.change.hidden"))
+        )
       )
     }
 }

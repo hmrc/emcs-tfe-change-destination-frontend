@@ -57,7 +57,7 @@ class MovementIndexControllerSpec extends SpecBase with MockUserAnswersService {
       val result = controller.onPageLoad(testErn, testArc)(request)
 
       status(result) mustEqual SEE_OTHER
-      redirectLocation(result).value mustEqual testOnly.controllers.routes.UnderConstructionController.onPageLoad().url
+      redirectLocation(result).value mustEqual controllers.sections.movement.routes.MovementCheckAnswersController.onPageLoad(testErn, testArc).url
     }
 
     "must redirect to Journey Recovery for a GET if no existing data is found" in new Test(None) {

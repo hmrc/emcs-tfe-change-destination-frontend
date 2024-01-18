@@ -5,3 +5,6 @@ POST        /trader/:ern/movement/:arc/movement/invoice-details                 
 
 GET         /trader/:ern/movement/:arc/movement/review-answers                       controllers.sections.movement.MovementReviewAnswersController.onPageLoad(ern: String, arc: String)
 POST        /trader/:ern/movement/:arc/movement/review-answers                       controllers.sections.movement.MovementReviewAnswersController.onSubmit(ern: String, arc: String)
+
+GET         /trader/:ern/movement/:arc/movement/check-answers                       controllers.sections.movement.MovementCheckAnswersController.onPageLoad(ern: String, arc: String)
+POST        /trader/:ern/movement/:arc/movement/check-answers                       controllers.sections.movement.MovementCheckAnswersController.onSubmit(ern: String, arc: String)

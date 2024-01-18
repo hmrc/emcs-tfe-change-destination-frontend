@@ -73,9 +73,16 @@ class MovementNavigatorSpec extends SpecBase {
       "for the InvoiceDetails page" - {
 
         "must go to the MovementReview page" in {
-          //TODO: there is a CYA page on the prototype, however there is currently no story for this? (doing as part of this story)
           navigator.nextPage(InvoiceDetailsPage, NormalMode, emptyUserAnswers) mustBe
-            controllers.sections.movement.routes.MovementReviewAnswersController.onPageLoad(testErn, testArc)
+            controllers.sections.movement.routes.MovementCheckAnswersController.onPageLoad(testErn, testArc)
+        }
+      }
+
+      "for the MovementCheckAnswers page" - {
+
+        "must go to the Task List page" in {
+          navigator.nextPage(MovementCheckAnswersPage, NormalMode, emptyUserAnswers) mustBe
+            controllers.routes.DraftMovementController.onPageLoad(testErn, testArc)
         }
       }
     }

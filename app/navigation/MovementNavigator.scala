@@ -21,7 +21,7 @@ import models._
 import models.requests.DataRequest
 import models.sections.ReviewAnswer.ChangeAnswers
 import pages._
-import pages.sections.movement.{InvoiceDetailsPage, MovementReviewPage}
+import pages.sections.movement.{InvoiceDetailsPage, MovementCheckAnswersPage, MovementReviewPage}
 import play.api.mvc.Call
 
 import javax.inject.{Inject, Singleton}
@@ -41,7 +41,10 @@ class MovementNavigator @Inject()() extends BaseNavigator {
       }
 
     case InvoiceDetailsPage =>
-      (userAnswers: UserAnswers) => controllers.sections.movement.routes.MovementReviewAnswersController.onPageLoad(userAnswers.ern, userAnswers.arc)
+      (userAnswers: UserAnswers) => controllers.sections.movement.routes.MovementCheckAnswersController.onPageLoad(userAnswers.ern, userAnswers.arc)
+
+    case MovementCheckAnswersPage =>
+      (userAnswers: UserAnswers) => controllers.routes.DraftMovementController.onPageLoad(userAnswers.ern, userAnswers.arc)
 
     case _ =>
       //TODO update with MovementIndexController

@@ -20,28 +20,32 @@ import base.SpecBase
 import models.requests.DataRequest
 import play.api.test.FakeRequest
 
-class MovementReviewAnswersHelperSpec extends SpecBase {
+class MovementCheckAnswersHelperSpec extends SpecBase {
 
   lazy val request: FakeRequest[_] = FakeRequest()
-  lazy val helper = new MovementReviewAnswersHelper()
+  lazy val helper = new MovementCheckAnswersHelper()
 
   "summaryList" - {
 
-    "return 2 rows" - {
+    Seq(true, false).foreach { onReviewPage =>
+      s"when onReviewPage = $onReviewPage" - {
 
-      "when there is an answer for InvoiceDetailsPage" in {
-        helper.summaryList()(dataRequest(request), messages(request)).rows.length mustBe 2
-      }
-    }
+        "return 2 rows" - {
 
-    "return no rows" - {
+          "when there is an answer for InvoiceDetailsPage" in {
+            helper.summaryList(onReviewPage)(dataRequest(request), messages(request)).rows.length mustBe 2
+          }
+        }
 
-      "when there is not an answer for InvoiceDetails" in {
-        implicit val dr: DataRequest[_] = dataRequest(request,
-          movementDetails = maxGetMovementResponse.copy(eadEsad = maxGetMovementResponse.eadEsad.copy(invoiceDate = None)))
-        helper.summaryList()(dr, messages(request)).rows.length mustBe 0
+        "return no rows" - {
+
+          "when there is not an answer for InvoiceDetails" in {
+            implicit val dr: DataRequest[_] = dataRequest(request,
+              movementDetails = maxGetMovementResponse.copy(eadEsad = maxGetMovementResponse.eadEsad.copy(invoiceDate = None)))
+            helper.summaryList(onReviewPage)(dr, messages(request)).rows.length mustBe 0
+          }
+        }
       }
     }
   }
-
 }

@@ -17,7 +17,7 @@
 package forms.sections.movement
 
 import base.SpecBase
-import fixtures.messages.sections.movement.MovementReviewMessages
+import fixtures.messages.sections.movement.MovementReviewAnswersMessages
 import forms.behaviours.OptionFieldBehaviours
 import models.sections.ReviewAnswer
 import play.api.data.FormError
@@ -50,7 +50,7 @@ class MovementReviewAnswersFormProviderSpec extends SpecBase with OptionFieldBeh
 
   "Error messages" - {
 
-    Seq(MovementReviewMessages.English).foreach { messagesForLang =>
+    Seq(MovementReviewAnswersMessages.English).foreach { messagesForLang =>
 
       implicit val msgs: Messages = messages(Seq(messagesForLang.lang))
 

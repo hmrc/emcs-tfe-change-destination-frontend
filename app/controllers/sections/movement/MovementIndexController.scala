@@ -37,8 +37,7 @@ class MovementIndexController @Inject()(
       if (MovementSection.needsReview) {
         Redirect(controllers.sections.movement.routes.MovementReviewAnswersController.onPageLoad(ern, arc))
       } else {
-        //TODO: Redirect to the MovementDetailsCheckAnswersController (future story)
-        Redirect(testOnly.controllers.routes.UnderConstructionController.onPageLoad())
+        Redirect(controllers.sections.movement.routes.MovementCheckAnswersController.onPageLoad(ern, arc))
       }
     }
 }

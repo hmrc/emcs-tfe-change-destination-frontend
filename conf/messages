@@ -652,13 +652,13 @@ checkYourAnswersConsignee.address = Address
 
 invoiceDetails.title = Invoice details
 invoiceDetails.heading = Invoice details
-invoiceDetails.text = If you do not have an invoice, you can use a delivery note or transport document, or skip this question and return to it later. The reference should relate to these specific goods in your records.
+invoiceDetails.text = If you do not have an invoice, you can use a delivery note or transport document. The reference should relate to these specific goods in your records.
 invoiceDetails.invoice-reference.label = Invoice reference
-invoiceDetails.invoice-reference.error.required = Enter a reference, or skip this question for now
+invoiceDetails.invoice-reference.error.required = Enter a reference for an invoice, delivery note or transport document
 invoiceDetails.invoice-reference.error.length = Reference must be 35 characters or less
 invoiceDetails.value.label = Invoice date of issue
 invoiceDetails.value.hint = For example, {0}.
-invoiceDetails.value.error.required.all = Enter the date of issue, or skip this question for now
+invoiceDetails.value.error.required.all = Enter the date of issue for an invoice, delivery note or transport document
 invoiceDetails.value.error.required.two = Date of issue must include a {0} and {1}
 invoiceDetails.value.error.required = Date of issue must include a {0}
 invoiceDetails.value.error.invalid = Date of issue must be a real date
@@ -1419,3 +1419,6 @@ movementReviewAnswers.row.invoiceReference = Invoice Reference
 movementReviewAnswers.row.invoiceDate = Invoice date of issue
 movementReviewAnswers.question = Do you need to change any details in this section?
 movementReviewAnswers.error.required = Select yes if you need to change any of these details
+
+movementCheckAnswers.title = Check your answers
+movementCheckAnswers.heading = Check your answers

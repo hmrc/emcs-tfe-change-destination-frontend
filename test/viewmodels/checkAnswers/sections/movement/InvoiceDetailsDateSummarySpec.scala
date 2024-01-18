@@ -17,6 +17,7 @@
 package viewmodels.checkAnswers.sections.movement
 
 import base.SpecBase
+import fixtures.messages.sections.movement.InvoiceDetailsMessages
 import fixtures.messages.sections.movement.InvoiceDetailsMessages.English
 import pages.sections.movement.InvoiceDetailsPage
 import play.api.i18n.Messages
@@ -33,40 +34,61 @@ class InvoiceDetailsDateSummarySpec extends SpecBase with DateTimeUtils {
 
   "InvoiceDetailsDateSummary" - {
 
-    s"when being rendered in lang code of '${English.lang.code}'" - {
+    Seq(InvoiceDetailsMessages.English).foreach { messagesForLanguage =>
 
-      implicit val msgs: Messages = messages(Seq(English.lang))
+      s"when being rendered in lang code of '${English.lang.code}'" - {
 
-      "when there's an answer" - {
+        implicit val msgs: Messages = messages(Seq(English.lang))
 
-        "must return expected output from UserAnswers" in {
+        Seq(true, false).foreach { onReviewPage =>
 
-          implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(InvoiceDetailsPage, invoiceDetailsModel))
+          s"when onReviewPage = $onReviewPage" - {
 
-          InvoiceDetailsDateSummary.row() mustBe
-            Some(
-              SummaryListRowViewModel(
-                key = English.cyaInvoiceDateLabel,
-                value = Value(Text(invoiceDetailsModel.date.formatDateForUIOutput())),
-                actions = Seq()
-              )
-            )
-        }
-      }
+            "when there's an answer" - {
 
-      "when there's no answer" - {
+              "must return expected output from UserAnswers" in {
 
-        "must return expected output from GetMovementResponse" in {
+                implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(InvoiceDetailsPage, invoiceDetailsModel))
 
-          implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers)
+                InvoiceDetailsDateSummary.row(onReviewPage) mustBe
+                  Some(
+                    SummaryListRowViewModel(
+                      key = English.cyaInvoiceDateLabel,
+                      value = Value(Text(invoiceDetailsModel.date.formatDateForUIOutput())),
+                      actions = if (onReviewPage) Seq() else Seq(
+                        ActionItemViewModel(
+                          content = messagesForLanguage.change,
+                          href = controllers.sections.movement.routes.InvoiceDetailsController.onPageLoad(testErn, testArc).url,
+                          id = "changeInvoiceDate"
+                        ).withVisuallyHiddenText(messagesForLanguage.cyaChangeInvoiceDateHidden)
+                      )
+                    )
+                  )
+              }
+            }
 
-          InvoiceDetailsDateSummary.row() mustBe Some(
-            SummaryListRowViewModel(
-              key = English.cyaInvoiceDateLabel,
-              value = Value(Text(LocalDate.parse(testDateString).formatDateForUIOutput())),
-              actions = Seq()
-            )
-          )
+            "when there's no answer" - {
+
+              "must return expected output from GetMovementResponse" in {
+
+                implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers)
+
+                InvoiceDetailsDateSummary.row(onReviewPage) mustBe Some(
+                  SummaryListRowViewModel(
+                    key = English.cyaInvoiceDateLabel,
+                    value = Value(Text(LocalDate.parse(testDateString).formatDateForUIOutput())),
+                    actions = if (onReviewPage) Seq() else Seq(
+                      ActionItemViewModel(
+                        content = messagesForLanguage.change,
+                        href = controllers.sections.movement.routes.InvoiceDetailsController.onPageLoad(testErn, testArc).url,
+                        id = "changeInvoiceDate"
+                      ).withVisuallyHiddenText(messagesForLanguage.cyaChangeInvoiceDateHidden)
+                    )
+                  )
+                )
+              }
+            }
+          }
         }
       }
     }

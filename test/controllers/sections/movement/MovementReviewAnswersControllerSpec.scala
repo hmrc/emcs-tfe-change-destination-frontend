@@ -20,7 +20,7 @@ import base.SpecBase
 import controllers.actions.{FakeDataRetrievalAction, FakeMovementAction}
 import forms.sections.movement.MovementReviewAnswersFormProvider
 import mocks.services.MockUserAnswersService
-import mocks.viewmodels.MockMovementReviewAnswersHelper
+import mocks.viewmodels.MockMovementCheckAnswersHelper
 import models.UserAnswers
 import models.sections.ReviewAnswer
 import models.sections.ReviewAnswer.KeepAnswers
@@ -37,7 +37,7 @@ import views.html.sections.movement.MovementReviewAnswersView
 
 import scala.concurrent.Future
 
-class MovementReviewAnswersControllerSpec extends SpecBase with MockUserAnswersService with MockMovementReviewAnswersHelper {
+class MovementReviewAnswersControllerSpec extends SpecBase with MockUserAnswersService with MockMovementCheckAnswersHelper {
 
   lazy val formProvider = new MovementReviewAnswersFormProvider()
   lazy val form: Form[ReviewAnswer] = formProvider()
@@ -64,7 +64,7 @@ class MovementReviewAnswersControllerSpec extends SpecBase with MockUserAnswersS
       formProvider = formProvider,
       controllerComponents = Helpers.stubMessagesControllerComponents(),
       view = view,
-      movementReviewAnswersHelper = mockMovementReviewAnswersHelper
+      helper = mockMovementReviewAnswersHelper
     )
   }
 
@@ -72,7 +72,7 @@ class MovementReviewAnswersControllerSpec extends SpecBase with MockUserAnswersS
 
     "must return OK and the correct view for a GET" in new Test(Some(emptyUserAnswers)) {
 
-      MockMovementReviewAnswersHelper.summaryList().returns(list)
+      MockMovementCheckAnswersHelper.summaryList().returns(list)
 
       val result = controller.onPageLoad(testErn, testArc)(request)
 
@@ -84,7 +84,7 @@ class MovementReviewAnswersControllerSpec extends SpecBase with MockUserAnswersS
       emptyUserAnswers.set(MovementReviewPage, KeepAnswers)
     )) {
 
-      MockMovementReviewAnswersHelper.summaryList().returns(list)
+      MockMovementCheckAnswersHelper.summaryList().returns(list)
 
       val result = controller.onPageLoad(testErn, testArc)(request)
 
@@ -108,7 +108,7 @@ class MovementReviewAnswersControllerSpec extends SpecBase with MockUserAnswersS
 
       val result = controller.onSubmit(testErn, testArc)(request.withFormUrlEncodedBody(("value", "")))
 
-      MockMovementReviewAnswersHelper.summaryList().returns(list)
+      MockMovementCheckAnswersHelper.summaryList().returns(list)
 
       status(result) mustEqual BAD_REQUEST
       contentAsString(result) mustEqual view(boundForm, list, onSubmitCall)(dataRequest(request, userAnswers.get), messages(request)).toString

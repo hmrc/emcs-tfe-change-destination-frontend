@@ -28,7 +28,7 @@ import play.api.i18n.MessagesApi
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
 import services.UserAnswersService
 import utils.DateTimeUtils
-import viewmodels.checkAnswers.sections.movement.MovementReviewAnswersHelper
+import viewmodels.checkAnswers.sections.movement.MovementCheckAnswersHelper
 import views.html.sections.movement.MovementReviewAnswersView
 
 import javax.inject.Inject
@@ -46,7 +46,7 @@ class MovementReviewAnswersController @Inject()(
                                                  formProvider: MovementReviewAnswersFormProvider,
                                                  val controllerComponents: MessagesControllerComponents,
                                                  view: MovementReviewAnswersView,
-                                                 movementReviewAnswersHelper: MovementReviewAnswersHelper
+                                                 helper: MovementCheckAnswersHelper
                                                ) extends BaseNavigationController with AuthActionHelper with DateTimeUtils {
 
   def onPageLoad(ern: String, arc: String): Action[AnyContent] =
@@ -65,7 +65,7 @@ class MovementReviewAnswersController @Inject()(
   private def renderView(status: Status, form: Form[_])(implicit request: DataRequest[_]): Future[Result] =
     Future(status(view(
       form = form,
-      list = movementReviewAnswersHelper.summaryList(),
+      list = helper.summaryList(onReviewPage = true),
       onSubmitCall = controllers.sections.movement.routes.MovementReviewAnswersController.onSubmit(request.ern, request.arc)
     )))
 }

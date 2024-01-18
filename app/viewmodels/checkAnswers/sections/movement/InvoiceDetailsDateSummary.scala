@@ -26,13 +26,19 @@ import viewmodels.implicits._
 
 object InvoiceDetailsDateSummary extends DateTimeUtils {
 
-  def row()(implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] =
+  def row(onReviewPage: Boolean)(implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] =
 
     request.userAnswers.get(InvoiceDetailsPage).map { answer =>
 
       SummaryListRowViewModel(
         key = messages(s"invoiceDetails.invoice-date.checkYourAnswersLabel"),
-        value = ValueViewModel(answer.date.formatDateForUIOutput())
-      )
+        value = ValueViewModel(answer.date.formatDateForUIOutput()),
+        actions = if(onReviewPage) Seq() else Seq(
+          ActionItemViewModel(
+            "site.change",
+            controllers.sections.movement.routes.InvoiceDetailsController.onPageLoad(request.ern, request.arc).url,
+            id = "changeInvoiceDate"
+          ).withVisuallyHiddenText(messages("invoiceDetails.invoice-date.change.hidden"))
+      ))
     }
 }

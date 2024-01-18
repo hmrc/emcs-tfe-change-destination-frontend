@@ -17,6 +17,7 @@
 package viewmodels.checkAnswers.sections.movement
 
 import base.SpecBase
+import fixtures.messages.sections.movement.InvoiceDetailsMessages
 import fixtures.messages.sections.movement.InvoiceDetailsMessages.English
 import pages.sections.movement.InvoiceDetailsPage
 import play.api.i18n.Messages
@@ -30,41 +31,62 @@ class InvoiceDetailsReferenceSummarySpec extends SpecBase {
 
   "InvoiceDetailsReferenceSummary" - {
 
-    s"when being rendered in lang code of '${English.lang.code}'" - {
+    Seq(InvoiceDetailsMessages.English).foreach { messagesForLanguage =>
 
-      implicit val msgs: Messages = messages(Seq(English.lang))
+      s"when being rendered in lang code of '${English.lang.code}'" - {
 
-      "when there's an answer" - {
+        implicit val msgs: Messages = messages(Seq(English.lang))
 
-        "must return expected output from UserAnswers" in {
+        Seq(true, false).foreach { onReviewPage =>
 
-          implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(InvoiceDetailsPage, invoiceDetailsModel))
+          s"when onReviewPage = $onReviewPage" - {
 
-          InvoiceDetailsReferenceSummary.row() mustBe
-            Some(
-              SummaryListRowViewModel(
-                key = English.cyaInvoiceReferenceLabel,
-                value = Value(Text(invoiceDetailsModel.reference)),
-                actions = Seq()
-              )
-            )
-        }
-      }
+            "when there's an answer" - {
 
-      "when there's no answer" - {
+              "must return expected output from UserAnswers" in {
 
-        "must return expected output from GetMovementResponse" in {
+                implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(InvoiceDetailsPage, invoiceDetailsModel))
 
-          implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers)
+                InvoiceDetailsReferenceSummary.row(onReviewPage) mustBe
+                  Some(
+                    SummaryListRowViewModel(
+                      key = English.cyaInvoiceReferenceLabel,
+                      value = Value(Text(invoiceDetailsModel.reference)),
+                      actions = if (onReviewPage) Seq() else Seq(
+                        ActionItemViewModel(
+                          content = messagesForLanguage.change,
+                          href = controllers.sections.movement.routes.InvoiceDetailsController.onPageLoad(testErn, testArc).url,
+                          id = "changeInvoiceReference"
+                        ).withVisuallyHiddenText(messagesForLanguage.cyaChangeInvoiceReferenceHidden)
+                      )
+                    )
+                  )
+              }
+            }
 
-          InvoiceDetailsReferenceSummary.row() mustBe
-            Some(
-              SummaryListRowViewModel(
-                key = English.cyaInvoiceReferenceLabel,
-                value = Value(Text(maxGetMovementResponse.eadEsad.invoiceNumber)),
-                actions = Seq()
-              )
-            )
+            "when there's no answer" - {
+
+              "must return expected output from GetMovementResponse" in {
+
+                implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers)
+
+                InvoiceDetailsReferenceSummary.row(onReviewPage) mustBe
+                  Some(
+                    SummaryListRowViewModel(
+                      key = English.cyaInvoiceReferenceLabel,
+                      value = Value(Text(maxGetMovementResponse.eadEsad.invoiceNumber)),
+                      actions = if (onReviewPage) Seq() else Seq(
+                        ActionItemViewModel(
+                          content = messagesForLanguage.change,
+                          href = controllers.sections.movement.routes.InvoiceDetailsController.onPageLoad(testErn, testArc).url,
+                          id = "changeInvoiceReference"
+                        ).withVisuallyHiddenText(messagesForLanguage.cyaChangeInvoiceReferenceHidden)
+                      )
+                    )
+                  )
+              }
+            }
+          }
         }
       }
     }

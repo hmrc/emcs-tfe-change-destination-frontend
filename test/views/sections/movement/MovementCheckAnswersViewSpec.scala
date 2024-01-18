@@ -17,27 +17,23 @@
 package views.sections.movement
 
 import base.SpecBase
-import fixtures.messages.sections.movement.MovementReviewAnswersMessages.English
-import forms.sections.movement.MovementReviewAnswersFormProvider
+import fixtures.messages.sections.movement.MovementCheckAnswersMessages.English
 import models.requests.DataRequest
-import models.sections.ReviewAnswer
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
-import play.api.data.Form
 import play.api.i18n.Messages
 import play.api.test.FakeRequest
 import viewmodels.govuk.SummaryListFluency
-import views.html.sections.movement.MovementReviewAnswersView
+import views.html.sections.movement.MovementCheckAnswersView
 import views.{BaseSelectors, ViewBehaviours}
 
-class MovementReviewAnswersViewSpec extends SpecBase with ViewBehaviours with SummaryListFluency {
+class MovementCheckAnswersViewSpec extends SpecBase with ViewBehaviours with SummaryListFluency {
 
   object Selectors extends BaseSelectors
 
-  lazy val view: MovementReviewAnswersView = app.injector.instanceOf[MovementReviewAnswersView]
-  lazy val form: Form[ReviewAnswer] = app.injector.instanceOf[MovementReviewAnswersFormProvider].apply()
+  lazy val view: MovementCheckAnswersView = app.injector.instanceOf[MovementCheckAnswersView]
 
-  "Movement Review Answers view" - {
+  "Movement Check Answers view" - {
 
     s"when being rendered in lang code of '${English.lang.code}'" - {
 
@@ -45,7 +41,6 @@ class MovementReviewAnswersViewSpec extends SpecBase with ViewBehaviours with Su
       implicit val request: DataRequest[_] = dataRequest(FakeRequest())
 
       implicit val doc: Document = Jsoup.parse(view(
-        form = form,
         list = SummaryListViewModel(Seq.empty),
         onSubmitCall = testOnwardRoute
       ).toString())
@@ -54,10 +49,7 @@ class MovementReviewAnswersViewSpec extends SpecBase with ViewBehaviours with Su
         Selectors.title -> English.title,
         Selectors.h1 -> English.heading,
         Selectors.subHeadingCaptionSelector -> English.movementInformationSection,
-        Selectors.legend -> English.legend,
-        Selectors.radioButton(1) -> English.yes,
-        Selectors.radioButton(2) -> English.no,
-        Selectors.button -> English.saveAndContinue
+        Selectors.button -> English.confirmAnswers
       ))
     }
   }

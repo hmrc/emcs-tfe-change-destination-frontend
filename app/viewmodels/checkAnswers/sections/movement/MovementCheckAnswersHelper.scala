@@ -14,22 +14,22 @@
  * limitations under the License.
  */
 
-package mocks.viewmodels
+package viewmodels.checkAnswers.sections.movement
 
 import models.requests.DataRequest
-import org.scalamock.handlers.CallHandler2
-import org.scalamock.scalatest.MockFactory
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryList
-import viewmodels.checkAnswers.sections.movement.MovementReviewAnswersHelper
+import viewmodels.govuk.summarylist._
 
-trait MockMovementReviewAnswersHelper extends MockFactory {
+import javax.inject.Inject
 
-  lazy val mockMovementReviewAnswersHelper: MovementReviewAnswersHelper = mock[MovementReviewAnswersHelper]
+class MovementCheckAnswersHelper @Inject()() {
 
-  object MockMovementReviewAnswersHelper {
-
-    def summaryList(): CallHandler2[DataRequest[_], Messages, SummaryList] =
-      (mockMovementReviewAnswersHelper.summaryList()(_: DataRequest[_], _: Messages)).expects(*, *)
-  }
+  def summaryList(onReviewPage: Boolean)(implicit request: DataRequest[_], messages: Messages): SummaryList =
+    SummaryListViewModel(
+      rows = Seq(
+        InvoiceDetailsReferenceSummary.row(onReviewPage),
+        InvoiceDetailsDateSummary.row(onReviewPage)
+      ).flatten
+    ).withCssClass("govuk-!-margin-bottom-9")
 }
