@@ -18,14 +18,24 @@ package fixtures.messages.sections.info
 
 import fixtures.messages.{BaseEnglish, BaseMessages, i18n}
 
-object DestinationTypeMessages {
+object NewDestinationTypeMessages {
   sealed trait ViewMessages extends BaseMessages {
     _: i18n =>
-    val headingMovement = "What is the destination type for this movement?"
+    val headingMovement = "What is the new destination type for this movement?"
     val titleMovement = titleHelper(headingMovement)
-    val headingImport = "What is the destination type for this import?"
+    val headingImport = "What is the new destination type for this import?"
     val titleImport = titleHelper(headingImport)
-    val taxWarehouseInGb = "Tax warehouse in Great Britain"
+
+    val exportWithCustomsDeclarationLodgedInTheUk = "Export with customs declaration lodged in the United Kingdom"
+    val gbTaxWarehouse = "Tax warehouse in Great Britain"
+    val directDelivery = "Direct delivery"
+    val euTaxWarehouse = "Tax warehouse in the European Union"
+    val exemptedOrganisation = "Exempted organisation"
+    val exportWithCustomsDeclarationLodgedInTheEu = "Export with customs declaration lodged in the European Union"
+    val registeredConsignee = "Registered consignee"
+    val temporaryRegisteredConsignee = "Temporary registered consignee"
+    val unknownDestination = "Unknown destination"
+
     val cyaLabel: String = "Destination type"
     val cyaChangeHidden: String = "destination type"
   }

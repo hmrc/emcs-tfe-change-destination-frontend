@@ -26,7 +26,7 @@ import utils.Logging
 
 import javax.inject.Inject
 
-class DestinationTypeFormProvider @Inject() extends Mappings with Logging {
+class NewDestinationTypeFormProvider @Inject() extends Mappings with Logging {
 
   def apply()(implicit request: DataRequest[_]): Form[MovementScenario] =
     Form(
@@ -35,8 +35,8 @@ class DestinationTypeFormProvider @Inject() extends Mappings with Logging {
           case GreatBritainWarehouseKeeper | NorthernIrelandWarehouseKeeper => "destinationType.error.required.movement"
           case GreatBritainRegisteredConsignor | NorthernIrelandRegisteredConsignor => "destinationType.error.required.import"
           case userType =>
-            logger.error(s"[title] invalid UserType for CAM journey: $userType")
-            throw InvalidUserTypeException(s"[DestinationTypeFormProvider][apply] invalid UserType for CAM journey: $userType")
+            logger.error(s"[title] invalid UserType for COD journey: $userType")
+            throw InvalidUserTypeException(s"[NewDestinationTypeFormProvider][apply] invalid UserType for COD journey: $userType")
         }
       })
     )

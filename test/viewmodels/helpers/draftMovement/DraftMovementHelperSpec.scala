@@ -22,7 +22,7 @@ import models.UserType._
 import models.requests.DataRequest
 import models.response.emcsTfe.GuarantorType.NoGuarantor
 import models.response.emcsTfe.{HeaderEadEsadModel, MovementGuaranteeModel}
-import models.response.{InvalidUserTypeException, MissingMandatoryPage}
+import models.response.InvalidUserTypeException
 import models.sections.ReviewAnswer.ChangeAnswers
 import models.sections.info.DispatchPlace
 import models.sections.info.DispatchPlace.{GreatBritain, NorthernIreland}
@@ -145,13 +145,6 @@ class DraftMovementHelperSpec extends SpecBase {
             val response = intercept[InvalidUserTypeException](helper.heading)
 
             response.message mustBe s"[DraftMovementHelper][heading] invalid UserType and destinationType combination for CAM journey: $GreatBritainWarehouseKeeper | ${Some(UnknownDestination)}"
-          }
-          "must throw an error when the ERN is XIWK and DispatchPlace is missing" in {
-            implicit val request: DataRequest[_] = dataRequest(FakeRequest(), ern = "XIWK123", answers = emptyUserAnswers.set(DestinationTypePage, GbTaxWarehouse))
-
-            val response = intercept[MissingMandatoryPage](helper.heading)
-
-            response.message mustBe s"[heading] Missing mandatory page $DispatchPlacePage for $NorthernIrelandWarehouseKeeper"
           }
         }
       }

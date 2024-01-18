@@ -33,6 +33,7 @@ import javax.inject.{Inject, Singleton}
 @Singleton
 class InformationNavigator @Inject()() extends BaseNavigator {
 
+  // noinspection ScalaStyle
   private def normalRoutes(implicit request: DataRequest[_]): Page => UserAnswers => Call = {
 
     case ChangeTypePage => (userAnswers: UserAnswers) =>
@@ -47,18 +48,15 @@ class InformationNavigator @Inject()() extends BaseNavigator {
       (userAnswers: UserAnswers) => userAnswers.get(ChangeDestinationTypePage) match {
         case Some(wantsToChangeDestinationType) =>
           if(wantsToChangeDestinationType) {
-            controllers.sections.info.routes.DestinationTypeController.onPreDraftPageLoad(userAnswers.ern, userAnswers.arc, NormalMode)
+            controllers.sections.info.routes.NewDestinationTypeController.onPreDraftPageLoad(userAnswers.ern, userAnswers.arc)
           } else {
             controllers.routes.DraftMovementController.onPageLoad(userAnswers.ern, userAnswers.arc)
           }
         case _ => controllers.sections.info.routes.ChangeDestinationTypeController.onPageLoad(userAnswers.ern, userAnswers.arc)
       }
 
-    case DispatchPlacePage =>
-      (userAnswers: UserAnswers) => controllers.sections.info.routes.DestinationTypeController.onPreDraftPageLoad(userAnswers.ern, userAnswers.arc, NormalMode)
-
     case DestinationTypePage =>
-      (userAnswers: UserAnswers) => controllers.sections.info.routes.InvoiceDetailsController.onPreDraftPageLoad(userAnswers.ern, userAnswers.arc, NormalMode)
+      (userAnswers: UserAnswers) => controllers.routes.DraftMovementController.onPageLoad(userAnswers.ern, userAnswers.arc)
 
     case InvoiceDetailsPage =>
       (userAnswers: UserAnswers) => controllers.sections.info.routes.DispatchDetailsController.onPreDraftPageLoad(userAnswers.ern, userAnswers.arc, NormalMode)

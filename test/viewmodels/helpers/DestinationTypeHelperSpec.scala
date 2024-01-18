@@ -17,7 +17,7 @@
 package viewmodels.helpers
 
 import base.SpecBase
-import fixtures.messages.sections.info.DestinationTypeMessages
+import fixtures.messages.sections.info.NewDestinationTypeMessages
 import models.UserType.{NorthernIrelandWarehouse, Unknown}
 import models.requests.DataRequest
 import models.response.InvalidUserTypeException
@@ -31,7 +31,7 @@ class DestinationTypeHelperSpec extends SpecBase {
   lazy val helper = new DestinationTypeHelper()
 
 
-  Seq(DestinationTypeMessages.English).foreach { messagesForLanguage =>
+  Seq(NewDestinationTypeMessages.English).foreach { messagesForLanguage =>
     s"when being rendered in lang code of ${messagesForLanguage.lang.code}" - {
       implicit lazy val msgs: Messages = messages(Seq(messagesForLanguage.lang))
 
@@ -72,7 +72,7 @@ class DestinationTypeHelperSpec extends SpecBase {
             val result = intercept[InvalidUserTypeException] {
               helper.title(dataRequest(FakeRequest(), ern = "beans123"), msgs)
             }
-            result.message mustBe s"[DestinationTypeHelper][title] invalid UserType for CAM journey: $Unknown"
+            result.message mustBe s"[DestinationTypeHelper][title] invalid UserType for COD journey: $Unknown"
           }
         }
         "heading" - {
@@ -80,7 +80,7 @@ class DestinationTypeHelperSpec extends SpecBase {
             val result = intercept[InvalidUserTypeException] {
               helper.heading(dataRequest(FakeRequest(), ern = "beans123"), msgs)
             }
-            result.message mustBe s"[DestinationTypeHelper][heading] invalid UserType for CAM journey: $Unknown"
+            result.message mustBe s"[DestinationTypeHelper][heading] invalid UserType for COD journey: $Unknown"
           }
         }
       }
@@ -116,7 +116,7 @@ class DestinationTypeHelperSpec extends SpecBase {
               implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), ern = "XI00123")
               helper.options(NorthernIreland)
             }
-            result.message mustBe s"[DestinationTypeHelper][options] invalid UserType for CAM journey: $NorthernIrelandWarehouse"
+            result.message mustBe s"[DestinationTypeHelper][options] invalid UserType for COD journey: $NorthernIrelandWarehouse"
           }
         }
       }
