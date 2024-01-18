@@ -19,8 +19,9 @@ package navigation
 import controllers.routes
 import models._
 import models.requests.DataRequest
+import models.sections.ReviewAnswer.ChangeAnswers
 import pages._
-import pages.sections.movement.{InvoiceDetailsPage, MovementReviewAnswersPage}
+import pages.sections.movement.{InvoiceDetailsPage, MovementReviewPage}
 import play.api.mvc.Call
 
 import javax.inject.{Inject, Singleton}
@@ -31,17 +32,16 @@ class MovementNavigator @Inject()() extends BaseNavigator {
 
   private def normalRoutes(implicit request: DataRequest[_]): Page => UserAnswers => Call = {
 
-    case MovementReviewAnswersPage => (userAnswers: UserAnswers) =>
-      userAnswers.get(MovementReviewAnswersPage) match {
-        case Some(true) =>
-          controllers.sections.movement.routes.InvoiceDetailsController.onPreDraftPageLoad(userAnswers.ern, userAnswers.arc, NormalMode)
+    case MovementReviewPage => (userAnswers: UserAnswers) =>
+      userAnswers.get(MovementReviewPage) match {
+        case Some(ChangeAnswers) =>
+          controllers.sections.movement.routes.InvoiceDetailsController.onPageLoad(userAnswers.ern, userAnswers.arc)
         case _ =>
           controllers.routes.DraftMovementController.onPageLoad(userAnswers.ern, userAnswers.arc)
       }
 
     case InvoiceDetailsPage =>
-      //TODO update when CYA page is added
-      (userAnswers: UserAnswers) => testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+      (userAnswers: UserAnswers) => controllers.sections.movement.routes.MovementReviewAnswersController.onPageLoad(userAnswers.ern, userAnswers.arc)
 
     case _ =>
       //TODO update with MovementIndexController

@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,15 +18,15 @@ package fixtures.messages.sections.movement
 
 import fixtures.messages.{BaseEnglish, BaseMessages, i18n}
 
-object MovementReviewAnswersMessages {
+object MovementReviewMessages {
 
   sealed trait ViewMessages extends BaseMessages { _: i18n =>
 
     val heading = "Section summary"
-    val title = titleHelper(heading)
+    val title = titleHelper(s"$heading - Movement details")
     val invoiceReference = "Invoice reference"
     val invoiceDate = "Invoice date of issue"
-    val question = "Do you need to change any details in this section?"
+    val legend = "Do you need to change any details in this section?"
     val errorRequired = "Select yes if you need to change any of these details"
   }
 

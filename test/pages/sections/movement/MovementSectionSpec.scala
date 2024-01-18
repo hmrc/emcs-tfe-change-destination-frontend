@@ -18,6 +18,7 @@ package pages.sections.movement
 
 import base.SpecBase
 import models.requests.DataRequest
+import models.sections.ReviewAnswer.{ChangeAnswers, KeepAnswers}
 import play.api.test.FakeRequest
 import viewmodels.taskList._
 
@@ -25,33 +26,53 @@ class MovementSectionSpec extends SpecBase {
 
   "status" - {
 
-    "when MovementReviewAnswers has been answered false" - {
+    "must be Completed" - {
 
-      implicit val dr: DataRequest[_] = dataRequest(FakeRequest(),
-        emptyUserAnswers
-          .set(MovementReviewAnswersPage, false)
-      )
+      "when MovementReviewPage is KeepAnswers" in {
 
-      MovementSection.status mustBe Completed
+        implicit val dr: DataRequest[_] = dataRequest(FakeRequest(),
+          emptyUserAnswers
+            .set(MovementReviewPage, KeepAnswers)
+        )
+
+        MovementSection.status mustBe Completed
+      }
+
+      "when MovementReviewPage is ChangeAnswers (all answers complete)" in {
+
+        implicit val dr: DataRequest[_] = dataRequest(FakeRequest(),
+          emptyUserAnswers
+            .set(MovementReviewPage, ChangeAnswers)
+        )
+
+        MovementSection.status mustBe Completed
+      }
     }
 
-    "when MovementReviewAnswers has been answered true" - {
+    "must be InProgress" - {
 
-      implicit val dr: DataRequest[_] = dataRequest(FakeRequest(),
-        emptyUserAnswers
-          .set(MovementReviewAnswersPage, true)
-      )
+      "when MovementReviewPage is ChangeAnswers (the answers are not complete)" in {
 
-      MovementSection.status mustBe InProgress
+        implicit val dr: DataRequest[_] = dataRequest(FakeRequest(),
+          emptyUserAnswers
+            .set(MovementReviewPage, ChangeAnswers),
+          movementDetails = maxGetMovementResponse.copy(eadEsad = maxGetMovementResponse.eadEsad.copy(invoiceDate = None))
+        )
+
+        MovementSection.status mustBe InProgress
+      }
     }
 
-    "when MovementReviewAnswers has NOT been answered" in {
+    "must be Review" - {
 
-      implicit val dr: DataRequest[_] = dataRequest(FakeRequest(),
-        emptyUserAnswers
-      )
+      "when MovementReviewPage has NOT been answered" in {
 
-      MovementSection.status mustBe NotStarted
+        implicit val dr: DataRequest[_] = dataRequest(FakeRequest(),
+          emptyUserAnswers
+        )
+
+        MovementSection.status mustBe Review
+      }
     }
   }
 }

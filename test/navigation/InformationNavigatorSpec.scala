@@ -24,7 +24,6 @@ import models.sections.info.ChangeType
 import models.sections.info.ChangeType.Consignee
 import pages._
 import pages.sections.info._
-import pages.sections.movement.InvoiceDetailsPage
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 
@@ -106,15 +105,6 @@ class InformationNavigatorSpec extends SpecBase {
 
           navigator.nextPage(DestinationTypePage, NormalMode, emptyUserAnswers) mustBe
             controllers.routes.DraftMovementController.onPageLoad(testErn, testArc)
-        }
-      }
-
-      "for the InvoiceDetails page" - {
-
-        "must go to the Dispatch Details page" in {
-
-          navigator.nextPage(InvoiceDetailsPage, NormalMode, emptyUserAnswers) mustBe
-            controllers.sections.info.routes.DispatchDetailsController.onPreDraftPageLoad(testErn, testArc, NormalMode)
         }
       }
 

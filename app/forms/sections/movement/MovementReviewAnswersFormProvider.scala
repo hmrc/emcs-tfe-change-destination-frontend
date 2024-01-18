@@ -17,14 +17,15 @@
 package forms.sections.movement
 
 import forms.mappings.Mappings
+import models.sections.ReviewAnswer
 import play.api.data.Form
 
 import javax.inject.Inject
 
 class MovementReviewAnswersFormProvider @Inject() extends Mappings {
 
-  def apply(): Form[Boolean] =
+  def apply(): Form[ReviewAnswer] =
     Form(
-      "value" -> boolean("movementReviewAnswers.error.required")
+      "value" -> enumerable[ReviewAnswer]("movementReviewAnswers.error.required")
     )
 }

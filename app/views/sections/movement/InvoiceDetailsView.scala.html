@@ -26,13 +26,13 @@
         govukInput: GovukInput,
         govukButton: GovukButton,
         govukDateInput: GovukDateInput,
-        continueOrSkip: components.continueOrSkip,
+        saveAndContinue: components.saveAndContinue,
         p: components.p,
         h1: components.h1,
         h2: components.h2
 )
 
-@(form: Form[_], currentDate: String, onSubmitCall: Call, skipQuestionCall: Call)(implicit request: DataRequest[_], messages: Messages)
+@(form: Form[_], currentDate: String, onSubmitCall: Call)(implicit request: DataRequest[_], messages: Messages)
 
 @layout(pageTitle = title(form, messages("invoiceDetails.title")), maybeShowActiveTrader = maybeShowActiveTrader(request)) {
 
@@ -63,12 +63,11 @@
           field  = form("value"),
           legend = LegendViewModel(Text(messages("invoiceDetails.value.label"))).withCssClass(LabelSize.Medium.toString),
           erroredFields
-        )
-        .withHint(HintViewModel(messages("invoiceDetails.value.hint", currentDate)))
+        ).withHint(HintViewModel(messages("invoiceDetails.value.hint", currentDate)))
       )
     }
 
-    @continueOrSkip(skipQuestionCall.url)
+    @saveAndContinue()
   }
 }
 

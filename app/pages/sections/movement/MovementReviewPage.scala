@@ -16,13 +16,9 @@
 
 package pages.sections.movement
 
-import models.requests.DataRequest
-import pages.QuestionPage
+import pages.ReviewPage
 import play.api.libs.json.JsPath
 
-case object MovementReviewAnswersPage extends QuestionPage[Boolean] {
-  override val toString: String = "movementReviewAnswers"
-  override val path: JsPath = JsPath \ toString
-
-  override def getValueFromIE801(implicit request: DataRequest[_]): Option[Boolean] = None
+case object MovementReviewPage extends ReviewPage {
+  override val path: JsPath = MovementSection.path \ toString
 }

@@ -22,7 +22,6 @@ import models.requests.DataRequest
 import models.sections.info.ChangeType.Consignee
 import pages._
 import pages.sections.info._
-import pages.sections.movement.InvoiceDetailsPage
 import play.api.mvc.Call
 
 import javax.inject.{Inject, Singleton}
@@ -58,9 +57,6 @@ class InformationNavigator @Inject()() extends BaseNavigator {
 
     case DestinationTypePage =>
       (userAnswers: UserAnswers) => controllers.routes.DraftMovementController.onPageLoad(userAnswers.ern, userAnswers.arc)
-
-    case InvoiceDetailsPage =>
-      (userAnswers: UserAnswers) => controllers.sections.info.routes.DispatchDetailsController.onPreDraftPageLoad(userAnswers.ern, userAnswers.arc, NormalMode)
 
     case DispatchDetailsPage(_) =>
       (userAnswers: UserAnswers) => controllers.routes.DraftMovementController.onPageLoad(userAnswers.ern, userAnswers.arc)

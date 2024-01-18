@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,6 +20,7 @@ import base.SpecBase
 import controllers.routes
 import models._
 import models.requests.DataRequest
+import models.sections.ReviewAnswer.{ChangeAnswers, KeepAnswers}
 import pages._
 import pages.sections.movement._
 import play.api.mvc.AnyContentAsEmpty
@@ -42,28 +43,28 @@ class MovementNavigatorSpec extends SpecBase {
           controllers.routes.IndexController.onPageLoad(testErn, testArc)
       }
 
-      "for the MovementReviewAnswers page" - {
+      "for the MovementReview page" - {
 
-        "when answered true" - {
+        "when answered ChangeAnswers" - {
 
           "must go to the InvoiceDetails page" in {
 
             val userAnswers = emptyUserAnswers
-              .set(MovementReviewAnswersPage, true)
+              .set(MovementReviewPage, ChangeAnswers)
 
-            navigator.nextPage(MovementReviewAnswersPage, NormalMode, userAnswers) mustBe
-              controllers.sections.movement.routes.InvoiceDetailsController.onPreDraftPageLoad(testErn, testArc, NormalMode)
+            navigator.nextPage(MovementReviewPage, NormalMode, userAnswers) mustBe
+              controllers.sections.movement.routes.InvoiceDetailsController.onPageLoad(testErn, testArc)
           }
         }
 
-        "when answered false" - {
+        "when answered KeepAnswers" - {
 
-          "must go to the InvoiceDetails page" in {
+          "must go to the Task List page" in {
 
             val userAnswers = emptyUserAnswers
-              .set(MovementReviewAnswersPage, false)
+              .set(MovementReviewPage, KeepAnswers)
 
-            navigator.nextPage(MovementReviewAnswersPage, NormalMode, userAnswers) mustBe
+            navigator.nextPage(MovementReviewPage, NormalMode, userAnswers) mustBe
               controllers.routes.DraftMovementController.onPageLoad(testErn, testArc)
           }
         }
@@ -71,10 +72,10 @@ class MovementNavigatorSpec extends SpecBase {
 
       "for the InvoiceDetails page" - {
 
-        "must go to the Under construction page" in {
-
+        "must go to the MovementReview page" in {
+          //TODO: there is a CYA page on the prototype, however there is currently no story for this? (doing as part of this story)
           navigator.nextPage(InvoiceDetailsPage, NormalMode, emptyUserAnswers) mustBe
-            testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+            controllers.sections.movement.routes.MovementReviewAnswersController.onPageLoad(testErn, testArc)
         }
       }
     }
@@ -86,7 +87,7 @@ class MovementNavigatorSpec extends SpecBase {
         "must redirect to draft Movement" in {
 
           val pages: Seq[QuestionPage[_]] = Seq(
-            MovementReviewAnswersPage,
+            MovementReviewPage,
             InvoiceDetailsPage
           )
 

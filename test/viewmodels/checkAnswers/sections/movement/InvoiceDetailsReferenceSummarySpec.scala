@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,7 +18,6 @@ package viewmodels.checkAnswers.sections.movement
 
 import base.SpecBase
 import fixtures.messages.sections.movement.InvoiceDetailsMessages.English
-import org.scalatest.matchers.must.Matchers
 import pages.sections.movement.InvoiceDetailsPage
 import play.api.i18n.Messages
 import play.api.test.FakeRequest
@@ -27,7 +26,7 @@ import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
-class InvoiceDetailsReferenceSummarySpec extends SpecBase with Matchers {
+class InvoiceDetailsReferenceSummarySpec extends SpecBase {
 
   "InvoiceDetailsReferenceSummary" - {
 

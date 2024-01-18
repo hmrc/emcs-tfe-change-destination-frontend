@@ -16,13 +16,17 @@
 
 package forms.sections.movement
 
-import forms.behaviours.BooleanFieldBehaviours
+import base.SpecBase
+import fixtures.messages.sections.movement.MovementReviewMessages
+import forms.behaviours.OptionFieldBehaviours
+import models.sections.ReviewAnswer
 import play.api.data.FormError
+import play.api.i18n.Messages
 
-class MovementReviewAnswersFormProviderSpec extends BooleanFieldBehaviours {
+class MovementReviewAnswersFormProviderSpec extends SpecBase with OptionFieldBehaviours {
 
   val requiredKey = "movementReviewAnswers.error.required"
-  val invalidKey = "error.boolean"
+  val invalidKey = "error.invalid"
 
   val form = new MovementReviewAnswersFormProvider()()
 
@@ -30,9 +34,10 @@ class MovementReviewAnswersFormProviderSpec extends BooleanFieldBehaviours {
 
     val fieldName = "value"
 
-    behave like booleanField(
+    behave like optionsField[ReviewAnswer](
       form,
       fieldName,
+      validValues = ReviewAnswer.values,
       invalidError = FormError(fieldName, invalidKey)
     )
 
@@ -41,5 +46,21 @@ class MovementReviewAnswersFormProviderSpec extends BooleanFieldBehaviours {
       fieldName,
       requiredError = FormError(fieldName, requiredKey)
     )
+  }
+
+  "Error messages" - {
+
+    Seq(MovementReviewMessages.English).foreach { messagesForLang =>
+
+      implicit val msgs: Messages = messages(Seq(messagesForLang.lang))
+
+      s"when rendering with lang code of '${messagesForLang.lang}'" - {
+
+        "have the correct mandatory wording" in {
+
+          msgs(requiredKey) mustBe messagesForLang.errorRequired
+        }
+      }
+    }
   }
 }

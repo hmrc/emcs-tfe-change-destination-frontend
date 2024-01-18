@@ -18,13 +18,10 @@ package controllers.sections.movement
 
 import controllers.BaseNavigationController
 import controllers.actions._
-import controllers.actions.predraft.{PreDraftDataRequiredAction, PreDraftDataRetrievalAction}
 import forms.sections.movement.InvoiceDetailsFormProvider
-import models.Mode
+import models.NormalMode
 import models.requests.DataRequest
-import models.sections.info.InvoiceDetailsModel
 import navigation.MovementNavigator
-import pages.QuestionPage
 import pages.sections.movement.InvoiceDetailsPage
 import play.api.data.Form
 import play.api.i18n.MessagesApi
@@ -51,41 +48,26 @@ class InvoiceDetailsController @Inject()(
                                           timeMachine: TimeMachine
                                         ) extends BaseNavigationController with AuthActionHelper with DateTimeUtils {
 
-  def onPreDraftPageLoad(ern: String, arc: String,  mode: Mode): Action[AnyContent] =
+  def onPageLoad(ern: String, arc: String): Action[AnyContent] =
     authorisedDataRequestWithUpToDateMovementAsync(ern, arc) { implicit request =>
-      renderView(
-        Ok,
-        InvoiceDetailsPage,
-        fillForm(InvoiceDetailsPage, formProvider()),
-        controllers.sections.movement.routes.InvoiceDetailsController.onPreDraftSubmit(ern, arc, mode),
-        mode
-      )
+      renderView(Ok, fillForm(InvoiceDetailsPage, formProvider()))
     }
 
-  def onPreDraftSubmit(ern: String, arc: String, mode: Mode): Action[AnyContent] =
+  def onSubmit(ern: String, arc: String): Action[AnyContent] =
     authorisedDataRequestWithUpToDateMovementAsync(ern, arc) { implicit request =>
       formProvider().bindFromRequest().fold(
-        formWithErrors =>
-          renderView(
-            BadRequest,
-            InvoiceDetailsPage,
-            formWithErrors,
-            controllers.sections.movement.routes.InvoiceDetailsController.onPreDraftSubmit(ern, arc, mode),
-            mode
-          ),
-        value =>
-          saveAndRedirect(InvoiceDetailsPage, value, mode)
+        renderView(BadRequest, _),
+        saveAndRedirect(InvoiceDetailsPage, _, NormalMode)
       )
     }
 
-  private def renderView(status: Status, page: QuestionPage[InvoiceDetailsModel], form: Form[_], onSubmitCall: Call, mode: Mode)
+  private def renderView(status: Status, form: Form[_])
                         (implicit request: DataRequest[_]): Future[Result] = {
     Future.successful(
       status(view(
         form = form,
         currentDate = timeMachine.now().toLocalDate.formatDateNumbersOnly(),
-        onSubmitCall = onSubmitCall,
-        skipQuestionCall = navigator.nextPage(page, mode, request.userAnswers)
+        onSubmitCall = controllers.sections.movement.routes.InvoiceDetailsController.onSubmit(request.ern, request.arc)
       ))
     )
   }

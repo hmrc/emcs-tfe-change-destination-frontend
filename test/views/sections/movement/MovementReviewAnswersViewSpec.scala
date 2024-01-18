@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,21 +17,25 @@
 package views.sections.movement
 
 import base.SpecBase
-import fixtures.messages.sections.movement.MovementReviewAnswersMessages.English
+import fixtures.messages.sections.movement.MovementReviewMessages.English
 import forms.sections.movement.MovementReviewAnswersFormProvider
 import models.requests.DataRequest
+import models.sections.ReviewAnswer
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
+import play.api.data.Form
 import play.api.i18n.Messages
 import play.api.test.FakeRequest
-import utils.DateTimeUtils
 import viewmodels.govuk.SummaryListFluency
 import views.html.sections.movement.MovementReviewAnswersView
 import views.{BaseSelectors, ViewBehaviours}
 
-class MovementReviewAnswersViewSpec extends SpecBase with ViewBehaviours with DateTimeUtils with SummaryListFluency {
+class MovementReviewAnswersViewSpec extends SpecBase with ViewBehaviours with SummaryListFluency {
 
   object Selectors extends BaseSelectors
+
+  lazy val view: MovementReviewAnswersView = app.injector.instanceOf[MovementReviewAnswersView]
+  lazy val form: Form[ReviewAnswer] = app.injector.instanceOf[MovementReviewAnswersFormProvider].apply()
 
   "Movement Review Answers view" - {
 
@@ -39,9 +43,6 @@ class MovementReviewAnswersViewSpec extends SpecBase with ViewBehaviours with Da
 
       implicit val msgs: Messages = messages(Seq(English.lang))
       implicit val request: DataRequest[_] = dataRequest(FakeRequest())
-
-      lazy val view = app.injector.instanceOf[MovementReviewAnswersView]
-      val form = app.injector.instanceOf[MovementReviewAnswersFormProvider].apply()
 
       implicit val doc: Document = Jsoup.parse(view(
         form = form,
@@ -52,8 +53,8 @@ class MovementReviewAnswersViewSpec extends SpecBase with ViewBehaviours with Da
       behave like pageWithExpectedElementsAndMessages(Seq(
         Selectors.title -> English.title,
         Selectors.h1 -> English.heading,
-        Selectors.h2(1) -> English.movementDetailsSection,
-        Selectors.legend -> English.question,
+        Selectors.subHeadingCaptionSelector -> English.movementInformationSection,
+        Selectors.legend -> English.legend,
         Selectors.radioButton(1) -> English.yes,
         Selectors.radioButton(2) -> English.no,
         Selectors.button -> English.saveAndContinue

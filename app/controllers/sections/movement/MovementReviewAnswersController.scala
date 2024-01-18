@@ -19,10 +19,10 @@ package controllers.sections.movement
 import controllers.BaseNavigationController
 import controllers.actions._
 import forms.sections.movement.MovementReviewAnswersFormProvider
-import models.Mode
+import models.NormalMode
 import models.requests.DataRequest
 import navigation.MovementNavigator
-import pages.sections.movement.MovementReviewAnswersPage
+import pages.sections.movement.MovementReviewPage
 import play.api.data.Form
 import play.api.i18n.MessagesApi
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
@@ -49,26 +49,23 @@ class MovementReviewAnswersController @Inject()(
                                                  movementReviewAnswersHelper: MovementReviewAnswersHelper
                                                ) extends BaseNavigationController with AuthActionHelper with DateTimeUtils {
 
-  def onPageLoad(ern: String, arc: String, mode: Mode): Action[AnyContent] =
-    authorisedDataRequestWithUpToDateMovement(ern, arc) { implicit request =>
-      renderView(Ok, fillForm(MovementReviewAnswersPage, formProvider()), mode)
+  def onPageLoad(ern: String, arc: String): Action[AnyContent] =
+    authorisedDataRequestWithUpToDateMovementAsync(ern, arc) { implicit request =>
+      renderView(Ok, fillForm(MovementReviewPage, formProvider()))
     }
 
-  def onSubmit(ern: String, arc: String, mode: Mode): Action[AnyContent] =
+  def onSubmit(ern: String, arc: String): Action[AnyContent] =
     authorisedDataRequestWithUpToDateMovementAsync(ern, arc) { implicit request =>
       formProvider().bindFromRequest().fold(
-        formWithErrors =>
-          Future(renderView(BadRequest, formWithErrors, mode)),
-        value =>
-          saveAndRedirect(MovementReviewAnswersPage, value, mode)
+        renderView(BadRequest, _),
+        saveAndRedirect(MovementReviewPage, _, NormalMode)
       )
     }
 
-  private def renderView(status: Status, form: Form[_], mode: Mode)(implicit request: DataRequest[_]): Result = {
-    status(view(
+  private def renderView(status: Status, form: Form[_])(implicit request: DataRequest[_]): Future[Result] =
+    Future(status(view(
       form = form,
       list = movementReviewAnswersHelper.summaryList(),
-      onSubmitCall = controllers.sections.movement.routes.MovementReviewAnswersController.onSubmit(request.ern, request.arc, mode)
-    ))
-  }
+      onSubmitCall = controllers.sections.movement.routes.MovementReviewAnswersController.onSubmit(request.ern, request.arc)
+    )))
 }
