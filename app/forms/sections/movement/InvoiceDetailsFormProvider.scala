@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package forms.sections.info
+package forms.sections.movement
 
 import config.AppConfig
 import forms.mappings.Mappings

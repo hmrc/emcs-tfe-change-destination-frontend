@@ -36,3 +36,5 @@ POST        /trader/:ern/movement/:arc/declaration            controllers.Declar
 ->          /                                                 exportInformation.Routes
 ->          /                                                 destination.Routes
 ->          /                                                 guarantor.Routes
+->          /                                                 movement.Routes
+

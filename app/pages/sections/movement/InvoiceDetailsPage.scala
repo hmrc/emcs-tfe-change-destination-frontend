@@ -14,11 +14,12 @@
  * limitations under the License.
  */
 
-package pages.sections.info
+package pages.sections.movement
 
 import models.requests.DataRequest
 import models.sections.info.InvoiceDetailsModel
 import pages.QuestionPage
+import pages.sections.info.InfoSection
 import play.api.libs.json.JsPath
 
 import java.time.LocalDate

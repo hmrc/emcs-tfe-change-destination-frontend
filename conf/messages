@@ -206,34 +206,6 @@ checkYourAnswers.title = Check your answers before submitting your movement
 checkYourAnswers.heading = Check your answers before submitting your movement
 checkYourAnswers.submit.button = Submit movement
 
-deferredMovement.title = Is this a deferred movement?
-deferredMovement.heading = Is this a deferred movement?
-deferredMovement.caption = Movement information
-deferredMovement.hint = A deferred movement is one that was originally made using fallback procedures due to EMCS being unavailable.
-deferredMovement.summary = Help with fallback procedures
-deferredMovement.paragraph1 = Fallback is used when goods need to be dispatched and EMCS is unavailable. When this happens the Fallback Accompanying Document (FAD) is completed and printed to travel with the goods.
-deferredMovement.paragraph2 = Any information entered on EMCS for a deferred movement must match the information on the FAD.
-deferredMovement.error.required = Select yes if this is a deferred movement
-deferredMovement.checkYourAnswersLabel = Deferred movement
-deferredMovement.change.hidden = deferred movement
-
-localReferenceNumber.deferred.title = Enter the Local Reference Number (LRN) for the deferred movement
-localReferenceNumber.deferred.heading = Enter the Local Reference Number (LRN) for the deferred movement
-localReferenceNumber.deferred.p1 = This must match the LRN on the Fallback Accompanying Document (FAD).
-localReferenceNumber.deferred.error.required = Enter the LRN
-localReferenceNumber.deferred.error.length = LRN must be 22 characters or less
-localReferenceNumber.new.title = Create a unique reference for this movement
-localReferenceNumber.new.heading = Create a unique reference for this movement
-localReferenceNumber.new.p1 = This is also known as a Local Reference Number (LRN).
-localReferenceNumber.new.p2 = Use this reference to help you identify this movement in your records. The reference you create must not have been used for a previous movement.
-localReferenceNumber.new.error.required = Enter a unique reference
-localReferenceNumber.new.error.length = Unique reference must be 22 characters or less
-localReferenceNumber.deferred.checkYourAnswersLabel = Local Reference Number (LRN)
-localReferenceNumber.deferred.change.hidden = Local Reference Number (LRN)
-localReferenceNumber.new.checkYourAnswersLabel = Unique reference (LRN)
-localReferenceNumber.new.change.hidden = Unique reference (LRN)
-
-
 address.consignorAddress.title = Enter the consignor’s address
 address.consignorAddress.heading = Enter the consignor’s address
 address.consignorAddress.subheading = Consignor information
@@ -680,13 +652,13 @@ checkYourAnswersConsignee.address = Address
 
 invoiceDetails.title = Invoice details
 invoiceDetails.heading = Invoice details
-invoiceDetails.text = If you do not have an invoice, you can use a delivery note or transport document, or skip this question and return to it later. The reference should relate to these specific goods in your records.
+invoiceDetails.text = If you do not have an invoice, you can use a delivery note or transport document. The reference should relate to these specific goods in your records.
 invoiceDetails.invoice-reference.label = Invoice reference
-invoiceDetails.invoice-reference.error.required = Enter a reference, or skip this question for now
+invoiceDetails.invoice-reference.error.required = Enter a reference for an invoice, delivery note or transport document
 invoiceDetails.invoice-reference.error.length = Reference must be 35 characters or less
 invoiceDetails.value.label = Invoice date of issue
 invoiceDetails.value.hint = For example, {0}.
-invoiceDetails.value.error.required.all = Enter the date of issue, or skip this question for now
+invoiceDetails.value.error.required.all = Enter the date of issue for an invoice, delivery note or transport document
 invoiceDetails.value.error.required.two = Date of issue must include a {0} and {1}
 invoiceDetails.value.error.required = Date of issue must include a {0}
 invoiceDetails.value.error.invalid = Date of issue must be a real date
@@ -1441,3 +1413,12 @@ journeyTypeReview.heading = Section summary
 journeyTypeReview.legend = Do you need to change any details in this section?
 journeyTypeReview.error.required = Select yes if you need to change any of these details
 
+movementReviewAnswers.title = Section summary - Movement details
+movementReviewAnswers.heading = Section summary
+movementReviewAnswers.row.invoiceReference = Invoice Reference
+movementReviewAnswers.row.invoiceDate = Invoice date of issue
+movementReviewAnswers.question = Do you need to change any details in this section?
+movementReviewAnswers.error.required = Select yes if you need to change any of these details
+
+movementCheckAnswers.title = Check your answers
+movementCheckAnswers.heading = Check your answers

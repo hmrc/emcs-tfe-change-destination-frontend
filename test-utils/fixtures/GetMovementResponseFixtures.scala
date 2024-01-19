@@ -23,6 +23,8 @@ import play.api.libs.json.{JsObject, Json}
 
 trait GetMovementResponseFixtures extends BaseFixtures {
 
+  val testDateString = "2020-01-01"
+
   lazy val maxGetMovementResponse: GetMovementResponse = GetMovementResponse(
     arc = "ExciseMovementArc",
     sequenceNumber = 1,
@@ -134,7 +136,7 @@ trait GetMovementResponseFixtures extends BaseFixtures {
     eadEsad = EadEsadModel(
       localReferenceNumber = "EadEsadLocalReferenceNumber",
       invoiceNumber = "EadEsadInvoiceNumber",
-      invoiceDate = Some("EadEsadInvoiceDate"),
+      invoiceDate = Some(testDateString),
       originTypeCode = OriginType.DutyPaid,
       dateOfDispatch = "EadEsadDateOfDispatch",
       timeOfDispatch = Some("EadEsadTimeOfDispatch"),
@@ -295,7 +297,7 @@ trait GetMovementResponseFixtures extends BaseFixtures {
     "eadEsad" -> Json.obj(
       "localReferenceNumber" -> "EadEsadLocalReferenceNumber",
       "invoiceNumber"        -> "EadEsadInvoiceNumber",
-      "invoiceDate"          -> "EadEsadInvoiceDate",
+      "invoiceDate"          -> testDateString,
       "originTypeCode"       -> "3",
       "dateOfDispatch"       -> "EadEsadDateOfDispatch",
       "timeOfDispatch"       -> "EadEsadTimeOfDispatch",

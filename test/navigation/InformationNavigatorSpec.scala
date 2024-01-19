@@ -108,15 +108,6 @@ class InformationNavigatorSpec extends SpecBase {
         }
       }
 
-      "for the InvoiceDetails page" - {
-
-        "must go to the Dispatch Details page" in {
-
-          navigator.nextPage(InvoiceDetailsPage, NormalMode, emptyUserAnswers) mustBe
-            controllers.sections.info.routes.DispatchDetailsController.onPreDraftPageLoad(testErn, testArc, NormalMode)
-        }
-      }
-
       "for the Dispatch Details page" - {
 
         "must go to the DraftMovement" in {

@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-package forms.sections.info
+package forms.sections.movement
 
 import base.SpecBase
-import fixtures.messages.sections.info.InvoiceDetailsMessages
+import fixtures.messages.sections.movement.InvoiceDetailsMessages
 import forms.behaviours.StringFieldBehaviours
 import play.api.data.FormError
 import play.api.i18n.Messages

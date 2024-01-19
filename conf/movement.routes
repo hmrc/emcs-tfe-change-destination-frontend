@@ -1,0 +1,10 @@
+GET         /trader/:ern/movement/:arc/movement-information                          controllers.sections.movement.MovementIndexController.onPageLoad(ern: String, arc: String)
+
+GET         /trader/:ern/movement/:arc/movement-information/invoice-details          controllers.sections.movement.InvoiceDetailsController.onPageLoad(ern: String, arc: String)
+POST        /trader/:ern/movement/:arc/movement-information/invoice-details          controllers.sections.movement.InvoiceDetailsController.onSubmit(ern: String, arc: String)
+
+GET         /trader/:ern/movement/:arc/movement-information/review-answers           controllers.sections.movement.MovementReviewAnswersController.onPageLoad(ern: String, arc: String)
+POST        /trader/:ern/movement/:arc/movement-information/review-answers           controllers.sections.movement.MovementReviewAnswersController.onSubmit(ern: String, arc: String)
+
+GET         /trader/:ern/movement/:arc/movement-information/check-answers            controllers.sections.movement.MovementCheckAnswersController.onPageLoad(ern: String, arc: String)
+POST        /trader/:ern/movement/:arc/movement-information/check-answers            controllers.sections.movement.MovementCheckAnswersController.onSubmit(ern: String, arc: String)

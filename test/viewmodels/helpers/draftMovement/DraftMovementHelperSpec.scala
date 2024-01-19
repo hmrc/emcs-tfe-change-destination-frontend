@@ -35,8 +35,9 @@ import pages.sections.destination.{DestinationReviewPage, DestinationSection}
 import pages.sections.exportInformation.{ExportInformationReviewPage, ExportInformationSection}
 import pages.sections.firstTransporter.{FirstTransporterReviewPage, FirstTransporterSection}
 import pages.sections.guarantor.{GuarantorReviewPage, GuarantorSection}
-import pages.sections.info.{DestinationTypePage, DispatchPlacePage, InfoSection}
+import pages.sections.info.{DestinationTypePage, DispatchPlacePage}
 import pages.sections.journeyType.{JourneyTypeReviewPage, JourneyTypeSection}
+import pages.sections.movement.{MovementReviewPage, MovementSection}
 import pages.sections.transportArranger.{TransportArrangerReviewPage, TransportArrangerSection}
 import pages.sections.transportUnit.{TransportUnitsReviewPage, TransportUnitsSection}
 import play.api.i18n.{Messages, MessagesApi}
@@ -151,15 +152,17 @@ class DraftMovementHelperSpec extends SpecBase {
 
       "movementSection" - {
         "should render the Movement details section" in {
-          implicit val request: DataRequest[_] = dataRequest(FakeRequest(), ern = testErn, answers = emptyUserAnswers)
+          implicit val request: DataRequest[_] = dataRequest(FakeRequest(), ern = testErn,
+            answers = emptyUserAnswers.set(MovementReviewPage, ChangeAnswers),
+            movementDetails = maxGetMovementResponse.copy(eadEsad = maxGetMovementResponse.eadEsad.copy(invoiceDate = None)))
           helper.movementSection mustBe TaskListSection(
             messagesForLanguage.movementSectionHeading,
             Seq(
               TaskListSectionRow(
                 messagesForLanguage.movementDetails,
                 "movementDetails",
-                Some(controllers.sections.info.routes.InfoIndexController.onPageLoad(testErn, testArc).url),
-                Some(InfoSection),
+                Some(controllers.sections.movement.routes.MovementIndexController.onPageLoad(testErn, testArc).url),
+                Some(MovementSection),
                 Some(InProgress)
               )
             )

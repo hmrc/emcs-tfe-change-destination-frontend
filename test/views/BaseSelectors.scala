@@ -29,7 +29,7 @@ trait BaseSelectors {
   val link: Int => String = i => s"main a:nth-of-type($i)"
   def bullet(i: Int, ul: Int = 1) = s"main ul.govuk-list--bullet:nth-of-type($ul) li:nth-of-type($i)"
   val hint: String = "main .govuk-hint"
-  val button = ".govuk-button"
+  val button = "main .govuk-button"
   val secondaryButton = ".govuk-button--secondary"
   val saveAndExitLink = "#save-and-exit"
   val label: String => String = forId => s"main label[for='$forId']"

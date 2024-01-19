@@ -14,19 +14,18 @@
  * limitations under the License.
  */
 
-package views.sections.info
+package views.sections.movement
 
 import base.SpecBase
-import fixtures.messages.sections.info.InvoiceDetailsMessages
-import forms.sections.info.InvoiceDetailsFormProvider
+import fixtures.messages.sections.movement.InvoiceDetailsMessages
+import forms.sections.movement.InvoiceDetailsFormProvider
 import models.requests.DataRequest
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import play.api.i18n.Messages
-import play.api.mvc.Call
 import play.api.test.FakeRequest
 import utils.DateTimeUtils
-import views.html.sections.info.InvoiceDetailsView
+import views.html.sections.movement.InvoiceDetailsView
 import views.{BaseSelectors, ViewBehaviours}
 
 import java.time.LocalDate
@@ -34,6 +33,9 @@ import java.time.LocalDate
 class InvoiceDetailsViewSpec extends SpecBase with ViewBehaviours with DateTimeUtils {
 
   object Selectors extends BaseSelectors
+
+  lazy val view = app.injector.instanceOf[InvoiceDetailsView]
+  val form = app.injector.instanceOf[InvoiceDetailsFormProvider].apply()
 
   "Invoice Details view" - {
 
@@ -44,18 +46,12 @@ class InvoiceDetailsViewSpec extends SpecBase with ViewBehaviours with DateTimeU
         implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
         implicit val request: DataRequest[_] = dataRequest(FakeRequest())
 
-        lazy val view = app.injector.instanceOf[InvoiceDetailsView]
-        val form = app.injector.instanceOf[InvoiceDetailsFormProvider].apply()
-
-        val skipRoute: Call = Call("GET", "/skip-url")
-
         val currentDate = LocalDate.of(2023, 1, 1).formatDateNumbersOnly()
 
         implicit val doc: Document = Jsoup.parse(view(
           form = form,
           currentDate = currentDate,
-          onSubmitCall = testOnwardRoute,
-          skipQuestionCall = skipRoute
+          onSubmitCall = testOnwardRoute
         ).toString())
 
         behave like pageWithExpectedElementsAndMessages(Seq(
@@ -66,14 +62,8 @@ class InvoiceDetailsViewSpec extends SpecBase with ViewBehaviours with DateTimeU
           Selectors.label("invoice-reference") -> messagesForLanguage.referenceLabel,
           Selectors.legend -> messagesForLanguage.dateLabel,
           Selectors.hint -> messagesForLanguage.dateHint(currentDate),
-          Selectors.button -> messagesForLanguage.continue,
-          Selectors.link(1) -> messagesForLanguage.skipThisQuestion
+          Selectors.button -> messagesForLanguage.saveAndContinue
         ))
-
-        "have a link to the skipQuestionCall given to the view" in {
-
-          doc.select(Selectors.link(1)).attr("href") mustBe skipRoute.url
-        }
       }
     }
   }

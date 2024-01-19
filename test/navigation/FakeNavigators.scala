@@ -72,4 +72,9 @@ object FakeNavigators {
     override def nextPage(page: Page, mode: Mode, userAnswers: UserAnswers)(implicit request: DataRequest[_]): Call =
       desiredRoute
   }
+
+  class FakeMovementNavigator(desiredRoute: Call) extends MovementNavigator {
+    override def nextPage(page: Page, mode: Mode, userAnswers: UserAnswers)(implicit request: DataRequest[_]): Call =
+      desiredRoute
+  }
 }

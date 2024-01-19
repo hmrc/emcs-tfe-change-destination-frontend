@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package fixtures.messages.sections.info
+package fixtures.messages.sections.movement
 
 import fixtures.messages.{BaseEnglish, BaseMessages, i18n}
 
@@ -24,13 +24,13 @@ object InvoiceDetailsMessages {
 
     val heading = "Invoice details"
     val title = titleHelper(heading)
-    val text = "If you do not have an invoice, you can use a delivery note or transport document, or skip this question and return to it later. The reference should relate to these specific goods in your records."
+    val text = "If you do not have an invoice, you can use a delivery note or transport document. The reference should relate to these specific goods in your records."
     val referenceLabel = "Invoice reference"
-    val referenceErrorRequired = "Enter a reference, or skip this question for now"
+    val referenceErrorRequired = "Enter a reference for an invoice, delivery note or transport document"
     val referenceErrorLength = "Reference must be 35 characters or less"
     val dateLabel = "Invoice date of issue"
     val dateHint = (date: String) => s"For example, $date."
-    val dateErrorRequiredAll = "Enter the date of issue, or skip this question for now"
+    val dateErrorRequiredAll = "Enter the date of issue for an invoice, delivery note or transport document"
     val dateErrorInvalid = "Date of issue must be a real date"
     val dateErrorRequiredTwo = (fieldOne: String, fieldTwo: String) => s"Date of issue must include a $fieldOne and $fieldTwo"
     val dateErrorRequired = (field: String) => s"Date of issue must include a $field"

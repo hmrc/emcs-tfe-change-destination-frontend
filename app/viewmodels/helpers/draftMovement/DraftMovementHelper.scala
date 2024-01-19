@@ -25,8 +25,9 @@ import pages.sections.destination.DestinationSection
 import pages.sections.exportInformation.ExportInformationSection
 import pages.sections.firstTransporter.FirstTransporterSection
 import pages.sections.guarantor.GuarantorSection
-import pages.sections.info.{DestinationTypePage, DispatchPlacePage, InfoSection}
+import pages.sections.info.{DestinationTypePage, DispatchPlacePage}
 import pages.sections.journeyType.JourneyTypeSection
+import pages.sections.movement.MovementSection
 import pages.sections.transportArranger.TransportArrangerSection
 import pages.sections.transportUnit.TransportUnitsSection
 import play.api.i18n.Messages
@@ -70,9 +71,9 @@ class DraftMovementHelper @Inject()() extends Logging {
       TaskListSectionRow(
         taskName = messages("draftMovement.section.movement.movementDetails"),
         id = "movementDetails",
-        link = Some(controllers.sections.info.routes.InfoIndexController.onPageLoad(request.ern, request.arc).url),
-        section = Some(InfoSection),
-        status = Some(InfoSection.status)
+        link = Some(controllers.sections.movement.routes.MovementIndexController.onPageLoad(request.ern, request.arc).url),
+        section = Some(MovementSection),
+        status = Some(MovementSection.status)
       )
     )
   )
