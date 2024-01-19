@@ -28,14 +28,11 @@ class ConsignorSectionSpec extends SpecBase {
         implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), emptyUserAnswers.set(ConsignorAddressPage, testUserAddress))
         ConsignorSection.isCompleted mustBe true
       }
-    }
 
-    "should return true" - {
       "when no answer for ConsignorAddressPage has been provided (retrieved from IE801)" in {
         implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), emptyUserAnswers)
         ConsignorSection.isCompleted mustBe true
       }
     }
   }
-
 }

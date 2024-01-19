@@ -38,7 +38,7 @@ import pages.sections.firstTransporter.{FirstTransporterReviewPage, FirstTranspo
 import pages.sections.guarantor.GuarantorSection
 import pages.sections.info.{ChangeTypePage, DestinationTypePage, DispatchPlacePage}
 import pages.sections.journeyType.{HowMovementTransportedPage, JourneyTypeReviewPage, JourneyTypeSection}
-import pages.sections.movement.{MovementReviewPage, MovementSection}
+import pages.sections.movement.MovementSection
 import pages.sections.transportArranger.{TransportArrangerReviewPage, TransportArrangerSection}
 import pages.sections.transportUnit.{TransportUnitsReviewPage, TransportUnitsSection}
 import play.api.i18n.{Messages, MessagesApi}
