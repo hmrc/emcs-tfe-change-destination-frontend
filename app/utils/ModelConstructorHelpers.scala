@@ -18,7 +18,8 @@ package utils
 
 import models.requests.DataRequest
 import models.response.MissingMandatoryPage
-import pages.QuestionPage
+import models.sections.ReviewAnswer.ChangeAnswers
+import pages.{QuestionPage, ReviewPage}
 import play.api.libs.json.Reads
 
 trait ModelConstructorHelpers extends Logging {
@@ -29,4 +30,7 @@ trait ModelConstructorHelpers extends Logging {
       logger.error(s"Missing mandatory UserAnswer for page: '$page'")
       throw MissingMandatoryPage(s"Missing mandatory UserAnswer for page: '$page'")
   }
+
+  def whenSectionChanged[A](reviewPage: ReviewPage)(f: => A)(implicit request: DataRequest[_]): Option[A] =
+    Option.when(request.userAnswers.get(reviewPage).contains(ChangeAnswers))(f)
 }

@@ -18,11 +18,13 @@ package models.submitChangeDestination
 
 import models.requests.DataRequest
 import models.sections.guarantor.GuarantorArranger
+import models.sections.guarantor.GuarantorArranger.{NoGuarantorRequired, NoGuarantorRequiredUkToEu}
+import models.sections.info.movementScenario.{MovementScenario, MovementType}
 import pages.sections.guarantor.{GuarantorArrangerPage, GuarantorRequiredPage}
+import pages.sections.info.DestinationTypePage
 import play.api.libs.json.{Json, OFormat}
 import utils.ModelConstructorHelpers
 
-//TODO: REFACTOR FOR ACTUAL COD SUBMISSION
 case class MovementGuaranteeModel(
                                    guarantorTypeCode: GuarantorArranger,
                                    guarantorTrader: Option[Seq[TraderModel]]
@@ -31,22 +33,22 @@ case class MovementGuaranteeModel(
 object MovementGuaranteeModel extends ModelConstructorHelpers {
 
   def apply(implicit request: DataRequest[_]): MovementGuaranteeModel = {
-    val guarantorRequired: Boolean = mandatoryPage(GuarantorRequiredPage)
+      val guarantorRequired: Boolean = mandatoryPage(GuarantorRequiredPage)
 
-    if (!guarantorRequired) {
-      MovementGuaranteeModel(
-        guarantorTypeCode = GuarantorArranger.NoGuarantorRequired, // TODO: when do we ever set it to "5"?
-        guarantorTrader = None
-      )
-    } else {
-      val guarantorArranger: GuarantorArranger = mandatoryPage(GuarantorArrangerPage)
-      MovementGuaranteeModel(
-        guarantorTypeCode = guarantorArranger,
-        guarantorTrader = Some(Seq(TraderModel.applyGuarantor(guarantorArranger)).flatten)
-      )
+      if (!guarantorRequired) {
+        val movementScenario: MovementScenario = mandatoryPage(DestinationTypePage)
+        MovementGuaranteeModel(
+          guarantorTypeCode = if (movementScenario.movementType == MovementType.UkToEu) NoGuarantorRequiredUkToEu else NoGuarantorRequired,
+          guarantorTrader = None
+        )
+      } else {
+        val guarantorArranger: GuarantorArranger = mandatoryPage(GuarantorArrangerPage)
+        MovementGuaranteeModel(
+          guarantorTypeCode = guarantorArranger,
+          guarantorTrader = Some(Seq(TraderModel.applyGuarantor(guarantorArranger)))
+        )
+      }
     }
-
-  }
 
   implicit val fmt: OFormat[MovementGuaranteeModel] = Json.format
 }

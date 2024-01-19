@@ -19,10 +19,12 @@ package controllers
 import base.SpecBase
 import controllers.actions.{DataRequiredAction, FakeDataRetrievalAction, FakeMovementAction}
 import fixtures.SubmitChangeDestinationFixtures
-import mocks.config.MockAppConfig
 import mocks.services.{MockSubmitChangeDestinationService, MockUserAnswersService}
 import models.UserAnswers
 import models.requests.DataRequest
+import models.response.SubmitChangeDestinationException
+import models.response.emcsTfe.GuarantorType.NoGuarantor
+import models.response.emcsTfe.MovementGuaranteeModel
 import navigation.FakeNavigators.FakeNavigator
 import play.api.i18n.Messages
 import play.api.mvc.AnyContentAsEmpty
@@ -33,35 +35,37 @@ import views.html.DeclarationView
 import scala.concurrent.Future
 
 
-class DeclarationControllerSpec extends SpecBase with MockUserAnswersService with MockSubmitChangeDestinationService
-  with MockAppConfig with SubmitChangeDestinationFixtures {
+class DeclarationControllerSpec extends SpecBase with MockUserAnswersService with MockSubmitChangeDestinationService with SubmitChangeDestinationFixtures {
 
   lazy val view: DeclarationView = app.injector.instanceOf[DeclarationView]
-  val ern: String = "XIRC123"
-  lazy val submitRoute = routes.DeclarationController.onSubmit(ern, testArc)
+
+  lazy val submitRoute = routes.DeclarationController.onSubmit(testGreatBritainErn, testArc)
 
 
   class Test(userAnswers: UserAnswers = baseFullUserAnswers) {
+
     implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(
       FakeRequest(),
       userAnswers,
-      ern
+      testGreatBritainErn
     )
+
     implicit lazy val messagesInstance: Messages = messages(request)
+
     val controller: DeclarationController = new DeclarationController(
       messagesApi,
       fakeAuthAction,
       fakeUserAllowListAction,
       new FakeDataRetrievalAction(Some(userAnswers), Some(testMinTraderKnownFacts)),
       app.injector.instanceOf[DataRequiredAction],
-      new FakeMovementAction(maxGetMovementResponse),
+      new FakeMovementAction(maxGetMovementResponse.copy(movementGuarantee = MovementGuaranteeModel(NoGuarantor, None))),
       Helpers.stubMessagesControllerComponents(),
       mockUserAnswersService,
       new FakeNavigator(testOnwardRoute),
       mockSubmitChangeDestinationService,
       view,
       errorHandler
-    )(mockAppConfig)
+    )
   }
 
 
@@ -69,7 +73,7 @@ class DeclarationControllerSpec extends SpecBase with MockUserAnswersService wit
     "for GET onPageLoad" - {
       "must return the declaration page" in new Test() {
 
-        val res = controller.onPageLoad(ern, testArc)(request)
+        val res = controller.onPageLoad(testGreatBritainErn, testArc)(request)
 
         status(res) mustBe OK
         contentAsString(res) mustBe view(submitRoute).toString()
@@ -79,44 +83,36 @@ class DeclarationControllerSpec extends SpecBase with MockUserAnswersService wit
     "for POST submit" - {
       "when downstream call is successful" - {
         "must save the timestamp and redirect" in new Test() {
-//TODO: Add in when submission story is worked on
-//          MockAppConfig.destinationOfficeSuffix.returns("004098")
-//          MockSubmitChangeDestinationService.submit(xircSubmitChangeDestinationModel).returns(Future.successful(submitChangeDestinationResponseEIS))
+
+          MockSubmitChangeDestinationService.submit(maxSubmitChangeDestination).returns(Future.successful(submitChangeDestinationResponseEIS))
           MockUserAnswersService.set().returns(Future.successful(emptyUserAnswers))
 
-          val res = controller.onSubmit(ern, testArc)(request)
+          val res = controller.onSubmit(testGreatBritainErn, testArc)(request)
 
           status(res) mustBe SEE_OTHER
           redirectLocation(res) must contain(testOnwardRoute.url)
         }
       }
-//TODO: Add in when submission story is worked on
-//      "when downstream call is unsuccessful" - {
-//        "must return an InternalServerError" in new Test() {
-//          MockAppConfig.destinationOfficeSuffix.returns("004098")
-//          MockSubmitChangeDestinationService.submit(xircSubmitChangeDestinationModel).returns(Future.failed(SubmitChangeDestinationException("test error")))
-//
-//          val res = controller.onSubmit(ern, testArc)(request)
-//
-//          status(res) mustBe INTERNAL_SERVER_ERROR
-//        }
-//      }
-//
-//      "when creating a request model fails" - {
-//        "must return a BadRequest when MissingMandatoryPage" in new Test(emptyUserAnswers) {
-//          val res = controller.onSubmit(ern, testArc)(request)
-//
-//          status(res) mustBe SEE_OTHER
-//          redirectLocation(res) mustBe Some(routes.TaskListController.onPageLoad(ern, testArc).url)
-//        }
-//        "must return a InternalServerError when something else goes wrong" in new Test() {
-//          MockAppConfig.destinationOfficeSuffix.throws(new Exception("test error"))
-//
-//          val res = controller.onSubmit(ern, testArc)(request)
-//
-//          status(res) mustBe INTERNAL_SERVER_ERROR
-//        }
-//      }
+
+      "when downstream call is unsuccessful" - {
+        "must return an InternalServerError" in new Test() {
+
+          MockSubmitChangeDestinationService.submit(maxSubmitChangeDestination).returns(Future.failed(SubmitChangeDestinationException("test error")))
+
+          val res = controller.onSubmit(testGreatBritainErn, testArc)(request)
+
+          status(res) mustBe INTERNAL_SERVER_ERROR
+        }
+      }
+
+      "when creating a request model fails" - {
+        "must return a BadRequest when MissingMandatoryPage" in new Test(emptyUserAnswers) {
+          val res = controller.onSubmit(testGreatBritainErn, testArc)(request)
+
+          status(res) mustBe SEE_OTHER
+          redirectLocation(res) mustBe Some(routes.TaskListController.onPageLoad(testGreatBritainErn, testArc).url)
+        }
+      }
     }
   }
 }

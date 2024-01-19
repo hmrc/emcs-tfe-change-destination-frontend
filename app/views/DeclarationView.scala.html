@@ -22,7 +22,8 @@
         p: components.p,
         h1: components.h1,
         h2: components.h2,
-        govukButton: GovukButton
+        govukButton: GovukButton,
+        bullets: components.bullets
         )
 
 @(submitAction: Call)(implicit request: DataRequest[_], messages: Messages)
@@ -32,11 +33,17 @@
 
     @formHelper(submitAction) {
 
-        @h1("declaration.heading", Some(messages("taskList.subHeading")), "govuk-heading-l", hiddenContent = Some(messages("subHeading.hidden")))
+        @h2(messages("arc.subHeading", request.arc), "govuk-caption-l", hiddenContent = Some(messages("subHeading.hidden")))
+
+        @h1("declaration.heading", classes = "govuk-heading-l")
 
         @p() {
             @messages("declaration.content")
         }
+        @bullets(Seq(
+            Html(messages("declaration.bullet1")),
+            Html(messages("declaration.bullet2"))
+        ))
 
         @govukButton(Button(
             content = Text(messages("declaration.submit"))

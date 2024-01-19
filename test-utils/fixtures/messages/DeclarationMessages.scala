@@ -22,7 +22,10 @@ object DeclarationMessages {
     _: i18n =>
     val heading = "Declaration"
     val title: String = titleHelper(heading)
-    val content = "By submitting this draft movement you are confirming that to the best of your knowledge, the details you are providing are correct."
+    val content = "By submitting this change of destination you are confirming that:"
+    val bullet1 = "to the best of your knowledge, the details you are providing are correct"
+    val bullet2 = "you understand this change of destination cannot be recalled or changed after submission"
+    val submit = "Submit change of destination"
   }
 
   object English extends ViewMessages with BaseEnglish

@@ -122,7 +122,7 @@ class TraderModelSpec extends SpecBase {
                 .set(ConsigneeAddressPage, testUserAddress.copy(street = "consignee street"))
             )
 
-            TraderModel.applyConsignee mustBe Some(consigneeTraderWithErn)
+            TraderModel.applyConsignee mustBe consigneeTraderWithErn
         }
       }
       "when an VAT number is provided" in {
@@ -137,7 +137,7 @@ class TraderModelSpec extends SpecBase {
               movementDetails = maxGetMovementResponse.copy(consigneeTrader = None)
             )
 
-            TraderModel.applyConsignee mustBe Some(consigneeTraderWithVatNo)
+            TraderModel.applyConsignee mustBe consigneeTraderWithVatNo
         }
       }
       "when neither ERN nor VAT number is provided" in {
@@ -151,21 +151,8 @@ class TraderModelSpec extends SpecBase {
               movementDetails = maxGetMovementResponse.copy(consigneeTrader = None)
             )
 
-            TraderModel.applyConsignee mustBe Some(consigneeTraderWithNeitherErnNorVatNo)
+            TraderModel.applyConsignee mustBe consigneeTraderWithNeitherErnNorVatNo
         }
-      }
-    }
-    "must return None" - {
-      "when DestinationType is UnknownDestination" in {
-        implicit val dr: DataRequest[_] = dataRequest(fakeRequest,
-          emptyUserAnswers
-            .set(DestinationTypePage, UnknownDestination)
-            .set(ConsigneeExcisePage, "consignee ern")
-            .set(ConsigneeExportVatPage, ConsigneeExportVat(ConsigneeExportVatType.YesEoriNumber, Some("vat no"), Some("consignee eori")))
-            .set(ConsigneeAddressPage, testUserAddress.copy(street = "consignee street"))
-        )
-
-        TraderModel.applyConsignee mustBe None
       }
     }
   }
@@ -302,7 +289,7 @@ class TraderModelSpec extends SpecBase {
             .set(ConsignorAddressPage, testUserAddress.copy(street = "consignor street"))
         )
 
-        TraderModel.applyTransportArranger mustBe None
+        TraderModel.applyTransportArranger mustBe consignorTrader
       }
       "when Transport Arranger is Consignee" in {
         implicit val dr: DataRequest[_] = dataRequest(
@@ -316,7 +303,7 @@ class TraderModelSpec extends SpecBase {
             .set(ConsigneeAddressPage, testUserAddress.copy(street = "consignee street"))
         )
 
-        TraderModel.applyTransportArranger mustBe None
+        TraderModel.applyTransportArranger mustBe consigneeTraderWithErn
       }
       Seq(TransportArranger.GoodsOwner, TransportArranger.Other).foreach(
         transportArranger =>
@@ -330,7 +317,7 @@ class TraderModelSpec extends SpecBase {
                 .set(TransportArrangerVatPage, "arranger vat")
             )
 
-            TraderModel.applyTransportArranger mustBe Some(transportArrangerTrader)
+            TraderModel.applyTransportArranger mustBe transportArrangerTrader
           }
       )
     }
@@ -346,7 +333,7 @@ class TraderModelSpec extends SpecBase {
           .set(FirstTransporterVatPage, "first vat")
       )
 
-      TraderModel.applyFirstTransporter mustBe Some(firstTransporterTrader)
+      TraderModel.applyFirstTransporter mustBe firstTransporterTrader
     }
   }
 
@@ -359,7 +346,7 @@ class TraderModelSpec extends SpecBase {
             .set(ConsignorAddressPage, testUserAddress.copy(street = "consignor street"))
         )
 
-        TraderModel.applyGuarantor(GuarantorArranger.Consignor) mustBe Some(consignorTrader.copy(traderExciseNumber = None))
+        TraderModel.applyGuarantor(GuarantorArranger.Consignor) mustBe consignorTrader.copy(traderExciseNumber = None)
       }
       "when GoodsType is Consignee" in {
         implicit val dr: DataRequest[_] = dataRequest(
@@ -372,7 +359,7 @@ class TraderModelSpec extends SpecBase {
             .set(ConsigneeAddressPage, testUserAddress.copy(street = "consignee street"))
         )
 
-        TraderModel.applyGuarantor(GuarantorArranger.Consignee) mustBe Some(guarantorTraderWithConsigneeInfo)
+        TraderModel.applyGuarantor(GuarantorArranger.Consignee) mustBe guarantorTraderWithConsigneeInfo
       }
       Seq(GuarantorArranger.GoodsOwner, GuarantorArranger.Transporter).foreach(
         guarantorArranger =>
@@ -385,7 +372,7 @@ class TraderModelSpec extends SpecBase {
                 .set(GuarantorVatPage, "guarantor vat")
             )
 
-            TraderModel.applyGuarantor(guarantorArranger) mustBe Some(guarantorTrader)
+            TraderModel.applyGuarantor(guarantorArranger) mustBe guarantorTrader
           }
       )
     }
