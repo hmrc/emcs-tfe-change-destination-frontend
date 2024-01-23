@@ -168,12 +168,7 @@ signedOut.guidance.notSaved = We have not saved your answers.
 
 activeTrader.link = Change trader type
 
-lrn.subHeading = Change destination for {0}
-
-taskList.title = Draft movement
 taskList.lrn = Local Reference Number (LRN): {0}
-taskList.consignee = Consignee: {0}
-taskList.notProvided = Not provided
 taskList.delete = Delete this draft
 taskList.heading.importFor = Import for {0}
 taskList.heading.gbTaxWarehouseTo = Great Britain tax warehouse to {0}
@@ -196,11 +191,6 @@ taskList.section.transport.journeyType = Journey type
 taskList.section.transport.transportArranger = Transport arranger
 taskList.section.transport.firstTransporter = First transporter
 taskList.section.transport.units = Transport units
-taskList.section.items = Items
-taskList.section.items.items = Items
-taskList.section.documents = Documents
-taskList.section.documents.sad = Single Administrative Documents
-taskList.section.documents.documents = Documents
 taskList.section.submit = Submit
 taskList.section.submit.reviewAndSubmit = Review and submit
 

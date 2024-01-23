@@ -26,6 +26,4 @@ object SubmitChangeDestinationResponse {
     (__ \ "message").read[String].map(SubmitChangeDestinationResponse(_, "EIS")) or
       (__ \ "receipt").read[String].map(SubmitChangeDestinationResponse(_, "ChRIS"))
 
-  implicit val writes: OWrites[SubmitChangeDestinationResponse] =
-    (o: SubmitChangeDestinationResponse) => Json.obj("receipt" -> o.receipt)
 }

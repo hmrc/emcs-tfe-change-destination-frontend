@@ -148,7 +148,7 @@ object TraderModel extends ModelConstructorHelpers {
 
   def applyGuarantor(guarantorArranger: GuarantorArranger)(implicit request: DataRequest[_]): TraderModel = {
     guarantorArranger match {
-      case GuarantorArranger.Consignor =>applyConsignor.copy(traderExciseNumber = None)
+      case GuarantorArranger.Consignor => applyConsignor.copy(traderExciseNumber = None)
       case GuarantorArranger.Consignee =>
         val consigneeTrader = applyConsignee
         TraderModel(

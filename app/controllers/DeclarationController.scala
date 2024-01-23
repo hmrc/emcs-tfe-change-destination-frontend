@@ -20,7 +20,6 @@ import controllers.actions._
 import handlers.ErrorHandler
 import models.NormalMode
 import models.requests.DataRequest
-import models.response.MissingMandatoryPage
 import models.submitChangeDestination.SubmitChangeDestinationModel
 import navigation.Navigator
 import pages.DeclarationPage
@@ -33,7 +32,7 @@ import views.html.DeclarationView
 import java.time.LocalDateTime
 import javax.inject.Inject
 import scala.concurrent.Future
-import scala.util.{Failure, Success, Try}
+import scala.util.Try
 
 class DeclarationController @Inject()(
                                        override val messagesApi: MessagesApi,
@@ -72,15 +71,10 @@ class DeclarationController @Inject()(
     }
 
   private def withSubmitChangeDestinationModel(onSuccess: SubmitChangeDestinationModel => Future[Result])(implicit request: DataRequest[_]): Future[Result] =
-    Try(SubmitChangeDestinationModel.apply) match {
-      case Failure(exception: MissingMandatoryPage) =>
-        logger.warn(s"[withSubmitChangeDestinationModel] MissingMandatoryPage error thrown: ${exception.message}")
-        Future.successful(Redirect(routes.TaskListController.onPageLoad(request.ern, request.arc)))
-
-      case Failure(exception) =>
-        logger.error(s"[withSubmitChangeDestinationModel]Error thrown when creating request model to submit: ${exception.getMessage}")
-        Future.successful(InternalServerError(errorHandler.internalServerErrorTemplate))
-
-      case Success(submitChangeDestinationModel) => onSuccess(submitChangeDestinationModel)
-    }
+    Try(SubmitChangeDestinationModel.apply).fold(exception => {
+      logger.warn(s"[withSubmitChangeDestinationModel] An error was thrown constructing a submission model: ${exception.getMessage}")
+      Future.successful(Redirect(routes.TaskListController.onPageLoad(request.ern, request.arc)))
+    },
+      onSuccess(_)
+    )
 }

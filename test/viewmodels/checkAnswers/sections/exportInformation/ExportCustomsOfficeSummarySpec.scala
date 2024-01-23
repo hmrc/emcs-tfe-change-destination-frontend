@@ -19,7 +19,6 @@ package viewmodels.checkAnswers.sections.exportInformation
 import base.SpecBase
 import fixtures.messages.sections.exportInformation.ExportCustomsOfficeMessages
 import models.CheckMode
-import org.scalatest.matchers.must.Matchers
 import pages.sections.exportInformation.ExportCustomsOfficePage
 import play.api.i18n.Messages
 import play.api.test.FakeRequest
@@ -28,7 +27,7 @@ import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
-class ExportCustomsOfficeSummarySpec extends SpecBase with Matchers {
+class ExportCustomsOfficeSummarySpec extends SpecBase {
 
   "ExportCustomsOfficeSummary" - {
     Seq(ExportCustomsOfficeMessages.English).foreach { messagesForLanguage =>

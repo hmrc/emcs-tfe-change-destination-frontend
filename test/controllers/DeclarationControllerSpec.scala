@@ -106,7 +106,7 @@ class DeclarationControllerSpec extends SpecBase with MockUserAnswersService wit
       }
 
       "when creating a request model fails" - {
-        "must return a BadRequest when MissingMandatoryPage" in new Test(emptyUserAnswers) {
+        "must redirect back to the task list when MissingMandatoryPage" in new Test(emptyUserAnswers) {
           val res = controller.onSubmit(testGreatBritainErn, testArc)(request)
 
           status(res) mustBe SEE_OTHER

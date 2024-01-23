@@ -70,4 +70,5 @@ class DateTimeUtilsSpec extends SpecBase with DateTimeUtils {
       actualResult mustBe expectedResult
     }
   }
+
 }
