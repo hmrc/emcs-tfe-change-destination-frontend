@@ -19,10 +19,9 @@ package controllers.sections.exportInformation
 import base.SpecBase
 import controllers.actions.{FakeDataRetrievalAction, FakeMovementAction}
 import mocks.services.MockUserAnswersService
-import models.sections.ReviewAnswer.{ChangeAnswers, KeepAnswers}
 import models.{NormalMode, UserAnswers}
 import navigation.FakeNavigators.FakeExportInformationNavigator
-import pages.sections.exportInformation.{ExportCustomsOfficePage, ExportInformationReviewPage}
+import pages.sections.exportInformation.ExportCustomsOfficePage
 import play.api.http.Status.SEE_OTHER
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
@@ -47,10 +46,7 @@ class ExportInformationIndexControllerSpec extends SpecBase with MockUserAnswers
 
   "ExportInformationIndexController" - {
     "when ExportInformationSection.isCompleted" - {
-      "must redirect to the CYA controller" in new Fixture(Some(emptyUserAnswers
-        .set(ExportCustomsOfficePage, "")
-        .set(ExportInformationReviewPage, KeepAnswers)
-      )) {
+      "must redirect to the CYA controller" in new Fixture(Some(emptyUserAnswers.set(ExportCustomsOfficePage, ""))) {
         val result = testController.onPageLoad(testErn, testArc)(request)
 
         status(result) mustEqual SEE_OTHER
@@ -59,24 +55,9 @@ class ExportInformationIndexControllerSpec extends SpecBase with MockUserAnswers
       }
     }
 
-    "when ExportInformationSection.needsReview" - {
-      "must redirect to the CYA controller" in new Fixture(Some(
-        emptyUserAnswers
-          .set(ExportCustomsOfficePage, "")
-      )) {
-        val result = testController.onPageLoad(testErn, testArc)(request)
+    "when there the section is not completed" - {
 
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result) mustBe
-          Some(controllers.sections.exportInformation.routes.ExportInformationCheckAnswersController.onPageLoad(testErn, testArc).url)
-      }
-    }
-
-    "when there the section is not completed or needs review" - {
-
-      "must redirect to the export customs office controller" in new Fixture(
-        Some(emptyUserAnswers.set(ExportInformationReviewPage, ChangeAnswers))
-      ) {
+      "must redirect to the export customs office controller" in new Fixture(Some(emptyUserAnswers)) {
         val result = testController.onPageLoad(testErn, testArc)(request)
 
         status(result) mustEqual SEE_OTHER

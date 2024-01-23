@@ -18,36 +18,36 @@ package pages.sections.consignee
 
 import models.Enumerable
 import models.requests.DataRequest
+import models.sections.info.ChangeType.Consignee
 import models.sections.info.movementScenario.MovementScenario.UnknownDestination
 import pages.QuestionPage
 import pages.sections.Section
-import pages.sections.info.DestinationTypePage
+import pages.sections.info.{ChangeTypePage, DestinationTypePage}
 import play.api.libs.json.{Format, JsObject, JsPath, Reads}
 import viewmodels.taskList._
 
 import scala.annotation.unused
+import scala.collection.Seq
 
 case object ConsigneeSection extends Section[JsObject] with Enumerable.Implicits {
   override val path: JsPath = JsPath \ "consignee"
 
   override def status(implicit request: DataRequest[_]): TaskListStatus =
-    sectionHasBeenReviewed(ConsigneeReviewPage) {
-      (
-        request.userAnswers.get(ConsigneeExportPage),
-        request.userAnswers.get(ConsigneeExcisePage),
-        request.userAnswers.get(ConsigneeExemptOrganisationPage)
-      ) match {
-        case (Some(value), _, _) =>
-          value match {
-            case true => checkBusinessNameAndAddressBothExistWithPage(request.userAnswers.get(ConsigneeExportVatPage))
-            case false => checkBusinessNameAndAddressBothExistWithPage(request.userAnswers.get(ConsigneeExcisePage))
-          }
-        case (_, Some(value), _) =>
-          checkBusinessNameAndAddressBothExistWithPage(Some(value))
-        case (_, _, Some(value)) =>
-          checkBusinessNameAndAddressBothExistWithPage(Some(value))
-        case _ => NotStarted
-      }
+    (
+      request.userAnswers.get(ConsigneeExportPage),
+      request.userAnswers.get(ConsigneeExcisePage),
+      request.userAnswers.get(ConsigneeExemptOrganisationPage)
+    ) match {
+      case (Some(value), _, _) =>
+        value match {
+          case true => checkBusinessNameAndAddressBothExistWithPage(request.userAnswers.get(ConsigneeExportVatPage))
+          case false => checkBusinessNameAndAddressBothExistWithPage(request.userAnswers.get(ConsigneeExcisePage))
+        }
+      case (_, Some(value), _) =>
+        checkBusinessNameAndAddressBothExistWithPage(Some(value))
+      case (_, _, Some(value)) =>
+        checkBusinessNameAndAddressBothExistWithPage(Some(value))
+      case _ => NotStarted
     }
 
   /**
@@ -75,10 +75,7 @@ case object ConsigneeSection extends Section[JsObject] with Enumerable.Implicits
   }
 
   override def canBeCompletedForTraderAndDestinationType(implicit request: DataRequest[_]): Boolean =
-    request.userAnswers.get(DestinationTypePage) match {
-      case Some(value) if value != UnknownDestination => true
-      case _ => false
-    }
+    request.userAnswers.get(ChangeTypePage).contains(Consignee) && !request.userAnswers.get(DestinationTypePage).contains(UnknownDestination)
 
   def hasConsigneeChanged(implicit request: DataRequest[_]): Boolean = {
 

@@ -23,7 +23,9 @@ import models.CheckMode
 import models.response.emcsTfe.GuarantorType.{NoGuarantor, Owner}
 import models.response.emcsTfe.MovementGuaranteeModel
 import models.sections.guarantor.GuarantorArranger.{Consignee, Consignor, GoodsOwner, Transporter}
+import models.sections.info.movementScenario.MovementScenario.ExportWithCustomsDeclarationLodgedInTheUk
 import pages.sections.guarantor.{GuarantorArrangerPage, GuarantorRequiredPage}
+import pages.sections.info.DestinationTypePage
 import play.api.i18n.Messages
 import play.api.test.FakeRequest
 import uk.gov.hmrc.govukfrontend.views.Aliases.{Key, Value}
@@ -53,7 +55,11 @@ class GuarantorArrangerSummarySpec extends SpecBase {
 
       "and there is no answer for the GuarantorRequiredPage" - {
         "then must not return a row" in {
-          implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers, movementDetails = maxGetMovementResponse.copy(movementGuarantee = MovementGuaranteeModel(Owner, None)))
+          implicit lazy val request = dataRequest(
+            request = FakeRequest(),
+            answers = emptyUserAnswers.set(DestinationTypePage, ExportWithCustomsDeclarationLodgedInTheUk),
+            movementDetails = maxGetMovementResponse.copy(movementGuarantee = MovementGuaranteeModel(Owner, None))
+          )
 
           GuarantorArrangerSummary.row mustBe None
         }
@@ -61,7 +67,12 @@ class GuarantorArrangerSummarySpec extends SpecBase {
 
       "and there is a GuarantorRequiredPage answer of `no`" - {
         "then must not return a row" in {
-          implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(GuarantorRequiredPage, false), movementDetails = maxGetMovementResponse.copy(movementGuarantee = MovementGuaranteeModel(NoGuarantor, None)))
+          implicit lazy val request = dataRequest(
+            request = FakeRequest(),
+            answers = emptyUserAnswers
+              .set(DestinationTypePage, ExportWithCustomsDeclarationLodgedInTheUk)
+              .set(GuarantorRequiredPage, false),
+            movementDetails = maxGetMovementResponse.copy(movementGuarantee = MovementGuaranteeModel(NoGuarantor, None)))
 
           GuarantorArrangerSummary.row mustBe None
         }
@@ -69,7 +80,13 @@ class GuarantorArrangerSummarySpec extends SpecBase {
 
       "and there is a GuarantorRequiredPage answer of `yes`" - {
         "and there is no answer for the GuarantorArrangerPage" in {
-          implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(GuarantorRequiredPage, true), movementDetails = maxGetMovementResponse.copy(movementGuarantee = MovementGuaranteeModel(NoGuarantor, None)))
+          implicit lazy val request = dataRequest(
+            request = FakeRequest(),
+            answers = emptyUserAnswers
+              .set(DestinationTypePage, ExportWithCustomsDeclarationLodgedInTheUk)
+              .set(GuarantorRequiredPage, true),
+            movementDetails = maxGetMovementResponse.copy(movementGuarantee = MovementGuaranteeModel(NoGuarantor, None))
+          )
 
           GuarantorArrangerSummary.row mustBe expectedRow(messagesForLanguage.notProvided)
         }
@@ -85,6 +102,7 @@ class GuarantorArrangerSummarySpec extends SpecBase {
               implicit lazy val request = dataRequest(
                 FakeRequest(),
                 emptyUserAnswers
+                  .set(DestinationTypePage, ExportWithCustomsDeclarationLodgedInTheUk)
                   .set(GuarantorRequiredPage, true)
                   .set(GuarantorArrangerPage, arranger)
               )

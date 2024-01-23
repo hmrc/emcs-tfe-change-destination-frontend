@@ -14,30 +14,31 @@
  * limitations under the License.
  */
 
-package viewmodels.helpers.draftMovement
+package viewmodels.helpers
 
 import base.SpecBase
-import fixtures.messages.DraftMovementMessages
+import fixtures.messages.TaskListMessages
 import models.UserType._
 import models.requests.DataRequest
-import models.response.emcsTfe.GuarantorType.NoGuarantor
-import models.response.emcsTfe.{HeaderEadEsadModel, MovementGuaranteeModel}
 import models.response.InvalidUserTypeException
+import models.response.emcsTfe.GuarantorType.{NoGuarantor, Transporter}
+import models.response.emcsTfe.{HeaderEadEsadModel, MovementGuaranteeModel, TransportModeModel}
 import models.sections.ReviewAnswer.ChangeAnswers
-import models.sections.info.DispatchPlace
 import models.sections.info.DispatchPlace.{GreatBritain, NorthernIreland}
 import models.sections.info.movementScenario.MovementScenario._
 import models.sections.info.movementScenario.{DestinationType, MovementScenario}
+import models.sections.info.{ChangeType, DispatchPlace}
+import models.sections.journeyType.HowMovementTransported.{AirTransport, FixedTransportInstallations, RoadTransport}
 import models.sections.transportArranger.TransportArranger
 import pages.sections.Section
-import pages.sections.consignee.{ConsigneeReviewPage, ConsigneeSection}
-import pages.sections.destination.{DestinationReviewPage, DestinationSection}
-import pages.sections.exportInformation.{ExportInformationReviewPage, ExportInformationSection}
+import pages.sections.consignee.ConsigneeSection
+import pages.sections.destination.DestinationSection
+import pages.sections.exportInformation.ExportInformationSection
 import pages.sections.firstTransporter.{FirstTransporterReviewPage, FirstTransporterSection}
-import pages.sections.guarantor.{GuarantorReviewPage, GuarantorSection}
-import pages.sections.info.{DestinationTypePage, DispatchPlacePage}
-import pages.sections.journeyType.{JourneyTypeReviewPage, JourneyTypeSection}
-import pages.sections.movement.{MovementReviewPage, MovementSection}
+import pages.sections.guarantor.GuarantorSection
+import pages.sections.info.{ChangeTypePage, DestinationTypePage, DispatchPlacePage}
+import pages.sections.journeyType.{HowMovementTransportedPage, JourneyTypeReviewPage, JourneyTypeSection}
+import pages.sections.movement.MovementSection
 import pages.sections.transportArranger.{TransportArrangerReviewPage, TransportArrangerSection}
 import pages.sections.transportUnit.{TransportUnitsReviewPage, TransportUnitsSection}
 import play.api.i18n.{Messages, MessagesApi}
@@ -46,31 +47,31 @@ import play.api.test.FakeRequest
 import viewmodels.taskList._
 import views.ViewUtils.titleNoForm
 
-class DraftMovementHelperSpec extends SpecBase {
+class TaskListHelperSpec extends SpecBase {
 
-  lazy val helper = new DraftMovementHelper()
+  lazy val helper = new TaskListHelper()
 
-  Seq(DraftMovementMessages.English).foreach { messagesForLanguage =>
+  Seq(TaskListMessages.English).foreach { messagesForLanguage =>
     s"when being rendered in lang code of ${messagesForLanguage.lang.code}" - {
 
       implicit val msgs: Messages = app.injector.instanceOf[MessagesApi].preferred(Seq(messagesForLanguage.lang))
 
       "heading" - {
         "when user answers are valid" - {
-          "must return the draftMovement.heading.gbTaxWarehouseTo message" in {
+          "must return the taskList.heading.gbTaxWarehouseTo message" in {
             Seq[(String, MovementScenario)](
               ("GBWK123", GbTaxWarehouse)
             ).foreach {
               case (ern, movementScenario) =>
                 implicit val request: DataRequest[_] = dataRequest(FakeRequest(), ern = ern, answers = emptyUserAnswers.set(DestinationTypePage, movementScenario))
 
-                val input1 = msgs(s"draftMovement.heading.$movementScenario")
+                val input1 = msgs(s"taskList.heading.$movementScenario")
 
                 helper.heading mustBe messagesForLanguage.headingGbTaxWarehouseTo(input1)
                 titleNoForm(helper.heading) mustBe messagesForLanguage.titleGbTaxWarehouseTo(input1)
             }
           }
-          "must return the draftMovement.heading.dispatchPlaceTo message" in {
+          "must return the taskList.heading.dispatchPlaceTo message" in {
             Seq[(String, DispatchPlace, MovementScenario)](
               ("XIWK123", GreatBritain, GbTaxWarehouse),
               ("XIWK123", GreatBritain, EuTaxWarehouse),
@@ -92,13 +93,13 @@ class DraftMovementHelperSpec extends SpecBase {
                   dataRequest(FakeRequest(), ern = ern, answers = emptyUserAnswers.set(DispatchPlacePage, dispatchPlace).set(DestinationTypePage, movementScenario))
 
                 val input1 = msgs(s"dispatchPlace.$dispatchPlace")
-                val input2 = msgs(Seq(s"draftMovement.heading.$movementScenario", s"destinationType.$movementScenario"))
+                val input2 = msgs(Seq(s"taskList.heading.$movementScenario", s"destinationType.$movementScenario"))
 
                 helper.heading mustBe messagesForLanguage.headingDispatchPlaceTo(input1, input2)
                 titleNoForm(helper.heading) mustBe messagesForLanguage.titleDispatchPlaceTo(input1, input2)
             }
           }
-          "must return the draftMovement.heading.importFor message" in {
+          "must return the taskList.heading.importFor message" in {
             Seq[String](
               "GBRC123",
               "XIRC123"
@@ -138,23 +139,21 @@ class DraftMovementHelperSpec extends SpecBase {
 
             val response = intercept[InvalidUserTypeException](helper.heading)
 
-            response.message mustBe s"[DraftMovementHelper][heading] invalid UserType and destinationType combination for CAM journey: $GreatBritainWarehouse | ${Some(EuTaxWarehouse)}"
+            response.message mustBe s"[TaskListHelper][heading] invalid UserType and destinationType combination for CAM journey: $GreatBritainWarehouse | ${Some(EuTaxWarehouse)}"
           }
           "must throw an error when the ERN/destinationType combo is invalid" in {
             implicit val request: DataRequest[_] = dataRequest(FakeRequest(), ern = "GBWK123", answers = emptyUserAnswers.set(DestinationTypePage, UnknownDestination))
 
             val response = intercept[InvalidUserTypeException](helper.heading)
 
-            response.message mustBe s"[DraftMovementHelper][heading] invalid UserType and destinationType combination for CAM journey: $GreatBritainWarehouseKeeper | ${Some(UnknownDestination)}"
+            response.message mustBe s"[TaskListHelper][heading] invalid UserType and destinationType combination for CAM journey: $GreatBritainWarehouseKeeper | ${Some(UnknownDestination)}"
           }
         }
       }
 
       "movementSection" - {
         "should render the Movement details section" in {
-          implicit val request: DataRequest[_] = dataRequest(FakeRequest(), ern = testErn,
-            answers = emptyUserAnswers.set(MovementReviewPage, ChangeAnswers),
-            movementDetails = maxGetMovementResponse.copy(eadEsad = maxGetMovementResponse.eadEsad.copy(invoiceDate = None)))
+          implicit val request: DataRequest[_] = dataRequest(FakeRequest())
           helper.movementSection mustBe TaskListSection(
             messagesForLanguage.movementSectionHeading,
             Seq(
@@ -163,7 +162,7 @@ class DraftMovementHelperSpec extends SpecBase {
                 "movementDetails",
                 Some(controllers.sections.movement.routes.MovementIndexController.onPageLoad(testErn, testArc).url),
                 Some(MovementSection),
-                Some(InProgress)
+                Some(Review)
               )
             )
           )
@@ -201,11 +200,11 @@ class DraftMovementHelperSpec extends SpecBase {
           helper.deliverySection.sectionHeading mustBe messagesForLanguage.deliverySectionHeading
         }
         "should render the consignee row" - {
-          "when MovementScenario is valid" in {
+          "when MovementScenario is valid and ChangeType is 'Consignee'" in {
             MovementScenario.values.filterNot(_ == UnknownDestination).foreach {
               scenario =>
                 implicit val request: DataRequest[_] = dataRequest(FakeRequest(), ern = testErn,
-                  answers = emptyUserAnswers.set(DestinationTypePage, scenario).set(ConsigneeReviewPage, ChangeAnswers),
+                  answers = emptyUserAnswers.set(DestinationTypePage, scenario).set(ChangeTypePage, ChangeType.Consignee),
                   movementDetails = maxGetMovementResponse.copy(memberStateCode = None, serialNumberOfCertificateOfExemption = None,
                     consigneeTrader = None
                   ))
@@ -238,7 +237,7 @@ class DraftMovementHelperSpec extends SpecBase {
             ).foreach {
               scenario =>
                 implicit val request: DataRequest[_] = dataRequest(FakeRequest(), ern = testErn,
-                  answers = emptyUserAnswers.set(DestinationTypePage, scenario).set(DestinationReviewPage, ChangeAnswers),
+                  answers = emptyUserAnswers.set(DestinationTypePage, scenario),
                   movementDetails = maxGetMovementResponse.copy(memberStateCode = None, serialNumberOfCertificateOfExemption = None,
                     deliveryPlaceTrader = None
                 ))
@@ -261,9 +260,9 @@ class DraftMovementHelperSpec extends SpecBase {
                 helper.deliverySection.rows must not contain destinationRow(testErn)
             }
           }
-          "when MovementScenario is missing" in {
+          "when MovementScenario is missing (use IE801)" in {
             implicit val request: DataRequest[_] = dataRequest(FakeRequest(), ern = testErn, answers = emptyUserAnswers)
-            helper.deliverySection.rows must not contain destinationRow(testErn)
+            helper.deliverySection.rows must contain(destinationRow(testErn))
           }
         }
         "should render the export row" - {
@@ -274,7 +273,7 @@ class DraftMovementHelperSpec extends SpecBase {
             ).foreach {
               scenario =>
                 implicit val request: DataRequest[_] = dataRequest(FakeRequest(), ern = testErn,
-                  answers = emptyUserAnswers.set(DestinationTypePage, scenario).set(ExportInformationReviewPage, ChangeAnswers),
+                  answers = emptyUserAnswers.set(DestinationTypePage, scenario),
                   movementDetails = maxGetMovementResponse.copy(deliveryPlaceCustomsOfficeReferenceNumber = None)
                 )
                 helper.deliverySection.rows must contain(exportRow(testErn))
@@ -300,12 +299,14 @@ class DraftMovementHelperSpec extends SpecBase {
       }
 
       "guarantorSection" - {
-        "should render the Guarantor section" in {
+        "should render the Guarantor section when changed to exports" in {
           implicit val request: DataRequest[_] = dataRequest(FakeRequest(), ern = testErn,
-            answers = emptyUserAnswers.set(GuarantorReviewPage, ChangeAnswers),
-            movementDetails = maxGetMovementResponse.copy(movementGuarantee = MovementGuaranteeModel(NoGuarantor, None))
+            answers = emptyUserAnswers
+              .set(HowMovementTransportedPage, RoadTransport)
+              .set(DestinationTypePage, ExportWithCustomsDeclarationLodgedInTheUk),
+            movementDetails = maxGetMovementResponse.copy(movementGuarantee = MovementGuaranteeModel(Transporter, None))
           )
-          helper.guarantorSection mustBe TaskListSection(
+          helper.guarantorSection mustBe Some(TaskListSection(
             messagesForLanguage.guarantorSectionHeading,
             Seq(
               TaskListSectionRow(
@@ -313,10 +314,20 @@ class DraftMovementHelperSpec extends SpecBase {
                 "guarantor",
                 Some(controllers.sections.guarantor.routes.GuarantorIndexController.onPageLoad(testErn, testArc).url),
                 Some(GuarantorSection),
-                Some(InProgress) //Cannot be in 'Not started' state as a guarantor answer either is in the user answers or 801
+                Some(NotStarted)
               )
             )
+          ))
+        }
+
+        "should NOT render the Guarantor section when already answered" in {
+          implicit val request: DataRequest[_] = dataRequest(FakeRequest(), ern = testErn,
+            answers = emptyUserAnswers
+              .set(HowMovementTransportedPage, RoadTransport)
+              .set(DestinationTypePage, GbTaxWarehouse),
+            movementDetails = maxGetMovementResponse.copy(movementGuarantee = MovementGuaranteeModel(NoGuarantor, None))
           )
+          helper.guarantorSection mustBe None
         }
       }
 
@@ -641,16 +652,109 @@ class DraftMovementHelperSpec extends SpecBase {
       }
 
       "sections" - {
-        "should return all sections" in {
-          implicit val request: DataRequest[_] = dataRequest(FakeRequest(), ern = testErn, answers = emptyUserAnswers)
-          helper.sections.map(_.sectionHeading) mustBe
-            Seq(
-              messagesForLanguage.movementSectionHeading,
-              messagesForLanguage.deliverySectionHeading,
-              messagesForLanguage.guarantorSectionHeading,
-              messagesForLanguage.transportSectionHeading,
-              messagesForLanguage.submitSectionHeading,
+        "when NO guarantor information already exists" - {
+          "when DestinationType has changed to export logged in UK" - {
+            "should return all sections including Guarantor" in {
+              implicit val request: DataRequest[_] = dataRequest(
+                request = FakeRequest(),
+                ern = testErn,
+                answers = emptyUserAnswers
+                  .set(HowMovementTransportedPage, AirTransport)
+                  .set(DestinationTypePage, ExportWithCustomsDeclarationLodgedInTheUk),
+                movementDetails = maxGetMovementResponse.copy(movementGuarantee = MovementGuaranteeModel(NoGuarantor, None))
+              )
+              helper.sections.map(_.sectionHeading) mustBe
+                Seq(
+                  messagesForLanguage.movementSectionHeading,
+                  messagesForLanguage.deliverySectionHeading,
+                  messagesForLanguage.guarantorSectionHeading,
+                  messagesForLanguage.transportSectionHeading,
+                  messagesForLanguage.submitSectionHeading,
+                )
+            }
+          }
+
+          "when DestinationType has NOT change to export logged in UK and is FixedTransport" - {
+            "should return all sections (excluding Guarantor)" in {
+              implicit val request: DataRequest[_] = dataRequest(
+                request = FakeRequest(),
+                ern = testErn,
+                answers = emptyUserAnswers
+                  .set(HowMovementTransportedPage, FixedTransportInstallations)
+                  .set(DestinationTypePage, GbTaxWarehouse),
+                movementDetails = maxGetMovementResponse.copy(movementGuarantee = MovementGuaranteeModel(NoGuarantor, None))
+              )
+              helper.sections.map(_.sectionHeading) mustBe
+                Seq(
+                  messagesForLanguage.movementSectionHeading,
+                  messagesForLanguage.deliverySectionHeading,
+                  messagesForLanguage.transportSectionHeading,
+                  messagesForLanguage.submitSectionHeading,
+                )
+            }
+          }
+
+          "when transport type is NOT FixedTransportInstallations and movement is UktoEU" - {
+            "should return all sections including Guarantor" in {
+              implicit val request: DataRequest[_] = dataRequest(
+                request = FakeRequest(),
+                ern = testNorthernIrelandErn,
+                answers = emptyUserAnswers
+                  .set(HowMovementTransportedPage, RoadTransport)
+                  .set(DestinationTypePage, EuTaxWarehouse),
+                movementDetails = maxGetMovementResponse.copy(
+                  movementGuarantee = MovementGuaranteeModel(NoGuarantor, None),
+                  transportMode = TransportModeModel(FixedTransportInstallations.toString, None)
+                )
+              )
+              helper.sections.map(_.sectionHeading) mustBe
+                Seq(
+                  messagesForLanguage.movementSectionHeading,
+                  messagesForLanguage.deliverySectionHeading,
+                  messagesForLanguage.guarantorSectionHeading,
+                  messagesForLanguage.transportSectionHeading,
+                  messagesForLanguage.submitSectionHeading,
+                )
+            }
+          }
+
+          "when transport type is FixedTransportInstallations" - {
+            "should return all sections excluding Guarantor" in {
+              implicit val request: DataRequest[_] = dataRequest(
+                request = FakeRequest(),
+                ern = testNorthernIrelandErn,
+                answers = emptyUserAnswers
+                  .set(HowMovementTransportedPage, FixedTransportInstallations)
+                  .set(DestinationTypePage, EuTaxWarehouse),
+                movementDetails = maxGetMovementResponse.copy(movementGuarantee = MovementGuaranteeModel(NoGuarantor, None))
+              )
+              helper.sections.map(_.sectionHeading) mustBe
+                Seq(
+                  messagesForLanguage.movementSectionHeading,
+                  messagesForLanguage.deliverySectionHeading,
+                  messagesForLanguage.transportSectionHeading,
+                  messagesForLanguage.submitSectionHeading,
+                )
+            }
+          }
+        }
+
+        "when guarantor information already exists" - {
+
+          "should return all sections excluding Guarantor" in {
+            implicit val request: DataRequest[_] = dataRequest(
+              request = FakeRequest(),
+              ern = testErn,
+              answers = emptyUserAnswers
             )
+            helper.sections.map(_.sectionHeading) mustBe
+              Seq(
+                messagesForLanguage.movementSectionHeading,
+                messagesForLanguage.deliverySectionHeading,
+                messagesForLanguage.transportSectionHeading,
+                messagesForLanguage.submitSectionHeading,
+              )
+          }
         }
       }
     }

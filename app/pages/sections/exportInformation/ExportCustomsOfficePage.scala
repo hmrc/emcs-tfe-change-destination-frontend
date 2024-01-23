@@ -25,5 +25,5 @@ case object ExportCustomsOfficePage extends QuestionPage[String] {
   override val path: JsPath = ExportInformationSection.path \ toString
 
   override def getValueFromIE801(implicit request: DataRequest[_]): Option[String] =
-    request.movementDetails.deliveryPlaceCustomsOfficeReferenceNumber // TODO: check
+    request.movementDetails.deliveryPlaceCustomsOfficeReferenceNumber
 }

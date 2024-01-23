@@ -19,8 +19,10 @@ package viewmodels.checkAnswers.sections.consignee
 import base.SpecBase
 import fixtures.messages.sections.consignee.ConsigneeExportMessages
 import models.NormalMode
+import models.sections.info.ChangeType
 import org.scalatest.matchers.must.Matchers
 import pages.sections.consignee.ConsigneeExportPage
+import pages.sections.info.ChangeTypePage
 import play.api.i18n.Messages
 import play.api.test.FakeRequest
 import uk.gov.hmrc.govukfrontend.views.Aliases.Value
@@ -40,11 +42,37 @@ class ConsigneeExportSummarySpec extends SpecBase with Matchers {
 
         "when there's no answer" - {
 
-          "must output the expected data" in {
+          "when the Change Type is Consignee" - {
 
-            implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers)
+            "must output None (i.e. don't use the IE801 data)" in {
 
-            ConsigneeExportSummary.row(showActionLinks = true) mustBe None
+              implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(ChangeTypePage, ChangeType.Consignee))
+
+              ConsigneeExportSummary.row(showActionLinks = true) mustBe None
+            }
+          }
+
+          "when the Change Type is NOT Consignee" - {
+
+            "must output data from the IE801" in {
+
+              implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(ChangeTypePage, ChangeType.Destination))
+
+              ConsigneeExportSummary.row(showActionLinks = true) mustBe
+                Some(
+                  SummaryListRowViewModel(
+                    key = messagesForLanguage.cyaLabel,
+                    value = Value(Text(messagesForLanguage.yes)),
+                    actions = Seq(
+                      ActionItemViewModel(
+                        content = messagesForLanguage.change,
+                        href = controllers.sections.consignee.routes.ConsigneeExportController.onPageLoad(testErn, testArc, NormalMode).url,
+                        id = ConsigneeExportPage
+                      ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHidden)
+                    )
+                  )
+                )
+            }
           }
         }
 

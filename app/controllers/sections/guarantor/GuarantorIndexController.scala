@@ -38,11 +38,13 @@ class GuarantorIndexController @Inject()(
 
   def onPageLoad(ern: String, arc: String): Action[AnyContent] =
     authorisedDataRequestWithUpToDateMovement(ern, arc) { implicit request =>
-      if (GuarantorSection.isCompleted || GuarantorSection.needsReview) {
-        Redirect(controllers.sections.guarantor.routes.GuarantorCheckAnswersController.onPageLoad(ern, arc))
-      } else {
-        Redirect(controllers.sections.guarantor.routes.GuarantorRequiredController.onPageLoad(ern, arc, NormalMode))
-      }
+      Redirect(
+        if (GuarantorSection.isCompleted) {
+          controllers.sections.guarantor.routes.GuarantorCheckAnswersController.onPageLoad(ern, arc)
+        } else {
+          controllers.sections.guarantor.routes.GuarantorRequiredController.onPageLoad(ern, arc, NormalMode)
+        }
+      )
     }
 
 }

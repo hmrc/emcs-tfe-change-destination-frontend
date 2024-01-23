@@ -48,7 +48,7 @@ class DataRequestSpec extends SpecBase {
   "dispatchPlace" - {
     Seq(
       ("GB", GreatBritain),
-      ("XI", NorthernIreland),
+      ("XI", NorthernIreland)
     ).foreach {
       case (dp, res) =>
         s"when provided DISPATCH_PLACE $dp" - {

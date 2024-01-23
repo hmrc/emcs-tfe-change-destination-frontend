@@ -20,7 +20,9 @@ import models.requests.DataRequest
 import models.response.InvalidGuarantorTypeException
 import models.response.emcsTfe.GuarantorType
 import models.sections.guarantor.GuarantorArranger
+import models.sections.info.movementScenario.MovementType
 import pages.QuestionPage
+import pages.sections.info.DestinationTypePage
 import play.api.libs.json.JsPath
 
 case object GuarantorArrangerPage extends QuestionPage[GuarantorArranger] {
@@ -28,14 +30,22 @@ case object GuarantorArrangerPage extends QuestionPage[GuarantorArranger] {
   override val path: JsPath = GuarantorSection.path \ toString
 
   override def getValueFromIE801(implicit request: DataRequest[_]): Option[GuarantorArranger] = {
-    // TODO: check
-    request.movementDetails.movementGuarantee.guarantorTypeCode match {
-      case GuarantorType.Consignor => Some(GuarantorArranger.Consignor)
-      case GuarantorType.Consignee => Some(GuarantorArranger.Consignee)
-      case GuarantorType.Owner => Some(GuarantorArranger.GoodsOwner)
-      case GuarantorType.Transporter => Some(GuarantorArranger.Transporter)
-      case GuarantorType.NoGuarantor => None
-      case guarantorType => throw InvalidGuarantorTypeException(s"Invalid guarantor type from IE801: $guarantorType") // TODO: not sure about this
+    if (GuarantorSection.requiresGuarantorToBeProvided) None else {
+      request.movementDetails.movementGuarantee.guarantorTypeCode match {
+        case GuarantorType.Consignor => Some(GuarantorArranger.Consignor)
+        case GuarantorType.Consignee => Some(GuarantorArranger.Consignee)
+        case GuarantorType.Owner => Some(GuarantorArranger.GoodsOwner)
+        case GuarantorType.Transporter => Some(GuarantorArranger.Transporter)
+        case GuarantorType.NoGuarantor =>
+          request.userAnswers.get(DestinationTypePage).map { destination =>
+            if(destination.movementType == MovementType.UkToEu) {
+              GuarantorArranger.NoGuarantorRequiredUkToEu
+            } else {
+              GuarantorArranger.NoGuarantorRequired
+            }
+          }
+        case guarantorType => throw InvalidGuarantorTypeException(s"Invalid guarantor type from IE801: $guarantorType")
+      }
     }
   }
 }

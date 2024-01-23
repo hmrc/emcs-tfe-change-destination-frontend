@@ -155,14 +155,20 @@ class TransportArrangerAddressSummarySpec extends SpecBase {
 
           "when there's no answer for the ConsignorAddressPage" - {
 
-            "must output the expected data" in {
+            "must output the expected data from the IE801" in {
 
               implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(TransportArrangerPage, Consignor))
 
               TransportArrangerAddressSummary.row(onReviewPage = false) mustBe
                 SummaryListRowViewModel(
                   key = messagesForLanguage.cyaLabel,
-                  value = Value(Text(messagesForLanguage.sectionNotComplete("Consignor"))),
+                  value = Value(HtmlContent(
+                    HtmlFormat.fill(Seq(
+                      Html("ConsignorTraderStreetNumber ConsignorTraderStreetName<br>"),
+                      Html("ConsignorTraderCity<br>"),
+                      Html("ConsignorTraderPostcode")
+                    ))
+                  )),
                   actions = Seq()
                 )
             }
@@ -176,7 +182,13 @@ class TransportArrangerAddressSummarySpec extends SpecBase {
                 TransportArrangerAddressSummary.row(onReviewPage = true) mustBe
                   SummaryListRowViewModel(
                     key = messagesForLanguage.cyaLabel,
-                    value = Value(Text(messagesForLanguage.sectionNotComplete("Consignor"))),
+                    value = Value(HtmlContent(
+                      HtmlFormat.fill(Seq(
+                        Html("ConsignorTraderStreetNumber ConsignorTraderStreetName<br>"),
+                        Html("ConsignorTraderCity<br>"),
+                        Html("ConsignorTraderPostcode")
+                      ))
+                    )),
                     actions = Seq()
                   )
               }

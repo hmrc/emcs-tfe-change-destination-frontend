@@ -26,12 +26,10 @@ case object ConsignorSection extends Section[JsObject] with Enumerable.Implicits
   override val path: JsPath = JsPath \ "consignor"
 
   override def status(implicit request: DataRequest[_]): TaskListStatus =
-    sectionHasBeenReviewed(ConsignorReviewPage) {
-      if (request.userAnswers.get(ConsignorAddressPage).nonEmpty) {
-        Completed
-      } else {
-        NotStarted
-      }
+    if (request.userAnswers.get(ConsignorAddressPage).nonEmpty) {
+      Completed
+    } else {
+      NotStarted
     }
 
   override def canBeCompletedForTraderAndDestinationType(implicit request: DataRequest[_]): Boolean = true

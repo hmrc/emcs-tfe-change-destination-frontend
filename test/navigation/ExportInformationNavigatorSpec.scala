@@ -56,7 +56,7 @@ class ExportInformationNavigatorSpec extends SpecBase {
       "must go to the next section" in {
 
         navigator.nextPage(ExportInformationCheckAnswersPage, NormalMode, emptyUserAnswers) mustBe
-          routes.DraftMovementController.onPageLoad(testErn, testArc)
+          routes.TaskListController.onPageLoad(testErn, testArc)
       }
     }
   }

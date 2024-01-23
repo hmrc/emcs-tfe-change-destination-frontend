@@ -21,8 +21,10 @@ import fixtures.messages.sections.consignee.ConsigneeExportVatMessages
 import models.CheckMode
 import models.sections.consignee.ConsigneeExportVat
 import models.sections.consignee.ConsigneeExportVatType.YesEoriNumber
+import models.sections.info.ChangeType
 import org.scalatest.matchers.must.Matchers
 import pages.sections.consignee.ConsigneeExportVatPage
+import pages.sections.info.ChangeTypePage
 import play.api.i18n.Messages
 import play.api.test.FakeRequest
 import uk.gov.hmrc.govukfrontend.views.Aliases.Value
@@ -41,11 +43,37 @@ class ConsigneeExportVatSummarySpec extends SpecBase with Matchers {
 
         "when there's no answer" - {
 
-          "must output the expected data" in {
+          "when the ChangeType is `Consignee`" - {
 
-            implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers)
+            "must output None" in {
 
-            ConsigneeExportSummary.row(showActionLinks = true) mustBe None
+              implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(ChangeTypePage, ChangeType.Consignee))
+
+              ConsigneeExportVatSummary.row(showActionLinks = true) mustBe None
+            }
+          }
+
+          "when the ChangeType is NOT `Consignee`" - {
+
+            "must output data from the IE801 (where present)" in {
+
+              implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(ChangeTypePage, ChangeType.Destination))
+
+              ConsigneeExportVatSummary.row(showActionLinks = true) mustBe
+                Some(
+                  SummaryListRowViewModel(
+                    key = messagesForLanguage.cyaEoriLabel,
+                    value = Value(Text(maxGetMovementResponse.consigneeTrader.get.eoriNumber.get)),
+                    actions = Seq(
+                      ActionItemViewModel(
+                        content = messagesForLanguage.change,
+                        href = controllers.sections.consignee.routes.ConsigneeExportVatController.onPageLoad(testErn, testArc, CheckMode).url,
+                        id = "changeConsigneeExportVat"
+                      ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHidden)
+                    )
+                  )
+                )
+            }
           }
         }
 

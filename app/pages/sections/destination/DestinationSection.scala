@@ -49,21 +49,19 @@ case object DestinationSection extends Section[JsObject] with JsonOptionFormatte
     ).contains(destinationTypePageAnswer)
 
   override def status(implicit request: DataRequest[_]): TaskListStatus =
-    sectionHasBeenReviewed(DestinationReviewPage) {
-      request.userAnswers.get(DestinationTypePage) match {
-        case Some(value) =>
-          implicit val destinationTypePageAnswer: MovementScenario = value
-          if (shouldStartFlowAtDestinationWarehouseExcise) {
-            startFlowAtDestinationWarehouseExciseStatus
-          } else if (shouldStartFlowAtDestinationWarehouseVat) {
-            startFlowAtDestinationWarehouseVatStatus
-          } else if (shouldStartFlowAtDestinationBusinessName) {
-            startFlowAtDestinationBusinessNameStatus
-          } else {
-            NotStarted
-          }
-        case None => NotStarted
-      }
+    request.userAnswers.get(DestinationTypePage) match {
+      case Some(value) =>
+        implicit val destinationTypePageAnswer: MovementScenario = value
+        if (shouldStartFlowAtDestinationWarehouseExcise) {
+          startFlowAtDestinationWarehouseExciseStatus
+        } else if (shouldStartFlowAtDestinationWarehouseVat) {
+          startFlowAtDestinationWarehouseVatStatus
+        } else if (shouldStartFlowAtDestinationBusinessName) {
+          startFlowAtDestinationBusinessNameStatus
+        } else {
+          NotStarted
+        }
+      case None => NotStarted
     }
 
   private def startFlowAtDestinationWarehouseExciseStatus(implicit request: DataRequest[_]): TaskListStatus =

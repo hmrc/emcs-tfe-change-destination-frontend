@@ -21,12 +21,13 @@ import controllers.actions.{FakeDataRetrievalAction, FakeMovementAction}
 import mocks.services.MockUserAnswersService
 import models.response.emcsTfe.GuarantorType.NoGuarantor
 import models.response.emcsTfe.MovementGuaranteeModel
-import models.sections.ReviewAnswer.{ChangeAnswers, KeepAnswers}
 import models.sections.guarantor.GuarantorArranger.Consignor
+import models.sections.info.movementScenario.MovementScenario.ExportWithCustomsDeclarationLodgedInTheUk
 import models.{NormalMode, UserAddress, UserAnswers}
 import navigation.FakeNavigators.FakeGuarantorNavigator
 import pages.sections.consignor.ConsignorAddressPage
-import pages.sections.guarantor.{GuarantorArrangerPage, GuarantorRequiredPage, GuarantorReviewPage}
+import pages.sections.guarantor.{GuarantorArrangerPage, GuarantorRequiredPage}
+import pages.sections.info.DestinationTypePage
 import play.api.http.Status.SEE_OTHER
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
@@ -55,24 +56,11 @@ class GuarantorIndexControllerSpec extends SpecBase with MockUserAnswersService 
     "when GuarantorSection.isCompleted" - {
       "must redirect to the CYA controller" in new Fixture(
         Some(emptyUserAnswers
+          .set(DestinationTypePage, ExportWithCustomsDeclarationLodgedInTheUk)
           .set(GuarantorRequiredPage, true)
           .set(GuarantorArrangerPage, Consignor)
           .set(ConsignorAddressPage, UserAddress(None, "", "", ""))
-          .set(GuarantorReviewPage, KeepAnswers))) {
-
-        val result = testController.onPageLoad(testErn, testArc)(request)
-
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result) mustBe Some(controllers.sections.guarantor.routes.GuarantorCheckAnswersController.onPageLoad(testErn, testArc).url)
-      }
-    }
-
-    "when GuarantorSection.needsReview" - {
-      "must redirect to the CYA controller" in new Fixture(
-        Some(emptyUserAnswers
-          .set(GuarantorRequiredPage, true)
-          .set(GuarantorArrangerPage, Consignor)
-          .set(ConsignorAddressPage, UserAddress(None, "", "", "")))) {
+        )) {
 
         val result = testController.onPageLoad(testErn, testArc)(request)
 
@@ -85,7 +73,7 @@ class GuarantorIndexControllerSpec extends SpecBase with MockUserAnswersService 
 
       "must redirect to the guarantor required controller" in new Fixture(
         Some(emptyUserAnswers
-          .set(GuarantorReviewPage, ChangeAnswers)
+          .set(DestinationTypePage, ExportWithCustomsDeclarationLodgedInTheUk)
         )) {
         val result = testController.onPageLoad(testErn, testArc)(request)
 

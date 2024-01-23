@@ -122,7 +122,7 @@ class IndexControllerSpec extends SpecBase with MockPreDraftService with MockUse
         val result = controller.onSubmit(testErn, testArc)(request.withFormUrlEncodedBody(("value", "true")))
 
         status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual controllers.routes.DraftMovementController.onPageLoad(testErn, testArc).url
+        redirectLocation(result).value mustEqual controllers.routes.TaskListController.onPageLoad(testErn, testArc).url
       }
 
       "must redirect to the Info index and reinitialise the user answers when the user clicks 'Start a new CoD'" in new Test(Some(emptyUserAnswers)) {

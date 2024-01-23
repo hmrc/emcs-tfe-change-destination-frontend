@@ -19,41 +19,60 @@ package pages.sections.guarantor
 import models.Enumerable
 import models.requests.DataRequest
 import models.sections.guarantor.GuarantorArranger.{Consignee, Consignor}
+import models.sections.info.movementScenario.DestinationType.Export
+import models.sections.info.movementScenario.MovementScenario.ExportWithCustomsDeclarationLodgedInTheUk
+import models.sections.info.movementScenario.MovementType.UkToEu
+import models.sections.journeyType.HowMovementTransported.FixedTransportInstallations
 import pages.sections.Section
+import pages.sections.info.DestinationTypePage
+import pages.sections.journeyType.HowMovementTransportedPage
 import play.api.libs.json.{JsObject, JsPath}
 import viewmodels.taskList.{Completed, InProgress, NotStarted, TaskListStatus}
 
 case object GuarantorSection extends Section[JsObject] with Enumerable.Implicits {
   override val path: JsPath = JsPath \ "guarantor"
 
+  def requiresGuarantorToBeProvided(implicit request: DataRequest[_]): Boolean = {
+
+    val euChangedFromFixedTransport = {
+      request.userAnswers.get(DestinationTypePage).map(_.movementType).contains(UkToEu) &&
+        !request.userAnswers.get(HowMovementTransportedPage).contains(FixedTransportInstallations) &&
+        request.movementDetails.transportMode.transportModeCode == FixedTransportInstallations.toString
+    }
+
+    val gbToExport =
+      request.userAnswers.get(DestinationTypePage).contains(ExportWithCustomsDeclarationLodgedInTheUk) &&
+        request.movementDetails.destinationType != Export
+
+    (gbToExport || euChangedFromFixedTransport) && request.movementDetails.movementGuarantee.guarantorTrader.isEmpty
+  }
+
   //noinspection ScalaStyle
   override def status(implicit request: DataRequest[_]): TaskListStatus =
-    sectionHasBeenReviewed(GuarantorReviewPage) {
-      request.userAnswers.get(GuarantorRequiredPage) match {
-        case Some(true) =>
-          // guarantor required
-          request.userAnswers.get(GuarantorArrangerPage) match {
-            case Some(Consignee) | Some(Consignor) => Completed
-            case Some(_) =>
-              if (
-                request.userAnswers.get(GuarantorNamePage).nonEmpty &&
-                  request.userAnswers.get(GuarantorVatPage).nonEmpty &&
-                  request.userAnswers.get(GuarantorAddressPage).nonEmpty) {
-                Completed
-              } else {
-                InProgress
-              }
-            case None =>
-              // answer not present yet
+    request.userAnswers.get(GuarantorRequiredPage) match {
+      case Some(true) =>
+        // guarantor required
+        request.userAnswers.get(GuarantorArrangerPage) match {
+          case Some(Consignee) | Some(Consignor) => Completed
+          case Some(_) =>
+            if (
+              request.userAnswers.get(GuarantorNamePage).nonEmpty &&
+                request.userAnswers.get(GuarantorVatPage).nonEmpty &&
+                request.userAnswers.get(GuarantorAddressPage).nonEmpty) {
+              Completed
+            } else {
               InProgress
-          }
-        case Some(false) =>
-          // guarantor not required
-          Completed
-        case None =>
-          // answer not present yet
-          NotStarted
-      }
+            }
+          case None =>
+            // answer not present yet
+            InProgress
+        }
+      case Some(false) =>
+        // guarantor not required
+        Completed
+      case None =>
+        // answer not present yet
+        NotStarted
     }
 
   override def canBeCompletedForTraderAndDestinationType(implicit request: DataRequest[_]): Boolean = true

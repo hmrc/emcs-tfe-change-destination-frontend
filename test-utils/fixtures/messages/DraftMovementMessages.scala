@@ -16,7 +16,7 @@
 
 package fixtures.messages
 
-object DraftMovementMessages {
+object TaskListMessages {
   sealed trait ViewMessages extends BaseMessages {
     _: i18n =>
     def headingGbTaxWarehouseTo(input: String): String = s"Great Britain tax warehouse to $input"

@@ -21,19 +21,18 @@ import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import utils.Logging
-import views.html.DraftMovementView
+import views.html.TaskListView
 
 import javax.inject.Inject
 
-class DraftMovementController @Inject()(override val messagesApi: MessagesApi,
-                                        override val auth: AuthAction,
-                                        override val userAllowList: UserAllowListAction,
-                                        override val getData: DataRetrievalAction,
-                                        override val requireData: DataRequiredAction,
-                                        override val withMovement: MovementAction,
-                                        val controllerComponents: MessagesControllerComponents,
-                                        view: DraftMovementView
-                                       ) extends FrontendBaseController with I18nSupport with AuthActionHelper with Logging {
+class TaskListController @Inject()(override val messagesApi: MessagesApi,
+                                   override val auth: AuthAction,
+                                   override val userAllowList: UserAllowListAction,
+                                   override val getData: DataRetrievalAction,
+                                   override val requireData: DataRequiredAction,
+                                   override val withMovement: MovementAction,
+                                   val controllerComponents: MessagesControllerComponents,
+                                   view: TaskListView) extends FrontendBaseController with I18nSupport with AuthActionHelper with Logging {
 
   def onPageLoad(ern: String, arc: String): Action[AnyContent] =
     authorisedDataRequestWithUpToDateMovement(ern, arc) { implicit request =>

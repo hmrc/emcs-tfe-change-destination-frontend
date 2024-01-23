@@ -17,26 +17,13 @@
 package pages.sections.guarantor
 
 import base.SpecBase
-import models.response.emcsTfe.GuarantorType
-import models.response.emcsTfe.GuarantorType.NoGuarantor
 import play.api.test.FakeRequest
 
 class GuarantorRequiredPageSpec extends SpecBase {
 
-  val guarantorTypeCode: GuarantorType = maxGetMovementResponse.movementGuarantee.guarantorTypeCode
-
   "getValueFromIE801" - {
-    "must return Some(true)" - {
-      "when no guarantor is required" in {
-        GuarantorRequiredPage.getValueFromIE801(dataRequest(FakeRequest(),
-          movementDetails = maxGetMovementResponse.copy(movementGuarantee = maxGetMovementResponse.movementGuarantee.copy(NoGuarantor)))) mustBe Some(true)
-      }
-    }
-
-    "must return Some(false)" - {
-      "when a guarantor is required" in {
-        GuarantorRequiredPage.getValueFromIE801(dataRequest(FakeRequest())) mustBe Some(false)
-      }
+    "must return None" in {
+      GuarantorRequiredPage.getValueFromIE801(dataRequest(FakeRequest())) mustBe None
     }
   }
 }

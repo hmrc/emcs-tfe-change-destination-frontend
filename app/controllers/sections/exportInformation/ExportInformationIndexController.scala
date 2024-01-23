@@ -39,7 +39,7 @@ class ExportInformationIndexController @Inject()(
 
   def onPageLoad(ern: String, arc: String): Action[AnyContent] =
     authorisedDataRequestWithUpToDateMovement(ern, arc) { implicit request =>
-      if (ExportInformationSection.isCompleted || ExportInformationSection.needsReview) {
+      if (ExportInformationSection.isCompleted) {
         Redirect(controllers.sections.exportInformation.routes.ExportInformationCheckAnswersController.onPageLoad(ern, arc))
       } else {
         Redirect(controllers.sections.exportInformation.routes.ExportCustomsOfficeController.onPageLoad(ern, arc, NormalMode))

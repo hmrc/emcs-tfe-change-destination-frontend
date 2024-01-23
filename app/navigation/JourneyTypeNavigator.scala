@@ -55,12 +55,12 @@ class JourneyTypeNavigator @Inject()() extends BaseNavigator {
       jtRoutes.CheckYourAnswersJourneyTypeController.onPageLoad(userAnswers.ern, userAnswers.arc)
 
     case CheckYourAnswersJourneyTypePage => (userAnswers: UserAnswers) =>
-      routes.DraftMovementController.onPageLoad(userAnswers.ern, userAnswers.arc)
+      routes.TaskListController.onPageLoad(userAnswers.ern, userAnswers.arc)
 
     case JourneyTypeReviewPage => (userAnswers: UserAnswers) =>
       userAnswers.get(JourneyTypeReviewPage) match {
         case Some(ChangeAnswers) => controllers.sections.journeyType.routes.HowMovementTransportedController.onPageLoad(userAnswers.ern, userAnswers.arc, NormalMode)
-        case Some(KeepAnswers) => routes.DraftMovementController.onPageLoad(userAnswers.ern, userAnswers.arc)
+        case Some(KeepAnswers) => routes.TaskListController.onPageLoad(userAnswers.ern, userAnswers.arc)
         case _ => controllers.sections.journeyType.routes.JourneyTypeReviewController.onPageLoad(userAnswers.ern, userAnswers.arc)
       }
 

@@ -47,7 +47,7 @@ class DeclarationViewSpec extends SpecBase with ViewBehaviours {
 
           behave like pageWithExpectedElementsAndMessages(Seq(
             Selectors.title -> messagesForLanguage.title,
-            Selectors.subHeadingCaptionSelector -> messagesForLanguage.draftMovementSection,
+            Selectors.subHeadingCaptionSelector -> messagesForLanguage.taskListSection,
             Selectors.h1 -> messagesForLanguage.heading,
             Selectors.p(1) -> messagesForLanguage.content
           ))

@@ -17,34 +17,13 @@
 package pages.sections.destination
 
 import base.SpecBase
-import models.UserAddress
-import models.response.emcsTfe.TraderModel
 import play.api.test.FakeRequest
 
 class DestinationAddressPageSpec extends SpecBase {
 
-  val deliverPlaceTrader: TraderModel = maxGetMovementResponse.deliveryPlaceTrader.get
-
   "getValueFromIE801" - {
-    "must return Some(_)" - {
-      "when deliver place trader exists and has an address" in {
-        DestinationAddressPage.getValueFromIE801(dataRequest(FakeRequest())) mustBe deliverPlaceTrader.address.map(UserAddress.userAddressFromTraderAddress)
-      }
-    }
-    "must return None" - {
-      "when deliver place trader exists and has no address" in {
-        DestinationAddressPage.getValueFromIE801(dataRequest(
-          FakeRequest(),
-          movementDetails = maxGetMovementResponse.copy(deliveryPlaceTrader = Some(deliverPlaceTrader.copy(address = None)))
-        )) mustBe None
-      }
-      "when delivery place trader doesn't exist" in {
-        DestinationAddressPage.getValueFromIE801(dataRequest(
-          FakeRequest(),
-          movementDetails = maxGetMovementResponse.copy(deliveryPlaceTrader = None)
-        )) mustBe None
-      }
+    "must return None" in {
+      DestinationAddressPage.getValueFromIE801(dataRequest(FakeRequest())) mustBe None
     }
   }
-
 }

@@ -25,6 +25,8 @@ class UserRequestSpec extends SpecBase {
     Seq(
       ("GBRC123456789", GreatBritainRegisteredConsignor),
       ("XIRC123456789", NorthernIrelandRegisteredConsignor),
+      ("XIPA123456789", NorthernIrelandCertifiedConsignor),
+      ("XIPC123456789", NorthernIrelandTemporaryCertifiedConsignor),
       ("GBWK123456789", GreatBritainWarehouseKeeper),
       ("XIWK123456789", NorthernIrelandWarehouseKeeper),
       ("XI00123456789", NorthernIrelandWarehouse),

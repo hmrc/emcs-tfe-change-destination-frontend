@@ -23,10 +23,12 @@ import models.requests.DataRequest
 import models.response.emcsTfe.GuarantorType.NoGuarantor
 import models.response.emcsTfe.MovementGuaranteeModel
 import models.sections.guarantor.GuarantorArranger._
+import models.sections.info.movementScenario.MovementScenario.ExportWithCustomsDeclarationLodgedInTheUk
 import navigation.BaseNavigator
 import navigation.FakeNavigators.FakeNavigator
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import pages.sections.guarantor.{GuarantorArrangerPage, GuarantorRequiredPage}
+import pages.sections.info.DestinationTypePage
 import play.api.mvc.Results.Ok
 import play.api.mvc.{AnyContentAsEmpty, MessagesControllerComponents, Result}
 import play.api.test.FakeRequest
@@ -51,7 +53,10 @@ class GuarantorBaseControllerSpec extends SpecBase with MockUserAnswersService w
 
   "withGuarantorRequiredAnswer" - {
     "must return the success result" - {
-      "when guarantor is required" in new Test(emptyUserAnswers.set(GuarantorRequiredPage, true)) {
+      "when guarantor is required" in new Test(emptyUserAnswers
+        .set(DestinationTypePage, ExportWithCustomsDeclarationLodgedInTheUk)
+        .set(GuarantorRequiredPage, true)
+      ) {
         val result: Future[Result] = TestController.withGuarantorRequiredAnswer(Future.successful(Ok("beans")))
 
         status(result) mustBe OK
@@ -59,7 +64,10 @@ class GuarantorBaseControllerSpec extends SpecBase with MockUserAnswersService w
       }
     }
     "must redirect to guarantor CYA" - {
-      "when guarantor is not required" in new Test(emptyUserAnswers.set(GuarantorRequiredPage, false)) {
+      "when guarantor is not required" in new Test(emptyUserAnswers
+        .set(DestinationTypePage, ExportWithCustomsDeclarationLodgedInTheUk)
+        .set(GuarantorRequiredPage, false)
+      ) {
         val result: Future[Result] = TestController.withGuarantorRequiredAnswer(Future.successful(Ok("beans")))
 
         status(result) mustBe SEE_OTHER
@@ -70,13 +78,19 @@ class GuarantorBaseControllerSpec extends SpecBase with MockUserAnswersService w
 
   "withGuarantorArrangerAnswer" - {
     "must return the success result" - {
-      "when guarantor arranger is GoodsOwner" in new Test(emptyUserAnswers.set(GuarantorArrangerPage, GoodsOwner)) {
+      "when guarantor arranger is GoodsOwner" in new Test(emptyUserAnswers
+        .set(DestinationTypePage, ExportWithCustomsDeclarationLodgedInTheUk)
+        .set(GuarantorArrangerPage, GoodsOwner)
+      ) {
         val result: Future[Result] = TestController.withGuarantorArrangerAnswer(_ => Future.successful(Ok("beans")))
 
         status(result) mustBe OK
         contentAsString(result) mustBe "beans"
       }
-      "when guarantor arranger is Transporter" in new Test(emptyUserAnswers.set(GuarantorArrangerPage, Transporter)) {
+      "when guarantor arranger is Transporter" in new Test(emptyUserAnswers
+        .set(DestinationTypePage, ExportWithCustomsDeclarationLodgedInTheUk)
+        .set(GuarantorArrangerPage, Transporter)
+      ) {
         val result: Future[Result] = TestController.withGuarantorArrangerAnswer(_ => Future.successful(Ok("beans")))
 
         status(result) mustBe OK
@@ -84,7 +98,9 @@ class GuarantorBaseControllerSpec extends SpecBase with MockUserAnswersService w
       }
     }
     "must redirect to GuarantorIndexController" - {
-      "when GuarantorArrangerPage is not present in UserAnswers" in new Test(emptyUserAnswers) {
+      "when GuarantorArrangerPage is not present in UserAnswers" in new Test(emptyUserAnswers
+        .set(DestinationTypePage, ExportWithCustomsDeclarationLodgedInTheUk)
+      ) {
         val result: Future[Result] = TestController.withGuarantorArrangerAnswer(_ => Future.successful(Ok("beans")))
 
         status(result) mustBe SEE_OTHER
@@ -92,13 +108,19 @@ class GuarantorBaseControllerSpec extends SpecBase with MockUserAnswersService w
       }
     }
     "must redirect to guarantor CYA" - {
-      "when guarantor arranger is Consignor" in new Test(emptyUserAnswers.set(GuarantorArrangerPage, Consignor)) {
+      "when guarantor arranger is Consignor" in new Test(emptyUserAnswers
+        .set(DestinationTypePage, ExportWithCustomsDeclarationLodgedInTheUk)
+        .set(GuarantorArrangerPage, Consignor)
+      ) {
         val result: Future[Result] = TestController.withGuarantorArrangerAnswer(_ => Future.successful(Ok("beans")))
 
         status(result) mustBe SEE_OTHER
         redirectLocation(result) mustBe Some(controllers.sections.guarantor.routes.GuarantorCheckAnswersController.onPageLoad(testErn, testArc).url)
       }
-      "when guarantor arranger is Consignee" in new Test(emptyUserAnswers.set(GuarantorArrangerPage, Consignee)) {
+      "when guarantor arranger is Consignee" in new Test(emptyUserAnswers
+        .set(DestinationTypePage, ExportWithCustomsDeclarationLodgedInTheUk)
+        .set(GuarantorArrangerPage, Consignee)
+      ) {
         val result: Future[Result] = TestController.withGuarantorArrangerAnswer(_ => Future.successful(Ok("beans")))
 
         status(result) mustBe SEE_OTHER

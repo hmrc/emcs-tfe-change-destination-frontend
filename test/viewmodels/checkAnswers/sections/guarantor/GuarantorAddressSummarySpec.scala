@@ -22,10 +22,12 @@ import fixtures.messages.sections.guarantor.GuarantorAddressMessages.ViewMessage
 import models.requests.DataRequest
 import models.response.emcsTfe.{GuarantorType, MovementGuaranteeModel}
 import models.sections.guarantor.GuarantorArranger.{Consignee, Consignor, GoodsOwner, Transporter}
+import models.sections.info.movementScenario.MovementScenario.ExportWithCustomsDeclarationLodgedInTheUk
 import models.{CheckMode, UserAddress}
 import pages.sections.consignee.ConsigneeAddressPage
 import pages.sections.consignor.ConsignorAddressPage
 import pages.sections.guarantor.{GuarantorAddressPage, GuarantorArrangerPage, GuarantorRequiredPage}
+import pages.sections.info.DestinationTypePage
 import play.api.i18n.Messages
 import play.api.test.FakeRequest
 import play.twirl.api.{Html, HtmlFormat}
@@ -62,15 +64,17 @@ class GuarantorAddressSummarySpec extends SpecBase {
         Seq(GoodsOwner, Transporter).foreach { arranger =>
           s"when the Guarantor is ${arranger.getClass.getSimpleName.stripSuffix("$")}" - {
 
-            "when there's no answer in the user answers or 801" - {
+            "when there's no answer in the user answers" - {
 
               "must output the expected data" in {
 
                 implicit lazy val request: DataRequest[_] = dataRequest(
                   FakeRequest(),
                   emptyUserAnswers
-                    .set(GuarantorRequiredPage, true),
-                  movementDetails = maxGetMovementResponse.copy(movementGuarantee = MovementGuaranteeModel(GuarantorType.Transporter, None))
+                    .set(DestinationTypePage, ExportWithCustomsDeclarationLodgedInTheUk)
+                    .set(GuarantorRequiredPage, true)
+                    .set(GuarantorArrangerPage, arranger),
+                  movementDetails = maxGetMovementResponse.copy(movementGuarantee = MovementGuaranteeModel(GuarantorType.NoGuarantor, None))
                 )
 
                 GuarantorAddressSummary.row() mustBe expectedRow(messagesForLanguage.notProvided, true)
@@ -86,6 +90,7 @@ class GuarantorAddressSummarySpec extends SpecBase {
                 implicit lazy val request: DataRequest[_] = dataRequest(
                   FakeRequest(),
                   emptyUserAnswers
+                    .set(DestinationTypePage, ExportWithCustomsDeclarationLodgedInTheUk)
                     .set(GuarantorRequiredPage, true)
                     .set(GuarantorArrangerPage, arranger)
                 )
@@ -109,6 +114,7 @@ class GuarantorAddressSummarySpec extends SpecBase {
               "must output the expected row" in {
 
                 implicit lazy val request: DataRequest[_] = dataRequest(FakeRequest(), emptyUserAnswers
+                  .set(DestinationTypePage, ExportWithCustomsDeclarationLodgedInTheUk)
                   .set(GuarantorRequiredPage, true)
                   .set(GuarantorArrangerPage, arranger)
                   .set(GuarantorAddressPage, testUserAddress)
@@ -134,16 +140,26 @@ class GuarantorAddressSummarySpec extends SpecBase {
 
           "when there's no answer for the ConsignorAddressPage" - {
 
-            "must output the expected data" in {
+            "must use the data from the IE801" in {
 
               implicit lazy val request: DataRequest[_] = dataRequest(
                 FakeRequest(),
                 emptyUserAnswers
+                  .set(DestinationTypePage, ExportWithCustomsDeclarationLodgedInTheUk)
                   .set(GuarantorRequiredPage, true)
                   .set(GuarantorArrangerPage, Consignor)
               )
 
-              GuarantorAddressSummary.row() mustBe expectedRow(Text(messagesForLanguage.sectionNotComplete("Consignor")), false)
+              val expectedValue = HtmlContent(
+                HtmlFormat.fill(
+                  Seq(
+                    Html("ConsignorTraderStreetNumber ConsignorTraderStreetName<br>"),
+                    Html("ConsignorTraderCity<br>"),
+                    Html("ConsignorTraderPostcode")
+                  ))
+              )
+
+              GuarantorAddressSummary.row() mustBe expectedRow(expectedValue, false)
             }
           }
 
@@ -152,6 +168,7 @@ class GuarantorAddressSummarySpec extends SpecBase {
             "must output the expected row" in {
 
               implicit lazy val request: DataRequest[_] = dataRequest(FakeRequest(), emptyUserAnswers
+                .set(DestinationTypePage, ExportWithCustomsDeclarationLodgedInTheUk)
                 .set(GuarantorRequiredPage, true)
                 .set(GuarantorArrangerPage, Consignor)
                 .set(ConsignorAddressPage, testUserAddress)
@@ -179,6 +196,7 @@ class GuarantorAddressSummarySpec extends SpecBase {
               implicit lazy val request: DataRequest[_] = dataRequest(
                 FakeRequest(),
                 emptyUserAnswers
+                  .set(DestinationTypePage, ExportWithCustomsDeclarationLodgedInTheUk)
                   .set(GuarantorRequiredPage, true)
                   .set(GuarantorArrangerPage, Consignee),
                 movementDetails = maxGetMovementResponse.copy(consigneeTrader = None)
@@ -193,6 +211,7 @@ class GuarantorAddressSummarySpec extends SpecBase {
             "must output the expected row" in {
 
               implicit lazy val request: DataRequest[_] = dataRequest(FakeRequest(), emptyUserAnswers
+                .set(DestinationTypePage, ExportWithCustomsDeclarationLodgedInTheUk)
                 .set(GuarantorRequiredPage, true)
                 .set(GuarantorArrangerPage, Consignee)
                 .set(ConsigneeAddressPage, testUserAddress)

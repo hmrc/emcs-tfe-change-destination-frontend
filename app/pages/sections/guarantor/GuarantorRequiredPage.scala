@@ -17,7 +17,6 @@
 package pages.sections.guarantor
 
 import models.requests.DataRequest
-import models.response.emcsTfe.GuarantorType
 import pages.QuestionPage
 import play.api.libs.json.JsPath
 
@@ -25,6 +24,5 @@ case object GuarantorRequiredPage extends QuestionPage[Boolean] {
   override val toString: String = "guarantorRequired"
   override val path: JsPath = GuarantorSection.path \ toString
 
-  override def getValueFromIE801(implicit request: DataRequest[_]): Option[Boolean] =
-    Some(request.movementDetails.movementGuarantee.guarantorTypeCode == GuarantorType.NoGuarantor)
+  override def getValueFromIE801(implicit request: DataRequest[_]): Option[Boolean] = None
 }

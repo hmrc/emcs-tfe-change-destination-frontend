@@ -123,7 +123,7 @@ class JourneyTypeNavigatorSpec extends SpecBase {
 
         "must go to the construction page" in {
           navigator.nextPage(CheckYourAnswersJourneyTypePage, NormalMode, emptyUserAnswers) mustBe
-            routes.DraftMovementController.onPageLoad(testErn, testArc)
+            routes.TaskListController.onPageLoad(testErn, testArc)
         }
       }
 
@@ -141,7 +141,7 @@ class JourneyTypeNavigatorSpec extends SpecBase {
 
           "when the user answers no" in {
             navigator.nextPage(JourneyTypeReviewPage, NormalMode, emptyUserAnswers.set(JourneyTypeReviewPage, KeepAnswers)) mustBe
-              routes.DraftMovementController.onPageLoad(testErn, testArc)
+              routes.TaskListController.onPageLoad(testErn, testArc)
           }
         }
 

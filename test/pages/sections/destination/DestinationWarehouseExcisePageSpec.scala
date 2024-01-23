@@ -17,32 +17,13 @@
 package pages.sections.destination
 
 import base.SpecBase
-import models.response.emcsTfe.TraderModel
 import play.api.test.FakeRequest
 
 class DestinationWarehouseExcisePageSpec extends SpecBase {
 
-  val deliverPlaceTrader: TraderModel = maxGetMovementResponse.deliveryPlaceTrader.get
-
   "getValueFromIE801" - {
-    "must return Some(_)" - {
-      "when deliver place trader exists and has an excise number" in {
-        DestinationWarehouseExcisePage.getValueFromIE801(dataRequest(FakeRequest())) mustBe deliverPlaceTrader.traderExciseNumber
-      }
-    }
-    "must return None" - {
-      "when deliver place trader exists and has no excise number" in {
-        DestinationWarehouseExcisePage.getValueFromIE801(dataRequest(
-          FakeRequest(),
-          movementDetails = maxGetMovementResponse.copy(deliveryPlaceTrader = Some(deliverPlaceTrader.copy(traderExciseNumber = None)))
-        )) mustBe None
-      }
-      "when delivery place trader doesn't exist" in {
-        DestinationWarehouseExcisePage.getValueFromIE801(dataRequest(
-          FakeRequest(),
-          movementDetails = maxGetMovementResponse.copy(deliveryPlaceTrader = None)
-        )) mustBe None
-      }
+    "must return None" in {
+      DestinationWarehouseExcisePage.getValueFromIE801(dataRequest(FakeRequest())) mustBe None
     }
   }
 }

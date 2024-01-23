@@ -74,7 +74,7 @@ class FirstTransporterNavigatorSpec extends SpecBase {
 
       "must go to tasklist" in {
         navigator.nextPage(FirstTransporterCheckAnswersPage, NormalMode, emptyUserAnswers) mustBe
-          routes.DraftMovementController.onPageLoad(testErn, testArc)
+          routes.TaskListController.onPageLoad(testErn, testArc)
       }
 
     }
@@ -93,7 +93,7 @@ class FirstTransporterNavigatorSpec extends SpecBase {
 
         "when the user answers no (keep answers)" in {
           navigator.nextPage(FirstTransporterReviewPage, NormalMode, emptyUserAnswers.set(FirstTransporterReviewPage, KeepAnswers)) mustBe
-            routes.DraftMovementController.onPageLoad(testErn, testArc)
+            routes.TaskListController.onPageLoad(testErn, testArc)
         }
       }
 

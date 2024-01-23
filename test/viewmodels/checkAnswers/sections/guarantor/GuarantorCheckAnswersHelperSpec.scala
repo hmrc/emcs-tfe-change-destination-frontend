@@ -21,9 +21,11 @@ import fixtures.messages.sections.guarantor.GuarantorArrangerMessages.English
 import models.requests.DataRequest
 import models.sections.guarantor.GuarantorArranger
 import models.sections.guarantor.GuarantorArranger.{GoodsOwner, Transporter}
+import models.sections.info.movementScenario.MovementScenario.ExportWithCustomsDeclarationLodgedInTheUk
 import org.scalamock.scalatest.MockFactory
 import pages.sections.consignee.{ConsigneeAddressPage, ConsigneeBusinessNamePage}
 import pages.sections.guarantor._
+import pages.sections.info.DestinationTypePage
 import play.api.i18n.Messages
 import play.api.test.FakeRequest
 
@@ -42,6 +44,7 @@ class GuarantorCheckAnswersHelperSpec extends SpecBase with MockFactory {
             implicit val request: DataRequest[_] = dataRequest(
               FakeRequest(),
               emptyUserAnswers
+                .set(DestinationTypePage, ExportWithCustomsDeclarationLodgedInTheUk)
                 .set(GuarantorRequiredPage, true)
                 .set(GuarantorArrangerPage, value)
                 .set(GuarantorNamePage, "guarantor name")
@@ -57,6 +60,7 @@ class GuarantorCheckAnswersHelperSpec extends SpecBase with MockFactory {
             implicit val request: DataRequest[_] = dataRequest(
               FakeRequest(),
               emptyUserAnswers
+                .set(DestinationTypePage, ExportWithCustomsDeclarationLodgedInTheUk)
                 .set(GuarantorRequiredPage, true)
                 .set(GuarantorArrangerPage, value)
                 .set(ConsigneeBusinessNamePage, s"$value name")
@@ -72,6 +76,7 @@ class GuarantorCheckAnswersHelperSpec extends SpecBase with MockFactory {
         implicit val request: DataRequest[_] = dataRequest(
           FakeRequest(),
           emptyUserAnswers
+            .set(DestinationTypePage, ExportWithCustomsDeclarationLodgedInTheUk)
             .set(GuarantorRequiredPage, false)
         )
         helper.summaryList()(request, msgs).rows.length mustBe 1

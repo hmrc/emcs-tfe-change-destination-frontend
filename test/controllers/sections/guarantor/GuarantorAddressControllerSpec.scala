@@ -25,9 +25,11 @@ import mocks.services.MockUserAnswersService
 import models.response.emcsTfe.GuarantorType.NoGuarantor
 import models.response.emcsTfe.MovementGuaranteeModel
 import models.sections.guarantor.GuarantorArranger.{GoodsOwner, Transporter}
+import models.sections.info.movementScenario.MovementScenario.ExportWithCustomsDeclarationLodgedInTheUk
 import models.{NormalMode, UserAddress, UserAnswers}
 import navigation.FakeNavigators.FakeGuarantorNavigator
 import pages.sections.guarantor.{GuarantorAddressPage, GuarantorArrangerPage, GuarantorRequiredPage}
+import pages.sections.info.DestinationTypePage
 import play.api.data.Form
 import play.api.mvc.Call
 import play.api.test.FakeRequest
@@ -68,6 +70,7 @@ class GuarantorAddressControllerSpec extends SpecBase with MockUserAnswersServic
     guarantorArranger => {
 
       val answersSoFar = emptyUserAnswers
+        .set(DestinationTypePage, ExportWithCustomsDeclarationLodgedInTheUk)
         .set(GuarantorRequiredPage, true)
         .set(GuarantorArrangerPage, guarantorArranger)
 
@@ -119,7 +122,10 @@ class GuarantorAddressControllerSpec extends SpecBase with MockUserAnswersServic
   )
 
   "must redirect to the guarantor index if user hasn't answered that yet" in
-    new Fixture(Some(emptyUserAnswers.set(GuarantorRequiredPage, true))) {
+    new Fixture(Some(emptyUserAnswers
+      .set(DestinationTypePage, ExportWithCustomsDeclarationLodgedInTheUk)
+      .set(GuarantorRequiredPage, true)
+    )) {
       val result = testController.onPageLoad(testErn, testArc, NormalMode)(request)
 
       status(result) mustEqual SEE_OTHER

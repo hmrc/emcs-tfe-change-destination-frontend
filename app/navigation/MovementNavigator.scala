@@ -37,14 +37,14 @@ class MovementNavigator @Inject()() extends BaseNavigator {
         case Some(ChangeAnswers) =>
           controllers.sections.movement.routes.InvoiceDetailsController.onPageLoad(userAnswers.ern, userAnswers.arc)
         case _ =>
-          controllers.routes.DraftMovementController.onPageLoad(userAnswers.ern, userAnswers.arc)
+          controllers.routes.TaskListController.onPageLoad(userAnswers.ern, userAnswers.arc)
       }
 
     case InvoiceDetailsPage =>
       (userAnswers: UserAnswers) => controllers.sections.movement.routes.MovementCheckAnswersController.onPageLoad(userAnswers.ern, userAnswers.arc)
 
     case MovementCheckAnswersPage =>
-      (userAnswers: UserAnswers) => controllers.routes.DraftMovementController.onPageLoad(userAnswers.ern, userAnswers.arc)
+      (userAnswers: UserAnswers) => controllers.routes.TaskListController.onPageLoad(userAnswers.ern, userAnswers.arc)
 
     case _ =>
       //TODO update with MovementIndexController
@@ -53,7 +53,7 @@ class MovementNavigator @Inject()() extends BaseNavigator {
 
   private[navigation] val checkRouteMap: Page => UserAnswers => Call = {
     case _ =>
-      (userAnswers: UserAnswers) => controllers.routes.DraftMovementController.onPageLoad(userAnswers.ern, userAnswers.arc)
+      (userAnswers: UserAnswers) => controllers.routes.TaskListController.onPageLoad(userAnswers.ern, userAnswers.arc)
   }
 
   private[navigation] val reviewRouteMap: Page => UserAnswers => Call = {

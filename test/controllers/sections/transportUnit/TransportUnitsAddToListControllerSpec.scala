@@ -116,7 +116,7 @@ class TransportUnitsAddToListControllerSpec extends SpecBase with MockUserAnswer
 
       status(result) mustEqual SEE_OTHER
 
-      redirectLocation(result).value mustEqual controllers.routes.DraftMovementController.onPageLoad(testErn, testArc).url
+      redirectLocation(result).value mustEqual controllers.routes.TaskListController.onPageLoad(testErn, testArc).url
     }
 
     "must redirect to transport unit type page with next index if yes selected and clear down the answer for the page" in new Test(Some(
@@ -156,7 +156,7 @@ class TransportUnitsAddToListControllerSpec extends SpecBase with MockUserAnswer
 
       status(result) mustEqual SEE_OTHER
       redirectLocation(result).value mustEqual
-        controllers.routes.DraftMovementController.onPageLoad(testErn, testArc).url
+        controllers.routes.TaskListController.onPageLoad(testErn, testArc).url
     }
 
     "must redirect to task list page if MoreToCome is selected" in new Test(Some(
@@ -174,7 +174,7 @@ class TransportUnitsAddToListControllerSpec extends SpecBase with MockUserAnswer
 
       status(result) mustEqual SEE_OTHER
       redirectLocation(result).value mustEqual
-        controllers.routes.DraftMovementController.onPageLoad(testErn, testArc).url
+        controllers.routes.TaskListController.onPageLoad(testErn, testArc).url
     }
 
     "must return a Bad Request and errors when invalid data is submitted" in new Test(Some(emptyUserAnswers)) {
