@@ -16,6 +16,7 @@
 
 package models.sections.journeyType
 
+import models.sections.journeyType.HowMovementTransported._
 import org.scalatest.OptionValues
 import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.must.Matchers
@@ -41,6 +42,27 @@ class HowMovementTransportedSpec extends AnyFreeSpec with Matchers with OptionVa
       val howMovementTransported = HowMovementTransported.values.head
 
       Json.toJson(howMovementTransported) mustEqual JsString(howMovementTransported.toString)
+    }
+
+    ".transportModeToMaxDays" - {
+
+      Seq(
+        AirTransport -> 20,
+        FixedTransportInstallations -> 15,
+        InlandWaterwayTransport -> 35,
+        PostalConsignment -> 30,
+        RailTransport -> 35,
+        RoadTransport -> 35,
+        SeaTransport -> 45,
+        Other -> 45
+      ).foreach { transportModeToMaxDays =>
+
+        s"must return ${transportModeToMaxDays._2} when called for ${transportModeToMaxDays._1}" in {
+
+          HowMovementTransported.transportModeToMaxDays(transportModeToMaxDays._1) mustBe transportModeToMaxDays._2
+        }
+      }
+
     }
   }
 }

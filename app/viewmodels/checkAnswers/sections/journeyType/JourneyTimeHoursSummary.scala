@@ -18,7 +18,7 @@ package viewmodels.checkAnswers.sections.journeyType
 
 import models.CheckMode
 import models.requests.DataRequest
-import pages.sections.journeyType.JourneyTimeHoursPage
+import pages.sections.journeyType.{JourneyTimeDaysPage, JourneyTimeHoursPage}
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import viewmodels.govuk.summarylist._
@@ -28,7 +28,11 @@ object JourneyTimeHoursSummary {
 
   def row(onReviewPage: Boolean)(implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] = {
     val answers = request.userAnswers
-    answers.get(JourneyTimeHoursPage).map {
+    val isDaysAnswerDefined = request.userAnswers.get(JourneyTimeDaysPage).isDefined
+    val isHoursInLocalAnswers = answers.getFromUserAnswersOnly(JourneyTimeHoursPage).isDefined
+    //Stops the CYA page returning an 801 value and the 'local' answer
+    val optAnswer = if(onReviewPage || (!isDaysAnswerDefined && !isHoursInLocalAnswers)) JourneyTimeHoursPage.getValueFromIE801 else answers.getFromUserAnswersOnly(JourneyTimeHoursPage)
+    optAnswer.map {
       answer =>
         SummaryListRowViewModel(
           key = "journeyTimeHours.checkYourAnswersLabel",

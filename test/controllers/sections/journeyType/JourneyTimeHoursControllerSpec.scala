@@ -20,9 +20,11 @@ import base.SpecBase
 import controllers.actions.{FakeDataRetrievalAction, FakeMovementAction}
 import forms.sections.journeyType.JourneyTimeHoursFormProvider
 import mocks.services.MockUserAnswersService
+import models.response.emcsTfe.GetMovementResponse
+import models.sections.journeyType.HowMovementTransported
 import models.{NormalMode, UserAnswers}
 import navigation.FakeNavigators.FakeJourneyTypeNavigator
-import pages.sections.journeyType.JourneyTimeHoursPage
+import pages.sections.journeyType.{HowMovementTransportedPage, JourneyTimeDaysPage, JourneyTimeHoursPage}
 import play.api.data.Form
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.Helpers._
@@ -39,7 +41,7 @@ class JourneyTimeHoursControllerSpec extends SpecBase with MockUserAnswersServic
   lazy val form: Form[Int] = formProvider()
   lazy val view: JourneyTimeHoursView = app.injector.instanceOf[JourneyTimeHoursView]
 
-  class Test(val userAnswers: Option[UserAnswers]) {
+  class Test(val userAnswers: Option[UserAnswers], movementResponse: GetMovementResponse = maxGetMovementResponse) {
     lazy val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest()
 
     lazy val controller = new JourneyTimeHoursController(
@@ -50,7 +52,7 @@ class JourneyTimeHoursControllerSpec extends SpecBase with MockUserAnswersServic
       fakeAuthAction,
       new FakeDataRetrievalAction(userAnswers, Some(testMinTraderKnownFacts)),
       dataRequiredAction,
-      new FakeMovementAction(maxGetMovementResponse),
+      new FakeMovementAction(movementResponse),
       formProvider,
       Helpers.stubMessagesControllerComponents(),
       view
@@ -74,6 +76,67 @@ class JourneyTimeHoursControllerSpec extends SpecBase with MockUserAnswersServic
       MockUserAnswersService.set().returns(Future.successful(emptyUserAnswers))
 
       val result = controller.onSubmit(testErn, testArc, NormalMode)(request.withFormUrlEncodedBody(("value", validAnswer.toString)))
+
+      status(result) mustEqual SEE_OTHER
+      redirectLocation(result).value mustEqual testOnwardRoute.url
+    }
+
+    "must remove both the JourneyTimeHoursPage and JourneyTimeDaysPage answers when the user answer is the same as what is in 801" in new Test(Some(
+      emptyUserAnswers
+        .set(HowMovementTransportedPage, HowMovementTransported.AirTransport)
+        .set(JourneyTimeHoursPage, 1)
+        .set(JourneyTimeDaysPage, 3)
+    ),
+      movementResponse = maxGetMovementResponse.copy(journeyTime = "1 hours")
+    ) {
+
+      MockUserAnswersService.set(
+        emptyUserAnswers
+          .set(HowMovementTransportedPage, HowMovementTransported.AirTransport)
+      ).returns(Future.successful(emptyUserAnswers))
+
+      val result = controller.onSubmit(testErn, testArc, NormalMode)(request.withFormUrlEncodedBody(("value", validAnswer.toString)))
+
+      status(result) mustEqual SEE_OTHER
+      redirectLocation(result).value mustEqual testOnwardRoute.url
+    }
+
+    "must remove only the JourneyTimeDaysPage when the answer is different to the 801 value" in new Test(Some(
+      emptyUserAnswers
+        .set(HowMovementTransportedPage, HowMovementTransported.AirTransport)
+        .set(JourneyTimeHoursPage, 2)
+        .set(JourneyTimeDaysPage, 3)
+    ),
+      movementResponse = maxGetMovementResponse.copy(journeyTime = "1 hours")
+    ) {
+
+      MockUserAnswersService.set(
+        emptyUserAnswers
+          .set(HowMovementTransportedPage, HowMovementTransported.AirTransport)
+          .set(JourneyTimeHoursPage, 2)
+      ).returns(Future.successful(emptyUserAnswers))
+
+      val result = controller.onSubmit(testErn, testArc, NormalMode)(request.withFormUrlEncodedBody(("value", "2")))
+
+      status(result) mustEqual SEE_OTHER
+      redirectLocation(result).value mustEqual testOnwardRoute.url
+    }
+
+    "must remove only the JourneyTimeDaysPage when no JourneyTimeHoursPage exists" in new Test(Some(
+      emptyUserAnswers
+        .set(HowMovementTransportedPage, HowMovementTransported.AirTransport)
+        .set(JourneyTimeDaysPage, 3)
+    ),
+      movementResponse = maxGetMovementResponse.copy(journeyTime = "1 days")
+    ) {
+
+      MockUserAnswersService.set(
+        emptyUserAnswers
+          .set(HowMovementTransportedPage, HowMovementTransported.AirTransport)
+          .set(JourneyTimeHoursPage, 2)
+      ).returns(Future.successful(emptyUserAnswers))
+
+      val result = controller.onSubmit(testErn, testArc, NormalMode)(request.withFormUrlEncodedBody(("value", "2")))
 
       status(result) mustEqual SEE_OTHER
       redirectLocation(result).value mustEqual testOnwardRoute.url

@@ -52,6 +52,17 @@ object HowMovementTransported extends Enumerable.Implicits {
     Other
   )
 
+  val transportModeToMaxDays: Map[HowMovementTransported, Int] = Map(
+    AirTransport -> 20,
+    FixedTransportInstallations -> 15,
+    InlandWaterwayTransport -> 35,
+    PostalConsignment -> 30,
+    RailTransport -> 35,
+    RoadTransport -> 35,
+    SeaTransport -> 45,
+    Other -> 45
+  )
+
   def options(implicit messages: Messages): Seq[RadioItem] = values.zipWithIndex.map {
     case (value, _) =>
       RadioItem(
