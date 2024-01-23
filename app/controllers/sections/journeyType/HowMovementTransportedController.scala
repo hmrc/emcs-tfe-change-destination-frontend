@@ -20,17 +20,18 @@ import controllers.BaseNavigationController
 import controllers.actions._
 import forms.sections.journeyType.HowMovementTransportedFormProvider
 import models.requests.DataRequest
+import models.sections.ReviewAnswer
 import models.sections.journeyType.HowMovementTransported
 import models.sections.journeyType.HowMovementTransported.FixedTransportInstallations
 import models.sections.transportUnit.TransportUnitType.FixedTransport
 import models.{Index, Mode, NormalMode, UserAnswers}
 import navigation.JourneyTypeNavigator
-import pages.sections.journeyType.{HowMovementTransportedPage, JourneyTypeSection}
+import pages.sections.journeyType.{HowMovementTransportedPage, JourneyTypeReviewPage, JourneyTypeSection}
 import pages.sections.transportUnit.{TransportUnitTypePage, TransportUnitsSection}
 import play.api.i18n.MessagesApi
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import services.UserAnswersService
-import views.html.sections.journeyType.{HowMovementTransportedView, HowMovementTransportedNoOptionView}
+import views.html.sections.journeyType.{HowMovementTransportedNoOptionView, HowMovementTransportedView}
 
 import javax.inject.Inject
 import scala.concurrent.Future
@@ -72,7 +73,8 @@ class HowMovementTransportedController @Inject()(
     if (request.userAnswers.get(HowMovementTransportedPage).contains(answer)) {
       Future(Redirect(navigator.nextPage(HowMovementTransportedPage, mode, request.userAnswers)))
     } else {
-      val newUserAnswers = cleanseAnswers(answer)
+      val reviewPageAnswer = request.userAnswers.get(JourneyTypeReviewPage)
+      val newUserAnswers = (cleanseAnswers(answer) andThen addReviewAnswerToUserAnswersIfPresent(reviewPageAnswer))(request.userAnswers)
       saveAndRedirect(
         page = HowMovementTransportedPage,
         answer = answer,
@@ -93,17 +95,20 @@ class HowMovementTransportedController @Inject()(
       )
     }
 
-  private def cleanseAnswers(answer: HowMovementTransported)(implicit request: DataRequest[_]): UserAnswers = {
+  private def cleanseAnswers(answer: HowMovementTransported)(implicit request: DataRequest[_]): PartialFunction[UserAnswers, UserAnswers] = {
     //Cond156 - cleanup any existing TU entries when the user selects FixedTransportInstallations - set the Transport Unit type to be FixedTransportInstallations
-    if(answer == FixedTransportInstallations) {
-      request.userAnswers.remove(JourneyTypeSection).resetIndexedSection(TransportUnitsSection, Index(0)).set(
+    case userAnswers if answer == FixedTransportInstallations =>
+      userAnswers.remove(JourneyTypeSection).resetIndexedSection(TransportUnitsSection, Index(0)).set(
         TransportUnitTypePage(Index(0)), FixedTransport
       )
-    } else if(request.userAnswers.get(HowMovementTransportedPage).contains(FixedTransportInstallations)) {
+    case userAnswers if userAnswers.get(HowMovementTransportedPage).contains(FixedTransportInstallations) =>
       //If the user previously selected Fixed Transport Installation then clear the TU section (because the user did not actively enter any TU info)
-      request.userAnswers.remove(JourneyTypeSection).resetIndexedSection(TransportUnitsSection, Index(0))
-    } else {
-      request.userAnswers.remove(JourneyTypeSection)
-    }
+      userAnswers.remove(JourneyTypeSection).resetIndexedSection(TransportUnitsSection, Index(0))
+    case userAnswers => userAnswers.remove(JourneyTypeSection)
+  }
+
+  private def addReviewAnswerToUserAnswersIfPresent(optReviewPageAnswer: Option[ReviewAnswer]): PartialFunction[UserAnswers, UserAnswers] = {
+    case userAnswers if optReviewPageAnswer.isDefined => userAnswers.set(JourneyTypeReviewPage, optReviewPageAnswer.get)
+    case userAnswers => userAnswers
   }
 }

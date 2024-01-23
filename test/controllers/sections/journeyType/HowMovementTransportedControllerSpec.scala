@@ -21,11 +21,12 @@ import controllers.actions.{FakeDataRetrievalAction, FakeMovementAction}
 import controllers.routes
 import forms.sections.journeyType.HowMovementTransportedFormProvider
 import mocks.services.MockUserAnswersService
+import models.sections.ReviewAnswer.ChangeAnswers
 import models.sections.journeyType.HowMovementTransported
 import models.sections.transportUnit.TransportUnitType.{Container, Tractor}
 import models.{NormalMode, UserAnswers}
 import navigation.FakeNavigators.FakeJourneyTypeNavigator
-import pages.sections.journeyType.{GiveInformationOtherTransportPage, HowMovementTransportedPage, JourneyTimeDaysPage}
+import pages.sections.journeyType.{GiveInformationOtherTransportPage, HowMovementTransportedPage, JourneyTimeDaysPage, JourneyTypeReviewPage}
 import pages.sections.transportUnit.{TransportUnitIdentityPage, TransportUnitTypePage, TransportUnitsSection}
 import play.api.data.Form
 import play.api.libs.json.Json
@@ -113,7 +114,7 @@ class HowMovementTransportedControllerSpec extends SpecBase with MockUserAnswers
       redirectLocation(result).value mustEqual routes.JourneyRecoveryController.onPageLoad().url
     }
 
-    "must cleanse the journey section when changing the answer" in new Test(Some(
+    "must cleanse the journey section when changing the answer (retaining the review page answer)" in new Test(Some(
       emptyUserAnswers
         .set(HowMovementTransportedPage, HowMovementTransported.Other)
         .set(GiveInformationOtherTransportPage, "blah")
@@ -122,6 +123,7 @@ class HowMovementTransportedControllerSpec extends SpecBase with MockUserAnswers
         .set(TransportUnitIdentityPage(testIndex1), "Container1")
         .set(TransportUnitTypePage(testIndex2), Tractor)
         .set(TransportUnitIdentityPage(testIndex2), "Tractor")
+        .set(JourneyTypeReviewPage, ChangeAnswers)
     )) {
       val expectedAnswers = emptyUserAnswers
         .set(HowMovementTransportedPage, HowMovementTransported.values.head)
@@ -129,6 +131,7 @@ class HowMovementTransportedControllerSpec extends SpecBase with MockUserAnswers
         .set(TransportUnitIdentityPage(testIndex1), "Container1")
         .set(TransportUnitTypePage(testIndex2), Tractor)
         .set(TransportUnitIdentityPage(testIndex2), "Tractor")
+        .set(JourneyTypeReviewPage, ChangeAnswers)
 
       MockUserAnswersService.set(expectedAnswers).returns(Future.successful(expectedAnswers))
 
