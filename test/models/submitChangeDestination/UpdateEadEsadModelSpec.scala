@@ -20,7 +20,8 @@ import base.SpecBase
 import fixtures.SubmitChangeDestinationFixtures
 import models.requests.DataRequest
 import models.sections.ReviewAnswer.KeepAnswers
-import pages.sections.journeyType.JourneyTypeReviewPage
+import models.sections.journeyType.JourneyTime.{Days, Hours}
+import pages.sections.journeyType.{JourneyTimeDaysPage, JourneyTimeHoursPage, JourneyTypeReviewPage}
 import pages.sections.movement.MovementReviewAnswersPage
 import pages.sections.transportArranger.TransportArrangerReviewPage
 import play.api.mvc.AnyContentAsEmpty
@@ -29,6 +30,39 @@ import play.api.test.FakeRequest
 class UpdateEadEsadModelSpec extends SpecBase with SubmitChangeDestinationFixtures {
 
   val fakeRequest: FakeRequest[AnyContentAsEmpty.type] = FakeRequest()
+
+  "journeyTimeValue" - {
+
+    "must return Some(Hours) when hours" in {
+
+      implicit val dr: DataRequest[_] = dataRequest(
+        request = fakeRequest,
+        answers = emptyUserAnswers.set(JourneyTimeHoursPage, 1)
+      )
+
+      UpdateEadEsadModel.journeyTimeValue mustBe Some(Hours("1"))
+    }
+
+    "must return Some(Days) when hours" in {
+
+      implicit val dr: DataRequest[_] = dataRequest(
+        request = fakeRequest,
+        answers = emptyUserAnswers.set(JourneyTimeDaysPage, 1)
+      )
+
+      UpdateEadEsadModel.journeyTimeValue mustBe Some(Days("1"))
+    }
+
+    "must return None when not supplied" in {
+
+      implicit val dr: DataRequest[_] = dataRequest(
+        request = fakeRequest,
+        answers = emptyUserAnswers
+      )
+
+      UpdateEadEsadModel.journeyTimeValue mustBe None
+    }
+  }
 
   "apply" - {
 

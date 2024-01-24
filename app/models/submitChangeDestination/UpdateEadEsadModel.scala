@@ -17,7 +17,6 @@
 package models.submitChangeDestination
 
 import models.requests.DataRequest
-import models.response.MissingMandatoryPage
 import models.sections.journeyType.HowMovementTransported.Other
 import models.sections.journeyType.JourneyTime
 import models.sections.journeyType.JourneyTime.{Days, Hours}
@@ -43,19 +42,17 @@ object UpdateEadEsadModel extends ModelConstructorHelpers with Logging {
 
   implicit val fmt: OFormat[UpdateEadEsadModel] = Json.format
 
-  def apply(implicit request: DataRequest[_]): UpdateEadEsadModel = {
-
-    val journeyTimeValue: JourneyTime = (request.userAnswers.get(JourneyTimeHoursPage), request.userAnswers.get(JourneyTimeDaysPage)) match {
-      case (Some(hours), _) => Hours(hours.toString)
-      case (_, Some(days)) => Days(days.toString)
-      case _ =>
-        logger.error("Missing mandatory UserAnswer for journeyTime")
-        throw MissingMandatoryPage("Missing mandatory UserAnswer for journeyTime")
+  private[submitChangeDestination] def journeyTimeValue(implicit request: DataRequest[_]): Option[JourneyTime] =
+    (request.userAnswers.getFromUserAnswersOnly(JourneyTimeHoursPage), request.userAnswers.getFromUserAnswersOnly(JourneyTimeDaysPage)) match {
+      case (Some(hours), _) => Some(Hours(hours.toString))
+      case (_, Some(days)) => Some(Days(days.toString))
+      case _ => None
     }
 
+  def apply(implicit request: DataRequest[_]): UpdateEadEsadModel =
     UpdateEadEsadModel(
       administrativeReferenceCode = request.arc,
-      journeyTime = whenSectionChanged(JourneyTypeReviewPage)(journeyTimeValue),
+      journeyTime = whenSectionChanged(JourneyTypeReviewPage)(journeyTimeValue).flatten,
       changedTransportArrangement = whenSectionChanged(TransportArrangerReviewPage)(mandatoryPage(TransportArrangerPage)),
       sequenceNumber = Some(request.movementDetails.sequenceNumber.toString),
       invoiceDate = whenSectionChanged(MovementReviewAnswersPage)(mandatoryPage(InvoiceDetailsPage).date.toString),
@@ -67,5 +64,4 @@ object UpdateEadEsadModel extends ModelConstructorHelpers with Logging {
         }
       }.flatten
     )
-  }
 }
