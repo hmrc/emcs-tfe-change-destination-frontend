@@ -10,6 +10,7 @@ site.continue = Continue
 site.confirmAnswers = Confirm answers
 site.notProvided = Not provided
 site.saveAndContinue = Save and continue
+site.confirmAndContinue = Confirm and continue
 site.returnToDraft = Return to draft
 site.saveAndReturnToMovement = Save and return to movement
 site.start = Start now
@@ -322,6 +323,9 @@ howMovementTransported.0 = Other
 howMovementTransported.checkYourAnswers.label = Type of transport
 howMovementTransported.error.required = Select how the goods will be transported
 howMovementTransported.change.hidden = how will the goods be transported
+howMovementTransported.onlyFixedAllowed.title = How the goods will be transported
+howMovementTransported.onlyFixedAllowed.heading = How the goods will be transported
+howMovementTransported.onlyFixedAllowed.p = All movements of energy products between Northern Ireland and the European Union that do not require a guarantee must travel by fixed transport installations.
 
 giveInformationOtherTransport.title = Give information about your other type of transport
 giveInformationOtherTransport.heading = Give information about your other type of transport
