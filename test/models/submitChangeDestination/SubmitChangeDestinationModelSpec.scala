@@ -20,103 +20,176 @@ import base.SpecBase
 import config.AppConfig
 import fixtures.SubmitChangeDestinationFixtures
 import models.requests.DataRequest
-import models.sections.info._
-import pages.sections.info._
+import models.response.emcsTfe.GuarantorType.NoGuarantor
+import models.sections.ReviewAnswer.KeepAnswers
+import models.sections.consignee.{ConsigneeExportVat, ConsigneeExportVatType}
+import models.sections.info.ChangeType.Destination
+import pages.sections.consignee.{ConsigneeAddressPage, ConsigneeBusinessNamePage, ConsigneeExcisePage, ConsigneeExportVatPage}
+import pages.sections.destination.{DestinationAddressPage, DestinationBusinessNamePage, DestinationConsigneeDetailsPage, DestinationWarehouseExcisePage}
+import pages.sections.firstTransporter.FirstTransporterReviewPage
+import pages.sections.info.ChangeTypePage
+import pages.sections.journeyType.JourneyTypeReviewPage
+import pages.sections.movement.MovementReviewAnswersPage
+import pages.sections.transportArranger.TransportArrangerReviewPage
+import pages.sections.transportUnit.TransportUnitsReviewPage
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 
-//TODO: This has been coped over from CaM. Was originally the `SubmitCreateMovementModel`
-//      This will need to be refactored and udpated to accurately reflect the submission for CoD
 class SubmitChangeDestinationModelSpec extends SpecBase with SubmitChangeDestinationFixtures {
   implicit val ac: AppConfig = appConfig
 
   val fakeRequest: FakeRequest[AnyContentAsEmpty.type] = FakeRequest()
 
-  "dispatchOffice" - {
-    "when XIRC" - {
-      s"must return OfficeModel(XI$dispatchOfficeSuffix)" in {
-        implicit val dr: DataRequest[_] = dataRequest(
-          request = fakeRequest,
-          answers = emptyUserAnswers,
-          ern = "XIRC123"
-        )
-
-        SubmitChangeDestinationModel.dispatchOffice mustBe OfficeModel(s"XI$dispatchOfficeSuffix")
-      }
-    }
-    "when XIWK" - {
-      s"must return OfficeModel(GB$dispatchOfficeSuffix) when DispatchPlacePage is GreatBritain" in {
-        implicit val dr: DataRequest[_] = dataRequest(
-          request = fakeRequest,
-          answers = emptyUserAnswers.set(DispatchPlacePage, DispatchPlace.GreatBritain),
-          ern = "XIWK123"
-        )
-
-        SubmitChangeDestinationModel.dispatchOffice mustBe OfficeModel(s"GB$dispatchOfficeSuffix")
-      }
-      s"must return OfficeModel(XI$dispatchOfficeSuffix) when DispatchPlacePage is NorthernIreland" in {
-        implicit val dr: DataRequest[_] = dataRequest(
-          request = fakeRequest,
-          answers = emptyUserAnswers.set(DispatchPlacePage, DispatchPlace.NorthernIreland),
-          ern = "XIWK123"
-        )
-
-        SubmitChangeDestinationModel.dispatchOffice mustBe OfficeModel(s"XI$dispatchOfficeSuffix")
-      }
-    }
-    Seq("GBRC123", "GBWK123").foreach(
-      ern =>
-        s"when $ern" - {
-          s"must return OfficeModel(GB$dispatchOfficeSuffix)" in {
-            implicit val dr: DataRequest[_] = dataRequest(
-              request = fakeRequest,
-              answers = emptyUserAnswers,
-              ern = ern
-            )
-
-            SubmitChangeDestinationModel.dispatchOffice mustBe OfficeModel(s"GB$dispatchOfficeSuffix")
-          }
-        }
-    )
-  }
-
   "apply" - {
+
     "must return a model" - {
-      "when XIRC" in {
+
+      "when all sections have changed and now requires a guarantor (max scenario)" in {
+
         implicit val dr: DataRequest[_] = dataRequest(
           request = fakeRequest,
           answers = baseFullUserAnswers,
-          ern = "XIRC123"
+          ern = testGreatBritainErn,
+          movementDetails = maxGetMovementResponse.copy(movementGuarantee = models.response.emcsTfe.MovementGuaranteeModel(NoGuarantor, None))
         )
 
-        SubmitChangeDestinationModel.apply mustBe xircSubmitChangeDestinationModel
+        SubmitChangeDestinationModel.apply mustBe maxSubmitChangeDestination
       }
-      "when XIWK" in {
-        implicit val dr: DataRequest[_] = dataRequest(
-          request = fakeRequest,
-          answers = baseFullUserAnswers.set(DispatchPlacePage, DispatchPlace.NorthernIreland),
-          ern = "XIWK123"
-        )
 
-        SubmitChangeDestinationModel.apply mustBe xiwkSubmitChangeDestinationModel
-      }
-      "when GBRC" in {
+      "when all sections have changed and no new guarantor required" in {
+
         implicit val dr: DataRequest[_] = dataRequest(
           request = fakeRequest,
           answers = baseFullUserAnswers,
-          ern = "GBRC123"
+          ern = testGreatBritainErn
         )
 
-        SubmitChangeDestinationModel.apply mustBe gbrcSubmitChangeDestinationModel
+        SubmitChangeDestinationModel.apply mustBe maxSubmitChangeDestination.copy(
+          destinationChanged = maxSubmitChangeDestination.destinationChanged.copy(
+            movementGuarantee = None
+          )
+        )
       }
-      "when GBWK" in {
+
+      "when all sections have changed apart from Transport Units (no new guarantor required)" in {
+
         implicit val dr: DataRequest[_] = dataRequest(
           request = fakeRequest,
-          answers = baseFullUserAnswers,
-          ern = "GBWK123"
+          answers = baseFullUserAnswers.set(TransportUnitsReviewPage, KeepAnswers),
+          ern = testGreatBritainErn
         )
 
-        SubmitChangeDestinationModel.apply mustBe gbwkSubmitChangeDestinationModel
+        SubmitChangeDestinationModel.apply mustBe maxSubmitChangeDestination.copy(
+          destinationChanged = maxSubmitChangeDestination.destinationChanged.copy(
+            movementGuarantee = None
+          ),
+          transportDetails = None
+        )
+      }
+
+      "when all sections have changed apart from Transport Arranger (no new guarantor required)" in {
+
+        implicit val dr: DataRequest[_] = dataRequest(
+          request = fakeRequest,
+          answers = baseFullUserAnswers.set(TransportArrangerReviewPage, KeepAnswers),
+          ern = testGreatBritainErn
+        )
+
+        SubmitChangeDestinationModel.apply mustBe maxSubmitChangeDestination.copy(
+          destinationChanged = maxSubmitChangeDestination.destinationChanged.copy(
+            movementGuarantee = None
+          ),
+          updateEadEsad = maxSubmitChangeDestination.updateEadEsad.copy(
+            changedTransportArrangement = None
+          ),
+          newTransportArrangerTrader = None
+        )
+      }
+
+      "when all sections have changed apart from First Transporter (no new guarantor required)" in {
+
+        implicit val dr: DataRequest[_] = dataRequest(
+          request = fakeRequest,
+          answers = baseFullUserAnswers.set(FirstTransporterReviewPage, KeepAnswers),
+          ern = testGreatBritainErn
+        )
+
+        SubmitChangeDestinationModel.apply mustBe maxSubmitChangeDestination.copy(
+          destinationChanged = maxSubmitChangeDestination.destinationChanged.copy(
+            movementGuarantee = None
+          ),
+          newTransporterTrader = None
+        )
+      }
+
+      "when all sections have changed apart from Journey Type (no new guarantor required)" in {
+
+        implicit val dr: DataRequest[_] = dataRequest(
+          request = fakeRequest,
+          answers = baseFullUserAnswers.set(JourneyTypeReviewPage, KeepAnswers),
+          ern = testGreatBritainErn
+        )
+
+        SubmitChangeDestinationModel.apply mustBe maxSubmitChangeDestination.copy(
+          destinationChanged = maxSubmitChangeDestination.destinationChanged.copy(
+            movementGuarantee = None
+          ),
+          updateEadEsad = maxSubmitChangeDestination.updateEadEsad.copy(
+            journeyTime = None,
+            transportModeCode = None,
+            complementaryInformation = None
+          )
+        )
+      }
+
+      "when all sections have changed apart from Movement (no new guarantor required)" in {
+
+        implicit val dr: DataRequest[_] = dataRequest(
+          request = fakeRequest,
+          answers = baseFullUserAnswers.set(MovementReviewAnswersPage, KeepAnswers),
+          ern = testGreatBritainErn
+        )
+
+        SubmitChangeDestinationModel.apply mustBe maxSubmitChangeDestination.copy(
+          destinationChanged = maxSubmitChangeDestination.destinationChanged.copy(
+            movementGuarantee = None
+          ),
+          updateEadEsad = maxSubmitChangeDestination.updateEadEsad.copy(
+            invoiceDate = None,
+            invoiceNumber = None
+          )
+        )
+      }
+
+      "when only Destination Place has changed (minimum scenario)" in {
+
+        val userAnswers = emptyUserAnswers
+          // Info Section
+          .set(ChangeTypePage, Destination)
+          // Sections Reviews
+          .set(MovementReviewAnswersPage, KeepAnswers)
+          .set(JourneyTypeReviewPage, KeepAnswers)
+          .set(FirstTransporterReviewPage, KeepAnswers)
+          .set(TransportUnitsReviewPage, KeepAnswers)
+          .set(TransportArrangerReviewPage, KeepAnswers)
+          // consignee
+          .set(ConsigneeBusinessNamePage, "consignee name")
+          .set(ConsigneeExcisePage, "consignee ern")
+          .set(ConsigneeExportVatPage, ConsigneeExportVat(ConsigneeExportVatType.YesEoriNumber, Some("vat no"), Some("consignee eori")))
+          .set(ConsigneeAddressPage, testUserAddress.copy(street = "consignee street"))
+          // deliveryPlaceTrader
+          .set(DestinationWarehouseExcisePage, testGreatBritainErn)
+          .set(DestinationConsigneeDetailsPage, false)
+          .set(DestinationBusinessNamePage, "destination name")
+          .set(DestinationAddressPage, testUserAddress.copy(street = "destination street"))
+
+        implicit val dr: DataRequest[_] = dataRequest(
+          request = fakeRequest,
+          answers = userAnswers,
+          ern = testGreatBritainErn
+        )
+
+        SubmitChangeDestinationModel.apply mustBe minimumSubmitChangeDestinationModel
       }
     }
   }

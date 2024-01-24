@@ -20,19 +20,16 @@ import models.UserAddress
 import models.requests.DataRequest
 import models.sections.guarantor.GuarantorArranger
 import models.sections.info.movementScenario.MovementScenario
-import models.sections.info.movementScenario.MovementScenario.UnknownDestination
 import models.sections.transportArranger.TransportArranger
 import pages.sections.consignee._
 import pages.sections.consignor._
 import pages.sections.destination._
 import pages.sections.firstTransporter._
 import pages.sections.guarantor._
-import pages.sections.info.DestinationTypePage
 import pages.sections.transportArranger._
 import play.api.libs.json.{Format, Json}
 import utils.ModelConstructorHelpers
 
-//TODO: REFACTOR FOR ACTUAL COD SUBMISSION
 case class TraderModel(traderExciseNumber: Option[String],
                        traderName: Option[String],
                        address: Option[AddressModel],
@@ -41,23 +38,20 @@ case class TraderModel(traderExciseNumber: Option[String],
 
 object TraderModel extends ModelConstructorHelpers {
 
-  def applyConsignee(implicit request: DataRequest[_]): Option[TraderModel] = {
-    if(request.userAnswers.get(DestinationTypePage).contains(UnknownDestination)) None else {
-      Some(TraderModel(
-        // Consignee section has multiple entry points.
-        // If the ConsigneeExcisePage is defined, use that, otherwise use the VAT number entered on the ConsigneeExportVatPage.
-        traderExciseNumber = (request.userAnswers.get(ConsigneeExcisePage), request.userAnswers.get(ConsigneeExportVatPage).flatMap(_.vatNumber)) match {
-          case (Some(ern), _) => Some(ern)
-          case (_, Some(ern)) => Some(ern)
-          case _ => None
-        },
-        traderName = Some(mandatoryPage(ConsigneeBusinessNamePage)),
-        address = Some(AddressModel.fromUserAddress(mandatoryPage(ConsigneeAddressPage))),
-        vatNumber = None,
-        eoriNumber = request.userAnswers.get(ConsigneeExportVatPage).flatMap(_.eoriNumber)
-      ))
-    }
-  }
+  def applyConsignee(implicit request: DataRequest[_]): TraderModel =
+    TraderModel(
+      // Consignee section has multiple entry points.
+      // If the ConsigneeExcisePage is defined, use that, otherwise use the VAT number entered on the ConsigneeExportVatPage.
+      traderExciseNumber = (request.userAnswers.get(ConsigneeExcisePage), request.userAnswers.get(ConsigneeExportVatPage).flatMap(_.vatNumber)) match {
+        case (Some(ern), _) => Some(ern)
+        case (_, Some(ern)) => Some(ern)
+        case _ => None
+      },
+      traderName = Some(mandatoryPage(ConsigneeBusinessNamePage)),
+      address = Some(AddressModel.fromUserAddress(mandatoryPage(ConsigneeAddressPage))),
+      vatNumber = None,
+      eoriNumber = request.userAnswers.get(ConsigneeExportVatPage).flatMap(_.eoriNumber)
+    )
 
   def applyConsignor(implicit request: DataRequest[_]): TraderModel = {
     val consignorAddress: UserAddress = mandatoryPage(ConsignorAddressPage)
@@ -81,8 +75,8 @@ object TraderModel extends ModelConstructorHelpers {
           val consigneeTrader = applyConsignee
           Some(TraderModel(
             traderExciseNumber = Some(exciseId),
-            traderName = consigneeTrader.flatMap(_.traderName),
-            address = consigneeTrader.flatMap(_.address),
+            traderName = consigneeTrader.traderName,
+            address = consigneeTrader.address,
             vatNumber = None,
             eoriNumber = None
           ))
@@ -130,51 +124,47 @@ object TraderModel extends ModelConstructorHelpers {
     }
   }
 
-  def applyTransportArranger(implicit request: DataRequest[_]): Option[TraderModel] = {
-    val transportArranger: TransportArranger = mandatoryPage(TransportArrangerPage)
-
-    transportArranger match {
-      case TransportArranger.Consignor => None
-      case TransportArranger.Consignee => None
-      case _ => Some(TraderModel(
+  def applyTransportArranger(implicit request: DataRequest[_]): TraderModel =
+    mandatoryPage(TransportArrangerPage) match {
+      case TransportArranger.Consignor => TraderModel.applyConsignor
+      case TransportArranger.Consignee => TraderModel.applyConsignee
+      case _ => TraderModel(
         traderExciseNumber = None,
         traderName = Some(mandatoryPage(TransportArrangerNamePage)),
         address = Some(AddressModel.fromUserAddress(mandatoryPage(TransportArrangerAddressPage))),
         vatNumber = Some(mandatoryPage(TransportArrangerVatPage)),
         eoriNumber = None
-      ))
+      )
     }
-  }
 
-  def applyFirstTransporter(implicit request: DataRequest[_]): Option[TraderModel] = {
-    Some(TraderModel(
+  def applyFirstTransporter(implicit request: DataRequest[_]): TraderModel =
+    TraderModel(
       traderExciseNumber = None,
       traderName = Some(mandatoryPage(FirstTransporterNamePage)),
       address = Some(AddressModel.fromUserAddress(mandatoryPage(FirstTransporterAddressPage))),
       vatNumber = Some(mandatoryPage(FirstTransporterVatPage)),
       eoriNumber = None
-    ))
-  }
+    )
 
-  def applyGuarantor(guarantorArranger: GuarantorArranger)(implicit request: DataRequest[_]): Option[TraderModel] = {
+  def applyGuarantor(guarantorArranger: GuarantorArranger)(implicit request: DataRequest[_]): TraderModel = {
     guarantorArranger match {
-      case GuarantorArranger.Consignor => Some(applyConsignor.copy(traderExciseNumber = None))
+      case GuarantorArranger.Consignor => applyConsignor.copy(traderExciseNumber = None)
       case GuarantorArranger.Consignee =>
         val consigneeTrader = applyConsignee
-        Some(TraderModel(
+        TraderModel(
           traderExciseNumber = None,
-          traderName = consigneeTrader.flatMap(_.traderName),
-          address = consigneeTrader.flatMap(_.address),
+          traderName = consigneeTrader.traderName,
+          address = consigneeTrader.address,
           vatNumber = request.userAnswers.get(ConsigneeExportVatPage).flatMap(_.vatNumber),
           eoriNumber = None
-        ))
-      case _ => Some(TraderModel(
+        )
+      case _ => TraderModel(
         traderExciseNumber = None,
         traderName = Some(mandatoryPage(GuarantorNamePage)),
         address = Some(AddressModel.fromUserAddress(mandatoryPage(GuarantorAddressPage))),
         vatNumber = Some(mandatoryPage(GuarantorVatPage)),
         eoriNumber = None
-      ))
+      )
     }
   }
 

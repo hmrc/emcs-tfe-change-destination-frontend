@@ -26,7 +26,7 @@ trait GetMovementResponseFixtures extends BaseFixtures {
   val testDateString = "2020-01-01"
 
   lazy val maxGetMovementResponse: GetMovementResponse = GetMovementResponse(
-    arc = "ExciseMovementArc",
+    arc = testArc,
     sequenceNumber = 1,
     destinationType = DestinationType.TaxWarehouse,
     memberStateCode = Some("CCTMemberStateCode"),
@@ -206,7 +206,7 @@ trait GetMovementResponseFixtures extends BaseFixtures {
   )
 
   lazy val maxGetMovementJson: JsObject = Json.obj(
-    "arc"                                  -> "ExciseMovementArc",
+    "arc"                                  -> testArc,
     "sequenceNumber"                       -> 1,
     "destinationType"                      -> "1",
     "memberStateCode"                      -> "CCTMemberStateCode",

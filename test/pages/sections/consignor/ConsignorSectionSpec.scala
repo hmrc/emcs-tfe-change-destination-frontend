@@ -35,4 +35,5 @@ class ConsignorSectionSpec extends SpecBase {
       }
     }
   }
+
 }

@@ -18,23 +18,7 @@ package fixtures
 
 import models._
 import models.sections.consignee.{ConsigneeExportVat, ConsigneeExportVatType}
-import models.sections.guarantor.GuarantorArranger
-import models.sections.info.movementScenario.{DestinationType, MovementScenario, MovementType, OriginType}
 import models.sections.info.{DispatchDetailsModel, InvoiceDetailsModel}
-import models.sections.journeyType.HowMovementTransported
-import models.sections.transportArranger.TransportArranger
-import models.sections.transportUnit.{TransportSealTypeModel, TransportUnitType}
-import models.submitChangeDestination._
-import pages.sections.consignee._
-import pages.sections.consignor.ConsignorAddressPage
-import pages.sections.destination.{DestinationAddressPage, DestinationBusinessNamePage, DestinationWarehouseVatPage}
-import pages.sections.exportInformation.ExportCustomsOfficePage
-import pages.sections.firstTransporter.{FirstTransporterAddressPage, FirstTransporterNamePage, FirstTransporterVatPage}
-import pages.sections.guarantor._
-import pages.sections.info.{DestinationTypePage, DispatchDetailsPage}
-import pages.sections.journeyType.{GiveInformationOtherTransportPage, HowMovementTransportedPage, JourneyTimeHoursPage}
-import pages.sections.transportArranger.{TransportArrangerAddressPage, TransportArrangerNamePage, TransportArrangerPage, TransportArrangerVatPage}
-import pages.sections.transportUnit.{TransportSealTypePage, TransportUnitGiveMoreInformationPage, TransportUnitIdentityPage, TransportUnitTypePage}
 import play.api.libs.json.{JsObject, Json}
 import play.api.mvc.Call
 
@@ -150,93 +134,4 @@ trait BaseFixtures {
     "date" -> Json.toJson(LocalDate.of(2020, 2, 2)),
     "time" -> "07:25"
   )
-
-  val minimumSubmitChangeDestinationModel: SubmitChangeDestinationModel = SubmitChangeDestinationModel(
-    movementType = MovementType.ImportEu,
-    attributes = AttributesModel(SubmissionMessageType.Standard),
-    consigneeTrader = None,
-    consignorTrader = TraderModel(
-      traderExciseNumber = Some("XIRC123"),
-      traderName = Some(testMinTraderKnownFacts.traderName),
-      address = None,
-      vatNumber = None,
-      eoriNumber = None
-    ),
-    complementConsigneeTrader = None,
-    deliveryPlaceTrader = None,
-    deliveryPlaceCustomsOffice = None,
-    competentAuthorityDispatchOffice = OfficeModel("office"),
-    transportArrangerTrader = None,
-    firstTransporterTrader = None,
-    headerEadEsad = HeaderEadEsadModel(
-      destinationType = DestinationType.DirectDelivery,
-      journeyTime = "2 hours",
-      transportArrangement = TransportArranger.GoodsOwner
-    ),
-    transportMode = TransportModeModel(
-      transportModeCode = HowMovementTransported.AirTransport.toString,
-      complementaryInformation = None
-    ),
-    movementGuarantee = MovementGuaranteeModel(
-      guarantorTypeCode = GuarantorArranger.GoodsOwner,
-      guarantorTrader = None
-    ),
-    eadEsadDraft = EadEsadDraftModel(
-      originTypeCode = OriginType.Imports,
-      dateOfDispatch = "2020-10-31",
-      timeOfDispatch = None
-    ),
-    transportDetails = Seq()
-  )
-
-  val dispatchOfficeSuffix = "004098"
-
-  val baseFullUserAnswers: UserAnswers = emptyUserAnswers
-    // movementType
-    .set(DestinationTypePage, MovementScenario.DirectDelivery)
-    // consignee
-    .set(ConsigneeBusinessNamePage, "consignee name")
-    .set(ConsigneeExcisePage, "consignee ern")
-    .set(ConsigneeExportVatPage, ConsigneeExportVat(ConsigneeExportVatType.YesEoriNumber, Some("vat no"), Some("consignee eori")))
-    .set(ConsigneeAddressPage, testUserAddress.copy(street = "consignee street"))
-    // consignor
-    .set(ConsignorAddressPage, testUserAddress.copy(street = "consignor street"))
-    // complementConsigneeTrader
-    .set(ConsigneeExemptOrganisationPage, ExemptOrganisationDetailsModel("state", "number"))
-    // deliveryPlaceTrader
-    .set(DestinationWarehouseVatPage, "destination ern")
-    .set(DestinationBusinessNamePage, "destination name")
-    .set(DestinationAddressPage, testUserAddress.copy(street = "destination street"))
-    // deliveryPlaceCustomsOffice
-    .set(ExportCustomsOfficePage, "delivery place customs office")
-    // transportArrangerTrader
-    .set(TransportArrangerPage, TransportArranger.GoodsOwner)
-    .set(TransportArrangerNamePage, "arranger name")
-    .set(TransportArrangerAddressPage, testUserAddress.copy(street = "arranger street"))
-    .set(TransportArrangerVatPage, "arranger vat")
-    // firstTransporterTrader
-    .set(FirstTransporterNamePage, "first name")
-    .set(FirstTransporterAddressPage, testUserAddress.copy(street = "first street"))
-    .set(FirstTransporterVatPage, "first vat")
-    // headerEadEsad
-    .set(JourneyTimeHoursPage, 2)
-    // transportMode
-    .set(HowMovementTransportedPage, HowMovementTransported.AirTransport)
-    .set(GiveInformationOtherTransportPage, "info")
-    // movementGuarantee
-    .set(GuarantorRequiredPage, true)
-    .set(GuarantorNamePage, "guarantor name")
-    .set(GuarantorAddressPage, testUserAddress.copy(street = "guarantor street"))
-    .set(GuarantorVatPage, "guarantor vat")
-    .set(GuarantorArrangerPage, GuarantorArranger.GoodsOwner)
-    .set(GuarantorNamePage, "guarantor name")
-    .set(GuarantorAddressPage, testUserAddress.copy(street = "guarantor street"))
-    .set(GuarantorVatPage, "guarantor vat")
-    // eadEsadDraft
-    .set(DispatchDetailsPage(), DispatchDetailsModel(LocalDate.parse("2020-10-31"), LocalTime.parse("23:59:59")))
-    // transportDetails
-    .set(TransportUnitTypePage(testIndex1), TransportUnitType.FixedTransport)
-    .set(TransportUnitIdentityPage(testIndex1), "identity")
-    .set(TransportSealTypePage(testIndex1), TransportSealTypeModel("seal type", Some("seal info")))
-    .set(TransportUnitGiveMoreInformationPage(testIndex1), Some("more info"))
 }

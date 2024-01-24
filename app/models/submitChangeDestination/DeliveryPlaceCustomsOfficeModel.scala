@@ -17,22 +17,18 @@
 package models.submitChangeDestination
 
 import models.requests.DataRequest
-import pages.sections.journeyType.{GiveInformationOtherTransportPage, HowMovementTransportedPage}
+import pages.sections.exportInformation.{ExportCustomsOfficePage, ExportInformationSection}
 import play.api.libs.json.{Json, OFormat}
 import utils.ModelConstructorHelpers
 
-//TODO: REFACTOR FOR ACTUAL COD SUBMISSION
-case class TransportModeModel(
-                               transportModeCode: String,
-                               complementaryInformation: Option[String]
-                             )
+case class DeliveryPlaceCustomsOfficeModel(referenceNumber: String)
 
-object TransportModeModel extends ModelConstructorHelpers {
+object DeliveryPlaceCustomsOfficeModel extends ModelConstructorHelpers {
 
-  def apply(implicit request: DataRequest[_]): TransportModeModel = TransportModeModel(
-    transportModeCode = mandatoryPage(HowMovementTransportedPage).toString,
-    complementaryInformation = request.userAnswers.get(GiveInformationOtherTransportPage)
-  )
+  implicit val fmt: OFormat[DeliveryPlaceCustomsOfficeModel] = Json.format
 
-  implicit val fmt: OFormat[TransportModeModel] = Json.format
+  def apply(implicit request: DataRequest[_]): Option[DeliveryPlaceCustomsOfficeModel] =
+    Option.when(ExportInformationSection.canBeCompletedForTraderAndDestinationType) {
+      DeliveryPlaceCustomsOfficeModel(mandatoryPage(ExportCustomsOfficePage))
+    }
 }

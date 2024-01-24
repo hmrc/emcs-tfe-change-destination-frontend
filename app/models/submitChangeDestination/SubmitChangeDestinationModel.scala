@@ -16,77 +16,31 @@
 
 package models.submitChangeDestination
 
-import config.AppConfig
-import models.UserType
-import models.UserType._
 import models.requests.DataRequest
-import models.sections.info.DispatchPlace
-import models.sections.info.movementScenario.{MovementScenario, MovementType}
-import pages.sections.exportInformation.ExportCustomsOfficePage
-import pages.sections.info.{DestinationTypePage, DispatchPlacePage}
+import pages.sections.firstTransporter.FirstTransporterReviewPage
+import pages.sections.transportArranger.TransportArrangerReviewPage
+import pages.sections.transportUnit.TransportUnitsReviewPage
 import play.api.libs.json.{Json, OFormat}
 import utils.ModelConstructorHelpers
 
-//TODO: THIS MODEL IS ACTUALLY SUBMIT CREATE MOVEMENT
-//      It has been copied over from the Create Movement Frontend and then renamed - but the fields need updating as part
-//      Of the submission story for CoD that gets played. Then these comments can be removed.
 case class SubmitChangeDestinationModel(
-                                movementType: MovementType,
-                                attributes: AttributesModel,
-                                consigneeTrader: Option[TraderModel],
-                                consignorTrader: TraderModel,
-                                complementConsigneeTrader: Option[ComplementConsigneeTraderModel],
-                                deliveryPlaceTrader: Option[TraderModel],
-                                deliveryPlaceCustomsOffice: Option[OfficeModel],
-                                competentAuthorityDispatchOffice: OfficeModel,
-                                transportArrangerTrader: Option[TraderModel],
-                                firstTransporterTrader: Option[TraderModel],
-                                headerEadEsad: HeaderEadEsadModel,
-                                transportMode: TransportModeModel,
-                                movementGuarantee: MovementGuaranteeModel,
-                                eadEsadDraft: EadEsadDraftModel,
-                                transportDetails: Seq[TransportDetailsModel]
-                              )
+                                         newTransportArrangerTrader: Option[TraderModel],
+                                         updateEadEsad: UpdateEadEsadModel,
+                                         destinationChanged: DestinationChangedModel,
+                                         newTransporterTrader: Option[TraderModel],
+                                         transportDetails: Option[Seq[TransportDetailsModel]]
+                                       )
 
 object SubmitChangeDestinationModel extends ModelConstructorHelpers {
+
   implicit val fmt: OFormat[SubmitChangeDestinationModel] = Json.format
 
-  private[submitChangeDestination]def dispatchOffice(implicit request: DataRequest[_], appConfig: AppConfig): OfficeModel = {
-
-    val userType = UserType(request.ern)
-
-    // TODO will need to align for duty paid traders
-    OfficeModel(
-      if(userType == NorthernIrelandRegisteredConsignor) {
-        DispatchPlace.NorthernIreland + appConfig.destinationOfficeSuffix
-      } else if(userType == NorthernIrelandWarehouseKeeper) {
-        mandatoryPage(DispatchPlacePage) + appConfig.destinationOfficeSuffix
-      } else {
-        DispatchPlace.GreatBritain + appConfig.destinationOfficeSuffix
-      }
-    )
-  }
-
-  def apply(implicit request: DataRequest[_], appConfig: AppConfig): SubmitChangeDestinationModel = {
-
-    val movementScenario: MovementScenario = mandatoryPage(DestinationTypePage)
-
+  def apply(implicit request: DataRequest[_]): SubmitChangeDestinationModel =
     SubmitChangeDestinationModel(
-      movementType = movementScenario.movementType,
-      attributes = AttributesModel.apply(movementScenario.destinationType),
-      consigneeTrader = TraderModel.applyConsignee,
-      consignorTrader = TraderModel.applyConsignor,
-      complementConsigneeTrader = ComplementConsigneeTraderModel.apply,
-      deliveryPlaceTrader = TraderModel.applyDeliveryPlace(movementScenario),
-      deliveryPlaceCustomsOffice = request.userAnswers.get(ExportCustomsOfficePage).map(OfficeModel(_)),
-      competentAuthorityDispatchOffice = dispatchOffice,
-      transportArrangerTrader = TraderModel.applyTransportArranger,
-      firstTransporterTrader = TraderModel.applyFirstTransporter,
-      headerEadEsad = HeaderEadEsadModel.apply(movementScenario.destinationType),
-      transportMode = TransportModeModel.apply,
-      movementGuarantee = MovementGuaranteeModel.apply,
-      eadEsadDraft = EadEsadDraftModel.apply,
-      transportDetails = TransportDetailsModel.apply
+      newTransportArrangerTrader = whenSectionChanged(TransportArrangerReviewPage)(TraderModel.applyTransportArranger),
+      updateEadEsad = UpdateEadEsadModel.apply,
+      destinationChanged = DestinationChangedModel.apply,
+      newTransporterTrader = whenSectionChanged(FirstTransporterReviewPage)(TraderModel.applyFirstTransporter),
+      transportDetails = whenSectionChanged(TransportUnitsReviewPage)(TransportDetailsModel.apply)
     )
-  }
 }

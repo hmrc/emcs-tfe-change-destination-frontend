@@ -14,13 +14,16 @@
  * limitations under the License.
  */
 
-package models.submitChangeDestination
+package models.response
 
-import play.api.libs.json.{Json, OFormat}
+import play.api.libs.functional.syntax._
+import play.api.libs.json._
 
-//TODO: REFACTOR FOR ACTUAL COD SUBMISSION
-case class OfficeModel(referenceNumber: String)
+case class SubmitChangeDestinationResponse(receipt: String, downstreamService: String)
 
-object OfficeModel {
-  implicit val fmt: OFormat[OfficeModel] = Json.format
+object SubmitChangeDestinationResponse {
+  implicit val reads: Reads[SubmitChangeDestinationResponse] =
+    (__ \ "message").read[String].map(SubmitChangeDestinationResponse(_, "EIS")) or
+      (__ \ "receipt").read[String].map(SubmitChangeDestinationResponse(_, "ChRIS"))
+
 }

@@ -25,16 +25,15 @@ import play.api.libs.json.{Json, OFormat}
 import queries.TransportUnitsCount
 import utils.{JsonOptionFormatter, Logging, ModelConstructorHelpers}
 
-//TODO: REFACTOR FOR ACTUAL COD SUBMISSION
-case class TransportDetailsModel(
-    transportUnitCode: String,
-    identityOfTransportUnits: Option[String],
-    commercialSealIdentification: Option[String],
-    complementaryInformation: Option[String],
-    sealInformation: Option[String]
-)
+case class TransportDetailsModel(transportUnitCode: String,
+                                 identityOfTransportUnits: Option[String],
+                                 commercialSealIdentification: Option[String],
+                                 complementaryInformation: Option[String],
+                                 sealInformation: Option[String])
 
 object TransportDetailsModel extends ModelConstructorHelpers with Logging with JsonOptionFormatter {
+
+  implicit val fmt: OFormat[TransportDetailsModel] = Json.format
 
   def apply(implicit request: DataRequest[_]): Seq[TransportDetailsModel] = {
     request.userAnswers.get(TransportUnitsCount) match {
@@ -44,19 +43,17 @@ object TransportDetailsModel extends ModelConstructorHelpers with Logging with J
       case Some(value) =>
         (0 until value)
           .map(Index(_))
-        .map {
-          idx =>
-            val sealType: Option[TransportSealTypeModel] = request.userAnswers.get(TransportSealTypePage(idx))
-            TransportDetailsModel(
-              transportUnitCode = mandatoryPage(TransportUnitTypePage(idx)).toString,
-              identityOfTransportUnits = request.userAnswers.get(TransportUnitIdentityPage(idx)),
-              commercialSealIdentification = sealType.map(_.sealType),
-              complementaryInformation = request.userAnswers.get(TransportUnitGiveMoreInformationPage(idx)).flatten,
-              sealInformation = sealType.flatMap(_.moreInfo)
-            )
-        }
+          .map {
+            idx =>
+              val sealType: Option[TransportSealTypeModel] = request.userAnswers.get(TransportSealTypePage(idx))
+              TransportDetailsModel(
+                transportUnitCode = mandatoryPage(TransportUnitTypePage(idx)).toString,
+                identityOfTransportUnits = request.userAnswers.get(TransportUnitIdentityPage(idx)),
+                commercialSealIdentification = sealType.map(_.sealType),
+                complementaryInformation = request.userAnswers.get(TransportUnitGiveMoreInformationPage(idx)).flatten,
+                sealInformation = sealType.flatMap(_.moreInfo)
+              )
+          }
     }
   }
-
-  implicit val fmt: OFormat[TransportDetailsModel] = Json.format
 }

@@ -74,8 +74,11 @@ case object ConsigneeSection extends Section[JsObject] with Enumerable.Implicits
     }
   }
 
+  def hasChanged(implicit request: DataRequest[_]): Boolean =
+    request.userAnswers.get(ChangeTypePage).contains(Consignee)
+
   override def canBeCompletedForTraderAndDestinationType(implicit request: DataRequest[_]): Boolean =
-    request.userAnswers.get(ChangeTypePage).contains(Consignee) && !request.userAnswers.get(DestinationTypePage).contains(UnknownDestination)
+    hasChanged && !request.userAnswers.get(DestinationTypePage).contains(UnknownDestination)
 
   def hasConsigneeChanged(implicit request: DataRequest[_]): Boolean = {
 

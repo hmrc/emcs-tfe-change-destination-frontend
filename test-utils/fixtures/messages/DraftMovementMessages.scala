@@ -54,7 +54,7 @@ object TaskListMessages {
     val documents: String = "Documents"
 
     val submitSectionHeading: String = "Submit"
-    val reviewAndSubmit: String = "Review and submit"
+    val submit: String = "Submit"
   }
 
   object English extends ViewMessages with BaseEnglish

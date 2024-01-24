@@ -192,7 +192,6 @@ taskList.section.transport.transportArranger = Transport arranger
 taskList.section.transport.firstTransporter = First transporter
 taskList.section.transport.units = Transport units
 taskList.section.submit = Submit
-taskList.section.submit.reviewAndSubmit = Review and submit
 
 checkYourAnswers.title = Check your answers before submitting your movement
 checkYourAnswers.heading = Check your answers before submitting your movement
@@ -1117,8 +1116,10 @@ itemSelectPackaging.select.defaultValue = Choose packaging type
 
 declaration.title = Declaration
 declaration.heading = Declaration
-declaration.content = By submitting this draft movement you are confirming that to the best of your knowledge, the details you are providing are correct.
-declaration.submit = Submit draft movement
+declaration.content = By submitting this change of destination you are confirming that:
+declaration.bullet1 = to the best of your knowledge, the details you are providing are correct
+declaration.bullet2 = you understand this change of destination cannot be recalled or changed after submission
+declaration.submit = Submit change of destination
 
 itemBulkPackagingChoice.title = Is the {0} being moved in bulk?
 itemBulkPackagingChoice.heading = Is the {0} being moved in bulk?
