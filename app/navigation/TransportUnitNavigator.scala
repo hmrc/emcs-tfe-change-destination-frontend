@@ -82,6 +82,9 @@ class TransportUnitNavigator @Inject() extends BaseNavigator {
         case _ => controllers.sections.transportUnit.routes.TransportUnitsReviewController.onPageLoad(userAnswers.ern, userAnswers.arc)
       }
 
+    case TransportUnitCheckAnswersPage => (userAnswers: UserAnswers) =>
+      routes.TaskListController.onPageLoad(userAnswers.ern, userAnswers.arc)
+
     case _ =>
       (userAnswers: UserAnswers) => transportUnitRoutes.TransportUnitsAddToListController.onPageLoad(userAnswers.ern, userAnswers.arc)
   }

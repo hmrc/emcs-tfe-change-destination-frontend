@@ -19,10 +19,10 @@ package controllers.sections.transportUnit
 import base.SpecBase
 import controllers.actions.{FakeDataRetrievalAction, FakeMovementAction}
 import mocks.services.MockUserAnswersService
-import models.response.emcsTfe.TransportDetailsModel
-import models.sections.ReviewAnswer.ChangeAnswers
-import models.sections.journeyType.HowMovementTransported.{FixedTransportInstallations, RoadTransport}
-import models.sections.transportUnit.TransportUnitType.Container
+import models.response.emcsTfe.{TransportDetailsModel, TransportModeModel}
+import models.sections.ReviewAnswer.{ChangeAnswers, KeepAnswers}
+import models.sections.journeyType.HowMovementTransported.RoadTransport
+import models.sections.transportUnit.TransportUnitType.{Container, FixedTransport}
 import models.sections.transportUnit.{TransportSealTypeModel, TransportUnitType}
 import models.{NormalMode, UserAnswers}
 import navigation.TransportUnitNavigator
@@ -37,7 +37,9 @@ import scala.concurrent.Future
 
 class TransportUnitIndexControllerSpec extends SpecBase with MockUserAnswersService {
 
-  class Test(userAnswers: Option[UserAnswers], transportUnits: Seq[TransportDetailsModel] = Seq.empty) {
+  class Test(userAnswers: Option[UserAnswers],
+             transportUnits: Seq[TransportDetailsModel] = Seq.empty,
+             transportMode: TransportModeModel = maxGetMovementResponse.transportMode) {
     lazy val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest()
 
     lazy val controller = new TransportUnitIndexController(
@@ -47,7 +49,7 @@ class TransportUnitIndexControllerSpec extends SpecBase with MockUserAnswersServ
       fakeAuthAction,
       new FakeDataRetrievalAction(userAnswers, Some(testMinTraderKnownFacts)),
       dataRequiredAction,
-      new FakeMovementAction(maxGetMovementResponse.copy(transportDetails = transportUnits)),
+      new FakeMovementAction(maxGetMovementResponse.copy(transportDetails = transportUnits, transportMode = transportMode)),
       fakeUserAllowListAction,
       Helpers.stubMessagesControllerComponents()
     )
@@ -76,10 +78,22 @@ class TransportUnitIndexControllerSpec extends SpecBase with MockUserAnswersServ
     }
 
     "must redirect to the transport unit check answers page (CAM-TU09) when the journey type is " +
-      "Fixed Transport Installations" in new Test(Some(emptyUserAnswers
-      .set(HowMovementTransportedPage, FixedTransportInstallations)
-      .set(TransportUnitsReviewPage, ChangeAnswers)
-    )) {
+      "Fixed Transport Installations" in new Test(
+      Some(emptyUserAnswers),
+      transportUnits = Seq(maxGetMovementResponse.transportDetails.head.copy(transportUnitCode = "5")),
+      transportMode = maxGetMovementResponse.transportMode.copy(transportModeCode = "7")
+    ) {
+
+      val expectedUserAnswers = emptyUserAnswers
+        .set(TransportUnitTypePage(testIndex1), FixedTransport)
+        .set(TransportSealChoicePage(testIndex1), true)
+        .set(TransportUnitGiveMoreInformationChoicePage(testIndex1), true)
+        .set(TransportUnitGiveMoreInformationPage(testIndex1), Some("TransportDetailsComplementaryInformation1"))
+        .set(TransportSealTypePage(testIndex1), TransportSealTypeModel("TransportDetailsCommercialSealIdentification1", Some("TransportDetailsSealInformation1")))
+        .set(TransportUnitIdentityPage(testIndex1), "TransportDetailsIdentityOfTransportUnits1")
+        .set(TransportUnitsReviewPage, KeepAnswers)
+
+      MockUserAnswersService.set(expectedUserAnswers).returns(Future.successful(expectedUserAnswers))
 
       val result = controller.onPageLoad(testErn, testArc)(request)
 

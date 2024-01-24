@@ -245,10 +245,18 @@ class TransportUnitNavigatorSpec extends SpecBase with TransportUnitFixtures {
       }
     }
 
+    "for the TransportUnitCheckAnswersPage" - {
+
+      "must go to the task list" in {
+        navigator.nextPage(TransportUnitCheckAnswersPage, NormalMode, emptyUserAnswers) mustBe
+          routes.TaskListController.onPageLoad(testErn, testArc)
+      }
+    }
+
   }
 
   "in Check mode" - {
-    "must go to CheckYourAnswersTransportUnitController" in {
+    "must go to the TransportUnitAddToListPage" in {
       case object UnknownPage extends Page
       navigator.nextPage(UnknownPage, CheckMode, emptyUserAnswers) mustBe
         transportUnitRoutes.TransportUnitsAddToListController.onPageLoad(testErn, testArc)
