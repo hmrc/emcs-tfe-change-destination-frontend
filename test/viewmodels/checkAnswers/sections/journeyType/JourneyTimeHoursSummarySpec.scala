@@ -20,7 +20,7 @@ import base.SpecBase
 import fixtures.messages.sections.journeyType.JourneyTimeHoursMessages
 import models.CheckMode
 import org.scalatest.matchers.must.Matchers
-import pages.sections.journeyType.JourneyTimeHoursPage
+import pages.sections.journeyType.{JourneyTimeDaysPage, JourneyTimeHoursPage}
 import play.api.i18n.Messages
 import play.api.test.FakeRequest
 import uk.gov.hmrc.govukfrontend.views.Aliases.Text
@@ -38,25 +38,45 @@ class JourneyTimeHoursSummarySpec extends SpecBase with Matchers {
 
         implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
 
-        "when there's no answer for hours in the user answers" - {
+        "must output no row" - {
 
-          "must output the expected data" in {
+          "when there is no 'local' user answer for JourneyTimeHoursPage and there is days in 801" in {
 
             implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers, movementDetails = maxGetMovementResponse.copy(journeyTime = "1 days"))
 
-            JourneyTimeHoursSummary.row(false) mustBe None
+            JourneyTimeHoursSummary.row(onReviewPage = false) mustBe None
+          }
+
+          "when there is no 'local' user answer for JourneyTimeHoursPage and days have been entered" in {
+
+            implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(JourneyTimeDaysPage, 2), movementDetails = maxGetMovementResponse.copy(journeyTime = "1 days"))
+
+            JourneyTimeHoursSummary.row(onReviewPage = false) mustBe None
           }
         }
 
         "when there's an answer" - {
 
-            "when onReviewPage is set to false" - {
+          "show the 801 answer when the user is on the review page (with no action links)" in {
+            implicit lazy val request = dataRequest(FakeRequest(), movementDetails = maxGetMovementResponse.copy(journeyTime = "1 hours"))
 
-              "must output the expected row" in {
+            JourneyTimeHoursSummary.row(onReviewPage = true) mustBe Some(
+              SummaryListRowViewModel(
+                key = messagesForLanguage.cyaLabel,
+                value = Value(Text(messagesForLanguage.cyaValue(1))),
+                actions = Seq()
+              )
+            )
+          }
 
-                implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(JourneyTimeHoursPage, 1))
+          s"when onReviewPage is set to false" - {
 
-                JourneyTimeHoursSummary.row(false) mustBe Some(
+            "must show the 801 answer" - {
+
+              "when no 'day' answer has been provided and there is no local answer for 'hours'" in {
+                implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers, movementDetails = maxGetMovementResponse.copy(journeyTime = "1 hours"))
+
+                JourneyTimeHoursSummary.row(onReviewPage = false) mustBe Some(
                   SummaryListRowViewModel(
                     key = messagesForLanguage.cyaLabel,
                     value = Value(Text(messagesForLanguage.cyaValue(1))),
@@ -71,23 +91,56 @@ class JourneyTimeHoursSummarySpec extends SpecBase with Matchers {
                 )
               }
             }
-          "when onReviewPage is set to true" - {
 
-            "must output the expected row" in {
+            "must show the new answer" - {
 
-              implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(JourneyTimeHoursPage, 1))
+              "when the new answer has been provided on the hours page (and the 801 is days)" in {
 
-              JourneyTimeHoursSummary.row(true) mustBe Some(
-                SummaryListRowViewModel(
-                  key = messagesForLanguage.cyaLabel,
-                  value = Value(Text(messagesForLanguage.cyaValue(1))),
-                  actions = Seq()
+                implicit lazy val request = dataRequest(
+                  FakeRequest(),
+                  emptyUserAnswers.set(JourneyTimeHoursPage, 2),
+                  movementDetails = maxGetMovementResponse.copy(journeyTime = "1 days"))
+
+                JourneyTimeHoursSummary.row(onReviewPage = false) mustBe Some(
+                  SummaryListRowViewModel(
+                    key = messagesForLanguage.cyaLabel,
+                    value = Value(Text(messagesForLanguage.cyaValue(2))),
+                    actions = Seq(
+                      ActionItemViewModel(
+                        content = messagesForLanguage.change,
+                        href = controllers.sections.journeyType.routes.JourneyTimeHoursController.onPageLoad(testErn, testArc, CheckMode).url,
+                        id = "journeyTimeHours"
+                      ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHidden)
+                    )
+                  )
                 )
-              )
+              }
+
+              "when the new answer has been provided on the hours page (and the 801 is hours - overwriting the existing answer)" in {
+
+                implicit lazy val request = dataRequest(
+                  FakeRequest(),
+                  emptyUserAnswers.set(JourneyTimeHoursPage, 2),
+                  movementDetails = maxGetMovementResponse.copy(journeyTime = "1 hours"))
+
+                JourneyTimeHoursSummary.row(onReviewPage = false) mustBe Some(
+                  SummaryListRowViewModel(
+                    key = messagesForLanguage.cyaLabel,
+                    value = Value(Text(messagesForLanguage.cyaValue(2))),
+                    actions = Seq(
+                      ActionItemViewModel(
+                        content = messagesForLanguage.change,
+                        href = controllers.sections.journeyType.routes.JourneyTimeHoursController.onPageLoad(testErn, testArc, CheckMode).url,
+                        id = "journeyTimeHours"
+                      ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHidden)
+                    )
+                  )
+                )
+              }
             }
-          }
           }
         }
       }
     }
+  }
 }

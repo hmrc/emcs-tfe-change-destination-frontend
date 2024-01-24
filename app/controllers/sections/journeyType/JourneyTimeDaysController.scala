@@ -19,7 +19,7 @@ package controllers.sections.journeyType
 import controllers.BaseNavigationController
 import controllers.actions._
 import forms.sections.journeyType.JourneyTimeDaysFormProvider
-import models.Mode
+import models.{Mode, UserAnswers}
 import models.requests.DataRequest
 import models.sections.journeyType.HowMovementTransported
 import models.sections.journeyType.HowMovementTransported._
@@ -51,7 +51,7 @@ class JourneyTimeDaysController @Inject()(
   def onPageLoad(ern: String, arc: String, mode: Mode): Action[AnyContent] =
     authorisedDataRequestWithUpToDateMovementAsync(ern, arc) { implicit request =>
       withAnswerAsync(HowMovementTransportedPage) { transportMode =>
-        renderView(Ok, fillForm(JourneyTimeDaysPage, formProvider(transportModeToMaxDays(transportMode))), mode)
+        renderView(Ok, fillForm(JourneyTimeDaysPage, formProvider(HowMovementTransported.transportModeToMaxDays(transportMode))), mode)
       }
     }
 
@@ -61,8 +61,10 @@ class JourneyTimeDaysController @Inject()(
         formProvider(transportModeToMaxDays(transportMode)).bindFromRequest().fold(
           renderView(BadRequest, _, mode),
           amountOfDays => {
-            val cleansedAnswers = request.userAnswers.remove(JourneyTimeHoursPage)
-            saveAndRedirect(JourneyTimeDaysPage, amountOfDays, cleansedAnswers, mode)
+            val cleansedAnswers = cleanseAnswers(amountOfDays)
+            userAnswersService.set(cleansedAnswers).map { userAnswers =>
+              Redirect(navigator.nextPage(JourneyTimeDaysPage, mode, userAnswers))
+            }
           }
         )
       }
@@ -78,14 +80,11 @@ class JourneyTimeDaysController @Inject()(
     )
   }
 
-  private val transportModeToMaxDays: Map[HowMovementTransported, Int] = Map(
-    AirTransport -> 20,
-    FixedTransportInstallations -> 15,
-    InlandWaterwayTransport -> 35,
-    PostalConsignment -> 30,
-    RailTransport -> 35,
-    RoadTransport -> 35,
-    SeaTransport -> 45,
-    Other -> 45
-  )
+  private def cleanseAnswers(answer: Int)(implicit request: DataRequest[_]): UserAnswers = {
+    if(JourneyTimeDaysPage.getValueFromIE801.contains(answer)) {
+      request.userAnswers.remove(JourneyTimeHoursPage).remove(JourneyTimeDaysPage)
+    } else {
+      request.userAnswers.remove(JourneyTimeHoursPage).set(JourneyTimeDaysPage, answer)
+    }
+  }
 }

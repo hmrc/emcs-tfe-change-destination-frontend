@@ -20,7 +20,7 @@ import base.SpecBase
 import fixtures.messages.sections.journeyType.JourneyTimeDaysMessages
 import models.CheckMode
 import org.scalatest.matchers.must.Matchers
-import pages.sections.journeyType.JourneyTimeDaysPage
+import pages.sections.journeyType.{JourneyTimeDaysPage, JourneyTimeHoursPage}
 import play.api.i18n.Messages
 import play.api.test.FakeRequest
 import uk.gov.hmrc.govukfrontend.views.Aliases.Text
@@ -38,53 +38,105 @@ class JourneyTimeDaysSummarySpec extends SpecBase with Matchers {
 
         implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
 
-        "when there's no answer" - {
+        "must output no row" - {
 
-          "must output the expected data" in {
+          "when there is no 'local' user answer for JourneyTimeDaysPage and there is hours in 801" in {
 
-            implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers)
+            implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers, movementDetails = maxGetMovementResponse.copy(journeyTime = "1 hours"))
 
-            JourneyTimeDaysSummary.row(false) mustBe None
+            JourneyTimeDaysSummary.row(onReviewPage = false) mustBe None
+          }
+
+          "when there is no 'local' user answer for JourneyTimeDaysPage and days have been entered" in {
+
+            implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(JourneyTimeHoursPage, 2), movementDetails = maxGetMovementResponse.copy(journeyTime = "1 hours"))
+
+            JourneyTimeDaysSummary.row(onReviewPage = false) mustBe None
           }
         }
 
         "when there's an answer" - {
 
-          "when onReviewPage is set to false" - {
+          "show the 801 answer when the user is on the review page (with no action links)" in {
+            implicit lazy val request = dataRequest(FakeRequest(), movementDetails = maxGetMovementResponse.copy(journeyTime = "1 days"))
 
-            "must output the expected row" in {
-
-              implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(JourneyTimeDaysPage, 1))
-
-              JourneyTimeDaysSummary.row(false) mustBe Some(
-                SummaryListRowViewModel(
-                  key = messagesForLanguage.cyaLabel,
-                  value = Value(Text(messagesForLanguage.cyaValue(1))),
-                  actions = Seq(
-                    ActionItemViewModel(
-                      content = messagesForLanguage.change,
-                      href = controllers.sections.journeyType.routes.JourneyTimeDaysController.onPageLoad(testErn, testArc, CheckMode).url,
-                      id = "journeyTimeDays"
-                    ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHidden)
-                  )
-                )
+            JourneyTimeDaysSummary.row(onReviewPage = true) mustBe Some(
+              SummaryListRowViewModel(
+                key = messagesForLanguage.cyaLabel,
+                value = Value(Text(messagesForLanguage.cyaValue(1))),
+                actions = Seq()
               )
-            }
+            )
           }
 
-          "when onReviewPage is set to true" - {
+          s"when onReviewPage is set to false" - {
 
-            "must output the expected row" in {
+            "must show the 801 answer" - {
 
-              implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(JourneyTimeDaysPage, 1))
+              "when no 'hour' answer has been provided and there is no local answer for 'days'" in {
+                implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers, movementDetails = maxGetMovementResponse.copy(journeyTime = "1 days"))
 
-              JourneyTimeDaysSummary.row(true) mustBe Some(
-                SummaryListRowViewModel(
-                  key = messagesForLanguage.cyaLabel,
-                  value = Value(Text(messagesForLanguage.cyaValue(1))),
-                  actions = Seq()
+                JourneyTimeDaysSummary.row(onReviewPage = false) mustBe Some(
+                  SummaryListRowViewModel(
+                    key = messagesForLanguage.cyaLabel,
+                    value = Value(Text(messagesForLanguage.cyaValue(1))),
+                    actions = Seq(
+                      ActionItemViewModel(
+                        content = messagesForLanguage.change,
+                        href = controllers.sections.journeyType.routes.JourneyTimeDaysController.onPageLoad(testErn, testArc, CheckMode).url,
+                        id = "journeyTimeDays"
+                      ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHidden)
+                    )
+                  )
                 )
-              )
+              }
+            }
+
+            "must show the new answer" - {
+
+              "when the new answer has been provided on the days page (and the 801 is hours)" in {
+
+                implicit lazy val request = dataRequest(
+                  FakeRequest(),
+                  emptyUserAnswers.set(JourneyTimeDaysPage, 2),
+                  movementDetails = maxGetMovementResponse.copy(journeyTime = "1 hours"))
+
+                JourneyTimeDaysSummary.row(onReviewPage = false) mustBe Some(
+                  SummaryListRowViewModel(
+                    key = messagesForLanguage.cyaLabel,
+                    value = Value(Text(messagesForLanguage.cyaValue(2))),
+                    actions = Seq(
+                      ActionItemViewModel(
+                        content = messagesForLanguage.change,
+                        href = controllers.sections.journeyType.routes.JourneyTimeDaysController.onPageLoad(testErn, testArc, CheckMode).url,
+                        id = "journeyTimeDays"
+                      ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHidden)
+                    )
+                  )
+                )
+              }
+
+              "when the new answer has been provided on the days page (and the 801 is days - overwriting the existing answer)" in {
+
+                implicit lazy val request = dataRequest(
+                  FakeRequest(),
+                  emptyUserAnswers.set(JourneyTimeDaysPage, 2),
+                  movementDetails = maxGetMovementResponse.copy(journeyTime = "1 days"))
+
+                JourneyTimeDaysSummary.row(onReviewPage = false) mustBe Some(
+                  SummaryListRowViewModel(
+                    key = messagesForLanguage.cyaLabel,
+                    value = Value(Text(messagesForLanguage.cyaValue(2))),
+                    actions = Seq(
+                      ActionItemViewModel(
+                        content = messagesForLanguage.change,
+                        href = controllers.sections.journeyType.routes.JourneyTimeDaysController.onPageLoad(testErn, testArc, CheckMode).url,
+                        id = "journeyTimeDays"
+                      ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHidden)
+                    )
+                  )
+                )
+              }
             }
           }
         }

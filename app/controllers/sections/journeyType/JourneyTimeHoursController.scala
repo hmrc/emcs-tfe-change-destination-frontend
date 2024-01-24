@@ -56,8 +56,10 @@ class JourneyTimeHoursController @Inject()(
       formProvider().bindFromRequest().fold(
         renderView(BadRequest, _, mode),
         amountOfHours => {
-          val cleansedAnswers = request.userAnswers.remove(JourneyTimeDaysPage)
-          saveAndRedirect(JourneyTimeHoursPage, amountOfHours, cleansedAnswers, mode)
+          val cleansedAnswers = cleanseAnswers(amountOfHours)
+          userAnswersService.set(cleansedAnswers).map { userAnswers =>
+            Redirect(navigator.nextPage(JourneyTimeHoursPage, mode, userAnswers))
+          }
         }
       )
     }
@@ -69,5 +71,13 @@ class JourneyTimeHoursController @Inject()(
         mode = mode
       ))
     )
+  }
+
+  private def cleanseAnswers(answer: Int)(implicit request: DataRequest[_]) = {
+    if(JourneyTimeHoursPage.getValueFromIE801.contains(answer)) {
+      request.userAnswers.remove(JourneyTimeDaysPage).remove(JourneyTimeHoursPage)
+    } else {
+      request.userAnswers.remove(JourneyTimeDaysPage).set(JourneyTimeHoursPage, answer)
+    }
   }
 }
