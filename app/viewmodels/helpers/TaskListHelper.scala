@@ -191,7 +191,7 @@ class TaskListHelper @Inject()() extends Logging {
     TaskListSection(
       sectionHeading = messages("taskList.section.submit"),
       rows = Seq(TaskListSectionRow(
-        taskName = messages("taskList.section.submit.reviewAndSubmit"),
+        taskName = messages("taskList.section.submit"),
         id = "submit",
         link = if (completed) Some(controllers.routes.DeclarationController.onPageLoad(request.ern, request.arc).url) else None,
         section = None,

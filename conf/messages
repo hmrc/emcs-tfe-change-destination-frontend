@@ -192,7 +192,6 @@ taskList.section.transport.transportArranger = Transport arranger
 taskList.section.transport.firstTransporter = First transporter
 taskList.section.transport.units = Transport units
 taskList.section.submit = Submit
-taskList.section.submit.reviewAndSubmit = Review and submit
 
 checkYourAnswers.title = Check your answers before submitting your movement
 checkYourAnswers.heading = Check your answers before submitting your movement

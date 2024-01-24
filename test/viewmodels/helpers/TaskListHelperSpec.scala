@@ -446,7 +446,7 @@ class TaskListHelperSpec extends SpecBase {
               sectionHeading = messagesForLanguage.submitSectionHeading,
               rows = Seq(
                 TaskListSectionRow(
-                  taskName = messagesForLanguage.reviewAndSubmit,
+                  taskName = messagesForLanguage.submit,
                   id = "submit",
                   link = Some(controllers.routes.DeclarationController.onPageLoad(request.ern, request.arc).url),
                   section = None,
@@ -504,7 +504,7 @@ class TaskListHelperSpec extends SpecBase {
               sectionHeading = messagesForLanguage.submitSectionHeading,
               rows = Seq(
                 TaskListSectionRow(
-                  taskName = messagesForLanguage.reviewAndSubmit,
+                  taskName = messagesForLanguage.submit,
                   id = "submit",
                   link = None,
                   section = None,
@@ -559,7 +559,7 @@ class TaskListHelperSpec extends SpecBase {
               sectionHeading = messagesForLanguage.submitSectionHeading,
               rows = Seq(
                 TaskListSectionRow(
-                  taskName = messagesForLanguage.reviewAndSubmit,
+                  taskName = messagesForLanguage.submit,
                   id = "submit",
                   link = None,
                   section = None,
@@ -585,7 +585,7 @@ class TaskListHelperSpec extends SpecBase {
               sectionHeading = messagesForLanguage.submitSectionHeading,
               rows = Seq(
                 TaskListSectionRow(
-                  taskName = messagesForLanguage.reviewAndSubmit,
+                  taskName = messagesForLanguage.submit,
                   id = "submit",
                   link = None,
                   section = None,
@@ -601,7 +601,7 @@ class TaskListHelperSpec extends SpecBase {
               sectionHeading = messagesForLanguage.submitSectionHeading,
               rows = Seq(
                 TaskListSectionRow(
-                  taskName = messagesForLanguage.reviewAndSubmit,
+                  taskName = messagesForLanguage.submit,
                   id = "submit",
                   link = None,
                   section = None,
@@ -640,7 +640,7 @@ class TaskListHelperSpec extends SpecBase {
             sectionHeading = messagesForLanguage.submitSectionHeading,
             rows = Seq(
               TaskListSectionRow(
-                taskName = messagesForLanguage.reviewAndSubmit,
+                taskName = messagesForLanguage.submit,
                 id = "submit",
                 link = None,
                 section = None,
