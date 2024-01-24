@@ -43,7 +43,7 @@ class UpdateEadEsadModelSpec extends SpecBase with SubmitChangeDestinationFixtur
       UpdateEadEsadModel.journeyTimeValue mustBe Some(Hours("1"))
     }
 
-    "must return Some(Days) when hours" in {
+    "must return Some(Days) when days" in {
 
       implicit val dr: DataRequest[_] = dataRequest(
         request = fakeRequest,
