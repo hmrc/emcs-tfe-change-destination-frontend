@@ -19,18 +19,13 @@ package controllers.sections.info
 import controllers.BasePreDraftNavigationController
 import controllers.actions._
 import controllers.actions.predraft.{PreDraftAuthActionHelper, PreDraftDataRequiredAction, PreDraftDataRetrievalAction}
-import forms.sections.info.ChangeTypeFormProvider
-import models.NormalMode
-import models.requests.DataRequest
 import models.sections.info.ChangeType.Consignee
 import models.sections.info.movementScenario.DestinationType.UnknownDestination
 import navigation.InformationNavigator
 import pages.sections.info.{ChangeDestinationTypePage, ChangeTypePage}
-import play.api.data.Form
 import play.api.i18n.MessagesApi
-import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
+import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import services.{PreDraftService, UserAnswersService}
-import views.html.sections.info.ChangeTypeView
 
 import javax.inject.Inject
 import scala.concurrent.Future
