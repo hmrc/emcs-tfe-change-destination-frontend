@@ -34,7 +34,11 @@
 
 @()(implicit request: DataRequest[_], messages: Messages)
 
-@layout(pageTitle = titleNoForm(helper.heading), maybeShowActiveTrader = maybeShowActiveTrader(request)) {
+@layout(
+  pageTitle = titleNoForm(helper.heading),
+  maybeShowActiveTrader = maybeShowActiveTrader(request),
+  showBackLink = false
+) {
 
     @h2(messages("arc.subHeading", request.arc), "govuk-caption-l", hiddenContent = Some(messages("subHeading.hidden")))
     @h1(helper.heading, classes = "govuk-heading-l")
