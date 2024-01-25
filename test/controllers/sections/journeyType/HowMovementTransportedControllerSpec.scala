@@ -21,11 +21,14 @@ import controllers.actions.{FakeDataRetrievalAction, FakeMovementAction}
 import controllers.routes
 import forms.sections.journeyType.HowMovementTransportedFormProvider
 import mocks.services.MockUserAnswersService
+import models.response.emcsTfe.GetMovementResponse
 import models.sections.ReviewAnswer.ChangeAnswers
+import models.sections.info.movementScenario.MovementScenario
 import models.sections.journeyType.HowMovementTransported
 import models.sections.transportUnit.TransportUnitType.{Container, Tractor}
 import models.{NormalMode, UserAnswers}
 import navigation.FakeNavigators.FakeJourneyTypeNavigator
+import pages.sections.info.DestinationTypePage
 import pages.sections.journeyType.{GiveInformationOtherTransportPage, HowMovementTransportedPage, JourneyTimeDaysPage, JourneyTypeReviewPage}
 import pages.sections.transportUnit.{TransportUnitIdentityPage, TransportUnitTypePage, TransportUnitsSection}
 import play.api.data.Form
@@ -44,7 +47,7 @@ class HowMovementTransportedControllerSpec extends SpecBase with MockUserAnswers
   lazy val view: HowMovementTransportedView = app.injector.instanceOf[HowMovementTransportedView]
   lazy val onlyFixedView: HowMovementTransportedNoOptionView = app.injector.instanceOf[HowMovementTransportedNoOptionView]
 
-  class Test(val userAnswers: Option[UserAnswers]) {
+  class Test(val userAnswers: Option[UserAnswers], movementResponse: GetMovementResponse = maxGetMovementResponse) {
     lazy val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest()
 
     lazy val controller = new HowMovementTransportedController(
@@ -54,7 +57,7 @@ class HowMovementTransportedControllerSpec extends SpecBase with MockUserAnswers
       auth = fakeAuthAction,
       getData = new FakeDataRetrievalAction(userAnswers, Some(testMinTraderKnownFacts)),
       requireData = dataRequiredAction,
-      withMovement = new FakeMovementAction(maxGetMovementResponse),
+      withMovement = new FakeMovementAction(movementResponse),
       formProvider = formProvider,
       controllerComponents = Helpers.stubMessagesControllerComponents(),
       view = view,
@@ -79,6 +82,31 @@ class HowMovementTransportedControllerSpec extends SpecBase with MockUserAnswers
 
       status(result) mustEqual OK
       contentAsString(result) mustEqual view(form.fill(HowMovementTransported.values.head), NormalMode)(dataRequest(request), messages(request)).toString
+    }
+
+    Seq(
+      MovementScenario.EuTaxWarehouse,
+      MovementScenario.TemporaryRegisteredConsignee,
+      MovementScenario.RegisteredConsignee,
+      MovementScenario.DirectDelivery,
+      MovementScenario.UnknownDestination,
+      MovementScenario.ExemptedOrganisation
+    ).foreach { scenario =>
+      s"must return OK and the onlyFixedView when destination type is $scenario and destination type has not changed, and no guarantor exists" in new Test(
+        userAnswers = Some(
+          emptyUserAnswers.copy(ern = testNorthernIrelandErn)
+            .set(DestinationTypePage, scenario)
+        ),
+        movementResponse = maxGetMovementResponse.copy(
+          movementGuarantee = maxGetMovementResponse.movementGuarantee.copy(guarantorTrader = None),
+          destinationType = scenario.destinationType
+        )
+      ) {
+        val result = controller.onPageLoad(testNorthernIrelandErn, testArc, NormalMode)(request)
+
+        status(result) mustEqual OK
+        contentAsString(result) mustEqual onlyFixedView(NormalMode)(dataRequest(request, ern = testNorthernIrelandErn), messages(request)).toString
+      }
     }
 
     "must redirect to the next page when valid data is submitted" in new Test(Some(emptyUserAnswers)) {

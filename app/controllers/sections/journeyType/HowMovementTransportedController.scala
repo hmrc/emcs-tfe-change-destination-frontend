@@ -53,12 +53,14 @@ class HowMovementTransportedController @Inject()(
                                                   val userAllowList: UserAllowListAction
                                                 ) extends BaseNavigationController with AuthActionHelper {
 
-  private def guarantorNotRequiredEuGuard[T](onEuNotRequired: => T, default: => T)(implicit request: DataRequest[_]): T = {
+  //IF UKtoEU, destinationType has not changed and there's no Guarantor on the IE801 - then only option is FixedTransportInstallations
+  private def guarantorNotRequiredEuGuard[T](onEuNotRequired: => T, default: => T)(implicit request: DataRequest[_]): T =
     (request.userAnswers.get(DestinationTypePage), request.movementDetails.movementGuarantee.guarantorTrader.isEmpty) match {
-      case (Some(scenario), true) if scenario.movementType == MovementType.UkToEu => onEuNotRequired
+      case (Some(scenario), true)
+        if scenario.movementType == MovementType.UkToEu && scenario.destinationType == request.movementDetails.destinationType => onEuNotRequired
       case _ => default
     }
-  }
+
   def onPageLoad(ern: String, arc: String, mode: Mode): Action[AnyContent] =
     authorisedDataRequestWithUpToDateMovement(ern, arc) { implicit request =>
       guarantorNotRequiredEuGuard(
@@ -99,7 +101,7 @@ class HowMovementTransportedController @Inject()(
       userAnswers.remove(JourneyTypeSection).resetIndexedSection(TransportUnitsSection, Index(0)).set(
         TransportUnitTypePage(Index(0)), FixedTransport
       )
-    case userAnswers if userAnswers.get(HowMovementTransportedPage).contains(FixedTransportInstallations) =>
+    case userAnswers if userAnswers.getFromUserAnswersOnly(HowMovementTransportedPage).contains(FixedTransportInstallations) =>
       //If the user previously selected Fixed Transport Installation then clear the TU section (because the user did not actively enter any TU info)
       userAnswers.remove(JourneyTypeSection).resetIndexedSection(TransportUnitsSection, Index(0))
     case userAnswers => userAnswers.remove(JourneyTypeSection)
