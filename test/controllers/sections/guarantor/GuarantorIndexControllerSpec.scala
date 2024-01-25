@@ -26,7 +26,7 @@ import models.sections.info.movementScenario.MovementScenario.ExportWithCustomsD
 import models.{NormalMode, UserAddress, UserAnswers}
 import navigation.FakeNavigators.FakeGuarantorNavigator
 import pages.sections.consignor.ConsignorAddressPage
-import pages.sections.guarantor.{GuarantorArrangerPage, GuarantorRequiredPage}
+import pages.sections.guarantor.GuarantorArrangerPage
 import pages.sections.info.DestinationTypePage
 import play.api.http.Status.SEE_OTHER
 import play.api.test.FakeRequest
@@ -57,7 +57,6 @@ class GuarantorIndexControllerSpec extends SpecBase with MockUserAnswersService 
       "must redirect to the CYA controller" in new Fixture(
         Some(emptyUserAnswers
           .set(DestinationTypePage, ExportWithCustomsDeclarationLodgedInTheUk)
-          .set(GuarantorRequiredPage, true)
           .set(GuarantorArrangerPage, Consignor)
           .set(ConsignorAddressPage, UserAddress(None, "", "", ""))
         )) {
@@ -71,14 +70,14 @@ class GuarantorIndexControllerSpec extends SpecBase with MockUserAnswersService 
 
     "when there the section is not completed or needs review" - {
 
-      "must redirect to the guarantor required controller" in new Fixture(
+      "must redirect to the guarantor arranger controller" in new Fixture(
         Some(emptyUserAnswers
           .set(DestinationTypePage, ExportWithCustomsDeclarationLodgedInTheUk)
         )) {
         val result = testController.onPageLoad(testErn, testArc)(request)
 
         status(result) mustEqual SEE_OTHER
-        redirectLocation(result) mustBe Some(controllers.sections.guarantor.routes.GuarantorRequiredController.onPageLoad(testErn, testArc, NormalMode).url)
+        redirectLocation(result) mustBe Some(controllers.sections.guarantor.routes.GuarantorArrangerController.onPageLoad(testErn, testArc, NormalMode).url)
       }
     }
   }

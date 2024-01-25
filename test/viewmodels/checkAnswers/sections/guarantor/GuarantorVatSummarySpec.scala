@@ -25,7 +25,7 @@ import models.response.emcsTfe.{GuarantorType, MovementGuaranteeModel}
 import models.sections.guarantor.GuarantorArranger.{Consignee, Consignor, GoodsOwner, Transporter}
 import models.sections.info.movementScenario.MovementScenario.ExportWithCustomsDeclarationLodgedInTheUk
 import org.scalatest.matchers.must.Matchers
-import pages.sections.guarantor.{GuarantorArrangerPage, GuarantorRequiredPage, GuarantorVatPage}
+import pages.sections.guarantor.{GuarantorArrangerPage, GuarantorVatPage}
 import pages.sections.info.DestinationTypePage
 import play.api.i18n.Messages
 import play.api.test.FakeRequest
@@ -57,130 +57,93 @@ class GuarantorVatSummarySpec extends SpecBase with Matchers {
       s"when language is set to ${messagesForLanguage.lang.code}" - {
         implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
 
-        "and there is no answer for the GuarantorRequiredPage" - {
+        "and there is a GuarantorArrangerPage answer of `Consignee`" - {
           "then must not return a row" in {
             implicit lazy val request: DataRequest[_] = dataRequest(
               FakeRequest(),
               emptyUserAnswers
                 .set(DestinationTypePage, ExportWithCustomsDeclarationLodgedInTheUk)
+                .set(GuarantorArrangerPage, Consignee)
             )
 
             GuarantorVatSummary.row mustBe None
           }
         }
 
-        "and there is a GuarantorRequiredPage answer of `no`" - {
+        "and there is a GuarantorArrangerPage answer of `Consignor`" - {
           "then must not return a row" in {
             implicit lazy val request: DataRequest[_] = dataRequest(
               FakeRequest(),
               emptyUserAnswers
                 .set(DestinationTypePage, ExportWithCustomsDeclarationLodgedInTheUk)
-                .set(GuarantorRequiredPage, false)
+                .set(GuarantorArrangerPage, Consignor)
             )
 
             GuarantorVatSummary.row mustBe None
           }
         }
 
-        "and there is a GuarantorRequiredPage answer of `yes`" - {
-
-          "and there is a GuarantorArrangerPage answer of `Consignee`" - {
-            "then must not return a row" in {
+        "and there is a GuarantorArrangerPage answer of `GoodsOwner`" - {
+          "and there is no answer for GuarantorVatPage in 801 or user answers" - {
+            "then must render not provided row with change link" in {
               implicit lazy val request: DataRequest[_] = dataRequest(
                 FakeRequest(),
                 emptyUserAnswers
                   .set(DestinationTypePage, ExportWithCustomsDeclarationLodgedInTheUk)
-                  .set(GuarantorRequiredPage, true)
-                  .set(GuarantorArrangerPage, Consignee)
+                  .set(GuarantorArrangerPage, GoodsOwner),
+                movementDetails = maxGetMovementResponse.copy(movementGuarantee = MovementGuaranteeModel(GuarantorType.Owner, None))
               )
 
-              GuarantorVatSummary.row mustBe None
+              GuarantorVatSummary.row mustBe expectedRow(messagesForLanguage.notProvided, true)
             }
           }
 
-          "and there is a GuarantorArrangerPage answer of `Consignor`" - {
-            "then must not return a row" in {
+          "and there is a GuarantorVatPage answer" - {
+            "then must render row with value and change link" in {
               implicit lazy val request: DataRequest[_] = dataRequest(
                 FakeRequest(),
                 emptyUserAnswers
                   .set(DestinationTypePage, ExportWithCustomsDeclarationLodgedInTheUk)
-                  .set(GuarantorRequiredPage, true)
-                  .set(GuarantorArrangerPage, Consignor)
+                  .set(GuarantorArrangerPage, GoodsOwner)
+                  .set(GuarantorVatPage,"VAT123")
               )
 
-              GuarantorVatSummary.row mustBe None
-            }
-          }
-
-          "and there is a GuarantorArrangerPage answer of `GoodsOwner`" - {
-            "and there is no answer for GuarantorVatPage in 801 or user answers" - {
-              "then must render not provided row with change link" in {
-                implicit lazy val request: DataRequest[_] = dataRequest(
-                  FakeRequest(),
-                  emptyUserAnswers
-                    .set(DestinationTypePage, ExportWithCustomsDeclarationLodgedInTheUk)
-                    .set(GuarantorRequiredPage, true)
-                    .set(GuarantorArrangerPage, GoodsOwner),
-                  movementDetails = maxGetMovementResponse.copy(movementGuarantee = MovementGuaranteeModel(GuarantorType.Owner, None))
-                )
-
-                GuarantorVatSummary.row mustBe expectedRow(messagesForLanguage.notProvided, true)
-              }
-            }
-
-            "and there is a GuarantorVatPage answer" - {
-              "then must render row with value and change link" in {
-                implicit lazy val request: DataRequest[_] = dataRequest(
-                  FakeRequest(),
-                  emptyUserAnswers
-                    .set(DestinationTypePage, ExportWithCustomsDeclarationLodgedInTheUk)
-                    .set(GuarantorRequiredPage, true)
-                    .set(GuarantorArrangerPage, GoodsOwner)
-                    .set(GuarantorVatPage,"VAT123")
-                )
-
-                GuarantorVatSummary.row mustBe expectedRow("VAT123", true)
-              }
-            }
-          }
-
-          "and there is a GuarantorArrangerPage answer of `Transporter`" - {
-            "and there is no answer for GuarantorVatPage in 801 or user answers" - {
-              "then must render not provided row with change link" in {
-                implicit lazy val request: DataRequest[_] = dataRequest(
-                  FakeRequest(),
-                  emptyUserAnswers
-                    .set(DestinationTypePage, ExportWithCustomsDeclarationLodgedInTheUk)
-                    .set(GuarantorRequiredPage, true)
-                    .set(GuarantorArrangerPage, Transporter),
-                  movementDetails = maxGetMovementResponse.copy(movementGuarantee = MovementGuaranteeModel(GuarantorType.Transporter, None))
-
-                )
-
-                GuarantorVatSummary.row mustBe expectedRow(messagesForLanguage.notProvided, true)
-              }
-            }
-
-            "and there is a GuarantorVatPage answer" - {
-              "then must render row with value and change link" in {
-                implicit lazy val request: DataRequest[_] = dataRequest(
-                  FakeRequest(),
-                  emptyUserAnswers
-                    .set(DestinationTypePage, ExportWithCustomsDeclarationLodgedInTheUk)
-                    .set(GuarantorRequiredPage, true)
-                    .set(GuarantorArrangerPage, Transporter)
-                    .set(GuarantorVatPage, "TRAN123")
-                )
-
-                GuarantorVatSummary.row mustBe expectedRow("TRAN123", true)
-              }
+              GuarantorVatSummary.row mustBe expectedRow("VAT123", true)
             }
           }
         }
 
+        "and there is a GuarantorArrangerPage answer of `Transporter`" - {
+          "and there is no answer for GuarantorVatPage in 801 or user answers" - {
+            "then must render not provided row with change link" in {
+              implicit lazy val request: DataRequest[_] = dataRequest(
+                FakeRequest(),
+                emptyUserAnswers
+                  .set(DestinationTypePage, ExportWithCustomsDeclarationLodgedInTheUk)
+                  .set(GuarantorArrangerPage, Transporter),
+                movementDetails = maxGetMovementResponse.copy(movementGuarantee = MovementGuaranteeModel(GuarantorType.Transporter, None))
+
+              )
+
+              GuarantorVatSummary.row mustBe expectedRow(messagesForLanguage.notProvided, true)
+            }
+          }
+
+          "and there is a GuarantorVatPage answer" - {
+            "then must render row with value and change link" in {
+              implicit lazy val request: DataRequest[_] = dataRequest(
+                FakeRequest(),
+                emptyUserAnswers
+                  .set(DestinationTypePage, ExportWithCustomsDeclarationLodgedInTheUk)
+                  .set(GuarantorArrangerPage, Transporter)
+                  .set(GuarantorVatPage, "TRAN123")
+              )
+
+              GuarantorVatSummary.row mustBe expectedRow("TRAN123", true)
+            }
+          }
+        }
       }
-
     }
-
   }
 }

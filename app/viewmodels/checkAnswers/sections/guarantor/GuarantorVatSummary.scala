@@ -19,7 +19,7 @@ package viewmodels.checkAnswers.sections.guarantor
 import models.CheckMode
 import models.requests.DataRequest
 import models.sections.guarantor.GuarantorArranger.{GoodsOwner, Transporter}
-import pages.sections.guarantor.{GuarantorArrangerPage, GuarantorRequiredPage, GuarantorVatPage}
+import pages.sections.guarantor.{GuarantorArrangerPage, GuarantorVatPage}
 import play.api.i18n.Messages
 import play.twirl.api.HtmlFormat
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
@@ -28,31 +28,26 @@ import viewmodels.implicits._
 
 object GuarantorVatSummary {
 
-  def row()(implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] = {
+  def row()(implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] =
+    request.userAnswers.get(GuarantorArrangerPage)
+      .filter(arranger => arranger == GoodsOwner || arranger == Transporter)
+      .map { _ =>
 
-    request.userAnswers.get(GuarantorRequiredPage).filter(identity).flatMap { _ =>
-      request.userAnswers.get(GuarantorArrangerPage)
-        .filter(arranger => arranger == GoodsOwner || arranger == Transporter)
-        .map { _ =>
-
-          val value: String = request.userAnswers.get(GuarantorVatPage) match {
-            case Some(answer) => HtmlFormat.escape(answer).toString()
-            case None => messages("site.notProvided")
-          }
-
-          SummaryListRowViewModel(
-            key = "guarantorVat.checkYourAnswersLabel",
-            value = ValueViewModel(value),
-            actions = Seq(
-              ActionItemViewModel(
-                "site.change",
-                controllers.sections.guarantor.routes.GuarantorVatController.onPageLoad(request.ern, request.arc, CheckMode).url,
-                "changeGuarantorVat"
-              ).withVisuallyHiddenText(messages("guarantorVat.change.hidden"))
-            )
-          )
+        val value: String = request.userAnswers.get(GuarantorVatPage) match {
+          case Some(answer) => HtmlFormat.escape(answer).toString()
+          case None => messages("site.notProvided")
         }
-    }
-  }
 
+        SummaryListRowViewModel(
+          key = "guarantorVat.checkYourAnswersLabel",
+          value = ValueViewModel(value),
+          actions = Seq(
+            ActionItemViewModel(
+              "site.change",
+              controllers.sections.guarantor.routes.GuarantorVatController.onPageLoad(request.ern, request.arc, CheckMode).url,
+              "changeGuarantorVat"
+            ).withVisuallyHiddenText(messages("guarantorVat.change.hidden"))
+          )
+        )
+      }
 }

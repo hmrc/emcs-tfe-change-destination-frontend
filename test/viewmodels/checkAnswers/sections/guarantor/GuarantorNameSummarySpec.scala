@@ -27,7 +27,7 @@ import models.sections.info.movementScenario.MovementScenario.ExportWithCustomsD
 import models.{CheckMode, Mode, NormalMode}
 import org.scalatest.matchers.must.Matchers
 import pages.sections.consignee.ConsigneeBusinessNamePage
-import pages.sections.guarantor.{GuarantorArrangerPage, GuarantorNamePage, GuarantorRequiredPage}
+import pages.sections.guarantor.{GuarantorArrangerPage, GuarantorNamePage}
 import pages.sections.info.DestinationTypePage
 import play.api.i18n.Messages
 import play.api.test.FakeRequest
@@ -59,145 +59,106 @@ class GuarantorNameSummarySpec extends SpecBase with Matchers {
       s"when language is set to ${messagesForLanguage.lang.code}" - {
         implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
 
-        "and there is no answer for the GuarantorRequiredPage" - {
-          "then must not return a row" in {
-            implicit lazy val request: DataRequest[_] = dataRequest(
-              request = FakeRequest(),
-              answers = emptyUserAnswers
-                .set(DestinationTypePage, ExportWithCustomsDeclarationLodgedInTheUk),
-              movementDetails = maxGetMovementResponse.copy(movementGuarantee = MovementGuaranteeModel(NoGuarantor, None))
-            )
+        "and there is a GuarantorArrangerPage answer of `Consignee`" - {
+          "and that section hasn't been filled in yet" in {
 
-            GuarantorNameSummary.row mustBe None
-          }
-        }
-
-        "and there is a GuarantorRequiredPage answer of `no`" - {
-          "then must not return a row" in {
             implicit lazy val request: DataRequest[_] = dataRequest(
-              request = FakeRequest(),
-              answers = emptyUserAnswers
+              FakeRequest(),
+              emptyUserAnswers
                 .set(DestinationTypePage, ExportWithCustomsDeclarationLodgedInTheUk)
-                .set(GuarantorRequiredPage, false),
+                .set(GuarantorArrangerPage, Consignee),
+              movementDetails = maxGetMovementResponse.copy(
+                movementGuarantee = MovementGuaranteeModel(NoGuarantor, None),
+                consigneeTrader = None
+              )
+            )
+
+            GuarantorNameSummary.row mustBe expectedRow(messagesForLanguage.consigneeNameNotProvided, false)
+          }
+
+          "and that section has been filled in" in {
+            implicit lazy val request: DataRequest[_] = dataRequest(
+              FakeRequest(),
+              emptyUserAnswers
+                .set(DestinationTypePage, ExportWithCustomsDeclarationLodgedInTheUk)
+                .set(GuarantorArrangerPage, Consignee)
+                .set(ConsigneeBusinessNamePage, "consignee name here"),
               movementDetails = maxGetMovementResponse.copy(movementGuarantee = MovementGuaranteeModel(NoGuarantor, None))
             )
 
-            GuarantorNameSummary.row mustBe None
+            GuarantorNameSummary.row mustBe expectedRow("consignee name here", false)
           }
         }
 
-        "and there is a GuarantorRequiredPage answer of `yes`" - {
+        "and there is a GuarantorArrangerPage answer of `Consignor`" - {
+          "and that section has been filled in" in {
+            implicit lazy val request: DataRequest[_] = dataRequest(
+              FakeRequest(),
+              emptyUserAnswers
+                .set(DestinationTypePage, ExportWithCustomsDeclarationLodgedInTheUk)
+                .set(GuarantorArrangerPage, Consignor),
+              movementDetails = maxGetMovementResponse.copy(movementGuarantee = MovementGuaranteeModel(NoGuarantor, None))
+            )
 
-          "and there is a GuarantorArrangerPage answer of `Consignee`" - {
-            "and that section hasn't been filled in yet" in {
+            GuarantorNameSummary.row mustBe expectedRow(testMinTraderKnownFacts.traderName, false)
+          }
+        }
 
-              implicit lazy val request: DataRequest[_] = dataRequest(
-                FakeRequest(),
-                emptyUserAnswers
-                  .set(DestinationTypePage, ExportWithCustomsDeclarationLodgedInTheUk)
-                  .set(GuarantorRequiredPage, true)
-                  .set(GuarantorArrangerPage, Consignee),
-                movementDetails = maxGetMovementResponse.copy(
-                  movementGuarantee = MovementGuaranteeModel(NoGuarantor, None),
-                  consigneeTrader = None
-                )
-              )
+        "and there is a GuarantorArrangerPage answer of `GoodsOwner`" - {
+          "and that section hasn't been filled in yet" in {
 
-              GuarantorNameSummary.row mustBe expectedRow(messagesForLanguage.consigneeNameNotProvided, false)
-            }
+            implicit lazy val request: DataRequest[_] = dataRequest(
+              FakeRequest(),
+              emptyUserAnswers
+                .set(DestinationTypePage, ExportWithCustomsDeclarationLodgedInTheUk)
+                .set(GuarantorArrangerPage, GoodsOwner),
+              movementDetails = maxGetMovementResponse.copy(movementGuarantee = MovementGuaranteeModel(GuarantorType.Owner, None))
+            )
 
-            "and that section has been filled in" in {
-              implicit lazy val request: DataRequest[_] = dataRequest(
-                FakeRequest(),
-                emptyUserAnswers
-                  .set(DestinationTypePage, ExportWithCustomsDeclarationLodgedInTheUk)
-                  .set(GuarantorRequiredPage, true)
-                  .set(GuarantorArrangerPage, Consignee)
-                  .set(ConsigneeBusinessNamePage, "consignee name here"),
-                movementDetails = maxGetMovementResponse.copy(movementGuarantee = MovementGuaranteeModel(NoGuarantor, None))
-              )
-
-              GuarantorNameSummary.row mustBe expectedRow("consignee name here", false)
-            }
+            GuarantorNameSummary.row mustBe expectedRow(messagesForLanguage.notProvided, showChangeLink = true, NormalMode)
           }
 
-          "and there is a GuarantorArrangerPage answer of `Consignor`" - {
-            "and that section has been filled in" in {
-              implicit lazy val request: DataRequest[_] = dataRequest(
-                FakeRequest(),
-                emptyUserAnswers
-                  .set(DestinationTypePage, ExportWithCustomsDeclarationLodgedInTheUk)
-                  .set(GuarantorRequiredPage, true)
-                  .set(GuarantorArrangerPage, Consignor),
-                movementDetails = maxGetMovementResponse.copy(movementGuarantee = MovementGuaranteeModel(NoGuarantor, None))
-              )
+          "and that section has been filled in" in {
+            implicit lazy val request: DataRequest[_] = dataRequest(
+              FakeRequest(),
+              emptyUserAnswers
+                .set(DestinationTypePage, ExportWithCustomsDeclarationLodgedInTheUk)
+                .set(GuarantorArrangerPage, GoodsOwner)
+                .set(GuarantorNamePage, "guarantor name here"),
+              movementDetails = maxGetMovementResponse.copy(movementGuarantee = MovementGuaranteeModel(NoGuarantor, None))
+            )
 
-              GuarantorNameSummary.row mustBe expectedRow(testMinTraderKnownFacts.traderName, false)
-            }
+            GuarantorNameSummary.row mustBe expectedRow("guarantor name here", true)
+          }
+        }
+
+        "and there is a GuarantorArrangerPage answer of `Transporter`" - {
+          "and that section hasn't been filled in yet" in {
+
+            implicit lazy val request: DataRequest[_] = dataRequest(
+              FakeRequest(),
+              emptyUserAnswers
+                .set(DestinationTypePage, ExportWithCustomsDeclarationLodgedInTheUk)
+                .set(GuarantorArrangerPage, Transporter),
+              movementDetails = maxGetMovementResponse.copy(movementGuarantee = MovementGuaranteeModel(GuarantorType.Transporter, None))
+            )
+
+            GuarantorNameSummary.row mustBe expectedRow(messagesForLanguage.notProvided, showChangeLink = true, NormalMode)
           }
 
-          "and there is a GuarantorArrangerPage answer of `GoodsOwner`" - {
-            "and that section hasn't been filled in yet" in {
+          "and that section has been filled in" in {
+            implicit lazy val request: DataRequest[_] = dataRequest(
+              FakeRequest(),
+              emptyUserAnswers
+                .set(DestinationTypePage, ExportWithCustomsDeclarationLodgedInTheUk)
+                .set(GuarantorArrangerPage, Transporter)
+                .set(GuarantorNamePage, "transporter name here")
+            )
 
-              implicit lazy val request: DataRequest[_] = dataRequest(
-                FakeRequest(),
-                emptyUserAnswers
-                  .set(DestinationTypePage, ExportWithCustomsDeclarationLodgedInTheUk)
-                  .set(GuarantorRequiredPage, true)
-                  .set(GuarantorArrangerPage, GoodsOwner),
-                movementDetails = maxGetMovementResponse.copy(movementGuarantee = MovementGuaranteeModel(GuarantorType.Owner, None))
-              )
-
-              GuarantorNameSummary.row mustBe expectedRow(messagesForLanguage.notProvided, showChangeLink = true, NormalMode)
-            }
-
-            "and that section has been filled in" in {
-              implicit lazy val request: DataRequest[_] = dataRequest(
-                FakeRequest(),
-                emptyUserAnswers
-                  .set(DestinationTypePage, ExportWithCustomsDeclarationLodgedInTheUk)
-                  .set(GuarantorRequiredPage, true)
-                  .set(GuarantorArrangerPage, GoodsOwner)
-                  .set(GuarantorNamePage, "guarantor name here"),
-                movementDetails = maxGetMovementResponse.copy(movementGuarantee = MovementGuaranteeModel(NoGuarantor, None))
-              )
-
-              GuarantorNameSummary.row mustBe expectedRow("guarantor name here", true)
-            }
-          }
-
-          "and there is a GuarantorArrangerPage answer of `Transporter`" - {
-            "and that section hasn't been filled in yet" in {
-
-              implicit lazy val request: DataRequest[_] = dataRequest(
-                FakeRequest(),
-                emptyUserAnswers
-                  .set(DestinationTypePage, ExportWithCustomsDeclarationLodgedInTheUk)
-                  .set(GuarantorRequiredPage, true)
-                  .set(GuarantorArrangerPage, Transporter),
-                movementDetails = maxGetMovementResponse.copy(movementGuarantee = MovementGuaranteeModel(GuarantorType.Transporter, None))
-              )
-
-              GuarantorNameSummary.row mustBe expectedRow(messagesForLanguage.notProvided, showChangeLink = true, NormalMode)
-            }
-
-            "and that section has been filled in" in {
-              implicit lazy val request: DataRequest[_] = dataRequest(
-                FakeRequest(),
-                emptyUserAnswers
-                  .set(DestinationTypePage, ExportWithCustomsDeclarationLodgedInTheUk)
-                  .set(GuarantorRequiredPage, true)
-                  .set(GuarantorArrangerPage, Transporter)
-                  .set(GuarantorNamePage, "transporter name here")
-              )
-
-              GuarantorNameSummary.row mustBe expectedRow("transporter name here", true)
-            }
+            GuarantorNameSummary.row mustBe expectedRow("transporter name here", true)
           }
         }
       }
-
     }
-
   }
 }

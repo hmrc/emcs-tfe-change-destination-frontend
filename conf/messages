@@ -568,12 +568,6 @@ dispatchBusinessName.error.invalidCharacters = Business name must not contain < 
 dispatchBusinessName.checkYourAnswersLabel = Trader name
 dispatchBusinessName.change.hidden = Trader name
 
-guarantorRequired.title = Is a guarantor required for this movement?
-guarantorRequired.heading = Is a guarantor required for this movement?
-guarantorRequired.checkYourAnswersLabel = Guarantor required
-guarantorRequired.error.required = Select yes if a guarantor is required for this movement
-guarantorRequired.change.hidden = if a guarantor is required for this movement
-
 exportCustomsOffice.title = Enter the customs office code for the place where the export declaration is lodged
 exportCustomsOffice.heading = Enter the customs office code for the place where the export declaration is lodged
 exportCustomsOffice.hint = This code is also known as a customs office reference number. It starts with 2 letters representing the member state. For example, GBSOU001.

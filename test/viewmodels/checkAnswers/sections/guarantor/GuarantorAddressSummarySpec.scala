@@ -26,7 +26,7 @@ import models.sections.info.movementScenario.MovementScenario.ExportWithCustomsD
 import models.{CheckMode, UserAddress}
 import pages.sections.consignee.ConsigneeAddressPage
 import pages.sections.consignor.ConsignorAddressPage
-import pages.sections.guarantor.{GuarantorAddressPage, GuarantorArrangerPage, GuarantorRequiredPage}
+import pages.sections.guarantor.{GuarantorAddressPage, GuarantorArrangerPage}
 import pages.sections.info.DestinationTypePage
 import play.api.i18n.Messages
 import play.api.test.FakeRequest
@@ -72,7 +72,6 @@ class GuarantorAddressSummarySpec extends SpecBase {
                   FakeRequest(),
                   emptyUserAnswers
                     .set(DestinationTypePage, ExportWithCustomsDeclarationLodgedInTheUk)
-                    .set(GuarantorRequiredPage, true)
                     .set(GuarantorArrangerPage, arranger),
                   movementDetails = maxGetMovementResponse.copy(movementGuarantee = MovementGuaranteeModel(GuarantorType.NoGuarantor, None))
                 )
@@ -91,7 +90,6 @@ class GuarantorAddressSummarySpec extends SpecBase {
                   FakeRequest(),
                   emptyUserAnswers
                     .set(DestinationTypePage, ExportWithCustomsDeclarationLodgedInTheUk)
-                    .set(GuarantorRequiredPage, true)
                     .set(GuarantorArrangerPage, arranger)
                 )
 
@@ -115,7 +113,6 @@ class GuarantorAddressSummarySpec extends SpecBase {
 
                 implicit lazy val request: DataRequest[_] = dataRequest(FakeRequest(), emptyUserAnswers
                   .set(DestinationTypePage, ExportWithCustomsDeclarationLodgedInTheUk)
-                  .set(GuarantorRequiredPage, true)
                   .set(GuarantorArrangerPage, arranger)
                   .set(GuarantorAddressPage, testUserAddress)
                 )
@@ -146,7 +143,6 @@ class GuarantorAddressSummarySpec extends SpecBase {
                 FakeRequest(),
                 emptyUserAnswers
                   .set(DestinationTypePage, ExportWithCustomsDeclarationLodgedInTheUk)
-                  .set(GuarantorRequiredPage, true)
                   .set(GuarantorArrangerPage, Consignor)
               )
 
@@ -169,7 +165,6 @@ class GuarantorAddressSummarySpec extends SpecBase {
 
               implicit lazy val request: DataRequest[_] = dataRequest(FakeRequest(), emptyUserAnswers
                 .set(DestinationTypePage, ExportWithCustomsDeclarationLodgedInTheUk)
-                .set(GuarantorRequiredPage, true)
                 .set(GuarantorArrangerPage, Consignor)
                 .set(ConsignorAddressPage, testUserAddress)
               )
@@ -197,7 +192,6 @@ class GuarantorAddressSummarySpec extends SpecBase {
                 FakeRequest(),
                 emptyUserAnswers
                   .set(DestinationTypePage, ExportWithCustomsDeclarationLodgedInTheUk)
-                  .set(GuarantorRequiredPage, true)
                   .set(GuarantorArrangerPage, Consignee),
                 movementDetails = maxGetMovementResponse.copy(consigneeTrader = None)
               )
@@ -212,7 +206,6 @@ class GuarantorAddressSummarySpec extends SpecBase {
 
               implicit lazy val request: DataRequest[_] = dataRequest(FakeRequest(), emptyUserAnswers
                 .set(DestinationTypePage, ExportWithCustomsDeclarationLodgedInTheUk)
-                .set(GuarantorRequiredPage, true)
                 .set(GuarantorArrangerPage, Consignee)
                 .set(ConsigneeAddressPage, testUserAddress)
               )

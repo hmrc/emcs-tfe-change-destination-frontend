@@ -43,38 +43,13 @@ class GuarantorNavigatorSpec extends SpecBase {
           controllers.sections.guarantor.routes.GuarantorCheckAnswersController.onPageLoad(testErn, testArc)
       }
 
-      "for GuarantorRequiredPage" - {
-
-        "when true" - {
-
-          "must go to CAM-G02" in {
-
-            val userAnswers = emptyUserAnswers.set(GuarantorRequiredPage, true)
-
-            navigator.nextPage(GuarantorRequiredPage, NormalMode, userAnswers) mustBe
-              controllers.sections.guarantor.routes.GuarantorArrangerController.onPageLoad(testErn, testArc, NormalMode)
-          }
-        }
-        "when false" - {
-          "must go to CAM-G06" in {
-
-            val userAnswers = emptyUserAnswers.set(GuarantorRequiredPage, false)
-
-            navigator.nextPage(GuarantorRequiredPage, NormalMode, userAnswers) mustBe
-              controllers.sections.guarantor.routes.GuarantorCheckAnswersController.onPageLoad(testErn, testArc)
-          }
-        }
-      }
-
       "for GuarantorArrangerPage" - {
 
         GuarantorArranger.displayValues.foreach {
           case value@(GoodsOwner | Transporter) =>
             "must goto CAM-G03" - {
               s"when the arranger value is $value aka ${value.getClass.getSimpleName}" in {
-                val userAnswers = emptyUserAnswers
-                  .set(GuarantorRequiredPage, true)
-                  .set(GuarantorArrangerPage, value)
+                val userAnswers = emptyUserAnswers.set(GuarantorArrangerPage, value)
 
                 navigator.nextPage(GuarantorArrangerPage, NormalMode, userAnswers) mustBe
                   controllers.sections.guarantor.routes.GuarantorNameController.onPageLoad(testErn, testArc, NormalMode)
@@ -83,9 +58,7 @@ class GuarantorNavigatorSpec extends SpecBase {
           case value =>
             "must goto CAM-G06" - {
               s"when the arranger value is $value aka ${value.getClass.getSimpleName}" in {
-                val userAnswers = emptyUserAnswers
-                  .set(GuarantorRequiredPage, true)
-                  .set(GuarantorArrangerPage, value)
+                val userAnswers = emptyUserAnswers.set(GuarantorArrangerPage, value)
 
                 navigator.nextPage(GuarantorArrangerPage, NormalMode, userAnswers) mustBe
                   controllers.sections.guarantor.routes.GuarantorCheckAnswersController.onPageLoad(testErn, testArc)

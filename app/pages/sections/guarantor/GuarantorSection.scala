@@ -47,31 +47,19 @@ case object GuarantorSection extends Section[JsObject] with Enumerable.Implicits
     (gbToExport || euChangedFromFixedTransport) && request.movementDetails.movementGuarantee.guarantorTrader.isEmpty
   }
 
-  //noinspection ScalaStyle
   override def status(implicit request: DataRequest[_]): TaskListStatus =
-    request.userAnswers.get(GuarantorRequiredPage) match {
-      case Some(true) =>
-        // guarantor required
-        request.userAnswers.get(GuarantorArrangerPage) match {
-          case Some(Consignee) | Some(Consignor) => Completed
-          case Some(_) =>
-            if (
-              request.userAnswers.get(GuarantorNamePage).nonEmpty &&
-                request.userAnswers.get(GuarantorVatPage).nonEmpty &&
-                request.userAnswers.get(GuarantorAddressPage).nonEmpty) {
-              Completed
-            } else {
-              InProgress
-            }
-          case None =>
-            // answer not present yet
-            InProgress
+    request.userAnswers.get(GuarantorArrangerPage) match {
+      case Some(Consignee) | Some(Consignor) => Completed
+      case Some(_) =>
+        if (
+          request.userAnswers.get(GuarantorNamePage).nonEmpty &&
+            request.userAnswers.get(GuarantorVatPage).nonEmpty &&
+            request.userAnswers.get(GuarantorAddressPage).nonEmpty) {
+          Completed
+        } else {
+          InProgress
         }
-      case Some(false) =>
-        // guarantor not required
-        Completed
       case None =>
-        // answer not present yet
         NotStarted
     }
 

@@ -27,7 +27,7 @@ import models.sections.info.movementScenario.MovementScenario.ExportWithCustomsD
 import navigation.BaseNavigator
 import navigation.FakeNavigators.FakeNavigator
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
-import pages.sections.guarantor.{GuarantorArrangerPage, GuarantorRequiredPage}
+import pages.sections.guarantor.GuarantorArrangerPage
 import pages.sections.info.DestinationTypePage
 import play.api.mvc.Results.Ok
 import play.api.mvc.{AnyContentAsEmpty, MessagesControllerComponents, Result}
@@ -49,31 +49,6 @@ class GuarantorBaseControllerSpec extends SpecBase with MockUserAnswersService w
   class Test(ua: UserAnswers) {
     implicit val dr: DataRequest[AnyContentAsEmpty.type] =
       dataRequest(FakeRequest(), ua, movementDetails = maxGetMovementResponse.copy(movementGuarantee = MovementGuaranteeModel(NoGuarantor, None)))
-  }
-
-  "withGuarantorRequiredAnswer" - {
-    "must return the success result" - {
-      "when guarantor is required" in new Test(emptyUserAnswers
-        .set(DestinationTypePage, ExportWithCustomsDeclarationLodgedInTheUk)
-        .set(GuarantorRequiredPage, true)
-      ) {
-        val result: Future[Result] = TestController.withGuarantorRequiredAnswer(Future.successful(Ok("beans")))
-
-        status(result) mustBe OK
-        contentAsString(result) mustBe "beans"
-      }
-    }
-    "must redirect to guarantor CYA" - {
-      "when guarantor is not required" in new Test(emptyUserAnswers
-        .set(DestinationTypePage, ExportWithCustomsDeclarationLodgedInTheUk)
-        .set(GuarantorRequiredPage, false)
-      ) {
-        val result: Future[Result] = TestController.withGuarantorRequiredAnswer(Future.successful(Ok("beans")))
-
-        status(result) mustBe SEE_OTHER
-        redirectLocation(result) mustBe Some(controllers.sections.guarantor.routes.GuarantorCheckAnswersController.onPageLoad(testErn, testArc).url)
-      }
-    }
   }
 
   "withGuarantorArrangerAnswer" - {

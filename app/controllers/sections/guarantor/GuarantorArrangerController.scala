@@ -48,37 +48,33 @@ class GuarantorArrangerController @Inject()(
 
   def onPageLoad(ern: String, arc: String, mode: Mode): Action[AnyContent] =
     authorisedDataRequestWithUpToDateMovement(ern, arc) { implicit request =>
-      withGuarantorRequiredAnswer {
-        renderView(Ok, fillForm(GuarantorArrangerPage, formProvider()), mode)
-      }
+      renderView(Ok, fillForm(GuarantorArrangerPage, formProvider()), mode)
     }
 
   def onSubmit(ern: String, arc: String, mode: Mode): Action[AnyContent] =
     authorisedDataRequestWithUpToDateMovementAsync(ern, arc) { implicit request =>
-      withGuarantorRequiredAnswer {
-        formProvider().bindFromRequest().fold(
-          formWithErrors =>
-            Future.successful(renderView(BadRequest, formWithErrors, mode)),
-          {
-            case value@(GoodsOwner | Transporter) =>
-              if (Seq(Consignor, Consignee).exists(request.userAnswers.get(GuarantorArrangerPage).contains)) {
-                saveAndRedirect(GuarantorArrangerPage, value, NormalMode)
-              } else {
-                saveAndRedirect(GuarantorArrangerPage, value, mode)
-              }
-            case value =>
-              saveAndRedirect(
-                GuarantorArrangerPage,
-                value,
-                request.userAnswers
-                  .remove(GuarantorNamePage)
-                  .remove(GuarantorVatPage)
-                  .remove(GuarantorAddressPage),
-                mode
-              )
-          }
-        )
-      }
+      formProvider().bindFromRequest().fold(
+        formWithErrors =>
+          Future.successful(renderView(BadRequest, formWithErrors, mode)),
+        {
+          case value@(GoodsOwner | Transporter) =>
+            if (Seq(Consignor, Consignee).exists(request.userAnswers.get(GuarantorArrangerPage).contains)) {
+              saveAndRedirect(GuarantorArrangerPage, value, NormalMode)
+            } else {
+              saveAndRedirect(GuarantorArrangerPage, value, mode)
+            }
+          case value =>
+            saveAndRedirect(
+              GuarantorArrangerPage,
+              value,
+              request.userAnswers
+                .remove(GuarantorNamePage)
+                .remove(GuarantorVatPage)
+                .remove(GuarantorAddressPage),
+              mode
+            )
+        }
+      )
     }
 
   private def renderView(status: Status, form: Form[_], mode: Mode)(implicit request: DataRequest[_]): Result = {

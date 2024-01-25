@@ -21,24 +21,22 @@ import controllers.actions._
 import forms.sections.journeyType.HowMovementTransportedFormProvider
 import models.requests.DataRequest
 import models.sections.ReviewAnswer
+import models.sections.info.movementScenario.MovementType
 import models.sections.journeyType.HowMovementTransported
 import models.sections.journeyType.HowMovementTransported.FixedTransportInstallations
 import models.sections.transportUnit.TransportUnitType.FixedTransport
 import models.{Index, Mode, NormalMode, UserAnswers}
 import navigation.JourneyTypeNavigator
+import pages.sections.info.DestinationTypePage
 import pages.sections.journeyType.{HowMovementTransportedPage, JourneyTypeReviewPage, JourneyTypeSection}
 import pages.sections.transportUnit.{TransportUnitTypePage, TransportUnitsSection}
 import play.api.i18n.MessagesApi
-import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
+import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
 import services.UserAnswersService
 import views.html.sections.journeyType.{HowMovementTransportedNoOptionView, HowMovementTransportedView}
 
 import javax.inject.Inject
 import scala.concurrent.Future
-import pages.sections.info.DestinationTypePage
-import pages.sections.guarantor.GuarantorRequiredPage
-import models.sections.info.movementScenario.MovementType
-import play.api.mvc.Result
 
 class HowMovementTransportedController @Inject()(
                                                   override val messagesApi: MessagesApi,
@@ -56,8 +54,8 @@ class HowMovementTransportedController @Inject()(
                                                 ) extends BaseNavigationController with AuthActionHelper {
 
   private def guarantorNotRequiredEuGuard[T](onEuNotRequired: => T, default: => T)(implicit request: DataRequest[_]): T = {
-    (request.userAnswers.get(DestinationTypePage), request.userAnswers.get(GuarantorRequiredPage)) match {
-      case (Some(scenario), Some(false)) if scenario.movementType == MovementType.UkToEu => onEuNotRequired
+    (request.userAnswers.get(DestinationTypePage), request.movementDetails.movementGuarantee.guarantorTrader.isEmpty) match {
+      case (Some(scenario), true) if scenario.movementType == MovementType.UkToEu => onEuNotRequired
       case _ => default
     }
   }

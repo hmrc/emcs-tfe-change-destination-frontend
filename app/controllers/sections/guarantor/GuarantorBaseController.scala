@@ -20,37 +20,12 @@ import controllers.BaseNavigationController
 import models.requests.DataRequest
 import models.sections.guarantor.GuarantorArranger
 import models.sections.guarantor.GuarantorArranger.{GoodsOwner, Transporter}
-import pages.sections.guarantor.{GuarantorArrangerPage, GuarantorRequiredPage}
+import pages.sections.guarantor.GuarantorArrangerPage
 import play.api.mvc.Result
 
 import scala.concurrent.Future
 
 trait GuarantorBaseController extends BaseNavigationController {
-
-  def withGuarantorRequiredAnswer(f: Result)(implicit request: DataRequest[_]): Result = {
-    withAnswer(
-      page = GuarantorRequiredPage,
-      redirectRoute = controllers.sections.guarantor.routes.GuarantorIndexController.onPageLoad(request.ern, request.arc)
-    ) {
-      case true => f
-      case false =>
-        logger.warn(s"[withGuarantorRequiredAnswer] Answered no, redirecting to CYA")
-        Redirect(controllers.sections.guarantor.routes.GuarantorCheckAnswersController.onPageLoad(request.ern, request.arc))
-    }
-  }
-
-  def withGuarantorRequiredAnswer(f: Future[Result])(implicit request: DataRequest[_]): Future[Result] = {
-    withAnswerAsync(
-      page = GuarantorRequiredPage,
-      redirectRoute = controllers.sections.guarantor.routes.GuarantorIndexController.onPageLoad(request.ern, request.arc)
-    ) {
-      case true => f
-      case false =>
-        logger.warn(s"[withGuarantorRequiredAnswer] Answered no, redirecting to CYA")
-        Future.successful(Redirect(controllers.sections.guarantor.routes.GuarantorCheckAnswersController.onPageLoad(request.ern, request.arc)))
-    }
-  }
-
 
   def withGuarantorArrangerAnswer(f: GuarantorArranger => Result)(implicit request: DataRequest[_]): Result = {
     withAnswer(
