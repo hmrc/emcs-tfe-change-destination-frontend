@@ -17,23 +17,62 @@
 package controllers.sections.info
 
 import base.SpecBase
+import controllers.actions.FakeMovementAction
+import controllers.actions.predraft.FakePreDraftRetrievalAction
+import mocks.services.{MockPreDraftService, MockUserAnswersService}
+import models.UserAnswers
+import models.response.emcsTfe.GetMovementResponse
+import models.sections.info.ChangeType.Consignee
+import models.sections.info.movementScenario.DestinationType.UnknownDestination
+import navigation.FakeNavigators.FakeInfoNavigator
+import pages.sections.info.{ChangeDestinationTypePage, ChangeTypePage}
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.Helpers._
 import play.api.test.{FakeRequest, Helpers}
 
-class InfoIndexControllerSpec extends SpecBase {
+import scala.concurrent.Future
+
+class InfoIndexControllerSpec extends SpecBase with MockUserAnswersService with MockPreDraftService {
 
   lazy val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest()
 
-  lazy val controller = new InfoIndexController(
-    fakeUserAllowListAction,
-    fakeAuthAction,
-    Helpers.stubMessagesControllerComponents()
-  )
+  class Test(val userAnswers: Option[UserAnswers] = Some(emptyUserAnswers), movementDetails: GetMovementResponse = maxGetMovementResponse) {
+    lazy val controller = new InfoIndexController(
+      messagesApi = messagesApi,
+      userAnswersService = mockUserAnswersService,
+      userAllowList = fakeUserAllowListAction,
+      navigator = new FakeInfoNavigator(testOnwardRoute),
+      auth = fakeAuthAction,
+      preDraftService = mockPreDraftService,
+      getPreDraftData = new FakePreDraftRetrievalAction(userAnswers, Some(testMinTraderKnownFacts)),
+      requirePreDraftData = preDraftDataRequiredAction,
+      withMovement = new FakeMovementAction(movementDetails),
+      controllerComponents = Helpers.stubMessagesControllerComponents()
+    )
+  }
 
   "InfoIndex Controller" - {
 
-    "must redirect to the Change Type page (COD-01)" in {
+    "when the Destination Type of the IE801 is UnknownDestination" - {
+
+      "must set the ChangeType to Consignee and the ChangeDestinationType to True redirecting to NewDestinationType" in new Test(
+        movementDetails = maxGetMovementResponse.copy(destinationType = UnknownDestination)
+      ) {
+
+        MockPreDraftService.set(emptyUserAnswers
+          .set(ChangeTypePage, Consignee)
+          .set(ChangeDestinationTypePage, true)
+        ).returns(Future.successful(true))
+
+        val result = controller.onPageLoad(testErn, testArc)(request)
+
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustBe routes.NewDestinationTypeController.onPreDraftPageLoad(testErn, testArc).url
+
+      }
+    }
+
+    "in any other scenario must redirect to the Change Type page" in new Test() {
 
       val result = controller.onPageLoad(testErn, testArc)(request)
 

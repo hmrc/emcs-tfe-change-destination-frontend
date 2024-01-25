@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,18 +16,49 @@
 
 package controllers.sections.info
 
-import controllers.BaseController
+import controllers.BasePreDraftNavigationController
 import controllers.actions._
-import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
+import controllers.actions.predraft.{PreDraftAuthActionHelper, PreDraftDataRequiredAction, PreDraftDataRetrievalAction}
+import forms.sections.info.ChangeTypeFormProvider
+import models.NormalMode
+import models.requests.DataRequest
+import models.sections.info.ChangeType.Consignee
+import models.sections.info.movementScenario.DestinationType.UnknownDestination
+import navigation.InformationNavigator
+import pages.sections.info.{ChangeDestinationTypePage, ChangeTypePage}
+import play.api.data.Form
+import play.api.i18n.MessagesApi
+import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
+import services.{PreDraftService, UserAnswersService}
+import views.html.sections.info.ChangeTypeView
 
 import javax.inject.Inject
+import scala.concurrent.Future
 
-class InfoIndexController @Inject()(val userAllowList: UserAllowListAction,
-                                    val auth: AuthAction,
-                                    val controllerComponents: MessagesControllerComponents) extends BaseController {
+class InfoIndexController @Inject()(
+                                     override val messagesApi: MessagesApi,
+                                     override val userAnswersService: UserAnswersService,
+                                     override val userAllowList: UserAllowListAction,
+                                     override val navigator: InformationNavigator,
+                                     override val auth: AuthAction,
+                                     override val preDraftService: PreDraftService,
+                                     override val getPreDraftData: PreDraftDataRetrievalAction,
+                                     override val requirePreDraftData: PreDraftDataRequiredAction,
+                                     override val withMovement: MovementAction,
+                                     val controllerComponents: MessagesControllerComponents
+                                   ) extends BasePreDraftNavigationController with PreDraftAuthActionHelper {
 
   def onPageLoad(ern: String, arc: String): Action[AnyContent] =
-    (auth(ern, arc) andThen userAllowList) {
-      Redirect(controllers.sections.info.routes.ChangeTypeController.onPageLoad(ern, arc))
+    authorisedWithPreDraftDataUpToDateMovementAsync(ern, arc) { implicit request =>
+      if (request.movementDetails.destinationType == UnknownDestination) {
+        preDraftService.set(request.userAnswers
+          .set(ChangeTypePage, Consignee)
+          .set(ChangeDestinationTypePage, true)
+        ).map { _ =>
+          Redirect(routes.NewDestinationTypeController.onPreDraftPageLoad(ern, arc))
+        }
+      } else {
+        Future.successful(Redirect(routes.ChangeTypeController.onPageLoad(ern, arc)))
+      }
     }
 }
