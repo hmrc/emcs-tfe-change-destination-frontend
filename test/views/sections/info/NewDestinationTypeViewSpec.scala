@@ -91,8 +91,7 @@ class NewDestinationTypeViewSpec extends SpecBase with ViewBehaviours {
               Selectors.radioButton(5) -> messagesForLanguage.registeredConsignee,
               Selectors.radioButton(6) -> messagesForLanguage.euTaxWarehouse,
               Selectors.radioButton(7) -> messagesForLanguage.gbTaxWarehouse,
-              Selectors.radioButton(8) -> messagesForLanguage.temporaryRegisteredConsignee,
-              Selectors.radioButton(9) -> messagesForLanguage.unknownDestination,
+              Selectors.radioButton(8) -> messagesForLanguage.temporaryRegisteredConsignee
             ))
           }
       }
