@@ -22,7 +22,7 @@ import controllers.actions.predraft.FakePreDraftRetrievalAction
 import mocks.services.{MockPreDraftService, MockUserAnswersService}
 import models.UserAnswers
 import models.response.emcsTfe.GetMovementResponse
-import models.sections.info.ChangeType.Consignee
+import models.sections.info.ChangeType.ChangeConsignee
 import models.sections.info.movementScenario.DestinationType.UnknownDestination
 import navigation.FakeNavigators.FakeInfoNavigator
 import pages.sections.info.{ChangeDestinationTypePage, ChangeTypePage}
@@ -60,7 +60,7 @@ class InfoIndexControllerSpec extends SpecBase with MockUserAnswersService with 
       ) {
 
         MockPreDraftService.set(emptyUserAnswers
-          .set(ChangeTypePage, Consignee)
+          .set(ChangeTypePage, ChangeConsignee)
           .set(ChangeDestinationTypePage, true)
         ).returns(Future.successful(true))
 

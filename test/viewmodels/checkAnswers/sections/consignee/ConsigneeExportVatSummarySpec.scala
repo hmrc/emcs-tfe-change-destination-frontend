@@ -47,7 +47,7 @@ class ConsigneeExportVatSummarySpec extends SpecBase with Matchers {
 
             "must output None" in {
 
-              implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(ChangeTypePage, ChangeType.Consignee))
+              implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(ChangeTypePage, ChangeType.ChangeConsignee))
 
               ConsigneeExportVatSummary.row(showActionLinks = true) mustBe None
             }

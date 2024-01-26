@@ -18,7 +18,7 @@ package pages.sections.consignee
 
 import models.ExemptOrganisationDetailsModel
 import models.requests.DataRequest
-import models.sections.info.ChangeType.Consignee
+import models.sections.info.ChangeType.ChangeConsignee
 import pages.QuestionPage
 import pages.sections.info.ChangeTypePage
 import play.api.libs.json.JsPath
@@ -29,7 +29,7 @@ case object ConsigneeExemptOrganisationPage extends QuestionPage[ExemptOrganisat
 
   override def getValueFromIE801(implicit request: DataRequest[_]): Option[ExemptOrganisationDetailsModel] =
     request.userAnswers.get(ChangeTypePage) match {
-      case Some(Consignee) => None
+      case Some(ChangeConsignee) => None
       case _ =>
         for {
           memberStateCode <- request.movementDetails.memberStateCode

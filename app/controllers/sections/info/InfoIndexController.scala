@@ -19,7 +19,7 @@ package controllers.sections.info
 import controllers.BasePreDraftNavigationController
 import controllers.actions._
 import controllers.actions.predraft.{PreDraftAuthActionHelper, PreDraftDataRequiredAction, PreDraftDataRetrievalAction}
-import models.sections.info.ChangeType.Consignee
+import models.sections.info.ChangeType.ChangeConsignee
 import models.sections.info.movementScenario.DestinationType.UnknownDestination
 import navigation.InformationNavigator
 import pages.sections.info.{ChangeDestinationTypePage, ChangeTypePage}
@@ -47,7 +47,7 @@ class InfoIndexController @Inject()(
     authorisedWithPreDraftDataUpToDateMovementAsync(ern, arc) { implicit request =>
       if (request.movementDetails.destinationType == UnknownDestination) {
         preDraftService.set(request.userAnswers
-          .set(ChangeTypePage, Consignee)
+          .set(ChangeTypePage, ChangeConsignee)
           .set(ChangeDestinationTypePage, true)
         ).map { _ =>
           Redirect(routes.NewDestinationTypeController.onPreDraftPageLoad(ern, arc))

@@ -21,7 +21,7 @@ import models.response.SubmitChangeDestinationResponse
 import models.sections.ReviewAnswer.ChangeAnswers
 import models.sections.consignee.{ConsigneeExportVat, ConsigneeExportVatType}
 import models.sections.guarantor.GuarantorArranger
-import models.sections.info.ChangeType.Consignee
+import models.sections.info.ChangeType.ChangeConsignee
 import models.sections.info.movementScenario.{DestinationType, MovementScenario}
 import models.sections.journeyType.HowMovementTransported
 import models.sections.journeyType.JourneyTime.Hours
@@ -148,7 +148,7 @@ trait SubmitChangeDestinationFixtures extends GetMovementResponseFixtures { _: B
 
   val baseFullUserAnswers: UserAnswers = emptyUserAnswers
     // Info Section
-    .set(ChangeTypePage, Consignee)
+    .set(ChangeTypePage, ChangeConsignee)
     .set(ChangeDestinationTypePage, true)
     .set(DestinationTypePage, MovementScenario.ExportWithCustomsDeclarationLodgedInTheUk)
     // Sections Reviews

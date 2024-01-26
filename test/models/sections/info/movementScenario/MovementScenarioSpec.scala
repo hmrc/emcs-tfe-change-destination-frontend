@@ -153,31 +153,28 @@ class MovementScenarioSpec extends SpecBase {
       }
     }
     "when DestinationType is a Duty Paid option" - {
-      "must return an error" - {
-        "when DestinationType is CertifiedConsignee" in {
-          val result = intercept[InvalidDestinationTypeException](
-            MovementScenario.getMovementScenarioFromMovement(testDataRequest(
-              destinationType = DestinationType.CertifiedConsignee
-            ))
-          )
-          result.message mustBe "[MovementScenario][getMovementScenarioFromMovement] invalid DestinationType: 9"
-        }
-        "when DestinationType is TemporaryCertifiedConsignee" in {
-          val result = intercept[InvalidDestinationTypeException](
-            MovementScenario.getMovementScenarioFromMovement(testDataRequest(
-              destinationType = DestinationType.TemporaryCertifiedConsignee
-            ))
-          )
-          result.message mustBe "[MovementScenario][getMovementScenarioFromMovement] invalid DestinationType: 10"
-        }
-        "when DestinationType is ReturnToThePlaceOfDispatchOfTheConsignor" in {
-          val result = intercept[InvalidDestinationTypeException](
-            MovementScenario.getMovementScenarioFromMovement(testDataRequest(
-              destinationType = DestinationType.ReturnToThePlaceOfDispatchOfTheConsignor
-            ))
-          )
-          result.message mustBe "[MovementScenario][getMovementScenarioFromMovement] invalid DestinationType: 11"
-        }
+      "when DestinationType is CertifiedConsignee" in {
+        val result =
+          MovementScenario.getMovementScenarioFromMovement(testDataRequest(
+            destinationType = DestinationType.CertifiedConsignee
+          ))
+
+        result mustBe CertifiedConsignee
+      }
+      "when DestinationType is TemporaryCertifiedConsignee" in {
+        val result =
+          MovementScenario.getMovementScenarioFromMovement(testDataRequest(
+            destinationType = DestinationType.TemporaryCertifiedConsignee
+          ))
+        result mustBe TemporaryCertifiedConsignee
+      }
+      "when DestinationType is ReturnToThePlaceOfDispatchOfTheConsignor" in {
+        val result =
+          MovementScenario.getMovementScenarioFromMovement(testDataRequest(
+            destinationType = DestinationType.ReturnToThePlaceOfDispatchOfTheConsignor
+          ))
+
+        result mustBe ReturnToThePlaceOfDispatch
       }
     }
   }

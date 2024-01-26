@@ -27,17 +27,17 @@ sealed trait ChangeType
 
 object ChangeType extends Enumerable.Implicits {
 
-  case object Consignee extends WithName("consignee") with ChangeType
+  case object ChangeConsignee extends WithName("consignee") with ChangeType
   case object Destination extends WithName("destination") with ChangeType
   case object ExportOffice extends WithName("exportOffice") with ChangeType
-  case object Return extends WithName("return") with ChangeType
+  case object ReturnToConsignor extends WithName("return") with ChangeType
 
-  val allValues = Seq(Consignee, Destination, ExportOffice, Return)
+  val allValues = Seq(ChangeConsignee, Destination, ExportOffice, ReturnToConsignor)
 
   def values(implicit request: DataRequest[_]): Seq[ChangeType] = {
     val destinationType = request.movementDetails.destinationType
     val visibleOptions = Seq(
-      if(destinationType.isDutyPaid) Some(Return) else Some(Consignee),
+      if(destinationType.isDutyPaid) Some(ReturnToConsignor) else Some(ChangeConsignee),
       if(destinationType == Export) Some(ExportOffice) else Some(Destination)
     ).flatten
 

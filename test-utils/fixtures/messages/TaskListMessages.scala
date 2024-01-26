@@ -16,9 +16,19 @@
 
 package fixtures.messages
 
+import models.sections.info.movementScenario.MovementScenario
+
 object TaskListMessages {
   sealed trait ViewMessages extends BaseMessages {
     _: i18n =>
+    def headingDutyPaid(destinationType: MovementScenario): String = destinationType match {
+      case MovementScenario.CertifiedConsignee => "Northern Ireland tax warehouse to certified consignee"
+      case MovementScenario.TemporaryCertifiedConsignee => "Northern Ireland tax warehouse to temporary certified consignee"
+      case MovementScenario.ReturnToThePlaceOfDispatch => "Return to place of dispatch"
+      case _ =>
+        throw new IllegalArgumentException(s"DestinationType of '$destinationType' is not a valid Duty Paid scenario")
+    }
+    def titleDutyPaid(destinationType: MovementScenario) = titleHelper(headingDutyPaid(destinationType))
     def headingGbTaxWarehouseTo(input: String): String = s"Great Britain tax warehouse to $input"
     def titleGbTaxWarehouseTo(input: String): String = titleHelper(headingGbTaxWarehouseTo(input))
     def headingDispatchPlaceTo(input1: String, input2: String): String = s"$input1 tax warehouse to $input2"

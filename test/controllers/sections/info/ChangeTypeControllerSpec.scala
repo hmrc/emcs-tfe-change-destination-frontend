@@ -24,9 +24,10 @@ import mocks.services.{MockPreDraftService, MockUserAnswersService}
 import models.UserAnswers
 import models.requests.DataRequest
 import models.sections.info.ChangeType
-import models.sections.info.ChangeType.{Consignee, ExportOffice}
+import models.sections.info.ChangeType.{ChangeConsignee, ExportOffice, ReturnToConsignor}
+import models.sections.info.movementScenario.MovementScenario.ReturnToThePlaceOfDispatch
 import navigation.FakeNavigators.FakeInfoNavigator
-import pages.sections.info.ChangeTypePage
+import pages.sections.info.{ChangeTypePage, DestinationTypePage}
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.Helpers._
 import play.api.test.{FakeRequest, Helpers}
@@ -45,7 +46,7 @@ class ChangeTypeControllerSpec extends SpecBase with MockUserAnswersService with
   lazy val request = FakeRequest()
   implicit lazy val dr: DataRequest[AnyContentAsEmpty.type] = dataRequest(request)
 
-  class Test(val userAnswers: Option[UserAnswers]) {
+  class Test(val userAnswers: Option[UserAnswers] = Some(emptyUserAnswers)) {
 
     lazy val controller = new ChangeTypeController(
       messagesApi = messagesApi,
@@ -65,7 +66,7 @@ class ChangeTypeControllerSpec extends SpecBase with MockUserAnswersService with
 
   "ChangeType Controller" - {
 
-    "must return OK and the correct view for a GET" in new Test(Some(emptyUserAnswers)) {
+    "must return OK and the correct view for a GET" in new Test() {
       val result = controller.onPageLoad(testErn, testArc)(request)
 
       status(result) mustEqual OK
@@ -83,20 +84,35 @@ class ChangeTypeControllerSpec extends SpecBase with MockUserAnswersService with
 
     "must redirect to the next page when valid data is submitted" - {
 
-      "when changeType is Consignee don't save draft in UserAnswers" in new Test(Some(emptyUserAnswers)) {
+      "when changeType is Consignee don't save draft in UserAnswers" in new Test() {
 
-        val answersAfterSubmission = emptyUserAnswers.set(ChangeTypePage, Consignee)
+        val answersAfterSubmission = emptyUserAnswers.set(ChangeTypePage, ChangeConsignee)
 
         MockUserAnswersService.set().never()
         MockPreDraftService.set(answersAfterSubmission).returns(Future.successful(true))
 
-        val result = controller.onSubmit(testErn, testArc)(request.withFormUrlEncodedBody(("value", Consignee.toString)))
+        val result = controller.onSubmit(testErn, testArc)(request.withFormUrlEncodedBody(("value", ChangeConsignee.toString)))
 
         status(result) mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual testOnwardRoute.url
       }
 
-      "when changeType is anything other than Consignee save draft in UserAnswers" in new Test(Some(emptyUserAnswers)) {
+      "when changeType is ReturnToConsignor then save Desintation Type as ReturnToPlaceOfDispatch, clear preDraft and save draft" in new Test() {
+
+        val answersAfterSubmission = emptyUserAnswers
+          .set(ChangeTypePage, ReturnToConsignor)
+          .set(DestinationTypePage, ReturnToThePlaceOfDispatch)
+
+        MockUserAnswersService.set(answersAfterSubmission).returns(Future.successful(answersAfterSubmission))
+        MockPreDraftService.clear(testErn, testArc).returns(Future.successful(true))
+
+        val result = controller.onSubmit(testErn, testArc)(request.withFormUrlEncodedBody(("value", ReturnToConsignor.toString)))
+
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual testOnwardRoute.url
+      }
+
+      "when changeType is anything other than Consignee save draft in UserAnswers" in new Test() {
 
         val answersAfterSubmission = emptyUserAnswers.set(ChangeTypePage, ExportOffice)
 
@@ -110,7 +126,7 @@ class ChangeTypeControllerSpec extends SpecBase with MockUserAnswersService with
       }
     }
 
-    "must return a Bad Request and errors when invalid data is submitted" in new Test(Some(emptyUserAnswers)) {
+    "must return a Bad Request and errors when invalid data is submitted" in new Test() {
       val boundForm = form.bind(Map("value" -> ""))
 
       val result = controller.onSubmit(testErn, testArc)(request.withFormUrlEncodedBody(("value", "")))

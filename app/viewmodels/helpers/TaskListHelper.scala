@@ -19,8 +19,8 @@ package viewmodels.helpers
 import models.UserType._
 import models.requests.DataRequest
 import models.response.{InvalidUserTypeException, MissingMandatoryPage}
-import models.sections.info.ChangeType.Return
-import models.sections.info.movementScenario.MovementScenario.{ExportWithCustomsDeclarationLodgedInTheUk, _}
+import models.sections.info.ChangeType.ReturnToConsignor
+import models.sections.info.movementScenario.MovementScenario._
 import pages.sections.consignee.ConsigneeSection
 import pages.sections.destination.DestinationSection
 import pages.sections.exportInformation.ExportInformationSection
@@ -61,6 +61,9 @@ class TaskListHelper @Inject()() extends Logging {
       case (GreatBritainWarehouseKeeper | NorthernIrelandWarehouseKeeper, Some(destinationType@(ExportWithCustomsDeclarationLodgedInTheUk | ExportWithCustomsDeclarationLodgedInTheEu))) =>
         messages(s"destinationType.$destinationType")
 
+      case (NorthernIrelandCertifiedConsignor | NorthernIrelandTemporaryCertifiedConsignor, Some(destinationType@(CertifiedConsignee | TemporaryCertifiedConsignee | ReturnToThePlaceOfDispatch))) =>
+        messages(s"taskList.heading.dutyPaid.$destinationType")
+
       case (userType, destinationType) =>
         logger.error(s"[heading] invalid UserType and destinationType combination for CAM journey: $userType | $destinationType")
         throw InvalidUserTypeException(s"[TaskListHelper][heading] invalid UserType and destinationType combination for CAM journey: $userType | $destinationType")
@@ -81,7 +84,7 @@ class TaskListHelper @Inject()() extends Logging {
 
   //noinspection ScalaStyle
   private[helpers] def deliverySection(implicit request: DataRequest[_], messages: Messages): Option[TaskListSection] = {
-    if(request.userAnswers.get(ChangeTypePage).contains(Return)) None else {
+    if(request.userAnswers.get(ChangeTypePage).contains(ReturnToConsignor)) None else {
       Some(TaskListSection(
         sectionHeading = messages("taskList.section.delivery"),
         rows = Seq(

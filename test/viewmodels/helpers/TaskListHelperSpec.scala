@@ -24,7 +24,7 @@ import models.response.InvalidUserTypeException
 import models.response.emcsTfe.GuarantorType.{NoGuarantor, Transporter}
 import models.response.emcsTfe.{HeaderEadEsadModel, MovementGuaranteeModel, TransportModeModel}
 import models.sections.ReviewAnswer.ChangeAnswers
-import models.sections.info.ChangeType.{Consignee, Return}
+import models.sections.info.ChangeType.ReturnToConsignor
 import models.sections.info.DispatchPlace.{GreatBritain, NorthernIreland}
 import models.sections.info.movementScenario.MovementScenario._
 import models.sections.info.movementScenario.{DestinationType, MovementScenario}
@@ -59,6 +59,24 @@ class TaskListHelperSpec extends SpecBase {
 
       "heading" - {
         "when user answers are valid" - {
+          "must return the correct taskList.heading.dutyPaid message" in {
+            Seq[(String, MovementScenario)](
+              ("XIPA123", CertifiedConsignee),
+              ("XIPC123", CertifiedConsignee),
+              ("XIPA123", TemporaryCertifiedConsignee),
+              ("XIPC123", TemporaryCertifiedConsignee),
+              ("XIPA123", ReturnToThePlaceOfDispatch),
+              ("XIPC123", ReturnToThePlaceOfDispatch)
+            ).foreach {
+              case (ern, movementScenario) =>
+
+                implicit val request: DataRequest[_] =
+                  dataRequest(FakeRequest(), ern = ern, answers = emptyUserAnswers.set(DestinationTypePage, movementScenario))
+
+                helper.heading mustBe messagesForLanguage.headingDutyPaid(movementScenario)
+                titleNoForm(helper.heading) mustBe messagesForLanguage.titleDutyPaid(movementScenario)
+            }
+          }
           "must return the taskList.heading.gbTaxWarehouseTo message" in {
             Seq[(String, MovementScenario)](
               ("GBWK123", GbTaxWarehouse)
@@ -199,7 +217,7 @@ class TaskListHelperSpec extends SpecBase {
         "when ChangeType is ReturnToConsignorPlaceOfDispatch" - {
 
           "should return None for the whole section" in {
-            implicit val request: DataRequest[_] = dataRequest(FakeRequest(), ern = testErn, answers = emptyUserAnswers.set(ChangeTypePage, Return))
+            implicit val request: DataRequest[_] = dataRequest(FakeRequest(), ern = testErn, answers = emptyUserAnswers.set(ChangeTypePage, ReturnToConsignor))
             helper.deliverySection mustBe None
           }
         }
@@ -215,7 +233,7 @@ class TaskListHelperSpec extends SpecBase {
               MovementScenario.values.filterNot(_ == UnknownDestination).foreach {
                 scenario =>
                   implicit val request: DataRequest[_] = dataRequest(FakeRequest(), ern = testErn,
-                    answers = emptyUserAnswers.set(DestinationTypePage, scenario).set(ChangeTypePage, ChangeType.Consignee),
+                    answers = emptyUserAnswers.set(DestinationTypePage, scenario).set(ChangeTypePage, ChangeType.ChangeConsignee),
                     movementDetails = maxGetMovementResponse.copy(memberStateCode = None, serialNumberOfCertificateOfExemption = None,
                       consigneeTrader = None
                     ))

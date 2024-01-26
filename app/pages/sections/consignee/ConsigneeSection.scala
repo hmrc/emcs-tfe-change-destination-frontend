@@ -18,7 +18,7 @@ package pages.sections.consignee
 
 import models.Enumerable
 import models.requests.DataRequest
-import models.sections.info.ChangeType.Consignee
+import models.sections.info.ChangeType.ChangeConsignee
 import models.sections.info.movementScenario.MovementScenario.UnknownDestination
 import pages.QuestionPage
 import pages.sections.Section
@@ -75,7 +75,7 @@ case object ConsigneeSection extends Section[JsObject] with Enumerable.Implicits
   }
 
   def hasChanged(implicit request: DataRequest[_]): Boolean =
-    request.userAnswers.get(ChangeTypePage).contains(Consignee)
+    request.userAnswers.get(ChangeTypePage).contains(ChangeConsignee)
 
   override def canBeCompletedForTraderAndDestinationType(implicit request: DataRequest[_]): Boolean =
     hasChanged && !request.userAnswers.get(DestinationTypePage).contains(UnknownDestination)

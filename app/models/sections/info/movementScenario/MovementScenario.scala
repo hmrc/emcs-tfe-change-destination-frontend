@@ -18,16 +18,26 @@ package models.sections.info.movementScenario
 
 import models.requests.DataRequest
 import models.response.{InvalidDestinationTypeException, InvalidUserTypeException}
+import models.sections.info.movementScenario.MovementScenario.logger
 import models.{Enumerable, UserType, WithName}
 import utils.Logging
 
 sealed trait MovementScenario {
-  def originType(implicit request: DataRequest[_]): OriginType
+  def originType(implicit request: DataRequest[_]): OriginType =
+    (request.isWarehouseKeeper, request.isRegisteredConsignor, request.isCertifiedConsignor) match {
+      case (true, _, _) => OriginType.TaxWarehouse
+      case (_, true, _) => OriginType.Imports
+      case (_, _, true) => OriginType.DutyPaid
+      case _ =>
+        logger.error(s"[getOriginType] invalid UserType for CAM journey: ${request.userTypeFromErn}")
+        throw InvalidUserTypeException(s"[MovementScenario][getOriginType] invalid UserType for CAM journey: ${request.userTypeFromErn}")
+    }
 
   def destinationType: DestinationType
 
   def movementType(implicit request: DataRequest[_]): MovementType
 
+  //TODO we should probably change this to use the messages file instead of having the message here directly
   val stringValue: String
 }
 
@@ -54,19 +64,12 @@ object MovementScenario extends Enumerable.Implicits with Logging {
           MovementScenario.ExportWithCustomsDeclarationLodgedInTheEu
         }
       case DestinationType.UnknownDestination => MovementScenario.UnknownDestination
-      case answer@(DestinationType.ReturnToThePlaceOfDispatchOfTheConsignor | DestinationType.CertifiedConsignee | DestinationType.TemporaryCertifiedConsignee) =>
-        // TODO: These are Duty Paid answers which we don't currently have a design for (as of 29/11/23).
-        // We need a solid design for this, whether or not that's handled here is undecided yet, but for now we can throw an error in this case.
+      case DestinationType.ReturnToThePlaceOfDispatchOfTheConsignor => MovementScenario.ReturnToThePlaceOfDispatch
+      case DestinationType.CertifiedConsignee => MovementScenario.CertifiedConsignee
+      case DestinationType.TemporaryCertifiedConsignee => MovementScenario.TemporaryCertifiedConsignee
+      case answer =>
         throw InvalidDestinationTypeException(s"[MovementScenario][getMovementScenarioFromMovement] invalid DestinationType: $answer")
     }
-  }
-
-  private def getOriginType()(implicit request: DataRequest[_]): OriginType = (request.isWarehouseKeeper, request.isRegisteredConsignor) match {
-    case (true, _) => OriginType.TaxWarehouse
-    case (_, true) => OriginType.Imports
-    case _ =>
-      logger.error(s"[getOriginType] invalid UserType for COD journey: ${request.userTypeFromErn}")
-      throw InvalidUserTypeException(s"[MovementScenario][getOriginType] invalid UserType for COD journey: ${request.userTypeFromErn}")
   }
 
   /**
@@ -74,11 +77,9 @@ object MovementScenario extends Enumerable.Implicits with Logging {
    */
   case object ExportWithCustomsDeclarationLodgedInTheUk extends WithName("exportWithCustomsDeclarationLodgedInTheUk") with MovementScenario {
 
-    def originType(implicit request: DataRequest[_]): OriginType = getOriginType()
+    override def destinationType: DestinationType = DestinationType.Export
 
-    def destinationType: DestinationType = DestinationType.Export
-
-    def movementType(implicit request: DataRequest[_]): MovementType = (request.isWarehouseKeeper, request.isRegisteredConsignor) match {
+    override def movementType(implicit request: DataRequest[_]): MovementType = (request.isWarehouseKeeper, request.isRegisteredConsignor) match {
       case (true, _) => MovementType.DirectExport
       case (_, true) => MovementType.ImportDirectExport
       case _ =>
@@ -94,11 +95,9 @@ object MovementScenario extends Enumerable.Implicits with Logging {
    */
   case object GbTaxWarehouse extends WithName("gbTaxWarehouse") with MovementScenario {
 
-    def originType(implicit request: DataRequest[_]): OriginType = getOriginType()
+    override def destinationType: DestinationType = DestinationType.TaxWarehouse
 
-    def destinationType: DestinationType = DestinationType.TaxWarehouse
-
-    def movementType(implicit request: DataRequest[_]): MovementType = (request.isWarehouseKeeper, request.isRegisteredConsignor) match {
+    override def movementType(implicit request: DataRequest[_]): MovementType = (request.isWarehouseKeeper, request.isRegisteredConsignor) match {
       case (true, _) => MovementType.UkToUk
       case (_, true) => MovementType.ImportUk
       case _ =>
@@ -114,11 +113,9 @@ object MovementScenario extends Enumerable.Implicits with Logging {
    */
   case object DirectDelivery extends WithName("directDelivery") with MovementScenario {
 
-    def originType(implicit request: DataRequest[_]): OriginType = getOriginType()
+    override def destinationType: DestinationType = DestinationType.DirectDelivery
 
-    def destinationType: DestinationType = DestinationType.DirectDelivery
-
-    def movementType(implicit request: DataRequest[_]): MovementType = (request.isWarehouseKeeper, request.isRegisteredConsignor) match {
+    override def movementType(implicit request: DataRequest[_]): MovementType = (request.isWarehouseKeeper, request.isRegisteredConsignor) match {
       case (true, _) => MovementType.UkToEu
       case (_, true) => MovementType.ImportEu
       case _ =>
@@ -134,11 +131,9 @@ object MovementScenario extends Enumerable.Implicits with Logging {
    */
   case object EuTaxWarehouse extends WithName("euTaxWarehouse") with MovementScenario {
 
-    def originType(implicit request: DataRequest[_]): OriginType = getOriginType()
+    override def destinationType: DestinationType = DestinationType.TaxWarehouse
 
-    def destinationType: DestinationType = DestinationType.TaxWarehouse
-
-    def movementType(implicit request: DataRequest[_]): MovementType = (request.isWarehouseKeeper, request.isRegisteredConsignor) match {
+    override def movementType(implicit request: DataRequest[_]): MovementType = (request.isWarehouseKeeper, request.isRegisteredConsignor) match {
       case (true, _) => MovementType.UkToEu
       case (_, true) => MovementType.ImportEu
       case _ =>
@@ -154,11 +149,9 @@ object MovementScenario extends Enumerable.Implicits with Logging {
    */
   case object ExemptedOrganisation extends WithName("exemptedOrganisation") with MovementScenario {
 
-    def originType(implicit request: DataRequest[_]): OriginType = getOriginType()
+    override def destinationType: DestinationType = DestinationType.ExemptedOrganisation
 
-    def destinationType: DestinationType = DestinationType.ExemptedOrganisation
-
-    def movementType(implicit request: DataRequest[_]): MovementType = (request.isWarehouseKeeper, request.isRegisteredConsignor) match {
+    override def movementType(implicit request: DataRequest[_]): MovementType = (request.isWarehouseKeeper, request.isRegisteredConsignor) match {
       case (true, _) => MovementType.UkToEu
       case (_, true) => MovementType.ImportEu
       case _ =>
@@ -174,11 +167,9 @@ object MovementScenario extends Enumerable.Implicits with Logging {
    */
   case object ExportWithCustomsDeclarationLodgedInTheEu extends WithName("exportWithCustomsDeclarationLodgedInTheEu") with MovementScenario {
 
-    def originType(implicit request: DataRequest[_]): OriginType = getOriginType()
+    override def destinationType: DestinationType = DestinationType.Export
 
-    def destinationType: DestinationType = DestinationType.Export
-
-    def movementType(implicit request: DataRequest[_]): MovementType = (request.isWarehouseKeeper, request.isRegisteredConsignor) match {
+    override def movementType(implicit request: DataRequest[_]): MovementType = (request.isWarehouseKeeper, request.isRegisteredConsignor) match {
       case (true, _) => MovementType.IndirectExport
       case (_, true) => MovementType.ImportIndirectExport
       case _ =>
@@ -194,11 +185,9 @@ object MovementScenario extends Enumerable.Implicits with Logging {
    */
   case object RegisteredConsignee extends WithName("registeredConsignee") with MovementScenario {
 
-    def originType(implicit request: DataRequest[_]): OriginType = getOriginType()
+    override def destinationType: DestinationType = DestinationType.RegisteredConsignee
 
-    def destinationType: DestinationType = DestinationType.RegisteredConsignee
-
-    def movementType(implicit request: DataRequest[_]): MovementType = (request.isWarehouseKeeper, request.isRegisteredConsignor) match {
+    override def movementType(implicit request: DataRequest[_]): MovementType = (request.isWarehouseKeeper, request.isRegisteredConsignor) match {
       case (true, _) => MovementType.UkToEu
       case (_, true) => MovementType.ImportEu
       case _ =>
@@ -214,11 +203,9 @@ object MovementScenario extends Enumerable.Implicits with Logging {
    */
   case object TemporaryRegisteredConsignee extends WithName("temporaryRegisteredConsignee") with MovementScenario {
 
-    def originType(implicit request: DataRequest[_]): OriginType = getOriginType()
+    override def destinationType: DestinationType = DestinationType.TemporaryRegisteredConsignee
 
-    def destinationType: DestinationType = DestinationType.TemporaryRegisteredConsignee
-
-    def movementType(implicit request: DataRequest[_]): MovementType = (request.isWarehouseKeeper, request.isRegisteredConsignor) match {
+    override def movementType(implicit request: DataRequest[_]): MovementType = (request.isWarehouseKeeper, request.isRegisteredConsignor) match {
       case (true, _) => MovementType.UkToEu
       case (_, true) => MovementType.ImportEu
       case _ =>
@@ -231,15 +218,62 @@ object MovementScenario extends Enumerable.Implicits with Logging {
   }
 
   /**
+   * emcs: certified_consignee / import_for_certified_consignee
+   */
+  case object CertifiedConsignee extends WithName("certifiedConsignee") with MovementScenario {
+
+    override def destinationType: DestinationType = DestinationType.CertifiedConsignee
+
+    override def movementType(implicit request: DataRequest[_]): MovementType = request.isCertifiedConsignor match {
+      case true => MovementType.UkToEu
+      case false =>
+        logger.error(s"[movementType] invalid UserType for COD journey: ${request.userTypeFromErn}")
+        throw InvalidUserTypeException(s"[MovementScenario][movementType] invalid UserType for COD journey: ${request.userTypeFromErn}")
+    }
+
+    override val stringValue: String = "certified consignee"
+  }
+
+  /**
+   * emcs: temp_certified_consignee / import_for_temp_certified_consignee
+   */
+  case object TemporaryCertifiedConsignee extends WithName("temporaryCertifiedConsignee") with MovementScenario {
+
+    override def destinationType: DestinationType = DestinationType.TemporaryCertifiedConsignee
+
+    override def movementType(implicit request: DataRequest[_]): MovementType = request.isCertifiedConsignor match {
+      case true => MovementType.UkToEu
+      case false =>
+        logger.error(s"[movementType] invalid UserType for COD journey: ${request.userTypeFromErn}")
+        throw InvalidUserTypeException(s"[MovementScenario][movementType] invalid UserType for COD journey: ${request.userTypeFromErn}")
+    }
+
+    override val stringValue: String = "temporary certified consignee"
+
+  }
+
+  case object ReturnToThePlaceOfDispatch extends WithName("returnToThePlaceOfDispatch") with MovementScenario {
+
+    override def destinationType: DestinationType = DestinationType.ReturnToThePlaceOfDispatchOfTheConsignor
+
+    override def movementType(implicit request: DataRequest[_]): MovementType = request.isCertifiedConsignor match {
+      case true => MovementType.UkToEu
+      case false =>
+        logger.error(s"[movementType] invalid UserType for COD journey: ${request.userTypeFromErn}")
+        throw InvalidUserTypeException(s"[MovementScenario][movementType] invalid UserType for COD journey: ${request.userTypeFromErn}")
+    }
+
+    override val stringValue: String = "return to the place of dispatch of the consignor"
+  }
+
+  /**
    * emcs: unknown_destination / import_for_unknown_destination
    */
   case object UnknownDestination extends WithName("unknownDestination") with MovementScenario {
 
-    def originType(implicit request: DataRequest[_]): OriginType = getOriginType()
+    override def destinationType: DestinationType = DestinationType.UnknownDestination
 
-    def destinationType: DestinationType = DestinationType.UnknownDestination
-
-    def movementType(implicit request: DataRequest[_]): MovementType = (request.isWarehouseKeeper, request.isRegisteredConsignor) match {
+    override def movementType(implicit request: DataRequest[_]): MovementType = (request.isWarehouseKeeper, request.isRegisteredConsignor) match {
       case (true, _) => MovementType.UkToEu
       case (_, true) => MovementType.ImportUnknownDestination
       case _ =>
@@ -266,7 +300,13 @@ object MovementScenario extends Enumerable.Implicits with Logging {
     TemporaryRegisteredConsignee
   )
 
-  val values: Seq[MovementScenario] = (valuesUk ++ valuesEu :+ UnknownDestination).distinct
+  def valuesForDutyPaidTraders: Seq[MovementScenario] = Seq(
+    CertifiedConsignee,
+    TemporaryCertifiedConsignee,
+    ReturnToThePlaceOfDispatch
+  )
+
+  val values: Seq[MovementScenario] = (valuesUk ++ valuesEu ++ valuesForDutyPaidTraders :+ UnknownDestination).distinct
 
   implicit val enumerable: Enumerable[MovementScenario] = Enumerable(values.map(v => v.toString -> v): _*)
 }
