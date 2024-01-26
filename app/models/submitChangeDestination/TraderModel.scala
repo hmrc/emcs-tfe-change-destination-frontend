@@ -91,7 +91,10 @@ object TraderModel extends ModelConstructorHelpers {
         }
       } else if (DestinationSection.shouldStartFlowAtDestinationWarehouseVat(movementScenario)) {
         val exciseId: Option[String] = request.userAnswers.get(DestinationWarehouseVatPage)
-        val giveAddressAndBusinessName: Boolean = mandatoryPage(DestinationDetailsChoicePage)
+
+        val giveAddressAndBusinessName: Boolean =
+          if (DestinationSection.shouldSkipDestinationDetailsChoice(movementScenario)) true
+          else mandatoryPage(DestinationDetailsChoicePage)
 
         if (giveAddressAndBusinessName) {
           Some(TraderModel(

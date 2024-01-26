@@ -19,9 +19,11 @@ package navigation
 import base.SpecBase
 import controllers.sections.destination.routes
 import models.requests.DataRequest
+import models.sections.info.movementScenario.MovementScenario.{CertifiedConsignee, TemporaryCertifiedConsignee}
 import models.{CheckMode, NormalMode, ReviewMode}
 import pages.Page
 import pages.sections.destination._
+import pages.sections.info.DestinationTypePage
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 
@@ -53,7 +55,23 @@ class DestinationNavigatorSpec extends SpecBase {
 
       "for the DestinationWarehouseVatPage" - {
 
-        "must go to test Only page" in {
+        "must go to DestinationDetailsChoice page when DestinationType is CertifiedConsignee" in {
+
+          val userAnswers = emptyUserAnswers.set(DestinationTypePage, CertifiedConsignee)
+
+          navigator.nextPage(DestinationWarehouseVatPage, NormalMode, userAnswers) mustBe
+            routes.DestinationConsigneeDetailsController.onPageLoad(testErn, testArc, NormalMode)
+        }
+
+        "must go to DestinationDetailsChoice page when DestinationType is TemporaryCertifiedConsignee" in {
+
+          val userAnswers = emptyUserAnswers.set(DestinationTypePage, TemporaryCertifiedConsignee)
+
+          navigator.nextPage(DestinationWarehouseVatPage, NormalMode, userAnswers) mustBe
+            routes.DestinationConsigneeDetailsController.onPageLoad(testErn, testArc, NormalMode)
+        }
+
+        "must go to DestinationDetailsChoice page when DestinationType is NOT CertifiedConsignee or TemporaryCertifiedConsignee" in {
 
           navigator.nextPage(DestinationWarehouseVatPage, NormalMode, emptyUserAnswers) mustBe
             routes.DestinationDetailsChoiceController.onPageLoad(testErn, testArc, NormalMode)

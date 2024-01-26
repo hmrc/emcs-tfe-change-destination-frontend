@@ -281,6 +281,8 @@ class TaskListHelperSpec extends SpecBase {
                 EuTaxWarehouse,
                 RegisteredConsignee,
                 TemporaryRegisteredConsignee,
+                TemporaryCertifiedConsignee,
+                CertifiedConsignee,
                 ExemptedOrganisation,
                 DirectDelivery
               ).contains).foreach {
