@@ -42,7 +42,7 @@ object HowMovementTransportedSummary {
         SummaryListRowViewModel(
           key = "howMovementTransported.checkYourAnswers.label",
           value = value,
-          actions = if (onReviewPage || !showChangeLink) Seq() else Seq(
+          actions = if (onReviewPage || hideChangeLink) Seq() else Seq(
             ActionItemViewModel(
               content = "site.change",
               href = controllers.sections.journeyType.routes.HowMovementTransportedController.onPageLoad(
@@ -56,9 +56,8 @@ object HowMovementTransportedSummary {
         )
     }
 
-  private def showChangeLink(implicit request: DataRequest[_]): Boolean =
-    !(
-      request.userAnswers.get(DestinationTypePage).exists(_.movementType == MovementType.UkToEu) &&
-        request.movementDetails.movementGuarantee.guarantorTrader.isEmpty
-      )
+  private def hideChangeLink(implicit request: DataRequest[_]): Boolean =
+    request.userAnswers.get(DestinationTypePage).exists(_.movementType == MovementType.UkToEu) &&
+      request.movementDetails.movementGuarantee.guarantorTrader.isEmpty
+
 }

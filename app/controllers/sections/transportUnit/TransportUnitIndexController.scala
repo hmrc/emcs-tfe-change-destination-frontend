@@ -53,11 +53,11 @@ class TransportUnitIndexController @Inject()(
         case (_, Some(FixedTransportInstallations)) =>
           saveAnswersAndRedirect(Redirect(
             controllers.sections.transportUnit.routes.TransportUnitCheckAnswersController.onPageLoad(request.ern, request.arc)
-          ))(userAnswersWith801TransportUnits.set(TransportUnitsReviewPage, KeepAnswers)) //User can't change the answer so mark the section as complete
+          ), userAnswersWith801TransportUnits.set(TransportUnitsReviewPage, KeepAnswers)) //User can't change the answer so mark the section as complete
         case _ if TransportUnitsSection.needsReview =>
           saveAnswersAndRedirect(Redirect(
             controllers.sections.transportUnit.routes.TransportUnitsReviewController.onPageLoad(request.ern, request.arc)
-          ))(userAnswersWith801TransportUnits)
+          ), userAnswersWith801TransportUnits)
         case (None | Some(0), _) =>
           Future(Redirect(
             controllers.sections.transportUnit.routes.TransportUnitTypeController.onPageLoad(request.ern, request.arc, Index(0), NormalMode)
@@ -66,11 +66,11 @@ class TransportUnitIndexController @Inject()(
           lazy val redirectCall = Redirect(
             controllers.sections.transportUnit.routes.TransportUnitsAddToListController.onPageLoad(request.ern, request.arc)
           )
-          saveAnswersAndRedirect(redirectCall)(userAnswersWith801TransportUnits)
+          saveAnswersAndRedirect(redirectCall, userAnswersWith801TransportUnits)
       }
     }
 
-  private def saveAnswersAndRedirect(call: Result)(userAnswersToSave: UserAnswers)(implicit request: DataRequest[_]): Future[Result] = {
+  private def saveAnswersAndRedirect(call: Result, userAnswersToSave: UserAnswers)(implicit request: DataRequest[_]): Future[Result] = {
     if (userAnswersToSave == request.userAnswers) {
       Future(call)
     } else {

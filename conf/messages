@@ -1413,7 +1413,3 @@ movementReviewAnswers.error.required = Select yes if you need to change any of t
 
 movementCheckAnswers.title = Check your answers
 movementCheckAnswers.heading = Check your answers
-
-howMovementTransported.onlyFixedAllowed.title = How the goods will be transported
-howMovementTransported.onlyFixedAllowed.heading = How the goods will be transported
-howMovementTransported.onlyFixedAllowed.p = All movements of energy products between Northern Ireland and the European Union that do not require a guarantee must travel by fixed transport installations.
