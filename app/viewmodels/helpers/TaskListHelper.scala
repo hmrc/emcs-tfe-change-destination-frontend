@@ -19,13 +19,14 @@ package viewmodels.helpers
 import models.UserType._
 import models.requests.DataRequest
 import models.response.{InvalidUserTypeException, MissingMandatoryPage}
+import models.sections.info.ChangeType.Return
 import models.sections.info.movementScenario.MovementScenario.{ExportWithCustomsDeclarationLodgedInTheUk, _}
 import pages.sections.consignee.ConsigneeSection
 import pages.sections.destination.DestinationSection
 import pages.sections.exportInformation.ExportInformationSection
 import pages.sections.firstTransporter.FirstTransporterSection
 import pages.sections.guarantor.GuarantorSection
-import pages.sections.info.{DestinationTypePage, DispatchPlacePage}
+import pages.sections.info.{ChangeTypePage, DestinationTypePage, DispatchPlacePage}
 import pages.sections.journeyType.JourneyTypeSection
 import pages.sections.movement.MovementSection
 import pages.sections.transportArranger.TransportArrangerSection
@@ -79,45 +80,47 @@ class TaskListHelper @Inject()() extends Logging {
   )
 
   //noinspection ScalaStyle
-  private[helpers] def deliverySection(implicit request: DataRequest[_], messages: Messages): TaskListSection = {
-    TaskListSection(
-      sectionHeading = messages("taskList.section.delivery"),
-      rows = Seq(
-        if (ConsigneeSection.canBeCompletedForTraderAndDestinationType) {
-          Some(TaskListSectionRow(
-            taskName = messages("taskList.section.delivery.consignee"),
-            id = "consignee",
-            link = Some(controllers.sections.consignee.routes.ConsigneeIndexController.onPageLoad(request.ern, request.arc).url),
-            section = Some(ConsigneeSection),
-            status = Some(ConsigneeSection.status)
-          ))
-        } else {
-          None
-        },
-        if (DestinationSection.canBeCompletedForTraderAndDestinationType) {
-          Some(TaskListSectionRow(
-            taskName = messages("taskList.section.delivery.destination"),
-            id = "destination",
-            link = Some(controllers.sections.destination.routes.DestinationIndexController.onPageLoad(request.ern, request.arc).url),
-            section = Some(DestinationSection),
-            status = Some(DestinationSection.status)
-          ))
-        } else {
-          None
-        },
-        if (ExportInformationSection.canBeCompletedForTraderAndDestinationType) {
-          Some(TaskListSectionRow(
-            taskName = messages("taskList.section.delivery.export"),
-            id = "export",
-            link = Some(controllers.sections.exportInformation.routes.ExportInformationIndexController.onPageLoad(request.ern, request.arc).url),
-            section = Some(ExportInformationSection),
-            status = Some(ExportInformationSection.status)
-          ))
-        } else {
-          None
-        }
-      ).flatten
-    )
+  private[helpers] def deliverySection(implicit request: DataRequest[_], messages: Messages): Option[TaskListSection] = {
+    if(request.userAnswers.get(ChangeTypePage).contains(Return)) None else {
+      Some(TaskListSection(
+        sectionHeading = messages("taskList.section.delivery"),
+        rows = Seq(
+          if (ConsigneeSection.canBeCompletedForTraderAndDestinationType) {
+            Some(TaskListSectionRow(
+              taskName = messages("taskList.section.delivery.consignee"),
+              id = "consignee",
+              link = Some(controllers.sections.consignee.routes.ConsigneeIndexController.onPageLoad(request.ern, request.arc).url),
+              section = Some(ConsigneeSection),
+              status = Some(ConsigneeSection.status)
+            ))
+          } else {
+            None
+          },
+          if (DestinationSection.canBeCompletedForTraderAndDestinationType) {
+            Some(TaskListSectionRow(
+              taskName = messages("taskList.section.delivery.destination"),
+              id = "destination",
+              link = Some(controllers.sections.destination.routes.DestinationIndexController.onPageLoad(request.ern, request.arc).url),
+              section = Some(DestinationSection),
+              status = Some(DestinationSection.status)
+            ))
+          } else {
+            None
+          },
+          if (ExportInformationSection.canBeCompletedForTraderAndDestinationType) {
+            Some(TaskListSectionRow(
+              taskName = messages("taskList.section.delivery.export"),
+              id = "export",
+              link = Some(controllers.sections.exportInformation.routes.ExportInformationIndexController.onPageLoad(request.ern, request.arc).url),
+              section = Some(ExportInformationSection),
+              status = Some(ExportInformationSection.status)
+            ))
+          } else {
+            None
+          }
+        ).flatten
+      ))
+    }
   }
 
 
@@ -176,7 +179,7 @@ class TaskListHelper @Inject()() extends Logging {
 
   private def sectionsExceptSubmit(implicit request: DataRequest[_], messages: Messages): Seq[TaskListSection] = Seq(
     Some(movementSection),
-    Some(deliverySection),
+    deliverySection,
     guarantorSection,
     Some(transportSection)
   ).flatten
