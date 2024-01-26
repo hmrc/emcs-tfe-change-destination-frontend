@@ -30,14 +30,6 @@ import javax.inject.Inject
 class GuarantorNavigator @Inject() extends BaseNavigator {
 
   private def normalRoutes(implicit request: DataRequest[_]): Page => UserAnswers => Call = {
-    case GuarantorRequiredPage => (userAnswers: UserAnswers) =>
-
-      userAnswers.get(GuarantorRequiredPage) match {
-        case Some(true) =>
-          controllers.sections.guarantor.routes.GuarantorArrangerController.onPageLoad(userAnswers.ern, userAnswers.arc, NormalMode)
-        case _ =>
-          controllers.sections.guarantor.routes.GuarantorCheckAnswersController.onPageLoad(userAnswers.ern, userAnswers.arc)
-      }
 
     case GuarantorArrangerPage => (userAnswers: UserAnswers) =>
       userAnswers.get(GuarantorArrangerPage) match {

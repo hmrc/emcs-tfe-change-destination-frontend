@@ -26,11 +26,9 @@ import javax.inject.Inject
 class GuarantorCheckAnswersHelper @Inject()() {
 
   def summaryList()(implicit request: DataRequest[_], messages: Messages): SummaryList = {
-
     SummaryListViewModel(
       rows = Seq(
-        GuarantorRequiredSummary.row,
-        GuarantorArrangerSummary.row,
+        Some(GuarantorArrangerSummary.row),
         GuarantorNameSummary.row,
         GuarantorVatSummary.row,
         GuarantorAddressSummary.row

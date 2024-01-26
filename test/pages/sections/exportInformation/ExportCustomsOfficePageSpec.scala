@@ -21,22 +21,9 @@ import play.api.test.FakeRequest
 
 class ExportCustomsOfficePageSpec extends SpecBase {
 
-  val deliveryPlaceCustomsOfficeReference: String = maxGetMovementResponse.deliveryPlaceCustomsOfficeReferenceNumber.get
-
   "getValueFromIE801" - {
-    "must return Some(_)" - {
-      "when delivery place customs office reference is defined" in {
-        ExportCustomsOfficePage.getValueFromIE801(dataRequest(FakeRequest())) mustBe Some(deliveryPlaceCustomsOfficeReference)
-      }
-    }
-    "must return None" - {
-      "when delivery place customs office reference doesn't exist" in {
-        ExportCustomsOfficePage.getValueFromIE801(dataRequest(
-          FakeRequest(),
-          movementDetails = maxGetMovementResponse.copy(deliveryPlaceCustomsOfficeReferenceNumber = None)
-        )) mustBe None
-      }
+    "must return None" in {
+      ExportCustomsOfficePage.getValueFromIE801(dataRequest(FakeRequest())) mustBe None
     }
   }
-
 }

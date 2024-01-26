@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-package views.sections.guarantor
+// wee
+package views.sections.journeyType
 
 import base.SpecBase
-import fixtures.messages.sections.guarantor.GuarantorRequiredMessages
-import forms.sections.guarantor.GuarantorRequiredFormProvider
+import fixtures.messages.sections.journeyType.HowMovementTransportedMessages
 import models.NormalMode
 import models.requests.DataRequest
 import org.jsoup.Jsoup
@@ -26,35 +26,33 @@ import org.jsoup.nodes.Document
 import play.api.i18n.Messages
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
-import views.html.sections.guarantor.GuarantorRequiredView
+import views.html.sections.journeyType.HowMovementTransportedNoOptionView
 import views.{BaseSelectors, ViewBehaviours}
 
-class GuarantorRequiredViewSpec extends SpecBase with ViewBehaviours {
+class HowMovementTransportedNoOptionViewSpec extends SpecBase with ViewBehaviours {
 
   object Selectors extends BaseSelectors
 
-  "Guarantor Required view" - {
+  "HowMovementTransportedNoOptionView" - {
 
-    Seq(GuarantorRequiredMessages.English).foreach { messagesForLanguage =>
+    Seq(HowMovementTransportedMessages.English).foreach { messagesForLanguage =>
 
       s"when being rendered in lang code of '${messagesForLanguage.lang.code}'" - {
 
         implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
-        implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest())
+        implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), emptyUserAnswers)
 
-       lazy val view = app.injector.instanceOf[GuarantorRequiredView]
-        val form = app.injector.instanceOf[GuarantorRequiredFormProvider].apply()
+        lazy val view = app.injector.instanceOf[HowMovementTransportedNoOptionView]
 
-        implicit val doc: Document = Jsoup.parse(view(form, NormalMode).toString())
+        implicit val doc: Document = Jsoup.parse(view(NormalMode).toString())
 
         behave like pageWithExpectedElementsAndMessages(Seq(
-          Selectors.title -> messagesForLanguage.title,
-          Selectors.h1 -> messagesForLanguage.heading,
-          Selectors.h2(1) -> messagesForLanguage.guarantorSection,
-          Selectors.radioButton(1) -> messagesForLanguage.yes,
-          Selectors.radioButton(2) -> messagesForLanguage.no,
-          Selectors.button -> messagesForLanguage.saveAndContinue,
-          Selectors.link(1) -> messagesForLanguage.returnToDraft
+          Selectors.title -> messagesForLanguage.titleFixed,
+          Selectors.subHeadingCaptionSelector -> messagesForLanguage.journeyTypeSection,
+          Selectors.h1 -> messagesForLanguage.headingFixed,
+          Selectors.p(1) -> messagesForLanguage.info,
+          Selectors.button -> messagesForLanguage.confirmAndContinue,
+          Selectors.saveAndExitLink -> messagesForLanguage.returnToDraft
         ))
       }
     }

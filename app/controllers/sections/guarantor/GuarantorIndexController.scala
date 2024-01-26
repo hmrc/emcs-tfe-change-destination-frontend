@@ -42,7 +42,7 @@ class GuarantorIndexController @Inject()(
         if (GuarantorSection.isCompleted) {
           controllers.sections.guarantor.routes.GuarantorCheckAnswersController.onPageLoad(ern, arc)
         } else {
-          controllers.sections.guarantor.routes.GuarantorRequiredController.onPageLoad(ern, arc, NormalMode)
+          controllers.sections.guarantor.routes.GuarantorArrangerController.onPageLoad(ern, arc, NormalMode)
         }
       )
     }

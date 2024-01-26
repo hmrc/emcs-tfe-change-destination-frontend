@@ -28,7 +28,7 @@ import models.sections.guarantor.GuarantorArranger.{GoodsOwner, Transporter}
 import models.sections.info.movementScenario.MovementScenario.ExportWithCustomsDeclarationLodgedInTheUk
 import models.{NormalMode, UserAddress, UserAnswers}
 import navigation.FakeNavigators.FakeGuarantorNavigator
-import pages.sections.guarantor.{GuarantorAddressPage, GuarantorArrangerPage, GuarantorRequiredPage}
+import pages.sections.guarantor.{GuarantorAddressPage, GuarantorArrangerPage}
 import pages.sections.info.DestinationTypePage
 import play.api.data.Form
 import play.api.mvc.Call
@@ -71,7 +71,6 @@ class GuarantorAddressControllerSpec extends SpecBase with MockUserAnswersServic
 
       val answersSoFar = emptyUserAnswers
         .set(DestinationTypePage, ExportWithCustomsDeclarationLodgedInTheUk)
-        .set(GuarantorRequiredPage, true)
         .set(GuarantorArrangerPage, guarantorArranger)
 
       s"with a Guarantor Arranger of ${guarantorArranger.getClass.getSimpleName.stripSuffix("$")}" - {
@@ -121,10 +120,9 @@ class GuarantorAddressControllerSpec extends SpecBase with MockUserAnswersServic
     }
   )
 
-  "must redirect to the guarantor index if user hasn't answered that yet" in
+  "must redirect to the guarantor index if user hasn't answered guarantor arranger yet" in
     new Fixture(Some(emptyUserAnswers
       .set(DestinationTypePage, ExportWithCustomsDeclarationLodgedInTheUk)
-      .set(GuarantorRequiredPage, true)
     )) {
       val result = testController.onPageLoad(testErn, testArc, NormalMode)(request)
 

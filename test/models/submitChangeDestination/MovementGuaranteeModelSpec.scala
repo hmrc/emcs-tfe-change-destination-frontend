@@ -24,39 +24,23 @@ import play.api.test.FakeRequest
 
 class MovementGuaranteeModelSpec extends SpecBase {
   "apply" - {
-    "must return a MovementGuaranteeModel" - {
-      "when no guarantor is required" in {
-        implicit val dr: DataRequest[_] = dataRequest(
-          FakeRequest(),
-          emptyUserAnswers
-            .set(GuarantorRequiredPage, false)
-            .set(GuarantorArrangerPage, GuarantorArranger.GoodsOwner)
-            .set(GuarantorNamePage, "name")
-            .set(GuarantorAddressPage, testUserAddress)
-            .set(GuarantorVatPage, "vat")
-        )
+    "must return a MovementGuaranteeModel" in {
+      implicit val dr: DataRequest[_] = dataRequest(
+        FakeRequest(),
+        emptyUserAnswers
+          .set(GuarantorArrangerPage, GuarantorArranger.GoodsOwner)
+          .set(GuarantorNamePage, "name")
+          .set(GuarantorAddressPage, testUserAddress)
+          .set(GuarantorVatPage, "vat")
+      )
 
-        MovementGuaranteeModel.apply mustBe MovementGuaranteeModel(GuarantorArranger.NoGuarantorRequired, None)
-      }
-      "when guarantor is required" in {
-        implicit val dr: DataRequest[_] = dataRequest(
-          FakeRequest(),
-          emptyUserAnswers
-            .set(GuarantorRequiredPage, true)
-            .set(GuarantorArrangerPage, GuarantorArranger.GoodsOwner)
-            .set(GuarantorNamePage, "name")
-            .set(GuarantorAddressPage, testUserAddress)
-            .set(GuarantorVatPage, "vat")
-        )
-
-        MovementGuaranteeModel.apply mustBe MovementGuaranteeModel(GuarantorArranger.GoodsOwner, Some(Seq(TraderModel(
-          None,
-          Some("name"),
-          Some(AddressModel.fromUserAddress(testUserAddress)),
-          Some("vat"),
-          None
-        ))))
-      }
+      MovementGuaranteeModel.apply mustBe MovementGuaranteeModel(GuarantorArranger.GoodsOwner, Some(Seq(TraderModel(
+        None,
+        Some("name"),
+        Some(AddressModel.fromUserAddress(testUserAddress)),
+        Some("vat"),
+        None
+      ))))
     }
   }
 }

@@ -63,7 +63,7 @@ class GuarantorArrangerControllerSpec extends SpecBase with MockUserAnswersServi
   }
 
   "GuarantorArranger Controller" - {
-    "must return OK and the correct view for a GET" in new Fixture(Some(emptyUserAnswers.set(GuarantorRequiredPage, true))) {
+    "must return OK and the correct view for a GET" in new Fixture(Some(emptyUserAnswers)) {
       val result = testController.onPageLoad(testErn, testArc, NormalMode)(request)
 
       status(result) mustEqual OK
@@ -72,7 +72,6 @@ class GuarantorArrangerControllerSpec extends SpecBase with MockUserAnswersServi
 
     "must populate the view correctly on a GET when the question has previously been answered" in new Fixture(
       Some(emptyUserAnswers
-        .set(GuarantorRequiredPage, true)
         .set(GuarantorArrangerPage, GuarantorArranger.values.head))) {
 
       val result = testController.onPageLoad(testErn, testArc, NormalMode)(request)
@@ -81,8 +80,8 @@ class GuarantorArrangerControllerSpec extends SpecBase with MockUserAnswersServi
       contentAsString(result) mustEqual view(form.fill(GuarantorArranger.values.head), NormalMode)(dataRequest(request), messages(request)).toString
     }
 
-    "must redirect to the next page when valid data is submitted" in new Fixture(Some(emptyUserAnswers.set(GuarantorRequiredPage, true))) {
-      MockUserAnswersService.set().returns(Future.successful(emptyUserAnswers.set(GuarantorRequiredPage, true)))
+    "must redirect to the next page when valid data is submitted" in new Fixture(Some(emptyUserAnswers)) {
+      MockUserAnswersService.set().returns(Future.successful(emptyUserAnswers))
 
       val req = FakeRequest(POST, guarantorArrangerRoute).withFormUrlEncodedBody(("value", GuarantorArranger.values.head.toString))
 
@@ -92,7 +91,7 @@ class GuarantorArrangerControllerSpec extends SpecBase with MockUserAnswersServi
       redirectLocation(result).value mustEqual testOnwardRoute.url
     }
 
-    "must return a Bad Request and errors when invalid data is submitted" in new Fixture(Some(emptyUserAnswers.set(GuarantorRequiredPage, true))) {
+    "must return a Bad Request and errors when invalid data is submitted" in new Fixture(Some(emptyUserAnswers)) {
       val req = FakeRequest(POST, guarantorArrangerRoute).withFormUrlEncodedBody(("value", "invalid value"))
       val boundForm = form.bind(Map("value" -> "invalid value"))
 
@@ -123,14 +122,12 @@ class GuarantorArrangerControllerSpec extends SpecBase with MockUserAnswersServi
 
         s"must cleanse further guarantor sections when choosing an arranger of ${guarantorArranger.getClass.getSimpleName.stripSuffix("$")}" in new Fixture(
           Some(emptyUserAnswers
-            .set(GuarantorRequiredPage, true)
             .set(GuarantorArrangerPage, Transporter)
             .set(GuarantorNamePage, "Some name")
             .set(GuarantorVatPage, "GB12345678")
             .set(GuarantorAddressPage, UserAddress(Some("1"), "Street", "town", "AA11AA")))) {
 
           val expectedAnswers = emptyUserAnswers
-            .set(GuarantorRequiredPage, true)
             .set(GuarantorArrangerPage, guarantorArranger)
 
           MockUserAnswersService.set(expectedAnswers).returns(Future.successful(expectedAnswers))
@@ -151,7 +148,6 @@ class GuarantorArrangerControllerSpec extends SpecBase with MockUserAnswersServi
             s"must force NormalMode if new answer is ${guarantorArranger.getClass.getSimpleName.stripSuffix("$")}" +
               s" and old answer is ${consignorOrConsigneeOldAnswer.getClass.getSimpleName.stripSuffix("$")}" in new Fixture(
               Some(emptyUserAnswers
-                .set(GuarantorRequiredPage, true)
                 .set(GuarantorArrangerPage, consignorOrConsigneeOldAnswer))) {
 
               MockUserAnswersService.set().returns(Future.successful(emptyUserAnswers))
@@ -169,7 +165,6 @@ class GuarantorArrangerControllerSpec extends SpecBase with MockUserAnswersServi
             s"must keep old Mode if new answer is ${guarantorArranger.getClass.getSimpleName.stripSuffix("$")}" +
               s" and old answer is ${oldAnswer.getClass.getSimpleName.stripSuffix("$")}" in new Fixture(
               Some(emptyUserAnswers
-                .set(GuarantorRequiredPage, true)
                 .set(GuarantorArrangerPage, oldAnswer))) {
 
               if (oldAnswer != guarantorArranger) {

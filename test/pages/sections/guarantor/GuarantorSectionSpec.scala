@@ -30,7 +30,6 @@ class GuarantorSectionSpec extends SpecBase {
       "when Consignor is selected" in {
         implicit val dr: DataRequest[_] = dataRequest(FakeRequest(),
           emptyUserAnswers
-            .set(GuarantorRequiredPage, true)
             .set(GuarantorArrangerPage, Consignor)
         )
         GuarantorSection.isCompleted mustBe true
@@ -38,15 +37,7 @@ class GuarantorSectionSpec extends SpecBase {
       "when Consignee is selected" in {
         implicit val dr: DataRequest[_] = dataRequest(FakeRequest(),
           emptyUserAnswers
-            .set(GuarantorRequiredPage, true)
             .set(GuarantorArrangerPage, Consignee)
-        )
-        GuarantorSection.isCompleted mustBe true
-      }
-      "when guarantor is not required" in {
-        implicit val dr: DataRequest[_] = dataRequest(FakeRequest(),
-          emptyUserAnswers
-            .set(GuarantorRequiredPage, false)
         )
         GuarantorSection.isCompleted mustBe true
       }
@@ -55,7 +46,6 @@ class GuarantorSectionSpec extends SpecBase {
           s"when another option is selected and the rest of the Guarantor section is completed - ${arranger.getClass.getSimpleName.stripSuffix("$")}" in {
             implicit val dr: DataRequest[_] = dataRequest(FakeRequest(),
               emptyUserAnswers
-                .set(GuarantorRequiredPage, true)
                 .set(GuarantorArrangerPage, arranger)
                 .set(GuarantorNamePage, "")
                 .set(GuarantorVatPage, "")
@@ -67,10 +57,9 @@ class GuarantorSectionSpec extends SpecBase {
     }
 
     "must return false" - {
-      "when guarantor is required but only GuarantorRequiredPage is completed" in {
+      "when guarantor no answers exist" in {
         implicit val dr: DataRequest[_] = dataRequest(FakeRequest(),
-          emptyUserAnswers
-            .set(GuarantorRequiredPage, true),
+          emptyUserAnswers,
           movementDetails = maxGetMovementResponse.copy(movementGuarantee = MovementGuaranteeModel(NoGuarantor, None))
         )
         GuarantorSection.isCompleted mustBe false
@@ -80,7 +69,6 @@ class GuarantorSectionSpec extends SpecBase {
           s"when another option is selected and the rest of the Guarantor section is not completed - ${arranger.getClass.getSimpleName.stripSuffix("$")}" in {
             implicit val dr: DataRequest[_] = dataRequest(FakeRequest(),
               emptyUserAnswers
-                .set(GuarantorRequiredPage, true)
                 .set(GuarantorArrangerPage, arranger)
                 .set(GuarantorNamePage, "")
                 .set(GuarantorVatPage, ""),

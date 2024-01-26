@@ -181,7 +181,6 @@ trait SubmitChangeDestinationFixtures extends GetMovementResponseFixtures { _: B
     .set(HowMovementTransportedPage, HowMovementTransported.Other)
     .set(GiveInformationOtherTransportPage, "info")
     // movementGuarantee
-    .set(GuarantorRequiredPage, true)
     .set(GuarantorNamePage, "guarantor name")
     .set(GuarantorAddressPage, testUserAddress.copy(street = "guarantor street"))
     .set(GuarantorVatPage, "guarantor vat")

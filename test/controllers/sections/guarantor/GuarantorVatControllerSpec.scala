@@ -25,7 +25,7 @@ import models.sections.guarantor.GuarantorArranger.Transporter
 import models.sections.info.movementScenario.MovementScenario.ExportWithCustomsDeclarationLodgedInTheUk
 import models.{NormalMode, UserAnswers}
 import navigation.FakeNavigators.FakeGuarantorNavigator
-import pages.sections.guarantor.{GuarantorArrangerPage, GuarantorRequiredPage, GuarantorVatPage}
+import pages.sections.guarantor.{GuarantorArrangerPage, GuarantorVatPage}
 import pages.sections.info.DestinationTypePage
 import play.api.data.Form
 import play.api.test.FakeRequest
@@ -64,7 +64,6 @@ class GuarantorVatControllerSpec extends SpecBase with MockUserAnswersService {
   "GuarantorVat Controller" - {
     "must return OK and the correct view for a GET" in new Fixture(Some(emptyUserAnswers
       .set(DestinationTypePage, ExportWithCustomsDeclarationLodgedInTheUk)
-      .set(GuarantorRequiredPage, true)
       .set(GuarantorArrangerPage, Transporter))) {
 
       val result = testController.onPageLoad(testErn, testArc, NormalMode)(request)
@@ -76,7 +75,6 @@ class GuarantorVatControllerSpec extends SpecBase with MockUserAnswersService {
     "must populate the view correctly on a GET when the question has previously been answered" in new Fixture(
       Some(emptyUserAnswers
         .set(DestinationTypePage, ExportWithCustomsDeclarationLodgedInTheUk)
-        .set(GuarantorRequiredPage, true)
         .set(GuarantorArrangerPage, Transporter)
         .set(GuarantorVatPage, "answer"))) {
 
@@ -89,12 +87,10 @@ class GuarantorVatControllerSpec extends SpecBase with MockUserAnswersService {
     "must redirect to the next page when valid data is submitted" in new Fixture(
       Some(emptyUserAnswers
         .set(DestinationTypePage, ExportWithCustomsDeclarationLodgedInTheUk)
-        .set(GuarantorRequiredPage, true)
         .set(GuarantorArrangerPage, Transporter))) {
 
       MockUserAnswersService.set().returns(Future.successful(emptyUserAnswers
         .set(DestinationTypePage, ExportWithCustomsDeclarationLodgedInTheUk)
-        .set(GuarantorRequiredPage, true)
         .set(GuarantorArrangerPage, Transporter)))
 
       val req = FakeRequest(POST, guarantorVatRoute).withFormUrlEncodedBody(("value", "answer"))
@@ -108,12 +104,10 @@ class GuarantorVatControllerSpec extends SpecBase with MockUserAnswersService {
     "must redirect to the next page when the NONGBVAT link is clicked" in new Fixture(
       Some(emptyUserAnswers
         .set(DestinationTypePage, ExportWithCustomsDeclarationLodgedInTheUk)
-        .set(GuarantorRequiredPage, true)
         .set(GuarantorArrangerPage, Transporter))) {
 
       MockUserAnswersService.set().returns(Future.successful(emptyUserAnswers
         .set(DestinationTypePage, ExportWithCustomsDeclarationLodgedInTheUk)
-        .set(GuarantorRequiredPage, true)
         .set(GuarantorArrangerPage, Transporter)))
 
       val req = FakeRequest(GET, controllers.sections.guarantor.routes.GuarantorVatController.onNonGbVAT(testErn, testArc, NormalMode).url)
@@ -127,7 +121,7 @@ class GuarantorVatControllerSpec extends SpecBase with MockUserAnswersService {
     "must redirect to the guarantor index controller for a GET if no guarantor arranger value is found" in new Fixture(
       Some(emptyUserAnswers
         .set(DestinationTypePage, ExportWithCustomsDeclarationLodgedInTheUk)
-        .set(GuarantorRequiredPage, true))) {
+      )) {
 
       val result = testController.onPageLoad(testErn, testArc, NormalMode)(request)
 
@@ -139,7 +133,7 @@ class GuarantorVatControllerSpec extends SpecBase with MockUserAnswersService {
     "must redirect to the guarantor index controller for a POST if no guarantor arranger value is found" in new Fixture(
       Some(emptyUserAnswers
         .set(DestinationTypePage, ExportWithCustomsDeclarationLodgedInTheUk)
-        .set(GuarantorRequiredPage, true))) {
+      )) {
 
       val req = FakeRequest(POST, guarantorVatSubmitRoute)
 
@@ -152,7 +146,6 @@ class GuarantorVatControllerSpec extends SpecBase with MockUserAnswersService {
 
     "must return a Bad Request and errors when invalid data is submitted" in new Fixture(Some(emptyUserAnswers
       .set(DestinationTypePage, ExportWithCustomsDeclarationLodgedInTheUk)
-      .set(GuarantorRequiredPage, true)
       .set(GuarantorArrangerPage, Transporter))) {
 
       val req = FakeRequest(POST, guarantorVatRoute).withFormUrlEncodedBody(("value", ""))

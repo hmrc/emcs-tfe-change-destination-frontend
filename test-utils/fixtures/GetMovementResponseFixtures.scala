@@ -155,7 +155,7 @@ trait GetMovementResponseFixtures extends BaseFixtures {
       complementaryInformation = Some("TransportModeComplementaryInformation")
     ),
     movementGuarantee = MovementGuaranteeModel(
-      guarantorTypeCode = GuarantorType.ConsignorTransporterOwner,
+      guarantorTypeCode = GuarantorType.Owner,
       guarantorTrader = Some(
         Seq(
           TraderModel(
@@ -316,7 +316,7 @@ trait GetMovementResponseFixtures extends BaseFixtures {
       "complementaryInformation" -> "TransportModeComplementaryInformation"
     ),
     "movementGuarantee" -> Json.obj(
-      "guarantorTypeCode" -> "123",
+      "guarantorTypeCode" -> "3",
       "guarantorTrader" -> Json.arr(
         Json.obj(
           "traderExciseNumber" -> "GuarantorTraderErn1",

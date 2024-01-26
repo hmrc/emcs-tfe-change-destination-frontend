@@ -19,6 +19,8 @@ package viewmodels.checkAnswers.sections.guarantor
 import base.SpecBase
 import fixtures.messages.sections.guarantor.GuarantorArrangerMessages.English
 import models.requests.DataRequest
+import models.response.emcsTfe.GuarantorType.NoGuarantor
+import models.response.emcsTfe.MovementGuaranteeModel
 import models.sections.guarantor.GuarantorArranger
 import models.sections.guarantor.GuarantorArranger.{GoodsOwner, Transporter}
 import models.sections.info.movementScenario.MovementScenario.ExportWithCustomsDeclarationLodgedInTheUk
@@ -45,13 +47,13 @@ class GuarantorCheckAnswersHelperSpec extends SpecBase with MockFactory {
               FakeRequest(),
               emptyUserAnswers
                 .set(DestinationTypePage, ExportWithCustomsDeclarationLodgedInTheUk)
-                .set(GuarantorRequiredPage, true)
                 .set(GuarantorArrangerPage, value)
                 .set(GuarantorNamePage, "guarantor name")
                 .set(GuarantorVatPage, "gurantor123")
-                .set(GuarantorAddressPage, testUserAddress)
+                .set(GuarantorAddressPage, testUserAddress),
+              movementDetails = maxGetMovementResponse.copy(movementGuarantee = MovementGuaranteeModel(NoGuarantor, None))
             )
-            helper.summaryList()(request, msgs).rows.length mustBe 5
+            helper.summaryList()(request, msgs).rows.length mustBe 4
           }
         }
       case value =>
@@ -61,12 +63,12 @@ class GuarantorCheckAnswersHelperSpec extends SpecBase with MockFactory {
               FakeRequest(),
               emptyUserAnswers
                 .set(DestinationTypePage, ExportWithCustomsDeclarationLodgedInTheUk)
-                .set(GuarantorRequiredPage, true)
                 .set(GuarantorArrangerPage, value)
                 .set(ConsigneeBusinessNamePage, s"$value name")
-                .set(ConsigneeAddressPage, testUserAddress)
+                .set(ConsigneeAddressPage, testUserAddress),
+              movementDetails = maxGetMovementResponse.copy(movementGuarantee = MovementGuaranteeModel(NoGuarantor, None))
             )
-            helper.summaryList()(request, msgs).rows.length mustBe 4
+            helper.summaryList()(request, msgs).rows.length mustBe 3
           }
         }
     }
@@ -76,8 +78,8 @@ class GuarantorCheckAnswersHelperSpec extends SpecBase with MockFactory {
         implicit val request: DataRequest[_] = dataRequest(
           FakeRequest(),
           emptyUserAnswers
-            .set(DestinationTypePage, ExportWithCustomsDeclarationLodgedInTheUk)
-            .set(GuarantorRequiredPage, false)
+            .set(DestinationTypePage, ExportWithCustomsDeclarationLodgedInTheUk),
+          movementDetails = maxGetMovementResponse.copy(movementGuarantee = MovementGuaranteeModel(NoGuarantor, None))
         )
         helper.summaryList()(request, msgs).rows.length mustBe 1
       }
