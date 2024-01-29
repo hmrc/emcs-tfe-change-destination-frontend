@@ -19,6 +19,7 @@ package viewmodels.checkAnswers.sections.journeyType
 import models.CheckMode
 import models.requests.DataRequest
 import models.sections.info.movementScenario.MovementType
+import models.sections.journeyType.HowMovementTransported.FixedTransportInstallations
 import pages.sections.info.DestinationTypePage
 import pages.sections.journeyType.HowMovementTransportedPage
 import play.api.i18n.Messages
@@ -58,6 +59,6 @@ object HowMovementTransportedSummary {
 
   private def hideChangeLink(implicit request: DataRequest[_]): Boolean =
     request.userAnswers.get(DestinationTypePage).exists(_.movementType == MovementType.UkToEu) &&
-      request.movementDetails.movementGuarantee.guarantorTrader.isEmpty
+      request.movementDetails.movementGuarantee.guarantorTrader.isEmpty && request.userAnswers.get(HowMovementTransportedPage).contains(FixedTransportInstallations)
 
 }

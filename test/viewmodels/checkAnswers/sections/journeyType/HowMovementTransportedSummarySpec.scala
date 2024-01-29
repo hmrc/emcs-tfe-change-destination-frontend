@@ -91,7 +91,7 @@ class HowMovementTransportedSummarySpec extends SpecBase with Matchers {
             }
           }
 
-          "when the movement is UkToEu and there is no guarantor in 801" - {
+          "when the movement is UkToEu, there is no guarantor in 801 and the journey type is FixedTransportInstallations" - {
 
             "must output the expected row" in {
 
