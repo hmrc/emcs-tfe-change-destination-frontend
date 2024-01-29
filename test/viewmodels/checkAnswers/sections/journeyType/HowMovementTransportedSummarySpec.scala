@@ -19,8 +19,11 @@ package viewmodels.checkAnswers.sections.journeyType
 import base.SpecBase
 import fixtures.messages.sections.journeyType.HowMovementTransportedMessages
 import models.CheckMode
-import models.sections.journeyType.HowMovementTransported.AirTransport
+import models.response.emcsTfe.TransportModeModel
+import models.sections.info.movementScenario.MovementScenario.DirectDelivery
+import models.sections.journeyType.HowMovementTransported.{AirTransport, FixedTransportInstallations}
 import org.scalatest.matchers.must.Matchers
+import pages.sections.info.DestinationTypePage
 import pages.sections.journeyType.HowMovementTransportedPage
 import play.api.i18n.Messages
 import play.api.test.FakeRequest
@@ -45,7 +48,7 @@ class HowMovementTransportedSummarySpec extends SpecBase with Matchers {
 
             implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers)
 
-            HowMovementTransportedSummary.row(false) mustBe None
+            HowMovementTransportedSummary.row(onReviewPage = false) mustBe None
           }
         }
         "when there's an answer" - {
@@ -56,7 +59,7 @@ class HowMovementTransportedSummarySpec extends SpecBase with Matchers {
 
               implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(HowMovementTransportedPage, AirTransport))
 
-              HowMovementTransportedSummary.row(false) mustBe Some(
+              HowMovementTransportedSummary.row(onReviewPage = false) mustBe Some(
                 SummaryListRowViewModel(
                   key = messagesForLanguage.cyaLabel,
                   value = Value(HtmlContent(messagesForLanguage.radioOption1)),
@@ -78,10 +81,33 @@ class HowMovementTransportedSummarySpec extends SpecBase with Matchers {
 
               implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(HowMovementTransportedPage, AirTransport))
 
-              HowMovementTransportedSummary.row(true) mustBe Some(
+              HowMovementTransportedSummary.row(onReviewPage = true) mustBe Some(
                 SummaryListRowViewModel(
                   key = messagesForLanguage.cyaLabel,
                   value = Value(HtmlContent(messagesForLanguage.radioOption1)),
+                  actions = Seq()
+                )
+              )
+            }
+          }
+
+          "when the movement is UkToEu, there is no guarantor in 801 and the journey type is FixedTransportInstallations" - {
+
+            "must output the expected row" in {
+
+              implicit lazy val request = dataRequest(FakeRequest(),
+                emptyUserAnswers.set(DestinationTypePage, DirectDelivery),
+                ern = testNorthernIrelandErn,
+                movementDetails = maxGetMovementResponse.copy(
+                  movementGuarantee = maxGetMovementResponse.movementGuarantee.copy(guarantorTrader = None),
+                  transportMode = TransportModeModel(FixedTransportInstallations.toString, None)
+                )
+              )
+
+              HowMovementTransportedSummary.row(onReviewPage = false) mustBe Some(
+                SummaryListRowViewModel(
+                  key = messagesForLanguage.cyaLabel,
+                  value = Value(HtmlContent(messagesForLanguage.radioOption2)),
                   actions = Seq()
                 )
               )

@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-// wee
 package views.sections.journeyType
 
 import base.SpecBase

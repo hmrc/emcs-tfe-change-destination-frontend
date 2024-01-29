@@ -18,6 +18,9 @@ package viewmodels.checkAnswers.sections.journeyType
 
 import models.CheckMode
 import models.requests.DataRequest
+import models.sections.info.movementScenario.MovementType
+import models.sections.journeyType.HowMovementTransported.FixedTransportInstallations
+import pages.sections.info.DestinationTypePage
 import pages.sections.journeyType.HowMovementTransportedPage
 import play.api.i18n.Messages
 import play.twirl.api.HtmlFormat
@@ -40,7 +43,7 @@ object HowMovementTransportedSummary {
         SummaryListRowViewModel(
           key = "howMovementTransported.checkYourAnswers.label",
           value = value,
-          actions = if (!onReviewPage) {Seq(
+          actions = if (onReviewPage || hideChangeLink) Seq() else Seq(
             ActionItemViewModel(
               content = "site.change",
               href = controllers.sections.journeyType.routes.HowMovementTransportedController.onPageLoad(
@@ -50,7 +53,12 @@ object HowMovementTransportedSummary {
               ).url,
               id = HowMovementTransportedPage
             ).withVisuallyHiddenText(messages("howMovementTransported.change.hidden"))
-          )} else Seq()
+          )
         )
     }
+
+  private def hideChangeLink(implicit request: DataRequest[_]): Boolean =
+    request.userAnswers.get(DestinationTypePage).exists(_.movementType == MovementType.UkToEu) &&
+      request.movementDetails.movementGuarantee.guarantorTrader.isEmpty && request.userAnswers.get(HowMovementTransportedPage).contains(FixedTransportInstallations)
+
 }
