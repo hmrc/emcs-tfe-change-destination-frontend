@@ -17,7 +17,7 @@
 package models.sections.info.movementScenario
 
 import models.requests.DataRequest
-import models.response.{InvalidDestinationTypeException, InvalidUserTypeException}
+import models.response.InvalidUserTypeException
 import models.sections.info.movementScenario.MovementScenario.logger
 import models.{Enumerable, UserType, WithName}
 import utils.Logging
@@ -29,8 +29,8 @@ sealed trait MovementScenario {
       case (_, true, _) => OriginType.Imports
       case (_, _, true) => OriginType.DutyPaid
       case _ =>
-        logger.error(s"[getOriginType] invalid UserType for CAM journey: ${request.userTypeFromErn}")
-        throw InvalidUserTypeException(s"[MovementScenario][getOriginType] invalid UserType for CAM journey: ${request.userTypeFromErn}")
+        logger.error(s"[getOriginType] invalid UserType for COD journey: ${request.userTypeFromErn}")
+        throw InvalidUserTypeException(s"[MovementScenario][getOriginType] invalid UserType for COD journey: ${request.userTypeFromErn}")
     }
 
   def destinationType: DestinationType
@@ -67,8 +67,6 @@ object MovementScenario extends Enumerable.Implicits with Logging {
       case DestinationType.ReturnToThePlaceOfDispatchOfTheConsignor => MovementScenario.ReturnToThePlaceOfDispatch
       case DestinationType.CertifiedConsignee => MovementScenario.CertifiedConsignee
       case DestinationType.TemporaryCertifiedConsignee => MovementScenario.TemporaryCertifiedConsignee
-      case answer =>
-        throw InvalidDestinationTypeException(s"[MovementScenario][getMovementScenarioFromMovement] invalid DestinationType: $answer")
     }
   }
 
