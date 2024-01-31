@@ -61,6 +61,8 @@ class ChangeTypeController @Inject()(
         renderView(BadRequest, _),
         {
           case ReturnToConsignor =>
+            //If the change type is Return to Consignor then set the DestinationType to Return to Place of Dispatch automatically for the User
+            //we delete the pre-draft at this point too as the service then redirects to the Task List page
             for {
               savedAnswers <- userAnswersService.set(
                 request.userAnswers
