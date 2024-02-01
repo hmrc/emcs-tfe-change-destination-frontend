@@ -565,7 +565,7 @@ class MovementScenarioSpec extends SpecBase {
       }
     }
     ".destinationType" - {
-      "must return RegisteredConsignee" in {
+      "must return CertifiedConsignee" in {
         CertifiedConsignee.destinationType mustBe DestinationType.CertifiedConsignee
       }
     }
@@ -590,7 +590,7 @@ class MovementScenarioSpec extends SpecBase {
       }
     }
     ".destinationType" - {
-      "must return RegisteredConsignee" in {
+      "must return TemporaryCertifiedConsignee" in {
         TemporaryCertifiedConsignee.destinationType mustBe DestinationType.TemporaryCertifiedConsignee
       }
     }
@@ -615,7 +615,7 @@ class MovementScenarioSpec extends SpecBase {
       }
     }
     ".destinationType" - {
-      "must return RegisteredConsignee" in {
+      "must return ReturnToThePlaceOfDispatchOfTheConsignor" in {
         ReturnToThePlaceOfDispatch.destinationType mustBe DestinationType.ReturnToThePlaceOfDispatchOfTheConsignor
       }
     }
