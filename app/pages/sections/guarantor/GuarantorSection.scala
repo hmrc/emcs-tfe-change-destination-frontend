@@ -34,17 +34,17 @@ case object GuarantorSection extends Section[JsObject] with Enumerable.Implicits
 
   def requiresGuarantorToBeProvided(implicit request: DataRequest[_]): Boolean = {
 
-    val euChangedFromFixedTransport = {
-      request.userAnswers.get(DestinationTypePage).map(_.movementType).contains(UkToEu) &&
-        !request.userAnswers.get(HowMovementTransportedPage).contains(FixedTransportInstallations) &&
-        request.movementDetails.transportMode.transportModeCode == FixedTransportInstallations.toString
-    }
+    val euNoGuarantorRequired =
+      Option.when(request.isNorthernIrelandErn) {
+        request.userAnswers.get(DestinationTypePage).map(_.movementType).contains(UkToEu) &&
+          request.userAnswers.get(HowMovementTransportedPage).contains(FixedTransportInstallations)
+      }
 
     val gbToExport =
       request.userAnswers.get(DestinationTypePage).contains(ExportWithCustomsDeclarationLodgedInTheUk) &&
         request.movementDetails.destinationType != Export
 
-    (gbToExport || euChangedFromFixedTransport) && request.movementDetails.movementGuarantee.guarantorTrader.isEmpty
+    (gbToExport || euNoGuarantorRequired.contains(false)) && request.movementDetails.movementGuarantee.guarantorTrader.isEmpty
   }
 
   override def status(implicit request: DataRequest[_]): TaskListStatus =

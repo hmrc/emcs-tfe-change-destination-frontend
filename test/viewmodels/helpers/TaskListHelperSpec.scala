@@ -331,6 +331,27 @@ class TaskListHelperSpec extends SpecBase {
       }
 
       "guarantorSection" - {
+
+        "should render the Guarantor section when NI changed from UKtoEU to anything else" in {
+          implicit val request: DataRequest[_] = dataRequest(FakeRequest(), ern = testNorthernIrelandErn,
+            answers = emptyUserAnswers
+              .set(DestinationTypePage, GbTaxWarehouse),
+            movementDetails = maxGetMovementResponse.copy(movementGuarantee = MovementGuaranteeModel(Transporter, None))
+          )
+          helper.guarantorSection mustBe Some(TaskListSection(
+            messagesForLanguage.guarantorSectionHeading,
+            Seq(
+              TaskListSectionRow(
+                messagesForLanguage.guarantor,
+                "guarantor",
+                Some(controllers.sections.guarantor.routes.GuarantorIndexController.onPageLoad(testNorthernIrelandErn, testArc).url),
+                Some(GuarantorSection),
+                Some(NotStarted)
+              )
+            )
+          ))
+        }
+
         "should render the Guarantor section when changed to exports" in {
           implicit val request: DataRequest[_] = dataRequest(FakeRequest(), ern = testErn,
             answers = emptyUserAnswers
@@ -353,7 +374,7 @@ class TaskListHelperSpec extends SpecBase {
         }
 
         "should NOT render the Guarantor section when already answered" in {
-          implicit val request: DataRequest[_] = dataRequest(FakeRequest(), ern = testErn,
+          implicit val request: DataRequest[_] = dataRequest(FakeRequest(), ern = testGreatBritainErn,
             answers = emptyUserAnswers
               .set(HowMovementTransportedPage, RoadTransport)
               .set(DestinationTypePage, GbTaxWarehouse),
@@ -689,7 +710,7 @@ class TaskListHelperSpec extends SpecBase {
             "should return all sections including Guarantor" in {
               implicit val request: DataRequest[_] = dataRequest(
                 request = FakeRequest(),
-                ern = testErn,
+                ern = testGreatBritainErn,
                 answers = emptyUserAnswers
                   .set(HowMovementTransportedPage, AirTransport)
                   .set(DestinationTypePage, ExportWithCustomsDeclarationLodgedInTheUk),
@@ -710,7 +731,7 @@ class TaskListHelperSpec extends SpecBase {
             "should return all sections (excluding Guarantor)" in {
               implicit val request: DataRequest[_] = dataRequest(
                 request = FakeRequest(),
-                ern = testErn,
+                ern = testGreatBritainErn,
                 answers = emptyUserAnswers
                   .set(HowMovementTransportedPage, FixedTransportInstallations)
                   .set(DestinationTypePage, GbTaxWarehouse),
