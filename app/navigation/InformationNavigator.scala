@@ -19,7 +19,7 @@ package navigation
 import controllers.routes
 import models._
 import models.requests.DataRequest
-import models.sections.info.ChangeType.Consignee
+import models.sections.info.ChangeType.ChangeConsignee
 import pages._
 import pages.sections.info._
 import play.api.mvc.Call
@@ -38,7 +38,7 @@ class InformationNavigator @Inject()() extends BaseNavigator {
 
     case ChangeTypePage => (userAnswers: UserAnswers) =>
       userAnswers.get(ChangeTypePage) match {
-          case Some(Consignee) =>
+          case Some(ChangeConsignee) =>
             controllers.sections.info.routes.ChangeDestinationTypeController.onPageLoad(userAnswers.ern, userAnswers.arc)
           case _ =>
             controllers.routes.TaskListController.onPageLoad(request.ern, request.arc)

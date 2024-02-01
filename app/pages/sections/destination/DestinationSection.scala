@@ -19,7 +19,7 @@ package pages.sections.destination
 import models.Enumerable
 import models.requests.DataRequest
 import models.sections.info.movementScenario.MovementScenario
-import models.sections.info.movementScenario.MovementScenario.{DirectDelivery, EuTaxWarehouse, ExemptedOrganisation, GbTaxWarehouse, RegisteredConsignee, TemporaryRegisteredConsignee}
+import models.sections.info.movementScenario.MovementScenario.{CertifiedConsignee, DirectDelivery, EuTaxWarehouse, ExemptedOrganisation, GbTaxWarehouse, RegisteredConsignee, TemporaryCertifiedConsignee, TemporaryRegisteredConsignee}
 import pages.sections.Section
 import pages.sections.info.DestinationTypePage
 import play.api.libs.json.{JsObject, JsPath}
@@ -40,12 +40,20 @@ case object DestinationSection extends Section[JsObject] with JsonOptionFormatte
     Seq(
       RegisteredConsignee,
       TemporaryRegisteredConsignee,
+      CertifiedConsignee,
+      TemporaryCertifiedConsignee,
       ExemptedOrganisation
     ).contains(destinationTypePageAnswer)
 
   def shouldStartFlowAtDestinationBusinessName(implicit destinationTypePageAnswer: MovementScenario): Boolean =
     Seq(
       DirectDelivery
+    ).contains(destinationTypePageAnswer)
+
+  def shouldSkipDestinationDetailsChoice(implicit destinationTypePageAnswer: MovementScenario): Boolean =
+    Seq(
+      CertifiedConsignee,
+      TemporaryCertifiedConsignee
     ).contains(destinationTypePageAnswer)
 
   override def status(implicit request: DataRequest[_]): TaskListStatus =
@@ -78,9 +86,15 @@ case object DestinationSection extends Section[JsObject] with JsonOptionFormatte
       case _ => NotStarted
     }
 
-  private def startFlowAtDestinationWarehouseVatStatus(implicit request: DataRequest[_]): TaskListStatus =
+  //noinspection ScalaStyle
+  private def startFlowAtDestinationWarehouseVatStatus(implicit request: DataRequest[_], movementScenario: MovementScenario): TaskListStatus = {
+
+    val destinationDetailsChoice = if (shouldSkipDestinationDetailsChoice) Some(true) else {
+      request.userAnswers.get(DestinationDetailsChoicePage)
+    }
+
     (
-      request.userAnswers.get(DestinationDetailsChoicePage),
+      destinationDetailsChoice,
       request.userAnswers.get(DestinationConsigneeDetailsPage),
       request.userAnswers.get(DestinationBusinessNamePage),
       request.userAnswers.get(DestinationAddressPage)
@@ -89,10 +103,11 @@ case object DestinationSection extends Section[JsObject] with JsonOptionFormatte
       case (Some(true), Some(true), _, _) => Completed
       case (Some(true), Some(false), Some(_), Some(_)) => Completed
       case (Some(_), Some(false), bn, a) if bn.isEmpty || a.isEmpty => InProgress
-      case (Some(_), _, _, _) => InProgress
+      case (Some(_), _, _, _) if !shouldSkipDestinationDetailsChoice => InProgress
       case _ if request.userAnswers.get(DestinationWarehouseVatPage).nonEmpty => InProgress
       case _ => NotStarted
     }
+  }
 
   private def startFlowAtDestinationBusinessNameStatus(implicit request: DataRequest[_]): TaskListStatus =
     (
@@ -111,6 +126,8 @@ case object DestinationSection extends Section[JsObject] with JsonOptionFormatte
         EuTaxWarehouse,
         RegisteredConsignee,
         TemporaryRegisteredConsignee,
+        CertifiedConsignee,
+        TemporaryCertifiedConsignee,
         ExemptedOrganisation,
         DirectDelivery
       ).contains(value) => true

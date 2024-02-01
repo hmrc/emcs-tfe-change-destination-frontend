@@ -22,9 +22,10 @@ import controllers.actions.predraft.{PreDraftAuthActionHelper, PreDraftDataRequi
 import forms.sections.info.ChangeTypeFormProvider
 import models.NormalMode
 import models.requests.DataRequest
-import models.sections.info.ChangeType.Consignee
+import models.sections.info.ChangeType.{ChangeConsignee, ReturnToConsignor}
+import models.sections.info.movementScenario.MovementScenario.ReturnToThePlaceOfDispatch
 import navigation.InformationNavigator
-import pages.sections.info.ChangeTypePage
+import pages.sections.info.{ChangeTypePage, DestinationTypePage}
 import play.api.data.Form
 import play.api.i18n.MessagesApi
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
@@ -47,7 +48,7 @@ class ChangeTypeController @Inject()(
                                       formProvider: ChangeTypeFormProvider,
                                       val controllerComponents: MessagesControllerComponents,
                                       view: ChangeTypeView
-                                     ) extends BasePreDraftNavigationController with PreDraftAuthActionHelper {
+                                    ) extends BasePreDraftNavigationController with PreDraftAuthActionHelper {
 
   def onPageLoad(ern: String, arc: String): Action[AnyContent] =
     authorisedWithPreDraftDataUpToDateMovementAsync(ern, arc) { implicit request =>
@@ -59,8 +60,21 @@ class ChangeTypeController @Inject()(
       formProvider().bindFromRequest().fold(
         renderView(BadRequest, _),
         {
-          case Consignee =>
-            savePreDraftAndRedirect(ChangeTypePage, Consignee, NormalMode)
+          case ReturnToConsignor =>
+            //If the change type is Return to Consignor then set the DestinationType to Return to Place of Dispatch automatically for the User
+            //we delete the pre-draft at this point too as the service then redirects to the Task List page
+            for {
+              savedAnswers <- userAnswersService.set(
+                request.userAnswers
+                  .set(ChangeTypePage, ReturnToConsignor)
+                  .set(DestinationTypePage, ReturnToThePlaceOfDispatch)
+              )
+              _ <- preDraftService.clear(ern, arc)
+            } yield {
+              Redirect(navigator.nextPage(ChangeTypePage, NormalMode, savedAnswers))
+            }
+          case ChangeConsignee =>
+            savePreDraftAndRedirect(ChangeTypePage, ChangeConsignee, NormalMode)
           case changeType =>
             createDraftEntryAndRedirect(ChangeTypePage, changeType)
         }

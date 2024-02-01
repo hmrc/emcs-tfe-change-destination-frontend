@@ -21,7 +21,7 @@ import controllers.routes
 import models._
 import models.requests.DataRequest
 import models.sections.info.ChangeType
-import models.sections.info.ChangeType.Consignee
+import models.sections.info.ChangeType.ChangeConsignee
 import pages._
 import pages.sections.info._
 import play.api.mvc.AnyContentAsEmpty
@@ -50,12 +50,12 @@ class InformationNavigatorSpec extends SpecBase {
 
           "must go to Under Construction" in {
 
-            navigator.nextPage(ChangeTypePage, NormalMode, emptyUserAnswers.set(ChangeTypePage, Consignee)) mustBe
+            navigator.nextPage(ChangeTypePage, NormalMode, emptyUserAnswers.set(ChangeTypePage, ChangeConsignee)) mustBe
               controllers.sections.info.routes.ChangeDestinationTypeController.onPageLoad(testErn, testArc)
           }
         }
 
-        ChangeType.allValues.filterNot(_ == Consignee).foreach { changeType =>
+        ChangeType.allValues.filterNot(_ == ChangeConsignee).foreach { changeType =>
 
           s"when the answer is `$changeType`" - {
 

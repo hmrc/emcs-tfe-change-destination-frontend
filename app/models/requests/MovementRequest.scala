@@ -29,4 +29,6 @@ case class MovementRequest[A](request: UserRequest[A], arc: String, movementDeta
 
   lazy val isWarehouseKeeper: Boolean = request.isWarehouseKeeper
   lazy val isRegisteredConsignor: Boolean = request.isRegisteredConsignor
+  lazy val isCertifiedConsignor: Boolean = request.isCertifiedConsignor
+
 }

@@ -17,7 +17,7 @@
 package models.requests
 
 import models.UserType
-import models.UserType.{GreatBritainRegisteredConsignor, GreatBritainWarehouseKeeper, NorthernIrelandRegisteredConsignor, NorthernIrelandWarehouseKeeper}
+import models.UserType.{GreatBritainRegisteredConsignor, GreatBritainWarehouseKeeper, NorthernIrelandCertifiedConsignor, NorthernIrelandRegisteredConsignor, NorthernIrelandTemporaryCertifiedConsignor, NorthernIrelandWarehouseKeeper}
 import play.api.mvc.{Request, WrappedRequest}
 
 case class UserRequest[A](request: Request[A],
@@ -32,4 +32,5 @@ case class UserRequest[A](request: Request[A],
 
   lazy val isWarehouseKeeper: Boolean = (userTypeFromErn == GreatBritainWarehouseKeeper) || (userTypeFromErn == NorthernIrelandWarehouseKeeper)
   lazy val isRegisteredConsignor: Boolean = (userTypeFromErn == GreatBritainRegisteredConsignor) || (userTypeFromErn == NorthernIrelandRegisteredConsignor)
+  lazy val isCertifiedConsignor: Boolean = (userTypeFromErn == NorthernIrelandCertifiedConsignor) || (userTypeFromErn == NorthernIrelandTemporaryCertifiedConsignor)
 }

@@ -30,7 +30,8 @@ import utils.Logging
 class DestinationTypeHelper extends Logging {
 
   def title(implicit request: DataRequest[_], messages: Messages): String = request.userTypeFromErn match {
-    case GreatBritainWarehouseKeeper | NorthernIrelandWarehouseKeeper => messages("newDestinationType.title.movement")
+    case GreatBritainWarehouseKeeper | NorthernIrelandWarehouseKeeper | NorthernIrelandCertifiedConsignor | NorthernIrelandTemporaryCertifiedConsignor =>
+      messages("newDestinationType.title.movement")
     case GreatBritainRegisteredConsignor | NorthernIrelandRegisteredConsignor => messages("newDestinationType.title.import")
     case userType =>
       logger.error(s"[title] invalid UserType for COD journey: $userType")
@@ -38,7 +39,8 @@ class DestinationTypeHelper extends Logging {
   }
 
   def heading(implicit request: DataRequest[_], messages: Messages): String = request.userTypeFromErn match {
-    case GreatBritainWarehouseKeeper | NorthernIrelandWarehouseKeeper => messages("newDestinationType.heading.movement")
+    case GreatBritainWarehouseKeeper | NorthernIrelandWarehouseKeeper | NorthernIrelandCertifiedConsignor | NorthernIrelandTemporaryCertifiedConsignor =>
+      messages("newDestinationType.heading.movement")
     case GreatBritainRegisteredConsignor | NorthernIrelandRegisteredConsignor => messages("newDestinationType.heading.import")
     case userType =>
       logger.error(s"[heading] invalid UserType for COD journey: $userType")
@@ -52,6 +54,7 @@ class DestinationTypeHelper extends Logging {
       case NorthernIrelandWarehouseKeeper if dispatchPlace == GreatBritain => MovementScenario.valuesUk.map(radioOption)
       case NorthernIrelandWarehouseKeeper if dispatchPlace == NorthernIreland => MovementScenario.valuesEu.map(radioOption)
       case NorthernIrelandRegisteredConsignor => MovementScenario.valuesEu.map(radioOption)
+      case NorthernIrelandCertifiedConsignor | NorthernIrelandTemporaryCertifiedConsignor => MovementScenario.valuesForDutyPaidTraders.map(radioOption)
       case userType =>
         logger.error(s"[options] invalid UserType for COD journey: $userType")
         throw InvalidUserTypeException(s"[DestinationTypeHelper][options] invalid UserType for COD journey: $userType")

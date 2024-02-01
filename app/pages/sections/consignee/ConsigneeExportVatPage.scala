@@ -19,7 +19,7 @@ package pages.sections.consignee
 import models.requests.DataRequest
 import models.response.emcsTfe.TraderModel
 import models.sections.consignee.{ConsigneeExportVat, ConsigneeExportVatType}
-import models.sections.info.ChangeType.Consignee
+import models.sections.info.ChangeType.ChangeConsignee
 import pages.QuestionPage
 import pages.sections.info.ChangeTypePage
 import play.api.libs.json.JsPath
@@ -30,7 +30,7 @@ case object ConsigneeExportVatPage extends QuestionPage[ConsigneeExportVat] {
 
   override def getValueFromIE801(implicit request: DataRequest[_]): Option[ConsigneeExportVat] =
     request.userAnswers.get(ChangeTypePage) match {
-      case Some(Consignee) => None
+      case Some(ChangeConsignee) => None
       case _ =>
         request.movementDetails.consigneeTrader.map {
           case TraderModel(_, _, _, Some(vatNumber), _) =>

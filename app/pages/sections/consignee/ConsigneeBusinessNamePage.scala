@@ -17,7 +17,7 @@
 package pages.sections.consignee
 
 import models.requests.DataRequest
-import models.sections.info.ChangeType.Consignee
+import models.sections.info.ChangeType.ChangeConsignee
 import pages.QuestionPage
 import pages.sections.info.ChangeTypePage
 import play.api.libs.json.JsPath
@@ -28,7 +28,7 @@ case object ConsigneeBusinessNamePage extends QuestionPage[String] {
 
   override def getValueFromIE801(implicit request: DataRequest[_]): Option[String] =
     request.userAnswers.get(ChangeTypePage) match {
-      case Some(Consignee) => None
+      case Some(ChangeConsignee) => None
       case _ => request.movementDetails.consigneeTrader.flatMap(_.traderName)
     }
 }

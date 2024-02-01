@@ -46,7 +46,7 @@ class ConsigneeExportSummarySpec extends SpecBase with Matchers {
 
             "must output None (i.e. don't use the IE801 data)" in {
 
-              implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(ChangeTypePage, ChangeType.Consignee))
+              implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(ChangeTypePage, ChangeType.ChangeConsignee))
 
               ConsigneeExportSummary.row(showActionLinks = true) mustBe None
             }
