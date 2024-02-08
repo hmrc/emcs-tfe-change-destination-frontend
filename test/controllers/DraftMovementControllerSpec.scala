@@ -34,7 +34,7 @@ class TaskListControllerSpec extends SpecBase {
     lazy val testController = new TaskListController(
       messagesApi,
       fakeAuthAction,
-      fakeUserAllowListAction,
+      fakeBetaAllowListAction,
       new FakeDataRetrievalAction(Some(userAnswers), Some(testMinTraderKnownFacts)),
       dataRequiredAction,
       new FakeMovementAction(maxGetMovementResponse),

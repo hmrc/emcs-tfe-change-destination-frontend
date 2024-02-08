@@ -40,7 +40,7 @@ class GuarantorNameController @Inject()(
                                          override val getData: DataRetrievalAction,
                                          override val requireData: DataRequiredAction,
                                          override val withMovement: MovementAction,
-                                         override val userAllowList: UserAllowListAction,
+                                         override val betaAllowList: BetaAllowListAction,
                                          formProvider: GuarantorNameFormProvider,
                                          val controllerComponents: MessagesControllerComponents,
                                          view: GuarantorNameView

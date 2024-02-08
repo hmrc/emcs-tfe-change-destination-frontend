@@ -52,7 +52,7 @@ class DestinationCheckAnswersControllerSpec extends SpecBase with MockUserAnswer
     lazy val testController = new DestinationCheckAnswersController(
       messagesApi,
       mockUserAnswersService,
-      fakeUserAllowListAction,
+      fakeBetaAllowListAction,
       new FakeDestinationNavigator(testOnwardRoute),
       fakeAuthAction,
       new FakeDataRetrievalAction(optUserAnswers, Some(testMinTraderKnownFacts)),

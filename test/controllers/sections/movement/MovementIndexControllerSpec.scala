@@ -33,7 +33,7 @@ class MovementIndexControllerSpec extends SpecBase with MockUserAnswersService {
     lazy val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest()
 
     lazy val controller = new MovementIndexController(
-      userAllowList = fakeUserAllowListAction,
+      betaAllowList = fakeBetaAllowListAction,
       auth = fakeAuthAction,
       getData = new FakeDataRetrievalAction(userAnswers, Some(testMinTraderKnownFacts)),
       requireData = dataRequiredAction,

@@ -64,7 +64,7 @@ class DestinationDetailsChoiceControllerSpec extends SpecBase with MockUserAnswe
       formProvider,
       messagesControllerComponents,
       view,
-      fakeUserAllowListAction
+      fakeBetaAllowListAction
     )
   }
 

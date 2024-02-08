@@ -39,7 +39,7 @@ class ConsigneeExemptOrganisationController @Inject()(override val messagesApi: 
                                                       override val getData: DataRetrievalAction,
                                                       override val requireData: DataRequiredAction,
                                                       override val withMovement: MovementAction,
-                                                      override val userAllowList: UserAllowListAction,
+                                                      override val betaAllowList: BetaAllowListAction,
                                                       formProvider: ConsigneeExemptOrganisationFormProvider,
                                                       val controllerComponents: MessagesControllerComponents,
                                                       view: ConsigneeExemptOrganisationView,

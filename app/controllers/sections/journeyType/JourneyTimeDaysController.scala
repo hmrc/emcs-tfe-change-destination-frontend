@@ -36,7 +36,7 @@ import scala.concurrent.Future
 
 class JourneyTimeDaysController @Inject()(
                                            override val messagesApi: MessagesApi,
-                                           override val userAllowList: UserAllowListAction,
+                                           override val betaAllowList: BetaAllowListAction,
                                            override val userAnswersService: UserAnswersService,
                                            override val navigator: JourneyTypeNavigator,
                                            override val auth: AuthAction,

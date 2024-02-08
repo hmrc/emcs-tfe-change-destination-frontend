@@ -55,7 +55,7 @@ class DestinationAddressControllerSpec extends SpecBase with MockUserAnswersServ
       new FakeDataRetrievalAction(optUserAnswers, Some(testMinTraderKnownFacts)),
       dataRequiredAction,
       new FakeMovementAction(maxGetMovementResponse.copy(deliveryPlaceTrader = None)),
-      fakeUserAllowListAction,
+      fakeBetaAllowListAction,
       formProvider,
       messagesControllerComponents,
       view

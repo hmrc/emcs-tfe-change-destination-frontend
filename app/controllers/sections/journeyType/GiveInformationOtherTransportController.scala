@@ -41,7 +41,7 @@ class GiveInformationOtherTransportController @Inject()(
                                                          formProvider: GiveInformationOtherTransportFormProvider,
                                                          val controllerComponents: MessagesControllerComponents,
                                                          view: GiveInformationOtherTransportView,
-                                                         val userAllowList: UserAllowListAction
+                                                         val betaAllowList: BetaAllowListAction
                                                        ) extends BaseNavigationController with AuthActionHelper {
 
   def onPageLoad(ern: String, arc: String, mode: Mode): Action[AnyContent] =

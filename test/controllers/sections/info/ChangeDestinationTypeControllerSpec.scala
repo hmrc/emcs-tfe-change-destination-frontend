@@ -56,7 +56,7 @@ class ChangeDestinationTypeControllerSpec extends SpecBase with MockUserAnswersS
       new FakeMovementAction(maxGetMovementResponse),
       new FakeDataRetrievalAction(userAnswers, Some(testMinTraderKnownFacts)),
       dataRequiredAction,
-      fakeUserAllowListAction,
+      fakeBetaAllowListAction,
       new FakePreDraftRetrievalAction(userAnswers, Some(testMinTraderKnownFacts)),
       preDraftDataRequiredAction,
       mockPreDraftService,

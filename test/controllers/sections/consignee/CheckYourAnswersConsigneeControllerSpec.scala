@@ -82,7 +82,7 @@ class CheckYourAnswersConsigneeControllerSpec extends SpecBase with SummaryListF
     lazy val testController = new CheckYourAnswersConsigneeController(
       messagesApi,
       fakeAuthAction,
-      fakeUserAllowListAction,
+      fakeBetaAllowListAction,
       new FakeDataRetrievalAction(optUserAnswers, Some(testMinTraderKnownFacts)),
       dataRequiredAction,
       new FakeMovementAction(maxGetMovementResponse),

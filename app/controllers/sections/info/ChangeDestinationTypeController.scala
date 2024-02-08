@@ -42,7 +42,7 @@ class ChangeDestinationTypeController @Inject()(
                                                  override val withMovement: MovementAction,
                                                  override val getData: DataRetrievalAction,
                                                  override val requireData: DataRequiredAction,
-                                                 override val userAllowList: UserAllowListAction,
+                                                 override val betaAllowList: BetaAllowListAction,
                                                  val getPreDraftData: PreDraftDataRetrievalAction,
                                                  val requirePreDraftData: PreDraftDataRequiredAction,
                                                  val preDraftService: PreDraftService,

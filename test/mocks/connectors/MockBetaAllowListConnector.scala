@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,8 +16,7 @@
 
 package mocks.connectors
 
-import connectors.userAllowList.UserAllowListConnector
-import models.requests.CheckUserAllowListRequest
+import connectors.betaAllowList.BetaAllowListConnector
 import models.response.ErrorResponse
 import org.scalamock.handlers.CallHandler3
 import org.scalamock.scalatest.MockFactory
@@ -25,15 +24,14 @@ import uk.gov.hmrc.http.HeaderCarrier
 
 import scala.concurrent.{ExecutionContext, Future}
 
-trait MockUserAllowListConnector extends MockFactory {
+trait MockBetaAllowListConnector extends MockFactory {
 
-  lazy val mockUserAllowListConnector: UserAllowListConnector = mock[UserAllowListConnector]
+  lazy val mockBetaAllowListConnector: BetaAllowListConnector = mock[BetaAllowListConnector]
 
-  object MockUserAllowListConnector {
+  object MockBetaAllowListConnector {
 
-    def check(checkRequest: CheckUserAllowListRequest)
-    : CallHandler3[CheckUserAllowListRequest, HeaderCarrier, ExecutionContext, Future[Either[ErrorResponse, Boolean]]] =
-      (mockUserAllowListConnector.check(_: CheckUserAllowListRequest)(_: HeaderCarrier, _: ExecutionContext))
-        .expects(checkRequest, *, *)
+    def check(ern: String): CallHandler3[String, HeaderCarrier, ExecutionContext, Future[Either[ErrorResponse, Boolean]]] =
+      (mockBetaAllowListConnector.check(_: String)(_: HeaderCarrier, _: ExecutionContext))
+        .expects(ern, *, *)
   }
 }

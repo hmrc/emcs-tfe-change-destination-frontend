@@ -48,7 +48,7 @@ class JourneyTypeReviewControllerSpec extends SpecBase with MockUserAnswersServi
     lazy val controller = new JourneyTypeReviewController(
       messagesApi,
       mockUserAnswersService,
-      fakeUserAllowListAction,
+      fakeBetaAllowListAction,
       new FakeJourneyTypeNavigator(testOnwardRoute),
       fakeAuthAction,
       new FakeDataRetrievalAction(userAnswers, Some(testMinTraderKnownFacts)),

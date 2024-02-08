@@ -37,7 +37,7 @@ class ExportInformationCheckAnswersController @Inject()(
                                                          override val getData: DataRetrievalAction,
                                                          override val requireData: DataRequiredAction,
                                                          override val withMovement: MovementAction,
-                                                         override val userAllowList: UserAllowListAction,
+                                                         override val betaAllowList: BetaAllowListAction,
                                                          val cyaHelper: ExportInformationCheckAnswersHelper,
                                                          val controllerComponents: MessagesControllerComponents,
                                                          view: ExportInformationCheckAnswersView

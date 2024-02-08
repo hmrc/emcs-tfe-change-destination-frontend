@@ -47,7 +47,7 @@ class TransportUnitGiveMoreInformationControllerSpec extends SpecBase with MockU
     lazy val controller = new TransportUnitGiveMoreInformationController(
       messagesApi,
       mockUserAnswersService,
-      fakeUserAllowListAction,
+      fakeBetaAllowListAction,
       new FakeTransportUnitNavigator(testOnwardRoute),
       fakeAuthAction,
       new FakeDataRetrievalAction(userAnswers, Some(testMinTraderKnownFacts)),

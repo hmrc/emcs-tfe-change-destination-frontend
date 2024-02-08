@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,37 +14,36 @@
  * limitations under the License.
  */
 
-package connectors.referenceData
+package connectors.betaAllowList
 
 import base.SpecBase
 import mocks.connectors.MockHttpClient
 import models.response.UnexpectedDownstreamResponseError
+import org.scalatest.BeforeAndAfterAll
+import play.api.http.{HeaderNames, MimeTypes, Status}
 import uk.gov.hmrc.http.HeaderCarrier
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class GetCountriesAndMemberStatesConnectorSpec extends SpecBase with MockHttpClient {
+class BetaAllowListConnectorSpec extends SpecBase
+  with Status with MimeTypes with HeaderNames with MockHttpClient with BeforeAndAfterAll {
 
   implicit lazy val hc: HeaderCarrier = HeaderCarrier()
   implicit lazy val ec: ExecutionContext = app.injector.instanceOf[ExecutionContext]
 
-  lazy val connector = new GetCountriesAndMemberStatesConnectorImpl(mockHttpClient, appConfig)
+  lazy val connector = new BetaAllowListConnector(mockHttpClient, appConfig)
 
-  "getCountryCodesAndMemberStates" - {
+  "check" - {
 
     "should return a successful response" - {
 
       "when downstream call is successful" in {
 
-        val expectedResult = Right(Seq(countryJsonAT, countryJsonBE))
-
         MockHttpClient.get(
-          url = s"${appConfig.referenceDataBaseUrl}/oracle/member-states-and-countries"
-        ).returns(Future.successful(expectedResult))
+          url = s"${appConfig.emcsTfeBaseUrl}/beta/eligibility/$testErn/changeDestination"
+        ).returns(Future.successful(Right(true)))
 
-        val actualResult = connector.getCountryCodesAndMemberStates().futureValue
-
-        actualResult mustBe expectedResult
+        connector.check(testErn).futureValue mustBe Right(true)
       }
     }
 
@@ -52,17 +51,12 @@ class GetCountriesAndMemberStatesConnectorSpec extends SpecBase with MockHttpCli
 
       "when downstream call fails" in {
 
-        val expectedResult = Left(UnexpectedDownstreamResponseError)
-
         MockHttpClient.get(
-          url = s"${appConfig.referenceDataBaseUrl}/oracle/member-states-and-countries"
-        ).returns(Future.successful(expectedResult))
+          url = s"${appConfig.emcsTfeBaseUrl}/beta/eligibility/$testErn/changeDestination"
+        ).returns(Future.successful(Left(UnexpectedDownstreamResponseError)))
 
-        val actualResult = connector.getCountryCodesAndMemberStates().futureValue
-
-        actualResult mustBe expectedResult
+        connector.check(testErn).futureValue mustBe Left(UnexpectedDownstreamResponseError)
       }
     }
   }
 }
-

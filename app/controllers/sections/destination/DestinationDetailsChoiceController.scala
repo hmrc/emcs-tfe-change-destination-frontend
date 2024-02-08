@@ -41,7 +41,7 @@ class DestinationDetailsChoiceController @Inject()(override val messagesApi: Mes
                                                    formProvider: DestinationDetailsChoiceFormProvider,
                                                    val controllerComponents: MessagesControllerComponents,
                                                    view: DestinationDetailsChoiceView,
-                                                   val userAllowList: UserAllowListAction
+                                                   val betaAllowList: BetaAllowListAction
                                                   ) extends BaseNavigationController with AuthActionHelper {
 
   def onPageLoad(ern: String, arc: String, mode: Mode): Action[AnyContent] =

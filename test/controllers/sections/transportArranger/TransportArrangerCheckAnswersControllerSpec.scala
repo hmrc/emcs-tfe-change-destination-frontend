@@ -48,7 +48,7 @@ class TransportArrangerCheckAnswersControllerSpec extends SpecBase with SummaryL
       new FakeDataRetrievalAction(userAnswers, Some(testMinTraderKnownFacts)),
       dataRequiredAction,
       new FakeMovementAction(maxGetMovementResponse),
-      fakeUserAllowListAction,
+      fakeBetaAllowListAction,
       MockTransportArrangerCheckAnswersHelper,
       Helpers.stubMessagesControllerComponents(),
       view

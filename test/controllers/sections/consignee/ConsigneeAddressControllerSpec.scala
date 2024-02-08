@@ -57,7 +57,7 @@ class ConsigneeAddressControllerSpec extends SpecBase with MockUserAnswersServic
       new FakeDataRetrievalAction(optUserAnswers, Some(testMinTraderKnownFacts)),
       dataRequiredAction,
       new FakeMovementAction(maxGetMovementResponse.copy(consigneeTrader = None)),
-      fakeUserAllowListAction,
+      fakeBetaAllowListAction,
       new AddressFormProvider(),
       messagesControllerComponents,
       view

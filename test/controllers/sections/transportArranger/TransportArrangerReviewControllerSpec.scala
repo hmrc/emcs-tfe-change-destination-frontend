@@ -52,7 +52,7 @@ class TransportArrangerReviewControllerSpec extends SpecBase with MockUserAnswer
     lazy val controller = new TransportArrangerReviewController(
       messagesApi,
       mockUserAnswersService,
-      fakeUserAllowListAction,
+      fakeBetaAllowListAction,
       new FakeTransportArrangerNavigator(testOnwardRoute),
       fakeAuthAction,
       new FakeDataRetrievalAction(userAnswers, Some(testMinTraderKnownFacts)),

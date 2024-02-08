@@ -53,7 +53,7 @@ class FirstTransporterCheckAnswersControllerSpec extends SpecBase with SummaryLi
       new FakeDataRetrievalAction(optUserAnswers, Some(testMinTraderKnownFacts)),
       dataRequiredAction,
       new FakeMovementAction(maxGetMovementResponse),
-      fakeUserAllowListAction,
+      fakeBetaAllowListAction,
       mockFirstTransporterCheckAnswersHelper,
       messagesControllerComponents,
       view

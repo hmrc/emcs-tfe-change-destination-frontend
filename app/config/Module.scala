@@ -19,7 +19,6 @@ package config
 import com.google.inject.AbstractModule
 import connectors.emcsTfe.{UserAnswersConnector, UserAnswersConnectorImpl}
 import connectors.referenceData._
-import connectors.userAllowList.{UserAllowListConnector, UserAllowListConnectorImpl}
 import controllers.actions._
 import controllers.actions.predraft._
 import repositories.{SessionRepository, SessionRepositoryImpl}
@@ -34,15 +33,13 @@ class Module extends AbstractModule {
     bind(classOf[DataRetrievalAction]).to(classOf[DataRetrievalActionImpl]).asEagerSingleton()
     bind(classOf[DataRequiredAction]).to(classOf[DataRequiredActionImpl]).asEagerSingleton()
     bind(classOf[AuthAction]).to(classOf[AuthActionImpl]).asEagerSingleton()
-    bind(classOf[UserAllowListAction]).to(classOf[UserAllowListActionImpl]).asEagerSingleton()
+    bind(classOf[BetaAllowListAction]).to(classOf[BetaAllowListActionImpl]).asEagerSingleton()
     bind(classOf[MovementAction]).to(classOf[MovementActionImpl]).asEagerSingleton()
     bind(classOf[TimeMachine]).to(classOf[TimeMachineImpl]).asEagerSingleton()
     bind(classOf[SessionRepository]).to(classOf[SessionRepositoryImpl]).asEagerSingleton()
     bind(classOf[UserAnswersConnector]).to(classOf[UserAnswersConnectorImpl]).asEagerSingleton()
     bind(classOf[GetMemberStatesConnector]).to(classOf[GetMemberStatesConnectorImpl]).asEagerSingleton()
     bind(classOf[GetTraderKnownFactsConnector]).to(classOf[GetTraderKnownFactsConnectorImpl]).asEagerSingleton()
-    bind(classOf[UserAllowListConnector]).to(classOf[UserAllowListConnectorImpl]).asEagerSingleton()
-    bind(classOf[GetCountriesAndMemberStatesConnector]).to(classOf[GetCountriesAndMemberStatesConnectorImpl]).asEagerSingleton()
 
   }
 }

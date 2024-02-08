@@ -49,7 +49,7 @@ class TransportUnitGiveMoreInformationChoiceControllerSpec extends SpecBase with
     lazy val controller = new TransportUnitGiveMoreInformationChoiceController(
       messagesApi,
       mockUserAnswersService,
-      fakeUserAllowListAction,
+      fakeBetaAllowListAction,
       app.injector.instanceOf[TransportUnitNavigator],
       fakeAuthAction,
       new FakeDataRetrievalAction(userAnswers, Some(testMinTraderKnownFacts)),

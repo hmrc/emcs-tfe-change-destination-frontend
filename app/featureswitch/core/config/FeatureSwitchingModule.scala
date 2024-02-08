@@ -25,7 +25,7 @@ import javax.inject.Singleton
 @Singleton
 class FeatureSwitchingModule extends Module with FeatureSwitchRegistry {
 
-  val switches: Seq[FeatureSwitch] = Seq(AllowListEnabled, StubGetTraderKnownFacts, RedirectToFeedbackSurvey)
+  val switches: Seq[FeatureSwitch] = Seq(CheckBetaAllowList, StubGetTraderKnownFacts, RedirectToFeedbackSurvey)
 
   override def bindings(environment: Environment, configuration: Configuration): Seq[Binding[_]] = {
     Seq(
@@ -34,9 +34,9 @@ class FeatureSwitchingModule extends Module with FeatureSwitchRegistry {
   }
 }
 
-case object AllowListEnabled extends FeatureSwitch {
-  override val configName: String = "features.allowListEnabled"
-  override val displayName: String = "Enable Allow List functionality"
+case object CheckBetaAllowList extends FeatureSwitch {
+  override val configName: String = "features.checkBetaAllowList"
+  override val displayName: String = "Check beta allow list"
 }
 
 case object StubGetTraderKnownFacts extends FeatureSwitch {
