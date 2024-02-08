@@ -50,7 +50,7 @@ class FirstTransporterNameControllerSpec extends SpecBase with MockUserAnswersSe
       new FakeDataRetrievalAction(optUserAnswers, Some(testMinTraderKnownFacts)),
       dataRequiredAction,
       new FakeMovementAction(maxGetMovementResponse.copy(firstTransporterTrader = None)),
-      fakeUserAllowListAction,
+      fakeBetaAllowListAction,
       formProvider,
       messagesControllerComponents,
       view

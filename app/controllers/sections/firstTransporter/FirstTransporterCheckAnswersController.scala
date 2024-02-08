@@ -37,7 +37,7 @@ class FirstTransporterCheckAnswersController @Inject()(
                                                         override val getData: DataRetrievalAction,
                                                         override val requireData: DataRequiredAction,
                                                         override val withMovement: MovementAction,
-                                                        override val userAllowList: UserAllowListAction,
+                                                        override val betaAllowList: BetaAllowListAction,
                                                         val cyaHelper: FirstTransporterCheckAnswersHelper,
                                                         val controllerComponents: MessagesControllerComponents,
                                                         view: FirstTransporterCheckAnswersView

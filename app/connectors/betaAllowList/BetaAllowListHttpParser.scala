@@ -14,22 +14,22 @@
  * limitations under the License.
  */
 
-package connectors.userAllowList
+package connectors.betaAllowList
 
 import models.response.{ErrorResponse, UnexpectedDownstreamResponseError}
 import play.api.http.Status.{NOT_FOUND, OK}
 import uk.gov.hmrc.http.{HttpReads, HttpResponse}
 import utils.Logging
 
-trait UserAllowListHttpParser extends Logging {
+trait BetaAllowListHttpParser extends Logging {
 
-  implicit object UserAllowListReads extends HttpReads[Either[ErrorResponse, Boolean]] {
+  implicit object BetaAllowListReads extends HttpReads[Either[ErrorResponse, Boolean]] {
     override def read(method: String, url: String, response: HttpResponse): Either[ErrorResponse, Boolean] = {
       response.status match {
         case OK => Right(true)
         case NOT_FOUND => Right(false)
         case status =>
-          logger.warn(s"[read] Unexpected status from user-allow-list: $status")
+          logger.warn(s"[read] Unexpected status from emcs-tfe: $status")
           Left(UnexpectedDownstreamResponseError)
       }
     }

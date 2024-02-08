@@ -17,9 +17,9 @@
 package controllers.actions
 
 import config.AppConfig
-import connectors.userAllowList.UserAllowListConnector
+import connectors.betaAllowList.BetaAllowListConnector
 import handlers.ErrorHandler
-import models.requests.{CheckUserAllowListRequest, UserRequest}
+import models.requests.UserRequest
 import play.api.mvc.Results.{InternalServerError, Redirect}
 import play.api.mvc.{ActionRefiner, Result}
 import uk.gov.hmrc.http.HeaderCarrier
@@ -29,23 +29,23 @@ import utils.Logging
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
-class UserAllowListActionImpl @Inject()(userAllowListConnector: UserAllowListConnector,
+class BetaAllowListActionImpl @Inject()(betaAllowListConnector: BetaAllowListConnector,
                                         errorHandler: ErrorHandler,
                                         config: AppConfig)
-                                       (implicit val executionContext: ExecutionContext) extends UserAllowListAction {
+                                       (implicit val executionContext: ExecutionContext) extends BetaAllowListAction {
 
   override protected def refine[A](request: UserRequest[A]): Future[Either[Result, UserRequest[A]]] = {
 
     implicit val hc: HeaderCarrier = HeaderCarrierConverter.fromRequestAndSession(request, request.session)
 
-    if (config.allowListEnabled) {
-      userAllowListConnector.check(CheckUserAllowListRequest(request.ern)) map {
+    if (config.betaAllowListCheckingEnabled) {
+      betaAllowListConnector.check(request.ern).map {
         case Right(true) => Right(request)
         case Right(false) =>
           logger.info(s"[refine] User with ern: '${request.ern}' was not on the allow-list")
           Left(Redirect(controllers.error.routes.ErrorController.notOnPrivateBeta()))
         case Left(_) =>
-          logger.warn(s"[refine] Unable to check if User is on allow-list as unexpected error returned from user-allow-list")
+          logger.warn(s"[refine] Unable to check if user is on allow-list as unexpected error returned from emcs-tfe")
           Left(InternalServerError(errorHandler.internalServerErrorTemplate(request)))
       }
     } else {
@@ -54,4 +54,4 @@ class UserAllowListActionImpl @Inject()(userAllowListConnector: UserAllowListCon
   }
 }
 
-trait UserAllowListAction extends ActionRefiner[UserRequest, UserRequest] with Logging
+trait BetaAllowListAction extends ActionRefiner[UserRequest, UserRequest] with Logging

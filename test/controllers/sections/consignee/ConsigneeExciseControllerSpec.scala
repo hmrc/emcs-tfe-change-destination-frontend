@@ -50,7 +50,7 @@ class ConsigneeExciseControllerSpec extends SpecBase with MockUserAnswersService
     lazy val testController = new ConsigneeExciseController(
       messagesApi,
       fakeAuthAction,
-      fakeUserAllowListAction,
+      fakeBetaAllowListAction,
       new FakeDataRetrievalAction(optUserAnswers, Some(testMinTraderKnownFacts)),
       dataRequiredAction,
       new FakeMovementAction(maxGetMovementResponse.copy(consigneeTrader = None)),

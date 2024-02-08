@@ -46,7 +46,7 @@ class DestinationConsigneeDetailsControllerSpec extends SpecBase with MockUserAn
     lazy val testController = new DestinationConsigneeDetailsController(
       messagesApi,
       mockUserAnswersService,
-      fakeUserAllowListAction,
+      fakeBetaAllowListAction,
       new FakeDestinationNavigator(testOnwardRoute),
       fakeAuthAction,
       new FakeDataRetrievalAction(optUserAnswers, Some(testMinTraderKnownFacts)),

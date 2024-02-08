@@ -54,7 +54,7 @@ class GuarantorVatControllerSpec extends SpecBase with MockUserAnswersService {
       new FakeDataRetrievalAction(optUserAnswers, Some(testMinTraderKnownFacts)),
       dataRequiredAction,
       new FakeMovementAction(maxGetMovementResponse.copy(movementGuarantee = MovementGuaranteeModel(GuarantorType.NoGuarantor, None))),
-      fakeUserAllowListAction,
+      fakeBetaAllowListAction,
       formProvider,
       messagesControllerComponents,
       view

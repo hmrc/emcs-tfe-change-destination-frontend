@@ -50,7 +50,7 @@ class HowMovementTransportedController @Inject()(
                                                   val controllerComponents: MessagesControllerComponents,
                                                   view: HowMovementTransportedView,
                                                   onlyFixedView: HowMovementTransportedNoOptionView,
-                                                  val userAllowList: UserAllowListAction
+                                                  val betaAllowList: BetaAllowListAction
                                                 ) extends BaseNavigationController with AuthActionHelper {
 
   //IF UKtoEU, destinationType has not changed and there's no Guarantor on the IE801 - then only option is FixedTransportInstallations
@@ -95,7 +95,7 @@ class HowMovementTransportedController @Inject()(
       )
     }
 
-  private def cleanseAnswers(answer: HowMovementTransported)(implicit request: DataRequest[_]): PartialFunction[UserAnswers, UserAnswers] = {
+  private def cleanseAnswers(answer: HowMovementTransported): PartialFunction[UserAnswers, UserAnswers] = {
     //Cond156 - cleanup any existing TU entries when the user selects FixedTransportInstallations - set the Transport Unit type to be FixedTransportInstallations
     case userAnswers if answer == FixedTransportInstallations =>
       userAnswers.remove(JourneyTypeSection).resetIndexedSection(TransportUnitsSection, Index(0)).set(

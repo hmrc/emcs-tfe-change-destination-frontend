@@ -25,5 +25,6 @@ trait MockAppConfig extends MockFactory {
 
   object MockAppConfig {
     def destinationOfficeSuffix: CallHandler0[String] = (mockAppConfig.destinationOfficeSuffix _).expects()
+    def betaAllowListCheckingEnabled: CallHandler0[Boolean] = (mockAppConfig.betaAllowListCheckingEnabled _).expects()
   }
 }

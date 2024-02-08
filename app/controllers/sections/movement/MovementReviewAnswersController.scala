@@ -37,7 +37,7 @@ import scala.concurrent.Future
 class MovementReviewAnswersController @Inject()(
                                                  override val messagesApi: MessagesApi,
                                                  override val userAnswersService: UserAnswersService,
-                                                 override val userAllowList: UserAllowListAction,
+                                                 override val betaAllowList: BetaAllowListAction,
                                                  override val navigator: MovementNavigator,
                                                  override val auth: AuthAction,
                                                  override val getData: DataRetrievalAction,

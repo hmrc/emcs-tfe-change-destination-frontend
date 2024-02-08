@@ -42,7 +42,7 @@ class CheckYourAnswersControllerSpec extends SpecBase with SummaryListFluency wi
     val controller = new CheckYourAnswersController(
       messagesApi,
       app.injector.instanceOf[FakeAuthAction],
-      app.injector.instanceOf[FakeUserAllowListAction],
+      fakeBetaAllowListAction,
       new FakeDataRetrievalAction(userAnswers, Some(testMinTraderKnownFacts)),
       app.injector.instanceOf[DataRequiredAction],
       new FakeMovementAction(maxGetMovementResponse),

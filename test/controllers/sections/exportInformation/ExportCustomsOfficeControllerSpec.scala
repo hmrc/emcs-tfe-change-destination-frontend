@@ -56,7 +56,7 @@ class ExportCustomsOfficeControllerSpec extends SpecBase with MockUserAnswersSer
       new FakeDataRetrievalAction(optUserAnswers, Some(testMinTraderKnownFacts)),
       dataRequiredAction,
       new FakeMovementAction(maxGetMovementResponse.copy(deliveryPlaceCustomsOfficeReferenceNumber = None)),
-      fakeUserAllowListAction,
+      fakeBetaAllowListAction,
       formProvider,
       messagesControllerComponents,
       view

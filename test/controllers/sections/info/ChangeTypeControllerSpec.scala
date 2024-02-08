@@ -51,7 +51,7 @@ class ChangeTypeControllerSpec extends SpecBase with MockUserAnswersService with
     lazy val controller = new ChangeTypeController(
       messagesApi = messagesApi,
       userAnswersService = mockUserAnswersService,
-      userAllowList = fakeUserAllowListAction,
+      betaAllowList = fakeBetaAllowListAction,
       navigator = new FakeInfoNavigator(testOnwardRoute),
       auth = fakeAuthAction,
       preDraftService = mockPreDraftService,

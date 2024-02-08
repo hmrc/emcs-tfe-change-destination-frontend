@@ -49,7 +49,7 @@ trait SpecBase extends AnyFreeSpec
   def messages(candidates: Seq[Lang]): Messages = app.injector.instanceOf[MessagesApi].preferred(candidates)
 
   val fakeAuthAction = new FakeAuthAction(stubPlayBodyParsers)
-  val fakeUserAllowListAction = new FakeUserAllowListAction()
+  val fakeBetaAllowListAction = new FakeBetaAllowListAction()
 
   def userRequest[A](request: Request[A], ern: String = testErn): UserRequest[A] =
     UserRequest(request, ern, testInternalId, testCredId, testSessionId, hasMultipleErns = false)

@@ -46,7 +46,7 @@ class TransportSealTypeControllerSpec extends SpecBase with MockUserAnswersServi
     lazy val controller = new TransportSealTypeController(
       messagesApi,
       mockUserAnswersService,
-      fakeUserAllowListAction,
+      fakeBetaAllowListAction,
       new FakeTransportUnitNavigator(testOnwardRoute),
       fakeAuthAction,
       new FakeDataRetrievalAction(userAnswers, Some(testMinTraderKnownFacts)),

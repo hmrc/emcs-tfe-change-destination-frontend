@@ -45,7 +45,7 @@ class GuarantorIndexControllerSpec extends SpecBase with MockUserAnswersService 
       new FakeDataRetrievalAction(optUserAnswers, Some(testMinTraderKnownFacts)),
       dataRequiredAction,
       new FakeMovementAction(maxGetMovementResponse.copy(movementGuarantee = MovementGuaranteeModel(NoGuarantor, None))),
-      fakeUserAllowListAction,
+      fakeBetaAllowListAction,
       messagesControllerComponents
     )
 

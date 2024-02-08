@@ -36,7 +36,7 @@ import scala.concurrent.Future
 class JourneyTypeReviewController @Inject()(
                                              override val messagesApi: MessagesApi,
                                              override val userAnswersService: UserAnswersService,
-                                             override val userAllowList: UserAllowListAction,
+                                             override val betaAllowList: BetaAllowListAction,
                                              override val navigator: JourneyTypeNavigator,
                                              override val auth: AuthAction,
                                              override val getData: DataRetrievalAction,

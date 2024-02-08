@@ -62,7 +62,7 @@ class HowMovementTransportedControllerSpec extends SpecBase with MockUserAnswers
       controllerComponents = Helpers.stubMessagesControllerComponents(),
       view = view,
       onlyFixedView = onlyFixedView,
-      userAllowList = fakeUserAllowListAction
+      betaAllowList = fakeBetaAllowListAction
     )
   }
 

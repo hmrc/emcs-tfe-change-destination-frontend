@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,35 +14,35 @@
  * limitations under the License.
  */
 
-package connectors.userAllowList
+package connectors.betaAllowList
 
 import base.SpecBase
 import models.response.UnexpectedDownstreamResponseError
 import play.api.http.Status
 import uk.gov.hmrc.http.HttpResponse
 
-class UserAllowListHttpParserSpec extends SpecBase with UserAllowListHttpParser {
+class BetaAllowListHttpParserSpec extends SpecBase with BetaAllowListHttpParser {
 
-  "UserAllowListReads.read(method: String, url: String, response: HttpResponse)" - {
+  "BetaAllowListReads.read(method: String, url: String, response: HttpResponse)" - {
 
     "should return 'true'" - {
 
       s"when an OK (${Status.OK}) response is retrieved" in {
-        UserAllowListReads.read("", "", HttpResponse(Status.OK, "")) mustBe Right(true)
+        BetaAllowListReads.read("", "", HttpResponse(Status.OK, "")) mustBe Right(true)
       }
     }
 
     "should return 'false'" - {
 
       s"when a NOT_FOUND (${Status.NOT_FOUND}) response is retrieved" in {
-        UserAllowListReads.read("", "", HttpResponse(Status.NOT_FOUND, "")) mustBe Right(false)
+        BetaAllowListReads.read("", "", HttpResponse(Status.NOT_FOUND, "")) mustBe Right(false)
       }
     }
 
     "should return UnexpectedDownstreamError" - {
 
-      s"when status is anything else" in {
-        UserAllowListReads.read("", "", HttpResponse(Status.INTERNAL_SERVER_ERROR, "")) mustBe Left(UnexpectedDownstreamResponseError)
+      "when status is anything else" in {
+        BetaAllowListReads.read("", "", HttpResponse(Status.INTERNAL_SERVER_ERROR, "")) mustBe Left(UnexpectedDownstreamResponseError)
       }
     }
   }

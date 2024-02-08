@@ -59,8 +59,6 @@ class AppConfig @Inject()(servicesConfig: ServicesConfig, configuration: Configu
   lazy val exciseGuidance: String = configuration.get[String]("urls.exciseGuidance")
   lazy val signUpBetaFormUrl: String = configuration.get[String]("urls.signupBetaForm")
 
-  lazy val findCommodityCodeUrl: String = configuration.get[String]("urls.findCommodityCode")
-
   private lazy val feedbackFrontendHost: String = configuration.get[String]("feedback-frontend.host")
   lazy val feedbackFrontendSurveyUrl: String = s"$feedbackFrontendHost/feedback/$deskproName/beta"
 
@@ -80,15 +78,7 @@ class AppConfig @Inject()(servicesConfig: ServicesConfig, configuration: Configu
 
   private def emcsTfeService: String = servicesConfig.baseUrl("emcs-tfe")
 
-  private def userAllowListService: String = servicesConfig.baseUrl("user-allow-list")
-
   def emcsTfeBaseUrl: String = s"$emcsTfeService/emcs-tfe"
-
-  def userAllowListBaseUrl: String = s"$userAllowListService/user-allow-list"
-
-  def allowListEnabled: Boolean = isEnabled(AllowListEnabled)
-
-  def internalAuthToken: String = configuration.get[String]("internal-auth.token")
 
   private def traderKnownFactsReferenceDataService: String =
     if (isEnabled(StubGetTraderKnownFacts)) {
@@ -116,12 +106,14 @@ class AppConfig @Inject()(servicesConfig: ServicesConfig, configuration: Configu
   lazy val euCustomsOfficeCodesUrl = "https://ec.europa.eu/taxation_customs/dds2/rd/rd_home.jsp?Lang=en"
   lazy val gbCustomsOfficeCodesUrl = "https://www.gov.uk/government/publications/uk-customs-office-codes-for-data-element-512-of-the-customs-declaration-service"
 
-  lazy val wineGrowingZoneHintUrl: String = configuration.get[String]("urls.wineGrowingZoneHint")
-
   lazy val cacheTtl: Int = configuration.get[Int]("mongodb.timeToLiveInSeconds")
 
   def destinationOfficeSuffix: String = configuration.get[String]("constants.destinationOfficeSuffix")
 
   lazy val earliestDispatchDate: LocalDate = LocalDate.parse(configuration.get[String]("constants.earliestDispatchDate"))
   lazy val earliestInvoiceDate: LocalDate = LocalDate.parse(configuration.get[String]("constants.earliestInvoiceDate"))
+
+  def betaAllowListCheckingEnabled: Boolean = isEnabled(CheckBetaAllowList)
+
+  def betaCheckServiceName: String = configuration.get[String]("beta.serviceName")
 }

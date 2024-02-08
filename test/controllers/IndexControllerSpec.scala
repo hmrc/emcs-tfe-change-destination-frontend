@@ -54,7 +54,7 @@ class IndexControllerSpec extends SpecBase with MockPreDraftService with MockUse
       new FakeDataRetrievalAction(userAnswers, Some(testMinTraderKnownFacts)),
       new FakeMovementAction(maxGetMovementResponse),
       fakeAuthAction,
-      fakeUserAllowListAction,
+      fakeBetaAllowListAction,
       messagesControllerComponents,
       formProvider,
       view

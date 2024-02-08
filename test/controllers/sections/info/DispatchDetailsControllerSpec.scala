@@ -62,7 +62,7 @@ class DispatchDetailsControllerSpec extends SpecBase with MockUserAnswersService
       mockUserAnswersService,
       Helpers.stubMessagesControllerComponents(),
       view,
-      fakeUserAllowListAction
+      fakeBetaAllowListAction
     )
   }
 

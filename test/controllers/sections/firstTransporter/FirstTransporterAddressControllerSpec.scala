@@ -55,7 +55,7 @@ class FirstTransporterAddressControllerSpec extends SpecBase with MockUserAnswer
       new FakeDataRetrievalAction(optUserAnswers, Some(testMinTraderKnownFacts)),
       dataRequiredAction,
       new FakeMovementAction(maxGetMovementResponse.copy(firstTransporterTrader = None)),
-      fakeUserAllowListAction,
+      fakeBetaAllowListAction,
       new AddressFormProvider(),
       messagesControllerComponents,
       view

@@ -14,15 +14,17 @@
  * limitations under the License.
  */
 
-package models.requests
+package controllers.actions
 
-import play.api.libs.json.{Json, Writes}
+import fixtures.BaseFixtures
+import models.requests.UserRequest
+import play.api.mvc._
 
-final case class CheckUserAllowListRequest(ern: String)
+import javax.inject.Inject
+import scala.concurrent.{ExecutionContext, Future}
 
-object CheckUserAllowListRequest {
+class FakeBetaAllowListAction @Inject()() extends BetaAllowListAction with BaseFixtures {
+  override protected def refine[A](request: UserRequest[A]): Future[Either[Result, UserRequest[A]]] = Future.successful(Right(request))
 
-  implicit val writes: Writes[CheckUserAllowListRequest] = Writes { model =>
-    Json.obj("value" -> model.ern)
-  }
+  override protected def executionContext: ExecutionContext = scala.concurrent.ExecutionContext.Implicits.global
 }

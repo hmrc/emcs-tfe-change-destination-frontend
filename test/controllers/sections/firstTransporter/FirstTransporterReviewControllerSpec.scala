@@ -52,7 +52,7 @@ class FirstTransporterReviewControllerSpec extends SpecBase with MockUserAnswers
     lazy val controller = new FirstTransporterReviewController(
       messagesApi,
       mockUserAnswersService,
-      fakeUserAllowListAction,
+      fakeBetaAllowListAction,
       new FakeFirstTransporterNavigator(testOnwardRoute),
       fakeAuthAction,
       new FakeDataRetrievalAction(userAnswers, Some(testMinTraderKnownFacts)),

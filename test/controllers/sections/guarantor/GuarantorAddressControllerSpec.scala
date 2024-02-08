@@ -58,7 +58,7 @@ class GuarantorAddressControllerSpec extends SpecBase with MockUserAnswersServic
       new FakeDataRetrievalAction(optUserAnswers, Some(testMinTraderKnownFacts)),
       dataRequiredAction,
       new FakeMovementAction(maxGetMovementResponse.copy(movementGuarantee = MovementGuaranteeModel(NoGuarantor, None))),
-      fakeUserAllowListAction,
+      fakeBetaAllowListAction,
       new AddressFormProvider(),
       messagesControllerComponents,
       view

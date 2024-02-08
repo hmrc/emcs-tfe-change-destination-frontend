@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,50 +17,46 @@
 package controllers.actions
 
 import base.SpecBase
-import config.AppConfig
-import mocks.connectors.MockUserAllowListConnector
-import models.requests.{CheckUserAllowListRequest, UserRequest}
+import mocks.config.MockAppConfig
+import mocks.connectors.MockBetaAllowListConnector
+import models.requests.UserRequest
 import models.response.{ErrorResponse, UnexpectedDownstreamResponseError}
 import org.scalamock.scalatest.MockFactory
-import play.api.mvc.{AnyContentAsEmpty, Result}
+import play.api.mvc.Result
 import play.api.mvc.Results.Ok
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import uk.gov.hmrc.http.HeaderCarrier
 
-import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 
-class UserAllowListActionSpec extends SpecBase with MockFactory with MockUserAllowListConnector {
+class BetaAllowListActionSpec extends SpecBase with MockFactory with MockBetaAllowListConnector with MockAppConfig {
 
-  implicit val hc: HeaderCarrier = HeaderCarrier()
-  implicit lazy val request: UserRequest[AnyContentAsEmpty.type] = UserRequest(FakeRequest(), testErn, testInternalId, testCredId, testSessionId, false)
+  implicit val ec: ExecutionContext = app.injector.instanceOf[ExecutionContext]
 
-  lazy val mockAppConfig = mock[AppConfig]
-
-  lazy val userAllowListAction = new UserAllowListActionImpl(
-    userAllowListConnector = mockUserAllowListConnector,
+  lazy val betaAllowListAction = new BetaAllowListActionImpl(
+    betaAllowListConnector = mockBetaAllowListConnector,
     errorHandler = errorHandler,
     config = mockAppConfig
   )
 
   class Harness(enabled: Boolean, connectorResponse: Either[ErrorResponse, Boolean]) {
 
-    (() => mockAppConfig.allowListEnabled).expects().returns(enabled).anyNumberOfTimes()
-
-    if (enabled) {
-      MockUserAllowListConnector.check(CheckUserAllowListRequest(testErn))
+    if(enabled) {
+      MockAppConfig.betaAllowListCheckingEnabled.returns(true)
+      MockBetaAllowListConnector.check(testErn)
         .returns(Future.successful(connectorResponse))
+    } else {
+      MockAppConfig.betaAllowListCheckingEnabled.returns(false)
     }
 
-    val result: Future[Result] = userAllowListAction.invokeBlock(request, { _: UserRequest[_] =>
+    val result: Future[Result] = betaAllowListAction.invokeBlock(userRequest(FakeRequest()), { _: UserRequest[_] =>
       Future.successful(Ok)
     })
   }
 
-  "UserAllowListAction" - {
+  "BetaAllowListAction" - {
 
-    "when the allow list feature is enabled" - {
+    "when the beta allow list checking feature is enabled" - {
 
       "when the connector returns true (on the list)" - {
 
@@ -71,20 +67,20 @@ class UserAllowListActionSpec extends SpecBase with MockFactory with MockUserAll
 
       "when the connector returns false (NOT on the list)" - {
 
-        "must execute the supplied block" in new Harness(enabled = true, connectorResponse = Right(false)) {
+        "must return SEE_OTHER and redirect to the not on beta list page" in new Harness(enabled = true, connectorResponse = Right(false)) {
           status(result) mustBe SEE_OTHER
           redirectLocation(result) mustBe Some(controllers.error.routes.ErrorController.notOnPrivateBeta().url)
         }
       }
 
       "when the connector returns a Left" - {
-        "must execute the supplied block" in new Harness(enabled = true, connectorResponse = Left(UnexpectedDownstreamResponseError)) {
+        "render ISE" in new Harness(enabled = true, connectorResponse = Left(UnexpectedDownstreamResponseError)) {
           status(result) mustBe INTERNAL_SERVER_ERROR
         }
       }
     }
 
-    "when the allow list feature is disabled" - {
+    "when the beta allow list checking feature is disabled" - {
 
       "must execute the supplied block" in new Harness(enabled = false, connectorResponse = Right(false)) {
         status(result) mustBe OK
