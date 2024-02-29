@@ -54,7 +54,7 @@ object UpdateEadEsadModel extends ModelConstructorHelpers with Logging {
       administrativeReferenceCode = request.arc,
       journeyTime = whenSectionChanged(JourneyTypeReviewPage)(journeyTimeValue).flatten,
       changedTransportArrangement = whenSectionChanged(TransportArrangerReviewPage)(mandatoryPage(TransportArrangerPage)),
-      sequenceNumber = Some(request.movementDetails.sequenceNumber.toString),
+      sequenceNumber = None, // As per DDNEA rules, the sequence number should be added to the XML payload only after it has passed the RIM validation
       invoiceDate = whenSectionChanged(MovementReviewAnswersPage)(mandatoryPage(InvoiceDetailsPage).date.toString),
       invoiceNumber = whenSectionChanged(MovementReviewAnswersPage)(mandatoryPage(InvoiceDetailsPage).reference),
       transportModeCode = whenSectionChanged(JourneyTypeReviewPage)(mandatoryPage(HowMovementTransportedPage).toString),
