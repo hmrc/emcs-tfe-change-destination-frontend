@@ -40,7 +40,7 @@ object SubmitChangeDestinationModel extends ModelConstructorHelpers {
       newTransportArrangerTrader = whenSectionChanged(TransportArrangerReviewPage)(TraderModel.applyTransportArranger),
       updateEadEsad = UpdateEadEsadModel.apply,
       destinationChanged = DestinationChangedModel.apply,
-      newTransporterTrader = whenSectionChanged(FirstTransporterReviewPage)(TraderModel.applyFirstTransporter),
+      newTransporterTrader = Some(TraderModel.applyFirstTransporter),
       transportDetails = whenSectionChanged(TransportUnitsReviewPage)(TransportDetailsModel.apply)
     )
 }
