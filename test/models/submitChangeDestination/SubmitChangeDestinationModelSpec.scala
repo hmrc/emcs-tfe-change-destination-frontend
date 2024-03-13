@@ -117,8 +117,7 @@ class SubmitChangeDestinationModelSpec extends SpecBase with SubmitChangeDestina
         SubmitChangeDestinationModel.apply mustBe maxSubmitChangeDestination.copy(
           destinationChanged = maxSubmitChangeDestination.destinationChanged.copy(
             movementGuarantee = None
-          ),
-          newTransporterTrader = None
+          )
         )
       }
 

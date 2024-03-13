@@ -41,6 +41,21 @@ import play.api.libs.json.{JsValue, Json}
 
 trait SubmitChangeDestinationFixtures extends GetMovementResponseFixtures { _: BaseFixtures =>
 
+  val existingFirstTransporter = TraderModel(
+    traderExciseNumber = None,
+    traderName = maxGetMovementResponse.firstTransporterTrader.flatMap(_.traderName),
+    address = maxGetMovementResponse.firstTransporterTrader.flatMap(_.address.map { address =>
+      AddressModel(
+        address.streetNumber,
+        address.street,
+        address.postcode,
+        address.city
+      )
+    }),
+    vatNumber = maxGetMovementResponse.firstTransporterTrader.flatMap(_.vatNumber),
+    eoriNumber = None
+  )
+
   val newFirstTransporter = TraderModel(
     traderExciseNumber = None,
     traderName = Some("first name"),
@@ -142,7 +157,7 @@ trait SubmitChangeDestinationFixtures extends GetMovementResponseFixtures { _: B
       newTransportArrangerTrader = None,
       updateEadEsad = minUpdateEadEsad,
       destinationChanged = minDestinationChanged,
-      newTransporterTrader = None,
+      newTransporterTrader = Some(existingFirstTransporter),
       transportDetails = None
     )
 
