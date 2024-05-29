@@ -90,6 +90,18 @@ class BaseNavigationControllerSpec extends SpecBase with GuiceOneAppPerSuite wit
 
           redirectLocation(answer) mustBe Some(testOnwardRoute.url)
         }
+
+        "when IE801 value contains the same answer" in new Test {
+
+          val newUserAnswers: UserAnswers = emptyUserAnswers.set(page2, "IE801 answer")
+
+          MockUserAnswersService.set().returns(Future.successful(newUserAnswers))
+
+          val answer: Future[Result] =
+            testController.saveAndRedirect(page2, "IE801 answer", emptyUserAnswers, NormalMode)
+
+          redirectLocation(answer) mustBe Some(testOnwardRoute.url)
+        }
       }
 
       "must only redirect" - {
