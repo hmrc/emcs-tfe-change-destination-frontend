@@ -17,37 +17,37 @@
 package forms.sections.consignee
 
 import forms.mappings.Mappings
-import models.sections.consignee.{ConsigneeExportVat, ConsigneeExportVatType}
+import models.sections.consignee.{ConsigneeExportInformation, ConsigneeExportInformationType}
 import play.api.data.Form
 import play.api.data.Forms.mapping
 import uk.gov.voa.play.form.ConditionalMappings.mandatoryIfEqual
 
 import javax.inject.Inject
 
-class ConsigneeExportVatFormProvider @Inject() extends Mappings {
+class ConsigneeExportInformationFormProvider @Inject() extends Mappings {
 
   private val VAT_NUMBER_MAX_LENGTH = 14
   private val EORI_NUMBER_MAX_LENGTH = 17
 
-  def apply(): Form[ConsigneeExportVat] = {
+  def apply(): Form[ConsigneeExportInformation] = {
     Form(
       mapping(
-        "exportType" -> enumerable[ConsigneeExportVatType]("consigneeExportVat.consigneeExportType.error.required"),
+        "exportType" -> enumerable[ConsigneeExportInformationType]("consigneeExportInformation.consigneeExportType.error.required"),
         "vatNumber" ->
           mandatoryIfEqual(
             fieldName = "exportType",
             value = "yesVatNumber",
-            mapping = text("consigneeExportVat.vatNumber.error.required")
-              .verifying(firstError(maxLength(VAT_NUMBER_MAX_LENGTH, s"consigneeExportVat.vatNumber.error.length")))
+            mapping = text("consigneeExportInformation.vatNumber.error.required")
+              .verifying(firstError(maxLength(VAT_NUMBER_MAX_LENGTH, s"consigneeExportInformation.vatNumber.error.length")))
           ),
         "eoriNumber" ->
           mandatoryIfEqual(
             fieldName = "exportType",
             value = "yesEoriNumber",
-            mapping = text("consigneeExportVat.eoriNumber.error.required")
-            .verifying(firstError(maxLength(EORI_NUMBER_MAX_LENGTH, s"consigneeExportVat.eoriNumber.error.length")))
+            mapping = text("consigneeExportInformation.eoriNumber.error.required")
+            .verifying(firstError(maxLength(EORI_NUMBER_MAX_LENGTH, s"consigneeExportInformation.eoriNumber.error.length")))
           )
-      )(ConsigneeExportVat.apply)(ConsigneeExportVat.unapply)
+      )(ConsigneeExportInformation.apply)(ConsigneeExportInformation.unapply)
     )
   }
 }

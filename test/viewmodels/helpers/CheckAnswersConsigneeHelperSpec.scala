@@ -159,7 +159,7 @@ class CheckAnswersConsigneeHelperSpec extends SpecBase {
 
         val expectedSummaryListRows: Seq[SummaryListRow] = Seq(
           ConsigneeBusinessNameSummary.row(true)(fakeDataRequest, msgs),
-          ConsigneeExportVatSummary.row(true)(fakeDataRequest, msgs),
+          ConsigneeExportInformationSummary.row(true)(fakeDataRequest, msgs),
           ConsigneeAddressSummary.row(true)(fakeDataRequest, msgs)
         ).flatten
 
@@ -170,7 +170,7 @@ class CheckAnswersConsigneeHelperSpec extends SpecBase {
 
         val expectedSummaryListRows: Seq[SummaryListRow] = Seq(
           ConsigneeBusinessNameSummary.row(true)(fakeDataRequest, msgs),
-          ConsigneeExportVatSummary.row(true)(fakeDataRequest, msgs),
+          ConsigneeExportInformationSummary.row(true)(fakeDataRequest, msgs),
           ConsigneeAddressSummary.row(true)(fakeDataRequest, msgs)
         ).flatten
 

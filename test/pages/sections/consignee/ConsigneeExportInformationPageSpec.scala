@@ -18,42 +18,42 @@ package pages.sections.consignee
 
 import base.SpecBase
 import models.response.emcsTfe.TraderModel
-import models.sections.consignee.{ConsigneeExportVat, ConsigneeExportVatType}
+import models.sections.consignee.{ConsigneeExportInformation, ConsigneeExportInformationType}
 import play.api.test.FakeRequest
 
-class ConsigneeExportVatPageSpec extends SpecBase {
+class ConsigneeExportInformationPageSpec extends SpecBase {
 
   val consignee: TraderModel = maxGetMovementResponse.consigneeTrader.get
 
   "getValueFromIE801" - {
-    "must return Some(ConsigneeExportVat)" - {
+    "must return Some(ConsigneeExportInformation)" - {
       "when Consignee exists and has a VAT number" in {
-        ConsigneeExportVatPage.getValueFromIE801(dataRequest(FakeRequest(),
+        ConsigneeExportInformationPage.getValueFromIE801(dataRequest(FakeRequest(),
           movementDetails = maxGetMovementResponse.copy(consigneeTrader = Some(consignee.copy(vatNumber = Some("123456789"), eoriNumber = None))))) mustBe Some(
-          ConsigneeExportVat(ConsigneeExportVatType.YesVatNumber, Some("123456789"), None)
+          ConsigneeExportInformation(ConsigneeExportInformationType.YesVatNumber, Some("123456789"), None)
         )
       }
     }
 
-    "must return Some(ConsigneeExportVat(YesEoriNumber)" - {
+    "must return Some(ConsigneeExportInformation(YesEoriNumber)" - {
       "when Consignee exists and has a EORI number" in {
-        ConsigneeExportVatPage.getValueFromIE801(dataRequest(FakeRequest())) mustBe Some(
-          ConsigneeExportVat(ConsigneeExportVatType.YesEoriNumber, None, consignee.eoriNumber)
+        ConsigneeExportInformationPage.getValueFromIE801(dataRequest(FakeRequest())) mustBe Some(
+          ConsigneeExportInformation(ConsigneeExportInformationType.YesEoriNumber, None, consignee.eoriNumber)
         )
       }
     }
 
-    "must return Some(ConsigneeExportVat(No))" - {
+    "must return Some(ConsigneeExportInformation(No))" - {
       "when Consignee exists and has neither a VAT nor a EORI" in {
-        ConsigneeExportVatPage.getValueFromIE801(dataRequest(FakeRequest(),
-          movementDetails = maxGetMovementResponse.copy(consigneeTrader = Some(consignee.copy(vatNumber = None, eoriNumber = None))))) mustBe Some(ConsigneeExportVat(ConsigneeExportVatType.No, None, None))
+        ConsigneeExportInformationPage.getValueFromIE801(dataRequest(FakeRequest(),
+          movementDetails = maxGetMovementResponse.copy(consigneeTrader = Some(consignee.copy(vatNumber = None, eoriNumber = None))))) mustBe Some(ConsigneeExportInformation(ConsigneeExportInformationType.No, None, None))
       }
     }
 
     "must return None" - {
 
       "when Consignee doesn't exist" in {
-        ConsigneeExportVatPage.getValueFromIE801(dataRequest(
+        ConsigneeExportInformationPage.getValueFromIE801(dataRequest(
           FakeRequest(),
           movementDetails = maxGetMovementResponse.copy(consigneeTrader = None)
         )) mustBe None

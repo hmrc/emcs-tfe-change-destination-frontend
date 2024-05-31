@@ -17,7 +17,6 @@
 package models.submitChangeDestination
 
 import models.requests.DataRequest
-import pages.sections.firstTransporter.FirstTransporterReviewPage
 import pages.sections.transportArranger.TransportArrangerReviewPage
 import pages.sections.transportUnit.TransportUnitsReviewPage
 import play.api.libs.json.{Json, OFormat}

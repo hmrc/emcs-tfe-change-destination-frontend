@@ -16,13 +16,13 @@
 
 package fixtures
 
-import models.sections.consignee.ConsigneeExportVat
-import models.sections.consignee.ConsigneeExportVatType.{No, YesEoriNumber, YesVatNumber}
+import models.sections.consignee.ConsigneeExportInformation
+import models.sections.consignee.ConsigneeExportInformationType.{No, YesEoriNumber, YesVatNumber}
 import play.api.libs.json.{JsObject, Json}
 
-trait ConsigneeExportVatFixtures {
+trait ConsigneeExportInformationFixtures {
 
-  val exportTypeVatModel: ConsigneeExportVat = ConsigneeExportVat(
+  val exportTypeVatModel: ConsigneeExportInformation = ConsigneeExportInformation(
     exportType = YesVatNumber,
     vatNumber = Some("1234567890"),
     eoriNumber = None
@@ -33,7 +33,7 @@ trait ConsigneeExportVatFixtures {
     "vatNumber" -> "1234567890"
   )
 
-  val exportTypeEoriModel: ConsigneeExportVat = ConsigneeExportVat(
+  val exportTypeEoriModel: ConsigneeExportInformation = ConsigneeExportInformation(
     exportType = YesEoriNumber,
     vatNumber = None,
     eoriNumber = Some("1234567890")
@@ -44,7 +44,7 @@ trait ConsigneeExportVatFixtures {
     "eoriNumber" -> "1234567890"
   )
 
-  val exportTypeNoModel: ConsigneeExportVat = ConsigneeExportVat(
+  val exportTypeNoModel: ConsigneeExportInformation = ConsigneeExportInformation(
     exportType = No,
     vatNumber = None,
     eoriNumber = None

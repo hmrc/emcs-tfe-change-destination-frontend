@@ -18,7 +18,7 @@ package fixtures.messages.sections.consignee
 
 import fixtures.messages.{BaseEnglish, BaseMessages, i18n}
 
-object ConsigneeExportVatMessages {
+object ConsigneeExportInformationMessages {
 
   sealed trait ViewMessages extends BaseMessages { _: i18n =>
     val title = titleHelper("Do you know the VAT or EORI number of the person representing the consignor at the office of export?")

@@ -29,23 +29,23 @@ import uk.gov.hmrc.govukfrontend.views.viewmodels.input.Input
 import uk.gov.hmrc.govukfrontend.views.viewmodels.label.Label
 import uk.gov.hmrc.govukfrontend.views.viewmodels.radios.RadioItem
 
-case class ConsigneeExportVat(exportType: ConsigneeExportVatType, vatNumber: Option[String], eoriNumber: Option[String])
+case class ConsigneeExportInformation(exportType: ConsigneeExportInformationType, vatNumber: Option[String], eoriNumber: Option[String])
 
-object ConsigneeExportVat {
-  implicit val format: OFormat[ConsigneeExportVat] = Json.format[ConsigneeExportVat]
+object ConsigneeExportInformation {
+  implicit val format: OFormat[ConsigneeExportInformation] = Json.format[ConsigneeExportInformation]
 }
 
-sealed trait ConsigneeExportVatType
+sealed trait ConsigneeExportInformationType
 
-object ConsigneeExportVatType extends Enumerable.Implicits {
+object ConsigneeExportInformationType extends Enumerable.Implicits {
 
-  case object YesVatNumber extends WithName("yesVatNumber") with ConsigneeExportVatType
+  case object YesVatNumber extends WithName("yesVatNumber") with ConsigneeExportInformationType
 
-  case object YesEoriNumber extends WithName("yesEoriNumber") with ConsigneeExportVatType
+  case object YesEoriNumber extends WithName("yesEoriNumber") with ConsigneeExportInformationType
 
-  case object No extends WithName("no") with ConsigneeExportVatType
+  case object No extends WithName("no") with ConsigneeExportInformationType
 
-  val values: Seq[ConsigneeExportVatType] = Seq(YesVatNumber, YesEoriNumber, No)
+  val values: Seq[ConsigneeExportInformationType] = Seq(YesVatNumber, YesEoriNumber, No)
 
   def options(form: Form[_])(implicit messages: Messages): Seq[RadioItem] = {
 
@@ -58,7 +58,7 @@ object ConsigneeExportVatType extends Enumerable.Implicits {
           id = fieldName,
           value = form(fieldName).value,
           name = fieldName,
-          label = Label(content = Text(messages(s"consigneeExportVat.$fieldName.label")), isPageHeading = false),
+          label = Label(content = Text(messages(s"consigneeExportInformation.$fieldName.label")), isPageHeading = false),
           errorMessage = {
             form.error(fieldName).flatMap { error =>
               Some(
@@ -72,7 +72,7 @@ object ConsigneeExportVatType extends Enumerable.Implicits {
     values.map {
       value =>
         RadioItem(
-          content = Text(messages(s"consigneeExportVat.${value.toString}")),
+          content = Text(messages(s"consigneeExportInformation.${value.toString}")),
           value = Some(value.toString),
           id = Some(s"value_$value"),
           conditionalHtml = value match {
@@ -84,6 +84,6 @@ object ConsigneeExportVatType extends Enumerable.Implicits {
     }
   }
 
-  implicit val enumerable: Enumerable[ConsigneeExportVatType] =
+  implicit val enumerable: Enumerable[ConsigneeExportInformationType] =
     Enumerable(values.map(v => v.toString -> v): _*)
 }

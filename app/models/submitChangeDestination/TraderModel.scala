@@ -41,8 +41,8 @@ object TraderModel extends ModelConstructorHelpers {
   def applyConsignee(implicit request: DataRequest[_]): TraderModel =
     TraderModel(
       // Consignee section has multiple entry points.
-      // If the ConsigneeExcisePage is defined, use that, otherwise use the VAT number entered on the ConsigneeExportVatPage.
-      traderExciseNumber = (request.userAnswers.get(ConsigneeExcisePage), request.userAnswers.get(ConsigneeExportVatPage).flatMap(_.vatNumber)) match {
+      // If the ConsigneeExcisePage is defined, use that, otherwise use the VAT number entered on the ConsigneeExportInformationPage.
+      traderExciseNumber = (request.userAnswers.get(ConsigneeExcisePage), request.userAnswers.get(ConsigneeExportInformationPage).flatMap(_.vatNumber)) match {
         case (Some(ern), _) => Some(ern)
         case (_, Some(ern)) => Some(ern)
         case _ => None
@@ -50,7 +50,7 @@ object TraderModel extends ModelConstructorHelpers {
       traderName = Some(mandatoryPage(ConsigneeBusinessNamePage)),
       address = Some(AddressModel.fromUserAddress(mandatoryPage(ConsigneeAddressPage))),
       vatNumber = None,
-      eoriNumber = request.userAnswers.get(ConsigneeExportVatPage).flatMap(_.eoriNumber)
+      eoriNumber = request.userAnswers.get(ConsigneeExportInformationPage).flatMap(_.eoriNumber)
     )
 
   def applyConsignor(implicit request: DataRequest[_]): TraderModel = {
@@ -158,7 +158,7 @@ object TraderModel extends ModelConstructorHelpers {
           traderExciseNumber = None,
           traderName = consigneeTrader.traderName,
           address = consigneeTrader.address,
-          vatNumber = request.userAnswers.get(ConsigneeExportVatPage).flatMap(_.vatNumber),
+          vatNumber = request.userAnswers.get(ConsigneeExportInformationPage).flatMap(_.vatNumber),
           eoriNumber = None
         )
       case _ => TraderModel(

@@ -17,20 +17,20 @@
 package forms.sections.consignee
 
 import forms.behaviours.OptionFieldBehaviours
-import models.sections.consignee.ConsigneeExportVatType.{YesEoriNumber, YesVatNumber}
+import models.sections.consignee.ConsigneeExportInformationType.{YesEoriNumber, YesVatNumber}
 import play.api.data.FormError
 
-class ConsigneeExportVatFormProviderSpec extends OptionFieldBehaviours {
+class ConsigneeExportInformationFormProviderSpec extends OptionFieldBehaviours {
 
-  "ConsigneeExportVatFormProvider" - {
+  "ConsigneeExportInformationFormProvider" - {
 
-    val form = new ConsigneeExportVatFormProvider().apply()
+    val form = new ConsigneeExportInformationFormProvider().apply()
 
     "when a value is not provided" - {
 
       "must error with the expected message key" in {
         val boundForm = form.bind(Map("exportType" -> ""))
-        boundForm.errors.headOption mustBe Some(FormError("exportType", "consigneeExportVat.consigneeExportType.error.required", Seq()))
+        boundForm.errors.headOption mustBe Some(FormError("exportType", "consigneeExportInformation.consigneeExportType.error.required", Seq()))
       }
     }
 
@@ -46,7 +46,7 @@ class ConsigneeExportVatFormProviderSpec extends OptionFieldBehaviours {
           )
         )
 
-        boundForm.errors.headOption mustBe Some(FormError("vatNumber", "consigneeExportVat.vatNumber.error.required", Seq()))
+        boundForm.errors.headOption mustBe Some(FormError("vatNumber", "consigneeExportInformation.vatNumber.error.required", Seq()))
       }
 
       "when a value is too long" in {
@@ -57,7 +57,7 @@ class ConsigneeExportVatFormProviderSpec extends OptionFieldBehaviours {
           )
         )
 
-        boundForm.errors.headOption mustBe Some(FormError("vatNumber", "consigneeExportVat.vatNumber.error.length", Seq(vatNumberMaxLength)))
+        boundForm.errors.headOption mustBe Some(FormError("vatNumber", "consigneeExportInformation.vatNumber.error.length", Seq(vatNumberMaxLength)))
       }
     }
 
@@ -73,7 +73,7 @@ class ConsigneeExportVatFormProviderSpec extends OptionFieldBehaviours {
           )
         )
 
-        boundForm.errors.headOption mustBe Some(FormError("eoriNumber", "consigneeExportVat.eoriNumber.error.required", Seq()))
+        boundForm.errors.headOption mustBe Some(FormError("eoriNumber", "consigneeExportInformation.eoriNumber.error.required", Seq()))
       }
 
       "when a value is too long" in {
@@ -84,7 +84,7 @@ class ConsigneeExportVatFormProviderSpec extends OptionFieldBehaviours {
           )
         )
 
-        boundForm.errors.headOption mustBe Some(FormError("eoriNumber", "consigneeExportVat.eoriNumber.error.length", Seq(eoriNumberMaxLength)))
+        boundForm.errors.headOption mustBe Some(FormError("eoriNumber", "consigneeExportInformation.eoriNumber.error.length", Seq(eoriNumberMaxLength)))
       }
     }
 

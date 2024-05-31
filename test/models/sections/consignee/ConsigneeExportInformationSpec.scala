@@ -17,37 +17,37 @@
 package models.sections.consignee
 
 import base.SpecBase
-import fixtures.ConsigneeExportVatFixtures
+import fixtures.ConsigneeExportInformationFixtures
 import play.api.libs.json.{JsSuccess, Json}
 
-class ConsigneeExportVatSpec extends SpecBase with ConsigneeExportVatFixtures {
+class ConsigneeExportInformationSpec extends SpecBase with ConsigneeExportInformationFixtures {
 
-  "ConsigneeExportVat" - {
+  "ConsigneeExportInformation" - {
 
-    "ConsigneeExportVat with a VAT number" - {
+    "ConsigneeExportInformation with a VAT number" - {
 
       "should read from json" in {
-        Json.fromJson[ConsigneeExportVat](exportTypeVatJson) mustBe JsSuccess(exportTypeVatModel)
+        Json.fromJson[ConsigneeExportInformation](exportTypeVatJson) mustBe JsSuccess(exportTypeVatModel)
       }
       "should write to json" in {
         Json.toJson(exportTypeVatModel) mustBe exportTypeVatJson
       }
     }
 
-    "ConsigneeExportVat with an EORI number" - {
+    "ConsigneeExportInformation with an EORI number" - {
 
       "should read from json" in {
-        Json.fromJson[ConsigneeExportVat](exportTypeEoriJson) mustBe JsSuccess(exportTypeEoriModel)
+        Json.fromJson[ConsigneeExportInformation](exportTypeEoriJson) mustBe JsSuccess(exportTypeEoriModel)
       }
       "should write to json" in {
         Json.toJson(exportTypeEoriModel) mustBe exportTypeEoriJson
       }
     }
 
-    "ConsigneeExportVat with neither a VAT or EORI number" - {
+    "ConsigneeExportInformation with neither a VAT or EORI number" - {
 
       "should read from json" in {
-        Json.fromJson[ConsigneeExportVat](exportTypeNoJson) mustBe JsSuccess(exportTypeNoModel)
+        Json.fromJson[ConsigneeExportInformation](exportTypeNoJson) mustBe JsSuccess(exportTypeNoModel)
       }
       "should write to json" in {
         Json.toJson(exportTypeNoModel) mustBe exportTypeNoJson

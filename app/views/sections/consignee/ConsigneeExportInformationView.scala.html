@@ -15,7 +15,7 @@
  *@
 
 @import models.requests.DataRequest
-@import models.sections.consignee.ConsigneeExportVatType
+@import models.sections.consignee.ConsigneeExportInformationType
 @import viewmodels.LegendSize
 
 @this(
@@ -31,9 +31,9 @@
 
 @(form: Form[_], mode: Mode)(implicit request: DataRequest[_], messages: Messages)
 
-@layout(pageTitle = title(form, messages("consigneeExportVat.title")), maybeShowActiveTrader = maybeShowActiveTrader(request)) {
+@layout(pageTitle = title(form, messages("consigneeExportInformation.title")), maybeShowActiveTrader = maybeShowActiveTrader(request)) {
 
-    @formHelper(action = controllers.sections.consignee.routes.ConsigneeExportVatController.onSubmit(request.ern, request.arc, mode), 'autoComplete -> "off") {
+    @formHelper(action = controllers.sections.consignee.routes.ConsigneeExportInformationController.onSubmit(request.ern, request.arc, mode), 'autoComplete -> "off") {
 
         @if(form.errors.nonEmpty) {
             @govukErrorSummary(ErrorSummaryViewModel(form,  errorLinkOverrides = Map("value" -> "value_0")))
@@ -44,8 +44,8 @@
         @govukRadios(
             RadiosViewModel(
                 field  = form("exportType"),
-                legend = LegendViewModel(Text(messages("consigneeExportVat.heading"))).asPageHeading(LegendSize.Large),
-                items  = ConsigneeExportVatType.options(form)
+                legend = LegendViewModel(Text(messages("consigneeExportInformation.heading"))).asPageHeading(LegendSize.Large),
+                items  = ConsigneeExportInformationType.options(form)
             )
         )
 

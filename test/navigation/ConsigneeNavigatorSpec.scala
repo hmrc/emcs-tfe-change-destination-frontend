@@ -19,8 +19,8 @@ package navigation
 import base.SpecBase
 import controllers.routes
 import models.requests.DataRequest
-import models.sections.consignee.ConsigneeExportVat
-import models.sections.consignee.ConsigneeExportVatType.{No, YesEoriNumber, YesVatNumber}
+import models.sections.consignee.ConsigneeExportInformation
+import models.sections.consignee.ConsigneeExportInformationType.{No, YesEoriNumber, YesVatNumber}
 import models.{CheckMode, NormalMode, ReviewMode}
 import pages.Page
 import pages.sections.consignee._
@@ -83,7 +83,7 @@ class ConsigneeNavigatorSpec extends SpecBase {
               .set(ConsigneeExportPage, true)
 
             navigator.nextPage(ConsigneeExportPage, NormalMode, userAnswers) mustBe
-              controllers.sections.consignee.routes.ConsigneeExportVatController.onPageLoad(userAnswers.ern, userAnswers.arc, NormalMode)
+              controllers.sections.consignee.routes.ConsigneeExportInformationController.onPageLoad(userAnswers.ern, userAnswers.arc, NormalMode)
           }
         }
 
@@ -105,32 +105,32 @@ class ConsigneeNavigatorSpec extends SpecBase {
           controllers.sections.consignee.routes.ConsigneeBusinessNameController.onPageLoad(testErn, testArc, NormalMode)
       }
 
-      "for the ConsigneeExportVatPage" - {
+      "for the ConsigneeExportInformationPage" - {
 
         "must go to CAM-NEE03 business name page" - {
 
           "when YES - VAT Number is answered'" in {
             val userAnswers = emptyUserAnswers
-              .set(ConsigneeExportVatPage, ConsigneeExportVat(YesVatNumber, Some("vatnumber"), None))
+              .set(ConsigneeExportInformationPage, ConsigneeExportInformation(YesVatNumber, Some("vatnumber"), None))
 
-            navigator.nextPage(ConsigneeExportVatPage, NormalMode, userAnswers) mustBe
+            navigator.nextPage(ConsigneeExportInformationPage, NormalMode, userAnswers) mustBe
               controllers.sections.consignee.routes.ConsigneeBusinessNameController.onPageLoad(testErn, testArc, NormalMode)
           }
 
           "when YES - EORI Number is answered'" in {
             val userAnswers = emptyUserAnswers
-              .set(ConsigneeExportVatPage, ConsigneeExportVat(YesEoriNumber, None, Some("eorinumber")))
+              .set(ConsigneeExportInformationPage, ConsigneeExportInformation(YesEoriNumber, None, Some("eorinumber")))
 
-            navigator.nextPage(ConsigneeExportVatPage, NormalMode, userAnswers) mustBe
+            navigator.nextPage(ConsigneeExportInformationPage, NormalMode, userAnswers) mustBe
               controllers.sections.consignee.routes.ConsigneeBusinessNameController.onPageLoad(testErn, testArc, NormalMode)
           }
 
 
           "when NO is answered'" in {
             val userAnswers = emptyUserAnswers
-              .set(ConsigneeExportVatPage, ConsigneeExportVat(No, None, None))
+              .set(ConsigneeExportInformationPage, ConsigneeExportInformation(No, None, None))
 
-            navigator.nextPage(ConsigneeExportVatPage, NormalMode, userAnswers) mustBe
+            navigator.nextPage(ConsigneeExportInformationPage, NormalMode, userAnswers) mustBe
               controllers.sections.consignee.routes.ConsigneeBusinessNameController.onPageLoad(testErn, testArc, NormalMode)
           }
         }

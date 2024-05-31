@@ -18,7 +18,7 @@ package pages.sections.consignee
 
 import base.SpecBase
 import models.requests.DataRequest
-import models.sections.consignee.{ConsigneeExportVat, ConsigneeExportVatType}
+import models.sections.consignee.{ConsigneeExportInformation, ConsigneeExportInformationType}
 import models.{Enumerable, ExemptOrganisationDetailsModel, UserAddress}
 import play.api.test.FakeRequest
 
@@ -29,7 +29,7 @@ class ConsigneeSectionSpec extends SpecBase with Enumerable.Implicits {
         implicit val dr: DataRequest[_] = dataRequest(FakeRequest(),
           emptyUserAnswers
             .set(ConsigneeExportPage, true)
-            .set(ConsigneeExportVatPage, ConsigneeExportVat(ConsigneeExportVatType.No, None, None))
+            .set(ConsigneeExportInformationPage, ConsigneeExportInformation(ConsigneeExportInformationType.No, None, None))
             .set(ConsigneeBusinessNamePage, "")
             .set(ConsigneeAddressPage, UserAddress(None, "", "", ""))
         )
@@ -111,7 +111,7 @@ class ConsigneeSectionSpec extends SpecBase with Enumerable.Implicits {
         ConsigneeExemptOrganisationPage -> emptyUserAnswers.set(ConsigneeExemptOrganisationPage, ExemptOrganisationDetailsModel("member state changed", "certificate serial number changed")),
         ConsigneeBusinessNamePage -> emptyUserAnswers.set(ConsigneeBusinessNamePage, "business name changed"),
         ConsigneeAddressPage -> emptyUserAnswers.set(ConsigneeAddressPage, testUserAddress),
-        ConsigneeExportVatPage -> emptyUserAnswers.set(ConsigneeExportVatPage, ConsigneeExportVat(ConsigneeExportVatType.YesVatNumber, Some("vat number changed"), None))
+        ConsigneeExportInformationPage -> emptyUserAnswers.set(ConsigneeExportInformationPage, ConsigneeExportInformation(ConsigneeExportInformationType.YesVatNumber, Some("vat number changed"), None))
       ).foreach { pageToUserAnswers =>
 
         s"when the answer for ${pageToUserAnswers._1} has changed" in {
@@ -130,7 +130,7 @@ class ConsigneeSectionSpec extends SpecBase with Enumerable.Implicits {
           .set(ConsigneeExemptOrganisationPage, ExemptOrganisationDetailsModel(maxGetMovementResponse.memberStateCode.get, maxGetMovementResponse.serialNumberOfCertificateOfExemption.get))
           .set(ConsigneeBusinessNamePage, maxGetMovementResponse.consigneeTrader.get.traderName.get)
           .set(ConsigneeAddressPage, maxGetMovementResponse.consigneeTrader.get.address.map(UserAddress.userAddressFromTraderAddress).get)
-          .set(ConsigneeExportVatPage, ConsigneeExportVat(ConsigneeExportVatType.YesEoriNumber, None, Some(maxGetMovementResponse.consigneeTrader.get.eoriNumber.get)))
+          .set(ConsigneeExportInformationPage, ConsigneeExportInformation(ConsigneeExportInformationType.YesEoriNumber, None, Some(maxGetMovementResponse.consigneeTrader.get.eoriNumber.get)))
 
         ConsigneeSection.hasConsigneeChanged(dataRequest(FakeRequest(), userAnswers)) mustBe false
       }

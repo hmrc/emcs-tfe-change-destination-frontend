@@ -18,27 +18,27 @@ package pages.sections.consignee
 
 import models.requests.DataRequest
 import models.response.emcsTfe.TraderModel
-import models.sections.consignee.{ConsigneeExportVat, ConsigneeExportVatType}
+import models.sections.consignee.{ConsigneeExportInformation, ConsigneeExportInformationType}
 import models.sections.info.ChangeType.ChangeConsignee
 import pages.QuestionPage
 import pages.sections.info.ChangeTypePage
 import play.api.libs.json.JsPath
 
-case object ConsigneeExportVatPage extends QuestionPage[ConsigneeExportVat] {
-  override val toString: String = "exportVatOrEori"
+case object ConsigneeExportInformationPage extends QuestionPage[ConsigneeExportInformation] {
+  override val toString: String = "exportInformation"
   override val path: JsPath = ConsigneeSection.path \ toString
 
-  override def getValueFromIE801(implicit request: DataRequest[_]): Option[ConsigneeExportVat] =
+  override def getValueFromIE801(implicit request: DataRequest[_]): Option[ConsigneeExportInformation] =
     request.userAnswers.get(ChangeTypePage) match {
       case Some(ChangeConsignee) => None
       case _ =>
         request.movementDetails.consigneeTrader.map {
           case TraderModel(_, _, _, Some(vatNumber), _) =>
-            ConsigneeExportVat(ConsigneeExportVatType.YesVatNumber, Some(vatNumber), None)
+            ConsigneeExportInformation(ConsigneeExportInformationType.YesVatNumber, Some(vatNumber), None)
           case TraderModel(_, _, _, _, Some(eoriNumber)) =>
-            ConsigneeExportVat(ConsigneeExportVatType.YesEoriNumber, None, Some(eoriNumber))
+            ConsigneeExportInformation(ConsigneeExportInformationType.YesEoriNumber, None, Some(eoriNumber))
           case _ =>
-            ConsigneeExportVat(ConsigneeExportVatType.No, None, None)
+            ConsigneeExportInformation(ConsigneeExportInformationType.No, None, None)
         }
     }
 }

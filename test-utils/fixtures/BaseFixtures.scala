@@ -17,7 +17,7 @@
 package fixtures
 
 import models._
-import models.sections.consignee.{ConsigneeExportVat, ConsigneeExportVatType}
+import models.sections.consignee.{ConsigneeExportInformation, ConsigneeExportInformationType}
 import models.sections.info.{DispatchDetailsModel, InvoiceDetailsModel}
 import play.api.libs.json.{JsObject, Json}
 import play.api.mvc.Call
@@ -49,8 +49,8 @@ trait BaseFixtures {
   val testIndex3: Index = Index(2)
 
   val testExemptedOrganisation = ExemptOrganisationDetailsModel("AT", "12345")
-  val testEori = ConsigneeExportVat(ConsigneeExportVatType.YesEoriNumber, None, Some("1234"))
-  val testVat = ConsigneeExportVat(ConsigneeExportVatType.YesVatNumber, Some("1234"), None)
+  val testEori = ConsigneeExportInformation(ConsigneeExportInformationType.YesEoriNumber, None, Some("1234"))
+  val testVat = ConsigneeExportInformation(ConsigneeExportInformationType.YesVatNumber, Some("1234"), None)
 
   val emptyUserAnswers: UserAnswers = UserAnswers(
     ern = testErn,
@@ -113,8 +113,8 @@ trait BaseFixtures {
 
   val testConsigneeAddressJson: JsObject = Json.obj("consignee" -> Json.obj("consigneeAddress" -> testUserAddress))
   val testConsigneeExemptOrganisationJson: JsObject = Json.obj("consignee" -> Json.obj("exemptOrganisation" -> testExemptedOrganisation))
-  val testConsigneeVatJson: JsObject = Json.obj("consignee" -> Json.obj("exportVatOrEori" -> testVat))
-  val testConsigneeEoriJson: JsObject = Json.obj("consignee" -> Json.obj("exportVatOrEori" -> testEori))
+  val testConsigneeVatJson: JsObject = Json.obj("consignee" -> Json.obj("ExportInformationOrEori" -> testVat))
+  val testConsigneeEoriJson: JsObject = Json.obj("consignee" -> Json.obj("ExportInformationOrEori" -> testEori))
 
   val invoiceDetailsModel = InvoiceDetailsModel(
     reference = "somereference",

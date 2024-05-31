@@ -17,8 +17,8 @@
 package views.sections.consignee
 
 import base.SpecBase
-import fixtures.messages.sections.consignee.ConsigneeExportVatMessages
-import forms.sections.consignee.ConsigneeExportVatFormProvider
+import fixtures.messages.sections.consignee.ConsigneeExportInformationMessages
+import forms.sections.consignee.ConsigneeExportInformationFormProvider
 import models.NormalMode
 import models.requests.DataRequest
 import org.jsoup.Jsoup
@@ -26,23 +26,23 @@ import org.jsoup.nodes.Document
 import play.api.i18n.Messages
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
-import views.html.sections.consignee.ConsigneeExportVatView
+import views.html.sections.consignee.ConsigneeExportInformationView
 import views.{BaseSelectors, ViewBehaviours}
 
-class ConsigneeExportVatViewSpec extends SpecBase with ViewBehaviours {
+class ConsigneeExportInformationViewSpec extends SpecBase with ViewBehaviours {
   object Selectors extends BaseSelectors
 
-  "ConsigneeExportVatView" - {
+  "ConsigneeExportInformationView" - {
 
-    Seq(ConsigneeExportVatMessages.English).foreach { messagesForLanguage =>
+    Seq(ConsigneeExportInformationMessages.English).foreach { messagesForLanguage =>
 
       s"when being rendered in lang code of '${messagesForLanguage.lang.code}'" - {
 
         implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
         implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), emptyUserAnswers)
 
-       lazy val view = app.injector.instanceOf[ConsigneeExportVatView]
-        val form = app.injector.instanceOf[ConsigneeExportVatFormProvider].apply()
+       lazy val view = app.injector.instanceOf[ConsigneeExportInformationView]
+        val form = app.injector.instanceOf[ConsigneeExportInformationFormProvider].apply()
 
         implicit val doc: Document = Jsoup.parse(
           view(

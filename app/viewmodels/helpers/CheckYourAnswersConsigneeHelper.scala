@@ -32,7 +32,7 @@ class CheckYourAnswersConsigneeHelper @Inject()() {
         ConsigneeExportSummary.row(showActionLinks = true),
         ConsigneeBusinessNameSummary.row(showActionLinks = true),
         ConsigneeExciseSummary.row(showActionLinks = true),
-        ConsigneeExportVatSummary.row(showActionLinks = true),
+        ConsigneeExportInformationSummary.row(showActionLinks = true),
         ConsigneeExemptOrganisationSummary.row(showActionLinks = true),
         ConsigneeAddressSummary.row(showActionLinks = true)
       ).flatten

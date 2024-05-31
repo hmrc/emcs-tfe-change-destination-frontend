@@ -20,7 +20,7 @@ import base.SpecBase
 import config.AppConfig
 import controllers.actions.{FakeDataRetrievalAction, FakeMovementAction}
 import models.requests.DataRequest
-import models.sections.consignee.{ConsigneeExportVat, ConsigneeExportVatType}
+import models.sections.consignee.{ConsigneeExportInformation, ConsigneeExportInformationType}
 import models.{ExemptOrganisationDetailsModel, UserAnswers}
 import org.scalamock.scalatest.MockFactory
 import pages.DeclarationPage
@@ -96,7 +96,7 @@ class ConfirmationControllerSpec extends SpecBase with MockFactory {
         ConsigneeExemptOrganisationPage -> testUserAnswers.set(ConsigneeExemptOrganisationPage, ExemptOrganisationDetailsModel("changed", "changed")),
         ConsigneeBusinessNamePage -> testUserAnswers.set(ConsigneeBusinessNamePage, "changed"),
         ConsigneeAddressPage -> testUserAnswers.set(ConsigneeAddressPage, testUserAddress),
-        ConsigneeExportVatPage -> testUserAnswers.set(ConsigneeExportVatPage, ConsigneeExportVat(ConsigneeExportVatType.YesVatNumber, Some("changed"), None))).foreach { pageAndAnswers =>
+        ConsigneeExportInformationPage -> testUserAnswers.set(ConsigneeExportInformationPage, ConsigneeExportInformation(ConsigneeExportInformationType.YesVatNumber, Some("changed"), None))).foreach { pageAndAnswers =>
         s"must return OK and the correct view for a GET - when the answer has changed from the 801 for ${pageAndAnswers._1}" in {
           implicit val req: DataRequest[AnyContentAsEmpty.type] = dataRequest(
             request = request,

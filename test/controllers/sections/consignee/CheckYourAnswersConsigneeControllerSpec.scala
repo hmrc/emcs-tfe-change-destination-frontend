@@ -63,7 +63,7 @@ class CheckYourAnswersConsigneeControllerSpec extends SpecBase with SummaryListF
 
     val vatEoriList: Seq[SummaryListRow] = Seq(
       ConsigneeBusinessNameSummary.row(showActionLinks = true),
-      ConsigneeExportVatSummary.row(showActionLinks = true),
+      ConsigneeExportInformationSummary.row(showActionLinks = true),
       ConsigneeAddressSummary.row(showActionLinks = true)
     ).flatten
 
@@ -152,7 +152,7 @@ class CheckYourAnswersConsigneeControllerSpec extends SpecBase with SummaryListF
           emptyUserAnswers
             .set(ConsigneeAddressPage, testUserAddress)
             .set(ConsigneeBusinessNamePage, testBusinessName)
-            .set(ConsigneeExportVatPage, testEori)
+            .set(ConsigneeExportInformationPage, testEori)
             .set(DestinationTypePage, EuTaxWarehouse)
         )) {
 
@@ -177,7 +177,7 @@ class CheckYourAnswersConsigneeControllerSpec extends SpecBase with SummaryListF
           emptyUserAnswers
             .set(ConsigneeAddressPage, testUserAddress)
             .set(ConsigneeBusinessNamePage, testBusinessName)
-            .set(ConsigneeExportVatPage, testVat)
+            .set(ConsigneeExportInformationPage, testVat)
             .set(DestinationTypePage, GbTaxWarehouse)
         )) {
 
