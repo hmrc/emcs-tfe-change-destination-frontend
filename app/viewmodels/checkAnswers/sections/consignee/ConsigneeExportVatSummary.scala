@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,28 +18,28 @@ package viewmodels.checkAnswers.sections.consignee
 
 import models.CheckMode
 import models.requests.DataRequest
-import pages.sections.consignee.ConsigneeExemptOrganisationPage
+import pages.sections.consignee.ConsigneeExportVatPage
 import play.api.i18n.Messages
+import play.twirl.api.HtmlFormat
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
+object ConsigneeExportVatSummary {
 
-object ConsigneeExemptOrganisationSummary {
-
-  def row(implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] =
-    request.userAnswers.get(ConsigneeExemptOrganisationPage).map {
+  def row()(implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] =
+    request.userAnswers.get(ConsigneeExportVatPage).map {
       answer =>
 
         SummaryListRowViewModel(
-          key = "consigneeExemptOrganisation.checkYourAnswersLabel",
-          value = ValueViewModel(s"${answer.memberState}:${answer.certificateSerialNumber}"),
+          key = "consigneeExportVat.checkYourAnswersLabel",
+          value = ValueViewModel(HtmlFormat.escape(answer).toString),
           actions = Seq(
             ActionItemViewModel(
               content = "site.change",
-              href = controllers.sections.consignee.routes.ConsigneeExemptOrganisationController.onPageLoad(request.ern, request.arc, CheckMode).url,
-              id = "changeConsigneeExemptOrganisation"
-            ).withVisuallyHiddenText(messages("consigneeExemptOrganisation.change.hidden"))
+              href = controllers.sections.consignee.routes.ConsigneeExportVatController.onPageLoad(request.ern, request.arc, CheckMode).url,
+              id = "changeConsigneeExportVat"
+            ).withVisuallyHiddenText(messages("consigneeExportVat.change.hidden"))
           )
         )
     }

@@ -54,9 +54,9 @@ class CheckAnswersConsigneeHelperSpec extends SpecBase {
       "the user type is GreatBritainWarehouse" in new Setup(testGbWarehouseErn, testWarehouseDataJson) {
 
         val expectedSummaryListRows: Seq[SummaryListRow] = Seq(
-          ConsigneeBusinessNameSummary.row(true)(fakeDataRequest, msgs),
-          ConsigneeExciseSummary.row(true)(fakeDataRequest, msgs),
-          ConsigneeAddressSummary.row(true)(fakeDataRequest, msgs)
+          ConsigneeBusinessNameSummary.row,
+          ConsigneeExciseSummary.row,
+          ConsigneeAddressSummary.row
         ).flatten
 
         checkAnswersConsigneeHelper.summaryList() mustBe SummaryList(rows = expectedSummaryListRows)
@@ -65,9 +65,9 @@ class CheckAnswersConsigneeHelperSpec extends SpecBase {
       "the user type is NorthernIrelandWarehouse" in new Setup(testNiWarehouseErn, testWarehouseDataJson) {
 
         val expectedSummaryListRows: Seq[SummaryListRow] = Seq(
-          ConsigneeBusinessNameSummary.row(true)(fakeDataRequest, msgs),
-          ConsigneeExciseSummary.row(true)(fakeDataRequest, msgs),
-          ConsigneeAddressSummary.row(true)(fakeDataRequest, msgs)
+          ConsigneeBusinessNameSummary.row,
+          ConsigneeExciseSummary.row,
+          ConsigneeAddressSummary.row
         ).flatten
 
         checkAnswersConsigneeHelper.summaryList() mustBe SummaryList(rows = expectedSummaryListRows)
@@ -76,9 +76,9 @@ class CheckAnswersConsigneeHelperSpec extends SpecBase {
       "the destination type is DirectDelivery" in new Setup(testGbWarehouseErn, testWarehouseDataJson) {
 
         val expectedSummaryListRows: Seq[SummaryListRow] = Seq(
-          ConsigneeBusinessNameSummary.row(true)(fakeDataRequest, msgs),
-          ConsigneeExciseSummary.row(true)(fakeDataRequest, msgs),
-          ConsigneeAddressSummary.row(true)(fakeDataRequest, msgs)
+          ConsigneeBusinessNameSummary.row,
+          ConsigneeExciseSummary.row,
+          ConsigneeAddressSummary.row
         ).flatten
 
         checkAnswersConsigneeHelper.summaryList() mustBe SummaryList(rows = expectedSummaryListRows)
@@ -88,9 +88,9 @@ class CheckAnswersConsigneeHelperSpec extends SpecBase {
         new Setup(testGbrcWarehouseErn, testWarehouseDataJson) {
 
           val expectedSummaryListRows: Seq[SummaryListRow] = Seq(
-            ConsigneeBusinessNameSummary.row(true)(fakeDataRequest, msgs),
-            ConsigneeExciseSummary.row(true)(fakeDataRequest, msgs),
-            ConsigneeAddressSummary.row(true)(fakeDataRequest, msgs)
+            ConsigneeBusinessNameSummary.row,
+            ConsigneeExciseSummary.row,
+            ConsigneeAddressSummary.row
           ).flatten
 
           checkAnswersConsigneeHelper.summaryList() mustBe SummaryList(rows = expectedSummaryListRows)
@@ -100,9 +100,9 @@ class CheckAnswersConsigneeHelperSpec extends SpecBase {
         new Setup(testGbrcWarehouseErn, testWarehouseDataJson) {
 
           val expectedSummaryListRows: Seq[SummaryListRow] = Seq(
-            ConsigneeBusinessNameSummary.row(true)(fakeDataRequest, msgs),
-            ConsigneeExciseSummary.row(true)(fakeDataRequest, msgs),
-            ConsigneeAddressSummary.row(true)(fakeDataRequest, msgs)
+            ConsigneeBusinessNameSummary.row,
+            ConsigneeExciseSummary.row,
+            ConsigneeAddressSummary.row
           ).flatten
 
           checkAnswersConsigneeHelper.summaryList() mustBe SummaryList(rows = expectedSummaryListRows)
@@ -112,9 +112,9 @@ class CheckAnswersConsigneeHelperSpec extends SpecBase {
         new Setup(testGbrcWarehouseErn, testWarehouseDataJson) {
 
           val expectedSummaryListRows: Seq[SummaryListRow] = Seq(
-            ConsigneeBusinessNameSummary.row(true)(fakeDataRequest, msgs),
-            ConsigneeExciseSummary.row(true)(fakeDataRequest, msgs),
-            ConsigneeAddressSummary.row(true)(fakeDataRequest, msgs)
+            ConsigneeBusinessNameSummary.row,
+            ConsigneeExciseSummary.row,
+            ConsigneeAddressSummary.row
           ).flatten
 
           checkAnswersConsigneeHelper.summaryList() mustBe SummaryList(rows = expectedSummaryListRows)
@@ -124,9 +124,9 @@ class CheckAnswersConsigneeHelperSpec extends SpecBase {
         new Setup(testXircWarehouseErn, testWarehouseDataJson) {
 
           val expectedSummaryListRows: Seq[SummaryListRow] = Seq(
-            ConsigneeBusinessNameSummary.row(true)(fakeDataRequest, msgs),
-            ConsigneeExciseSummary.row(true)(fakeDataRequest, msgs),
-            ConsigneeAddressSummary.row(true)(fakeDataRequest, msgs)
+            ConsigneeBusinessNameSummary.row,
+            ConsigneeExciseSummary.row,
+            ConsigneeAddressSummary.row
           ).flatten
 
           checkAnswersConsigneeHelper.summaryList() mustBe SummaryList(rows = expectedSummaryListRows)
@@ -136,9 +136,9 @@ class CheckAnswersConsigneeHelperSpec extends SpecBase {
         new Setup(testXircWarehouseErn, testWarehouseDataJson) {
 
           val expectedSummaryListRows: Seq[SummaryListRow] = Seq(
-            ConsigneeBusinessNameSummary.row(true)(fakeDataRequest, msgs),
-            ConsigneeExciseSummary.row(true)(fakeDataRequest, msgs),
-            ConsigneeAddressSummary.row(true)(fakeDataRequest, msgs)
+            ConsigneeBusinessNameSummary.row,
+            ConsigneeExciseSummary.row,
+            ConsigneeAddressSummary.row
           ).flatten
 
           checkAnswersConsigneeHelper.summaryList() mustBe SummaryList(rows = expectedSummaryListRows)
@@ -147,9 +147,9 @@ class CheckAnswersConsigneeHelperSpec extends SpecBase {
       "the destination type is ExemptedOrganisations" in new Setup(testGbWarehouseErn, testExemptDataJson) {
 
         val expectedSummaryListRows: Seq[SummaryListRow] = Seq(
-          ConsigneeBusinessNameSummary.row(true)(fakeDataRequest, msgs),
-          ConsigneeExemptOrganisationSummary.row(true)(fakeDataRequest, msgs),
-          ConsigneeAddressSummary.row(true)(fakeDataRequest, msgs)
+          ConsigneeBusinessNameSummary.row,
+          ConsigneeExemptOrganisationSummary.row,
+          ConsigneeAddressSummary.row
         ).flatten
 
         checkAnswersConsigneeHelper.summaryList() mustBe SummaryList(rows = expectedSummaryListRows)
@@ -158,9 +158,9 @@ class CheckAnswersConsigneeHelperSpec extends SpecBase {
       "the user has selected yes VAT number" in new Setup(testGbWarehouseErn, testVatDataJson) {
 
         val expectedSummaryListRows: Seq[SummaryListRow] = Seq(
-          ConsigneeBusinessNameSummary.row(true)(fakeDataRequest, msgs),
-          ConsigneeExportInformationSummary.row(true)(fakeDataRequest, msgs),
-          ConsigneeAddressSummary.row(true)(fakeDataRequest, msgs)
+          ConsigneeBusinessNameSummary.row,
+          ConsigneeExportInformationSummary.row,
+          ConsigneeAddressSummary.row
         ).flatten
 
         checkAnswersConsigneeHelper.summaryList() mustBe SummaryList(rows = expectedSummaryListRows)
@@ -169,9 +169,9 @@ class CheckAnswersConsigneeHelperSpec extends SpecBase {
       "the user has selected Yes Eori number" in new Setup(testGbWarehouseErn, testEoriDataJson) {
 
         val expectedSummaryListRows: Seq[SummaryListRow] = Seq(
-          ConsigneeBusinessNameSummary.row(true)(fakeDataRequest, msgs),
-          ConsigneeExportInformationSummary.row(true)(fakeDataRequest, msgs),
-          ConsigneeAddressSummary.row(true)(fakeDataRequest, msgs)
+          ConsigneeBusinessNameSummary.row,
+          ConsigneeExportInformationSummary.row,
+          ConsigneeAddressSummary.row
         ).flatten
 
         checkAnswersConsigneeHelper.summaryList() mustBe SummaryList(rows = expectedSummaryListRows)
@@ -180,8 +180,8 @@ class CheckAnswersConsigneeHelperSpec extends SpecBase {
       "the user has selected no VAT or Eori number" in new Setup(testGbWarehouseErn, testNoVatOrEoriDataJson) {
 
         val expectedSummaryListRows: Seq[SummaryListRow] = Seq(
-          ConsigneeBusinessNameSummary.row(true)(fakeDataRequest, msgs),
-          ConsigneeAddressSummary.row(true)(fakeDataRequest, msgs)
+          ConsigneeBusinessNameSummary.row,
+          ConsigneeAddressSummary.row
         ).flatten
 
         checkAnswersConsigneeHelper.summaryList() mustBe SummaryList(rows = expectedSummaryListRows)

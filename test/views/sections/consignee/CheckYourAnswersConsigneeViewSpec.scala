@@ -64,9 +64,9 @@ class CheckYourAnswersConsigneeViewSpec extends SpecBase with ViewBehaviours {
           testErn,
           testArc,
           SummaryList(Seq(
-            ConsigneeBusinessNameSummary.row(true),
-            ConsigneeExciseSummary.row(true),
-            ConsigneeAddressSummary.row(true)
+            ConsigneeBusinessNameSummary.row,
+            ConsigneeExciseSummary.row,
+            ConsigneeAddressSummary.row
           ).flatten)
         ).toString())
 
@@ -115,9 +115,9 @@ class CheckYourAnswersConsigneeViewSpec extends SpecBase with ViewBehaviours {
           testErn,
           testArc,
           SummaryList(Seq(
-            ConsigneeBusinessNameSummary.row(true),
-            ConsigneeExemptOrganisationSummary.row(true),
-            ConsigneeAddressSummary.row(true)
+            ConsigneeBusinessNameSummary.row,
+            ConsigneeExemptOrganisationSummary.row,
+            ConsigneeAddressSummary.row
           ).flatten)
         ).toString())
 
@@ -166,9 +166,9 @@ class CheckYourAnswersConsigneeViewSpec extends SpecBase with ViewBehaviours {
           testErn,
           testArc,
           SummaryList(Seq(
-            ConsigneeBusinessNameSummary.row(true),
-            ConsigneeExportInformationSummary.row(true),
-            ConsigneeAddressSummary.row(true)
+            ConsigneeBusinessNameSummary.row,
+            ConsigneeExportInformationSummary.row,
+            ConsigneeAddressSummary.row
           ).flatten)
         ).toString())
 
@@ -217,9 +217,9 @@ class CheckYourAnswersConsigneeViewSpec extends SpecBase with ViewBehaviours {
           testErn,
           testArc,
           SummaryList(Seq(
-            ConsigneeBusinessNameSummary.row(true),
-            ConsigneeExportInformationSummary.row(true),
-            ConsigneeAddressSummary.row(true)
+            ConsigneeBusinessNameSummary.row,
+            ConsigneeExportInformationSummary.row,
+            ConsigneeAddressSummary.row
           ).flatten)
         ).toString())
 

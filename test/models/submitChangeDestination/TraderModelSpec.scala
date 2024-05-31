@@ -125,6 +125,8 @@ class TraderModelSpec extends SpecBase {
             TraderModel.applyConsignee mustBe consigneeTraderWithErn
         }
       }
+
+      //TODO: remove in ETFE-3250
       "when an VAT number is provided" in {
         MovementScenario.values.filterNot(_ == UnknownDestination).map {
           movementScenario =>
@@ -140,6 +142,23 @@ class TraderModelSpec extends SpecBase {
             TraderModel.applyConsignee mustBe consigneeTraderWithVatNo
         }
       }
+
+      "when an VAT number is provided (on export VAT page)" in {
+        MovementScenario.values.filterNot(_ == UnknownDestination).map {
+          movementScenario =>
+            implicit val dr: DataRequest[_] = dataRequest(fakeRequest,
+              emptyUserAnswers
+                .set(DestinationTypePage, movementScenario)
+                .set(ConsigneeBusinessNamePage, "consignee name")
+                .set(ConsigneeExportVatPage, "vat no")
+                .set(ConsigneeAddressPage, testUserAddress.copy(street = "consignee street")),
+              movementDetails = maxGetMovementResponse.copy(consigneeTrader = None)
+            )
+
+            TraderModel.applyConsignee mustBe consigneeTraderWithVatNo
+        }
+      }
+
       "when neither ERN nor VAT number is provided" in {
         MovementScenario.values.filterNot(_ == UnknownDestination).map {
           movementScenario =>

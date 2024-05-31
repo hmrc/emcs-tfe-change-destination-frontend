@@ -44,7 +44,7 @@ class ConsigneeBusinessNameSummarySpec extends SpecBase with Matchers {
 
             implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers, movementDetails = maxGetMovementResponse.copy(consigneeTrader = None))
 
-            ConsigneeBusinessNameSummary.row(showActionLinks = true) mustBe None
+            ConsigneeBusinessNameSummary.row mustBe None
           }
         }
 
@@ -54,7 +54,7 @@ class ConsigneeBusinessNameSummarySpec extends SpecBase with Matchers {
 
             implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers)
 
-            ConsigneeBusinessNameSummary.row(showActionLinks = true) mustBe
+            ConsigneeBusinessNameSummary.row mustBe
               Some(
                 SummaryListRowViewModel(
                   key = messagesForLanguage.cyaLabel,
@@ -73,44 +73,25 @@ class ConsigneeBusinessNameSummarySpec extends SpecBase with Matchers {
 
         "when there's an answer" - {
 
-          "when the show action link boolean is true" - {
 
-            "must output the expected row" in {
+          "must output the expected row" in {
 
-              implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(ConsigneeBusinessNamePage, "testName"))
+            implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(ConsigneeBusinessNamePage, "testName"))
 
-              ConsigneeBusinessNameSummary.row(showActionLinks = true) mustBe
-                Some(
-                  SummaryListRowViewModel(
-                    key = messagesForLanguage.cyaLabel,
-                    value = Value(Text("testName")),
-                    actions = Seq(
-                      ActionItemViewModel(
-                        content = messagesForLanguage.change,
-                        href = controllers.sections.consignee.routes.ConsigneeBusinessNameController.onPageLoad(testErn, testArc, CheckMode).url,
-                        id = "changeConsigneeBusinessName"
-                      ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHidden)
-                    )
+            ConsigneeBusinessNameSummary.row mustBe
+              Some(
+                SummaryListRowViewModel(
+                  key = messagesForLanguage.cyaLabel,
+                  value = Value(Text("testName")),
+                  actions = Seq(
+                    ActionItemViewModel(
+                      content = messagesForLanguage.change,
+                      href = controllers.sections.consignee.routes.ConsigneeBusinessNameController.onPageLoad(testErn, testArc, CheckMode).url,
+                      id = "changeConsigneeBusinessName"
+                    ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHidden)
                   )
                 )
-            }
-          }
-
-          "when the show action link boolean is false" - {
-
-            "must output the expected row without action links" in {
-
-              implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(ConsigneeBusinessNamePage, "testName"))
-
-              ConsigneeBusinessNameSummary.row(showActionLinks = false) mustBe
-                Some(
-                  SummaryListRowViewModel(
-                    key = messagesForLanguage.cyaLabel,
-                    value = Value(Text("testName")),
-                    actions = Seq()
-                  )
-                )
-            }
+              )
           }
         }
       }

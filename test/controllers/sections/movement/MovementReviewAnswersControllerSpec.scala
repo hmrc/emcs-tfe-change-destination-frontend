@@ -104,11 +104,11 @@ class MovementReviewAnswersControllerSpec extends SpecBase with MockUserAnswersS
 
     "must return a Bad Request and errors when invalid data is submitted" in new Test(Some(emptyUserAnswers)) {
 
+      MockMovementCheckAnswersHelper.summaryList().returns(list)
+
       val boundForm = form.bind(Map("value" -> ""))
 
       val result = controller.onSubmit(testErn, testArc)(request.withFormUrlEncodedBody(("value", "")))
-
-      MockMovementCheckAnswersHelper.summaryList().returns(list)
 
       status(result) mustEqual BAD_REQUEST
       contentAsString(result) mustEqual view(boundForm, list, onSubmitCall)(dataRequest(request, userAnswers.get), messages(request)).toString

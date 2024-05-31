@@ -136,6 +136,35 @@ class ConsigneeNavigatorSpec extends SpecBase {
         }
       }
 
+      "for the ConsigneeExportVat page" - {
+
+        "must go to the ConsigneeExportEori page" - {
+
+          "when the user selected both VAT and EORI on ConsigneeExportInformation" ignore {
+
+            //TODO change in ETFE-3250 and CHANGE IGNORE TO IN (please)
+            val userAnswers = emptyUserAnswers
+              .set(ConsigneeExportInformationPage, ConsigneeExportInformation(YesEoriNumber, None, None))
+
+            navigator.nextPage(ConsigneeExportVatPage, NormalMode, userAnswers) mustBe
+              controllers.sections.consignee.routes.ConsigneeExportInformationController.onPageLoad(testErn, testArc, NormalMode)
+          }
+        }
+
+        "must go to the ConsigneeBusinessName page" - {
+
+          "when the user selected both VAT and EORI on ConsigneeExportInformation" in {
+
+            //TODO change in ETFE-3250
+            val userAnswers = emptyUserAnswers
+              .set(ConsigneeExportInformationPage, ConsigneeExportInformation(YesVatNumber, None, None))
+
+            navigator.nextPage(ConsigneeExportVatPage, NormalMode, userAnswers) mustBe
+              controllers.sections.consignee.routes.ConsigneeBusinessNameController.onPageLoad(testErn, testArc, NormalMode)
+          }
+        }
+      }
+
       "for the CheckAnswersConsignee page" - {
         "must go to the tasklist" in {
           navigator.nextPage(CheckAnswersConsigneePage, NormalMode, emptyUserAnswers) mustBe

@@ -28,10 +28,10 @@ import viewmodels.implicits._
 
 object ConsigneeExportInformationSummary {
 
-  def row(showActionLinks: Boolean)(implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] =
+  def row(implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] =
     request.userAnswers.get(ConsigneeExportInformationPage).flatMap {
-      case ConsigneeExportInformation(YesVatNumber, Some(vat), _) => Some(summaryRow(showActionLinks, YesVatNumber.toString, vat))
-      case ConsigneeExportInformation(YesEoriNumber, _, Some(eori)) => Some(summaryRow(showActionLinks, YesEoriNumber.toString, eori))
+      case ConsigneeExportInformation(YesVatNumber, Some(vat), _) => Some(summaryRow(YesVatNumber.toString, vat))
+      case ConsigneeExportInformation(YesEoriNumber, _, Some(eori)) => Some(summaryRow(YesEoriNumber.toString, eori))
       case _ => Some(notKnownSummaryRow())
     }
 
@@ -53,11 +53,11 @@ object ConsigneeExportInformationSummary {
       )
     )
 
-  private def summaryRow(showActionLinks: Boolean, key: String, value: String)(implicit request: DataRequest[_], messages: Messages): SummaryListRow = {
+  private def summaryRow(key: String, value: String)(implicit request: DataRequest[_], messages: Messages): SummaryListRow = {
     SummaryListRowViewModel(
       key = s"consigneeExportInformation.checkYourAnswers.label.$key",
       value = ValueViewModel(value),
-      actions = if (!showActionLinks) Seq() else Seq(
+      actions = Seq(
         ActionItemViewModel(
           content = "site.change",
           href = controllers.sections.consignee.routes.ConsigneeExportInformationController.onPageLoad(

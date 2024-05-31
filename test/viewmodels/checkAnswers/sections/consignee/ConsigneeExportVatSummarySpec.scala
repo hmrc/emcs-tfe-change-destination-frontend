@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,11 +17,12 @@
 package viewmodels.checkAnswers.sections.consignee
 
 import base.SpecBase
-import fixtures.messages.sections.consignee.ConsigneeExportMessages
-import models.NormalMode
+import fixtures.messages.sections.consignee.ConsigneeExportVatMessages
+import models.CheckMode
 import models.sections.info.ChangeType
+import models.sections.info.movementScenario.DestinationType.Export
 import org.scalatest.matchers.must.Matchers
-import pages.sections.consignee.ConsigneeExportPage
+import pages.sections.consignee.ConsigneeExportVatPage
 import pages.sections.info.ChangeTypePage
 import play.api.i18n.Messages
 import play.api.test.FakeRequest
@@ -30,11 +31,10 @@ import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
-class ConsigneeExportSummarySpec extends SpecBase with Matchers {
-  "ConsigneeExportSummary" - {
+class ConsigneeExportVatSummarySpec extends SpecBase with Matchers {
+  "ConsigneeExportVatSummary" - {
 
-
-    Seq(ConsigneeExportMessages.English).foreach { messagesForLanguage =>
+    Seq(ConsigneeExportVatMessages.English).foreach { messagesForLanguage =>
 
       s"when being rendered in lang code of '${messagesForLanguage.lang.code}'" - {
 
@@ -48,26 +48,30 @@ class ConsigneeExportSummarySpec extends SpecBase with Matchers {
 
               implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(ChangeTypePage, ChangeType.ChangeConsignee))
 
-              ConsigneeExportSummary.row mustBe None
+              ConsigneeExportVatSummary.row mustBe None
             }
           }
 
-          "when the Change Type is NOT Consignee" - {
+          "when the Change Type is NOT Consignee and destination type is Export" - {
 
             "must output data from the IE801" in {
 
-              implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(ChangeTypePage, ChangeType.Destination))
+              implicit lazy val request = dataRequest(
+                request = FakeRequest(),
+                answers = emptyUserAnswers.set(ChangeTypePage, ChangeType.Destination),
+                movementDetails = maxGetMovementResponse.copy(destinationType = Export)
+              )
 
-              ConsigneeExportSummary.row mustBe
+              ConsigneeExportVatSummary.row mustBe
                 Some(
                   SummaryListRowViewModel(
                     key = messagesForLanguage.cyaLabel,
-                    value = Value(Text(messagesForLanguage.yes)),
+                    value = Value(Text("ConsigneeTraderId")),
                     actions = Seq(
                       ActionItemViewModel(
                         content = messagesForLanguage.change,
-                        href = controllers.sections.consignee.routes.ConsigneeExportController.onPageLoad(testErn, testArc, NormalMode).url,
-                        id = ConsigneeExportPage
+                        href = controllers.sections.consignee.routes.ConsigneeExportVatController.onPageLoad(testErn, testArc, CheckMode).url,
+                        id = "changeConsigneeExportVat"
                       ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHidden)
                     )
                   )
@@ -81,18 +85,18 @@ class ConsigneeExportSummarySpec extends SpecBase with Matchers {
 
           "must output the expected row" in {
 
-            implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(ConsigneeExportPage, true))
+            implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(ConsigneeExportVatPage, testVatNumber))
 
-            ConsigneeExportSummary.row mustBe
+            ConsigneeExportVatSummary.row mustBe
               Some(
                 SummaryListRowViewModel(
                   key = messagesForLanguage.cyaLabel,
-                  value = Value(Text(messagesForLanguage.yes)),
+                  value = Value(Text(testVatNumber)),
                   actions = Seq(
                     ActionItemViewModel(
                       content = messagesForLanguage.change,
-                      href = controllers.sections.consignee.routes.ConsigneeExportController.onPageLoad(testErn, testArc, NormalMode).url,
-                      id = ConsigneeExportPage
+                      href = controllers.sections.consignee.routes.ConsigneeExportVatController.onPageLoad(testErn, testArc, CheckMode).url,
+                      id = "changeConsigneeExportVat"
                     ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHidden)
                   )
                 )

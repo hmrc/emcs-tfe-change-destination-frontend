@@ -27,14 +27,14 @@ import viewmodels.implicits._
 
 object ConsigneeAddressSummary {
 
-  def row(showActionLinks: Boolean)(implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] =
+  def row(implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] =
     request.userAnswers.get(ConsigneeAddressPage).map {
       answer =>
 
         SummaryListRowViewModel(
           key = "address.consigneeAddress.checkYourAnswers.label",
           value = Value(answer.toCheckYourAnswersFormat),
-          actions = if (!showActionLinks) Seq() else Seq(
+          actions = Seq(
             ActionItemViewModel(
               content = "site.change",
               href = controllers.sections.consignee.routes.ConsigneeAddressController.onPageLoad(

@@ -48,6 +48,15 @@ class ConsigneeNavigator @Inject() extends BaseNavigator {
     case ConsigneeExportInformationPage => (userAnswers: UserAnswers) =>
       controllers.sections.consignee.routes.ConsigneeBusinessNameController.onPageLoad(userAnswers.ern, userAnswers.arc, NormalMode)
 
+    case ConsigneeExportVatPage => (userAnswers: UserAnswers) =>
+      userAnswers.get(ConsigneeExportInformationPage) match {
+        //TODO: implement in ETFE-3250
+//        case Some(answers) if answers.contains(YesEoriNumber) =>
+//        controllers.sections.consignee.routes.ConsigneeExportEoriController.onPageLoad(userAnswers.ern, userAnswers.draftId, NormalMode)
+        case _ =>
+          controllers.sections.consignee.routes.ConsigneeBusinessNameController.onPageLoad(userAnswers.ern, userAnswers.arc, NormalMode)
+      }
+
     case ConsigneeExcisePage => (userAnswers: UserAnswers) =>
       controllers.sections.consignee.routes.ConsigneeBusinessNameController.onPageLoad(userAnswers.ern, userAnswers.arc, NormalMode)
 

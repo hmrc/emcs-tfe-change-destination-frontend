@@ -1419,3 +1419,13 @@ movementReviewAnswers.error.required = Select yes if you need to change any of t
 
 movementCheckAnswers.title = Check your answers
 movementCheckAnswers.heading = Check your answers
+
+consigneeExportVat.title = Enter the VAT registration number of the person representing the consignor at the office of export
+consigneeExportVat.heading = Enter the VAT registration number of the person representing the consignor at the office of export
+consigneeExportVat.hint = This is 9 numbers, sometimes with ‘GB’ at the start, for example 123456789 or GB123456789.
+consigneeExportVat.checkYourAnswersLabel = Identification number
+consigneeExportVat.error.required = Enter the VAT registration number
+consigneeExportVat.error.length = VAT registration number must be 16 characters or less
+consigneeExportVat.error.invalid = VAT registration number must only contain letters and numbers
+consigneeExportVat.change.hidden = VAT registration number of the person representing the consignor at the office of export
+

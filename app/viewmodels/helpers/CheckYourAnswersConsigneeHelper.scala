@@ -29,12 +29,13 @@ class CheckYourAnswersConsigneeHelper @Inject()() {
   def summaryList()(implicit request: DataRequest[_], messages: Messages): SummaryList = {
     SummaryListViewModel(
       rows = Seq(
-        ConsigneeExportSummary.row(showActionLinks = true),
-        ConsigneeBusinessNameSummary.row(showActionLinks = true),
-        ConsigneeExciseSummary.row(showActionLinks = true),
-        ConsigneeExportInformationSummary.row(showActionLinks = true),
-        ConsigneeExemptOrganisationSummary.row(showActionLinks = true),
-        ConsigneeAddressSummary.row(showActionLinks = true)
+        ConsigneeExportSummary.row,
+        ConsigneeBusinessNameSummary.row,
+        ConsigneeExciseSummary.row,
+        ConsigneeExportVatSummary.row,
+        ConsigneeExportInformationSummary.row,
+        ConsigneeExemptOrganisationSummary.row,
+        ConsigneeAddressSummary.row
       ).flatten
     )
   }

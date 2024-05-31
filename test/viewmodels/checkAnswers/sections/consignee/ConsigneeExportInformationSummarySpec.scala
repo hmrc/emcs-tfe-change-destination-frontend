@@ -49,7 +49,7 @@ class ConsigneeExportInformationSummarySpec extends SpecBase with Matchers {
 
               implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(ChangeTypePage, ChangeType.ChangeConsignee))
 
-              ConsigneeExportInformationSummary.row(showActionLinks = true) mustBe None
+              ConsigneeExportInformationSummary.row mustBe None
             }
           }
 
@@ -59,7 +59,7 @@ class ConsigneeExportInformationSummarySpec extends SpecBase with Matchers {
 
               implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(ChangeTypePage, ChangeType.Destination))
 
-              ConsigneeExportInformationSummary.row(showActionLinks = true) mustBe
+              ConsigneeExportInformationSummary.row mustBe
                 Some(
                   SummaryListRowViewModel(
                     key = messagesForLanguage.cyaEoriLabel,
@@ -85,7 +85,7 @@ class ConsigneeExportInformationSummarySpec extends SpecBase with Matchers {
 
               implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(ConsigneeExportInformationPage, ConsigneeExportInformation(YesEoriNumber, None, testEori.eoriNumber)))
 
-              ConsigneeExportInformationSummary.row(showActionLinks = true) mustBe
+              ConsigneeExportInformationSummary.row mustBe
                 Some(
                   SummaryListRowViewModel(
                     key = messagesForLanguage.cyaEoriLabel,
