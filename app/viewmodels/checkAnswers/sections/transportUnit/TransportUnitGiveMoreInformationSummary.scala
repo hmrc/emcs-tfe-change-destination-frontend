@@ -30,9 +30,9 @@ import viewmodels.implicits._
 
 object TransportUnitGiveMoreInformationSummary {
 
-  def row(idx: Index, onReviewPage: Boolean)(implicit request: DataRequest[_], messages: Messages, link: views.html.components.link): Option[SummaryListRow] = {
+  def row(idx: Index, onReviewPage: Boolean)(implicit request: DataRequest[_], messages: Messages, link: views.html.components.link): SummaryListRow = {
     val optMoreInformation = request.userAnswers.get(TransportUnitGiveMoreInformationPage(idx)).flatten
-    Some(SummaryListRowViewModel(
+    SummaryListRowViewModel(
       key = "transportUnitGiveMoreInformation.checkYourAnswersLabel",
       value = ValueViewModel(getValue(optMoreInformation,
         controllers.sections.transportUnit.routes.TransportUnitGiveMoreInformationController.onPageLoad(request.userAnswers.ern, request.userAnswers.arc, idx, CheckMode), onReviewPage)),
@@ -47,7 +47,7 @@ object TransportUnitGiveMoreInformationSummary {
           )
         ).flatten
       }
-    ))
+    )
   }
 
   private def getValue(optValue: Option[String], redirectUrl: Call, onReviewPage: Boolean)

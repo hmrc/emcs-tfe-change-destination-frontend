@@ -47,17 +47,15 @@ class TransportSealChoiceSummarySpec extends SpecBase with Matchers with Transpo
             implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers)
 
             TransportSealChoiceSummary.row(testIndex1, onReviewPage = false) mustBe
-              Some(
-                SummaryListRowViewModel(
-                  key = messagesForLanguage.cyaLabel,
-                  value = Value(Text(messagesForLanguage.notProvided)),
-                  actions = Seq(
-                    ActionItemViewModel(
-                      content = messagesForLanguage.change,
-                      href = transportUnitRoutes.TransportSealChoiceController.onPageLoad(testErn, testArc, testIndex1, CheckMode).url,
-                      id = "changeTransportSealChoice1"
-                    ).withVisuallyHiddenText(messagesForLanguage.moreInfoCyaChangeHidden)
-                  )
+              SummaryListRowViewModel(
+                key = messagesForLanguage.cyaLabel,
+                value = Value(Text(messagesForLanguage.notProvided)),
+                actions = Seq(
+                  ActionItemViewModel(
+                    content = messagesForLanguage.change,
+                    href = transportUnitRoutes.TransportSealChoiceController.onPageLoad(testErn, testArc, testIndex1, CheckMode).url,
+                    id = "changeTransportSealChoice1"
+                  ).withVisuallyHiddenText(messagesForLanguage.moreInfoCyaChangeHidden)
                 )
               )
           }
@@ -67,12 +65,10 @@ class TransportSealChoiceSummarySpec extends SpecBase with Matchers with Transpo
             implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers)
 
             TransportSealChoiceSummary.row(testIndex1, onReviewPage = true) mustBe
-              Some(
-                SummaryListRowViewModel(
-                  key = messagesForLanguage.cyaLabel,
-                  value = Value(Text(messagesForLanguage.notProvided)),
-                  actions = Seq()
-                )
+              SummaryListRowViewModel(
+                key = messagesForLanguage.cyaLabel,
+                value = Value(Text(messagesForLanguage.notProvided)),
+                actions = Seq()
               )
           }
         }
@@ -84,17 +80,15 @@ class TransportSealChoiceSummarySpec extends SpecBase with Matchers with Transpo
             implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(TransportSealChoicePage(testIndex1), true))
 
             TransportSealChoiceSummary.row(testIndex1, onReviewPage = false) mustBe
-              Some(
-                SummaryListRowViewModel(
-                  key = messagesForLanguage.cyaLabel,
-                  value = Value(Text("Yes")),
-                  actions = Seq(
-                    ActionItemViewModel(
-                      content = messagesForLanguage.change,
-                      href = transportUnitRoutes.TransportSealChoiceController.onPageLoad(testErn, testArc, testIndex1, CheckMode).url,
-                      id = "changeTransportSealChoice1"
-                    ).withVisuallyHiddenText(messagesForLanguage.moreInfoCyaChangeHidden)
-                  )
+              SummaryListRowViewModel(
+                key = messagesForLanguage.cyaLabel,
+                value = Value(Text("Yes")),
+                actions = Seq(
+                  ActionItemViewModel(
+                    content = messagesForLanguage.change,
+                    href = transportUnitRoutes.TransportSealChoiceController.onPageLoad(testErn, testArc, testIndex1, CheckMode).url,
+                    id = "changeTransportSealChoice1"
+                  ).withVisuallyHiddenText(messagesForLanguage.moreInfoCyaChangeHidden)
                 )
               )
           }
@@ -104,12 +98,10 @@ class TransportSealChoiceSummarySpec extends SpecBase with Matchers with Transpo
             implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(TransportSealChoicePage(testIndex1), true))
 
             TransportSealChoiceSummary.row(testIndex1, onReviewPage = true) mustBe
-              Some(
-                SummaryListRowViewModel(
-                  key = messagesForLanguage.cyaLabel,
-                  value = Value(Text("Yes")),
-                  actions = Seq()
-                )
+              SummaryListRowViewModel(
+                key = messagesForLanguage.cyaLabel,
+                value = Value(Text("Yes")),
+                actions = Seq()
               )
           }
         }

@@ -47,6 +47,7 @@ taskListStatus.notStarted = Not Started
 taskListStatus.cannotStartYet = Cannot Start Yet
 taskListStatus.incomplete = Incomplete
 taskListStatus.review = Review
+taskListStatus.updateNeeded = Update Needed
 
 unitOfMeasure.kilograms.short = kg
 unitOfMeasure.kilograms.long = kilograms

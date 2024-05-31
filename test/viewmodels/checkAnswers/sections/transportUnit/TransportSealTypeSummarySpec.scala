@@ -142,28 +142,6 @@ class TransportSealTypeSummarySpec extends SpecBase with Matchers with Transport
               )
           }
 
-          "must output row with answer if TransportSealChoicePage is true (value from 801)" in {
-
-            implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers
-              .set(TransportSealChoicePage(testIndex1), true)
-            )
-
-            TransportSealTypeSummary.row(testIndex1, onReviewPage = false) mustBe
-              Some(
-                SummaryListRowViewModel(
-                  key = messagesForLanguage.sealTypeCYA,
-                  value = Value(Text("TransportDetailsCommercialSealIdentification1")),
-                  actions = Seq(
-                    ActionItemViewModel(
-                      content = messagesForLanguage.change,
-                      href = controllers.sections.transportUnit.routes.TransportSealTypeController.onPageLoad(testErn, testArc, testIndex1, CheckMode).url,
-                      id = "changeTransportSealType1"
-                    ).withVisuallyHiddenText(messagesForLanguage.sealTypeCyaChangeHidden)
-                  )
-                )
-              )
-          }
-
           "must output the expected row with no change link - when on review page" in {
 
             implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers

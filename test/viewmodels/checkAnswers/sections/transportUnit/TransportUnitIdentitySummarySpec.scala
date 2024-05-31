@@ -46,17 +46,15 @@ class TransportUnitIdentitySummarySpec extends SpecBase with Matchers {
             implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers, movementDetails = maxGetMovementResponse.copy(transportDetails = Seq.empty))
 
             TransportUnitIdentitySummary.row(testIndex1, onReviewPage = false) mustBe
-              Some(
-                SummaryListRowViewModel(
-                  key = messagesForLanguage.cyaLabel,
-                  value = Value(Text(messagesForLanguage.notProvided)),
-                  actions = Seq(
-                    ActionItemViewModel(
-                      content = messagesForLanguage.change,
-                      href = transportUnitRoutes.TransportUnitIdentityController.onPageLoad(testErn, testArc, testIndex1, CheckMode).url,
-                      id = "changeTransportUnitIdentity1"
-                    ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHidden)
-                  )
+              SummaryListRowViewModel(
+                key = messagesForLanguage.cyaLabel,
+                value = Value(Text(messagesForLanguage.notProvided)),
+                actions = Seq(
+                  ActionItemViewModel(
+                    content = messagesForLanguage.change,
+                    href = transportUnitRoutes.TransportUnitIdentityController.onPageLoad(testErn, testArc, testIndex1, CheckMode).url,
+                    id = "changeTransportUnitIdentity1"
+                  ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHidden)
                 )
               )
           }
@@ -66,12 +64,10 @@ class TransportUnitIdentitySummarySpec extends SpecBase with Matchers {
             implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers, movementDetails = maxGetMovementResponse.copy(transportDetails = Seq.empty))
 
             TransportUnitIdentitySummary.row(testIndex1, onReviewPage = true) mustBe
-              Some(
-                SummaryListRowViewModel(
-                  key = messagesForLanguage.cyaLabel,
-                  value = Value(Text(messagesForLanguage.notProvided)),
-                  actions = Seq()
-                )
+              SummaryListRowViewModel(
+                key = messagesForLanguage.cyaLabel,
+                value = Value(Text(messagesForLanguage.notProvided)),
+                actions = Seq()
               )
           }
         }
@@ -83,17 +79,15 @@ class TransportUnitIdentitySummarySpec extends SpecBase with Matchers {
             implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(TransportUnitIdentityPage(testIndex1), "testName"))
 
             TransportUnitIdentitySummary.row(testIndex1, onReviewPage = false) mustBe
-              Some(
-                SummaryListRowViewModel(
-                  key = messagesForLanguage.cyaLabel,
-                  value = Value(Text("testName")),
-                  actions = Seq(
-                    ActionItemViewModel(
-                      content = messagesForLanguage.change,
-                      href = transportUnitRoutes.TransportUnitIdentityController.onPageLoad(testErn, testArc, testIndex1, CheckMode).url,
-                      id = "changeTransportUnitIdentity1"
-                    ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHidden)
-                  )
+              SummaryListRowViewModel(
+                key = messagesForLanguage.cyaLabel,
+                value = Value(Text("testName")),
+                actions = Seq(
+                  ActionItemViewModel(
+                    content = messagesForLanguage.change,
+                    href = transportUnitRoutes.TransportUnitIdentityController.onPageLoad(testErn, testArc, testIndex1, CheckMode).url,
+                    id = "changeTransportUnitIdentity1"
+                  ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHidden)
                 )
               )
           }
@@ -103,12 +97,10 @@ class TransportUnitIdentitySummarySpec extends SpecBase with Matchers {
             implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(TransportUnitIdentityPage(testIndex1), "testName"))
 
             TransportUnitIdentitySummary.row(testIndex1, onReviewPage = true) mustBe
-              Some(
-                SummaryListRowViewModel(
-                  key = messagesForLanguage.cyaLabel,
-                  value = Value(Text("testName")),
-                  actions = Seq()
-                )
+              SummaryListRowViewModel(
+                key = messagesForLanguage.cyaLabel,
+                value = Value(Text("testName")),
+                actions = Seq()
               )
           }
         }

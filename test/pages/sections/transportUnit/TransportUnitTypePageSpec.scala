@@ -17,10 +17,7 @@
 package pages.sections.transportUnit
 
 import base.SpecBase
-import models.Index
 import models.response.emcsTfe.TransportDetailsModel
-import models.sections.transportUnit.TransportUnitType.Container
-import play.api.libs.json.Json
 import play.api.test.FakeRequest
 
 class TransportUnitTypePageSpec extends SpecBase {
@@ -28,36 +25,8 @@ class TransportUnitTypePageSpec extends SpecBase {
   val transportDetails: TransportDetailsModel = maxGetMovementResponse.transportDetails.head
 
   "getValueFromIE801" - {
-    "must return Some(_)" - {
-      "when the index is valid" in {
-        TransportUnitTypePage(testIndex1).getValueFromIE801(dataRequest(FakeRequest(), emptyUserAnswers.set(
-          TransportUnitsSectionUnits, Json.arr(Json.obj())),
-          movementDetails = maxGetMovementResponse.copy(transportDetails = Seq(transportDetails.copy(transportUnitCode = "1"))))) mustBe Some(Container)
-      }
-    }
-
-    "must return None" - {
-
-      "when the code is invalid" in {
-        TransportUnitTypePage(testIndex1).getValueFromIE801(dataRequest(FakeRequest(), emptyUserAnswers.set(
-          TransportUnitsSectionUnits, Json.arr(Json.obj())
-        ))) mustBe None
-      }
-
-      //scalastyle:off
-      "when the index exceeds the transport units in 801" in {
-        TransportUnitTypePage(Index(3)).getValueFromIE801(dataRequest(FakeRequest(), emptyUserAnswers.set(
-          TransportUnitsSectionUnits, Json.arr(Json.obj(), Json.obj(), Json.obj(), Json.obj())
-        ))) mustBe None
-      }
-
-      "when there are no transport units" in {
-        TransportUnitTypePage(testIndex1).getValueFromIE801(dataRequest(
-          FakeRequest(),
-          movementDetails = maxGetMovementResponse.copy(transportDetails = Seq.empty)
-        )) mustBe None
-      }
+    "must return None" in {
+      TransportUnitTypePage(testIndex1).getValueFromIE801(dataRequest(FakeRequest())) mustBe None
     }
   }
-
 }
