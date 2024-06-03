@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,7 +18,9 @@ package pages.sections.consignee
 
 import base.SpecBase
 import models.response.emcsTfe.TraderModel
-import models.sections.consignee.{ConsigneeExportVat, ConsigneeExportVatType}
+import models.sections.info.ChangeType.ChangeConsignee
+import models.sections.info.movementScenario.DestinationType.{Export, TaxWarehouse}
+import pages.sections.info.ChangeTypePage
 import play.api.test.FakeRequest
 
 class ConsigneeExportVatPageSpec extends SpecBase {
@@ -26,37 +28,27 @@ class ConsigneeExportVatPageSpec extends SpecBase {
   val consignee: TraderModel = maxGetMovementResponse.consigneeTrader.get
 
   "getValueFromIE801" - {
-    "must return Some(ConsigneeExportVat)" - {
-      "when Consignee exists and has a VAT number" in {
+    "must return the VAT number" - {
+      "when destination type is Export" in {
         ConsigneeExportVatPage.getValueFromIE801(dataRequest(FakeRequest(),
-          movementDetails = maxGetMovementResponse.copy(consigneeTrader = Some(consignee.copy(vatNumber = Some("123456789"), eoriNumber = None))))) mustBe Some(
-          ConsigneeExportVat(ConsigneeExportVatType.YesVatNumber, Some("123456789"), None)
-        )
-      }
-    }
-
-    "must return Some(ConsigneeExportVat(YesEoriNumber)" - {
-      "when Consignee exists and has a EORI number" in {
-        ConsigneeExportVatPage.getValueFromIE801(dataRequest(FakeRequest())) mustBe Some(
-          ConsigneeExportVat(ConsigneeExportVatType.YesEoriNumber, None, consignee.eoriNumber)
-        )
-      }
-    }
-
-    "must return Some(ConsigneeExportVat(No))" - {
-      "when Consignee exists and has neither a VAT nor a EORI" in {
-        ConsigneeExportVatPage.getValueFromIE801(dataRequest(FakeRequest(),
-          movementDetails = maxGetMovementResponse.copy(consigneeTrader = Some(consignee.copy(vatNumber = None, eoriNumber = None))))) mustBe Some(ConsigneeExportVat(ConsigneeExportVatType.No, None, None))
+          movementDetails = maxGetMovementResponse.copy(destinationType = Export))) mustBe Some("ConsigneeTraderId")
       }
     }
 
     "must return None" - {
 
-      "when Consignee doesn't exist" in {
+      "when the user wants to change the consignee" in {
         ConsigneeExportVatPage.getValueFromIE801(dataRequest(
           FakeRequest(),
-          movementDetails = maxGetMovementResponse.copy(consigneeTrader = None)
+          emptyUserAnswers.set(ChangeTypePage, ChangeConsignee)
         )) mustBe None
+      }
+
+      "when the destination type is not Export" in {
+        ConsigneeExportVatPage.getValueFromIE801(dataRequest(
+          FakeRequest(),
+          movementDetails = maxGetMovementResponse.copy(destinationType = TaxWarehouse))
+        ) mustBe None
       }
     }
   }

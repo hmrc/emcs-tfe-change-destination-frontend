@@ -16,38 +16,19 @@
 
 package forms.sections.consignee
 
+import forms.ONLY_ALPHANUMERIC_REGEX
 import forms.mappings.Mappings
-import models.sections.consignee.{ConsigneeExportVat, ConsigneeExportVatType}
 import play.api.data.Form
-import play.api.data.Forms.mapping
-import uk.gov.voa.play.form.ConditionalMappings.mandatoryIfEqual
 
 import javax.inject.Inject
 
 class ConsigneeExportVatFormProvider @Inject() extends Mappings {
 
-  private val VAT_NUMBER_MAX_LENGTH = 14
-  private val EORI_NUMBER_MAX_LENGTH = 17
-
-  def apply(): Form[ConsigneeExportVat] = {
+  def apply(): Form[String] =
     Form(
-      mapping(
-        "exportType" -> enumerable[ConsigneeExportVatType]("consigneeExportVat.consigneeExportType.error.required"),
-        "vatNumber" ->
-          mandatoryIfEqual(
-            fieldName = "exportType",
-            value = "yesVatNumber",
-            mapping = text("consigneeExportVat.vatNumber.error.required")
-              .verifying(firstError(maxLength(VAT_NUMBER_MAX_LENGTH, s"consigneeExportVat.vatNumber.error.length")))
-          ),
-        "eoriNumber" ->
-          mandatoryIfEqual(
-            fieldName = "exportType",
-            value = "yesEoriNumber",
-            mapping = text("consigneeExportVat.eoriNumber.error.required")
-            .verifying(firstError(maxLength(EORI_NUMBER_MAX_LENGTH, s"consigneeExportVat.eoriNumber.error.length")))
-          )
-      )(ConsigneeExportVat.apply)(ConsigneeExportVat.unapply)
+      "value" -> text("consigneeExportVat.error.required")
+        .transform[String](_.replace("-", "").replace(" ", ""), identity)
+        .verifying(maxLength(16, "consigneeExportVat.error.length"))
+        .verifying(regexpUnlessEmpty(ONLY_ALPHANUMERIC_REGEX, "consigneeExportVat.error.invalid"))
     )
-  }
 }

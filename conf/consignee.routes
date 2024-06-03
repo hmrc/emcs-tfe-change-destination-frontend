@@ -5,15 +5,20 @@ POST        /trader/:ern/movement/:arc/consignee/export-uk-eu                   
 GET         /trader/:ern/movement/:arc/consignee/export-uk-eu/change                    controllers.sections.consignee.ConsigneeExportController.onPageLoad(ern: String, arc: String, mode: Mode = CheckMode)
 POST        /trader/:ern/movement/:arc/consignee/export-uk-eu/change                    controllers.sections.consignee.ConsigneeExportController.onSubmit(ern: String, arc: String, mode: Mode = CheckMode)
 
-GET        /trader/:ern/movement/:arc/consignee/export-vat                           controllers.sections.consignee.ConsigneeExportVatController.onPageLoad(ern: String, arc: String, mode: Mode = NormalMode)
-POST       /trader/:ern/movement/:arc/consignee/export-vat                           controllers.sections.consignee.ConsigneeExportVatController.onSubmit(ern: String, arc: String, mode: Mode = NormalMode)
-GET        /trader/:ern/movement/:arc/consignee/export-vat/change                    controllers.sections.consignee.ConsigneeExportVatController.onPageLoad(ern: String, arc: String, mode: Mode = CheckMode)
-POST       /trader/:ern/movement/:arc/consignee/export-vat/change                    controllers.sections.consignee.ConsigneeExportVatController.onSubmit(ern: String, arc: String, mode: Mode = CheckMode)
+GET        /trader/:ern/movement/:arc/consignee/export-information                      controllers.sections.consignee.ConsigneeExportInformationController.onPageLoad(ern: String, arc: String, mode: Mode = NormalMode)
+POST       /trader/:ern/movement/:arc/consignee/export-information                      controllers.sections.consignee.ConsigneeExportInformationController.onSubmit(ern: String, arc: String, mode: Mode = NormalMode)
+GET        /trader/:ern/movement/:arc/consignee/export-information/change               controllers.sections.consignee.ConsigneeExportInformationController.onPageLoad(ern: String, arc: String, mode: Mode = CheckMode)
+POST       /trader/:ern/movement/:arc/consignee/export-information/change               controllers.sections.consignee.ConsigneeExportInformationController.onSubmit(ern: String, arc: String, mode: Mode = CheckMode)
 
-GET        /trader/:ern/movement/:arc/consignee/consignee-excise                     controllers.sections.consignee.ConsigneeExciseController.onPageLoad(ern: String, arc: String, mode: Mode = NormalMode)
-POST       /trader/:ern/movement/:arc/consignee/consignee-excise                     controllers.sections.consignee.ConsigneeExciseController.onSubmit(ern: String, arc: String, mode: Mode = NormalMode)
-GET        /trader/:ern/movement/:arc/consignee/consignee-excise/change              controllers.sections.consignee.ConsigneeExciseController.onPageLoad(ern: String, arc: String, mode: Mode = CheckMode)
-POST       /trader/:ern/movement/:arc/consignee/consignee-excise/change              controllers.sections.consignee.ConsigneeExciseController.onSubmit(ern: String, arc: String, mode: Mode = CheckMode)
+GET        /trader/:ern/movement/:arc/consignee/export-vat                              controllers.sections.consignee.ConsigneeExportVatController.onPageLoad(ern: String, arc: String, mode: Mode = NormalMode)
+POST       /trader/:ern/movement/:arc/consignee/export-vat                              controllers.sections.consignee.ConsigneeExportVatController.onSubmit(ern: String, arc: String, mode: Mode = NormalMode)
+GET        /trader/:ern/movement/:arc/consignee/export-vat/change                       controllers.sections.consignee.ConsigneeExportVatController.onPageLoad(ern: String, arc: String, mode: Mode = CheckMode)
+POST       /trader/:ern/movement/:arc/consignee/export-vat/change                       controllers.sections.consignee.ConsigneeExportVatController.onSubmit(ern: String, arc: String, mode: Mode = CheckMode)
+
+GET        /trader/:ern/movement/:arc/consignee/consignee-excise                        controllers.sections.consignee.ConsigneeExciseController.onPageLoad(ern: String, arc: String, mode: Mode = NormalMode)
+POST       /trader/:ern/movement/:arc/consignee/consignee-excise                        controllers.sections.consignee.ConsigneeExciseController.onSubmit(ern: String, arc: String, mode: Mode = NormalMode)
+GET        /trader/:ern/movement/:arc/consignee/consignee-excise/change                 controllers.sections.consignee.ConsigneeExciseController.onPageLoad(ern: String, arc: String, mode: Mode = CheckMode)
+POST       /trader/:ern/movement/:arc/consignee/consignee-excise/change                 controllers.sections.consignee.ConsigneeExciseController.onSubmit(ern: String, arc: String, mode: Mode = CheckMode)
 
 GET         /trader/:ern/movement/:arc/consignee/exempt-organisation                    controllers.sections.consignee.ConsigneeExemptOrganisationController.onPageLoad(ern: String, arc: String, mode: Mode = NormalMode)
 POST        /trader/:ern/movement/:arc/consignee/exempt-organisation                    controllers.sections.consignee.ConsigneeExemptOrganisationController.onSubmit(ern: String, arc: String, mode: Mode = NormalMode)

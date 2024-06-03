@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,16 +18,17 @@ package fixtures.messages.sections.consignee
 
 import fixtures.messages.{BaseEnglish, BaseMessages, i18n}
 
-object ConsigneeExportVatMessages {
+object ConsigneeExportInformationMessages {
 
   sealed trait ViewMessages extends BaseMessages { _: i18n =>
-    val heading = "Enter the VAT registration number of the person representing the consignor at the office of export"
-    val title = titleHelper(heading)
-    val hint = "This is 9 numbers, sometimes with ‘GB’ at the start, for example 123456789 or GB123456789."
-    val errorRequired = "Enter the VAT registration number"
-
-    val cyaLabel: String = "Identification number"
-    val cyaChangeHidden: String = "VAT registration number of the person representing the consignor at the office of export"
+    val title = titleHelper("Do you know the VAT or EORI number of the person representing the consignor at the office of export?")
+    val heading = "Do you know the VAT or EORI number of the person representing the consignor at the office of export?"
+    val yesVatNumberRadioOption = "Yes - VAT number"
+    val yesEoriNumberRadioOption = "Yes - EORI number"
+    val noRadioOption = "No"
+    val cyaEoriLabel: String = "EORI Number"
+    val cyaVatLabel: String = "VAT Number"
+    val cyaChangeHidden: String = "VAT or EORI number of the person representing the consignor"
   }
 
   object English extends ViewMessages with BaseEnglish

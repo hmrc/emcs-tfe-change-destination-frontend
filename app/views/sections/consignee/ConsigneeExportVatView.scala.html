@@ -15,38 +15,37 @@
  *@
 
 @import models.requests.DataRequest
-@import models.sections.consignee.ConsigneeExportVatType
-@import viewmodels.LegendSize
+@import viewmodels.InputWidth._
+@import viewmodels.LabelSize
 
 @this(
     layout: templates.Layout,
     formHelper: FormWithCSRF,
     govukErrorSummary: GovukErrorSummary,
-    govukRadios: GovukRadios,
-    govukButton: GovukButton,
+    govukInput: GovukInput,
     h1: components.h1,
     h2: components.h2,
     continueOrExit: components.continueOrExit
 )
 
-@(form: Form[_], mode: Mode)(implicit request: DataRequest[_], messages: Messages)
+@(form: Form[_], action: Call)(implicit request: DataRequest[_], messages: Messages)
 
 @layout(pageTitle = title(form, messages("consigneeExportVat.title")), maybeShowActiveTrader = maybeShowActiveTrader(request)) {
 
-    @formHelper(action = controllers.sections.consignee.routes.ConsigneeExportVatController.onSubmit(request.ern, request.arc, mode), 'autoComplete -> "off") {
+    @formHelper(action) {
 
         @if(form.errors.nonEmpty) {
-            @govukErrorSummary(ErrorSummaryViewModel(form,  errorLinkOverrides = Map("value" -> "value_0")))
+            @govukErrorSummary(ErrorSummaryViewModel(form))
         }
 
-        @h2(messages("consignee.subHeading", request.arc),"govuk-caption-xl", hiddenContent = Some(messages("subHeading.hidden")))
+        @h2(messages("consignee.subHeading"), "govuk-caption-xl", hiddenContent = Some(messages("subHeading.hidden")))
 
-        @govukRadios(
-            RadiosViewModel(
-                field  = form("exportType"),
-                legend = LegendViewModel(Text(messages("consigneeExportVat.heading"))).asPageHeading(LegendSize.Large),
-                items  = ConsigneeExportVatType.options(form)
+        @govukInput(
+            InputViewModel(
+                field = form("value"),
+                label = LabelViewModel(Text(messages("consigneeExportVat.heading"))).asPageHeading(LabelSize.Large),
             )
+            .withHint(HintViewModel(content = Text(messages("consigneeExportVat.hint"))))
         )
 
         @continueOrExit()

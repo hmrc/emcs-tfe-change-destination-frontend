@@ -35,7 +35,7 @@ trait PreDraftAuthActionHelper {
                          movementRefiner: => ActionRefiner[UserRequest, MovementRequest]): ActionBuilder[MovementRequest, AnyContent] =
     auth(ern, arc) andThen betaAllowList andThen movementRefiner
 
-  private def authedUpToDate(ern: String, arc: String) =
+  private def authedUpToDate(ern: String, arc: String): ActionBuilder[MovementRequest, AnyContent] =
     authorised(ern, arc, withMovement.upToDate(arc))
 
   private def authorisedWithPreDraftDataUpToDateMovement(ern: String, arc: String): ActionBuilder[DataRequest, AnyContent] =
@@ -43,12 +43,6 @@ trait PreDraftAuthActionHelper {
 
   def authorisedWithPreDraftDataUpToDateMovementAsync(ern: String, arc: String)(block: DataRequest[_] => Future[Result]): Action[AnyContent] =
     authorisedWithPreDraftDataUpToDateMovement(ern, arc).async(block)
-
-  private def authedCache(ern: String, arc: String) =
-    authorised(ern, arc, withMovement.fromCache(arc))
-
-  private def authorisedWithPreDraftDataCachedMovement(ern: String, arc: String): ActionBuilder[DataRequest, AnyContent] =
-    authedCache(ern, arc) andThen getPreDraftData() andThen requirePreDraftData
 
   def authorisedWithPreDraftDataCachedMovementAsync(ern: String, arc: String)(block: DataRequest[_] => Future[Result]): Action[AnyContent] =
     authorisedWithPreDraftDataUpToDateMovement(ern, arc).async(block)

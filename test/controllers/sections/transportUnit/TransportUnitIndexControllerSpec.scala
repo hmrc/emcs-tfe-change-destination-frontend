@@ -145,7 +145,6 @@ class TransportUnitIndexControllerSpec extends SpecBase with MockUserAnswersServ
         .set(TransportUnitsReviewPage, ChangeAnswers)
       ), transportUnits = Seq(maxGetMovementResponse.transportDetails.head.copy(transportUnitCode = "1"))
     ) {
-      val result = controller.onPageLoad(testErn, testArc)(request)
 
       val expectedUserAnswers = emptyUserAnswers
         .set(HowMovementTransportedPage, RoadTransport)
@@ -158,6 +157,8 @@ class TransportUnitIndexControllerSpec extends SpecBase with MockUserAnswersServ
         .set(TransportUnitIdentityPage(testIndex1), "TransportDetailsIdentityOfTransportUnits1")
 
       MockUserAnswersService.set(expectedUserAnswers).returns(Future.successful(expectedUserAnswers))
+
+      val result = controller.onPageLoad(testErn, testArc)(request)
 
       status(result) mustEqual SEE_OTHER
       redirectLocation(result).value mustBe routes.TransportUnitsAddToListController.onPageLoad(testErn, testArc).url
@@ -171,7 +172,6 @@ class TransportUnitIndexControllerSpec extends SpecBase with MockUserAnswersServ
         .set(TransportUnitsReviewPage, ChangeAnswers)
       ), transportUnits = Seq(maxGetMovementResponse.transportDetails.head.copy(transportUnitCode = "1", identityOfTransportUnits = None))
     ) {
-      val result = controller.onPageLoad(testErn, testArc)(request)
 
       val expectedUserAnswers = emptyUserAnswers
         .set(HowMovementTransportedPage, RoadTransport)
@@ -183,6 +183,8 @@ class TransportUnitIndexControllerSpec extends SpecBase with MockUserAnswersServ
         .set(TransportSealTypePage(testIndex1), TransportSealTypeModel("TransportDetailsCommercialSealIdentification1", Some("TransportDetailsSealInformation1")))
 
       MockUserAnswersService.set(expectedUserAnswers).returns(Future.successful(expectedUserAnswers))
+
+      val result = controller.onPageLoad(testErn, testArc)(request)
 
       status(result) mustEqual SEE_OTHER
       redirectLocation(result).value mustBe routes.TransportUnitsAddToListController.onPageLoad(testErn, testArc).url
@@ -196,8 +198,6 @@ class TransportUnitIndexControllerSpec extends SpecBase with MockUserAnswersServ
         .set(TransportUnitsReviewPage, ChangeAnswers)
       ), transportUnits = Seq(maxGetMovementResponse.transportDetails.head.copy(transportUnitCode = "1", commercialSealIdentification = None))
     ) {
-      val result = controller.onPageLoad(testErn, testArc)(request)
-
       val expectedUserAnswers = emptyUserAnswers
         .set(HowMovementTransportedPage, RoadTransport)
         .set(TransportUnitsReviewPage, ChangeAnswers)
@@ -208,6 +208,8 @@ class TransportUnitIndexControllerSpec extends SpecBase with MockUserAnswersServ
         .set(TransportUnitIdentityPage(testIndex1), "TransportDetailsIdentityOfTransportUnits1")
 
       MockUserAnswersService.set(expectedUserAnswers).returns(Future.successful(expectedUserAnswers))
+
+      val result = controller.onPageLoad(testErn, testArc)(request)
 
       status(result) mustEqual SEE_OTHER
       redirectLocation(result).value mustBe routes.TransportUnitsAddToListController.onPageLoad(testErn, testArc).url

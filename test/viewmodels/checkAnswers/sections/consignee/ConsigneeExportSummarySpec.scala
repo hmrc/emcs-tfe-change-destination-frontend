@@ -48,7 +48,7 @@ class ConsigneeExportSummarySpec extends SpecBase with Matchers {
 
               implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(ChangeTypePage, ChangeType.ChangeConsignee))
 
-              ConsigneeExportSummary.row(showActionLinks = true) mustBe None
+              ConsigneeExportSummary.row mustBe None
             }
           }
 
@@ -58,7 +58,7 @@ class ConsigneeExportSummarySpec extends SpecBase with Matchers {
 
               implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(ChangeTypePage, ChangeType.Destination))
 
-              ConsigneeExportSummary.row(showActionLinks = true) mustBe
+              ConsigneeExportSummary.row mustBe
                 Some(
                   SummaryListRowViewModel(
                     key = messagesForLanguage.cyaLabel,
@@ -78,44 +78,25 @@ class ConsigneeExportSummarySpec extends SpecBase with Matchers {
 
         "when there's an answer" - {
 
-          "when the show action link boolean is true" - {
 
-            "must output the expected row" in {
+          "must output the expected row" in {
 
-              implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(ConsigneeExportPage, true))
+            implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(ConsigneeExportPage, true))
 
-              ConsigneeExportSummary.row(showActionLinks = true) mustBe
-                Some(
-                  SummaryListRowViewModel(
-                    key = messagesForLanguage.cyaLabel,
-                    value = Value(Text(messagesForLanguage.yes)),
-                    actions = Seq(
-                      ActionItemViewModel(
-                        content = messagesForLanguage.change,
-                        href = controllers.sections.consignee.routes.ConsigneeExportController.onPageLoad(testErn, testArc, NormalMode).url,
-                        id = ConsigneeExportPage
-                      ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHidden)
-                    )
+            ConsigneeExportSummary.row mustBe
+              Some(
+                SummaryListRowViewModel(
+                  key = messagesForLanguage.cyaLabel,
+                  value = Value(Text(messagesForLanguage.yes)),
+                  actions = Seq(
+                    ActionItemViewModel(
+                      content = messagesForLanguage.change,
+                      href = controllers.sections.consignee.routes.ConsigneeExportController.onPageLoad(testErn, testArc, NormalMode).url,
+                      id = ConsigneeExportPage
+                    ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHidden)
                   )
                 )
-            }
-          }
-
-          "when the show action link boolean is false" - {
-
-            "must output the expected row without action links" in {
-
-              implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(ConsigneeExportPage, true))
-
-              ConsigneeExportSummary.row(showActionLinks = false) mustBe
-                Some(
-                  SummaryListRowViewModel(
-                    key = messagesForLanguage.cyaLabel,
-                    value = Value(Text(messagesForLanguage.yes)),
-                    actions = Seq()
-                  )
-                )
-            }
+              )
           }
         }
       }

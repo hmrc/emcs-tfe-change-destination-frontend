@@ -50,21 +50,21 @@ class CheckYourAnswersConsigneeControllerSpec extends SpecBase with SummaryListF
   class Fixture(optUserAnswers: Option[UserAnswers]) {
 
     val ernList: Seq[SummaryListRow] = Seq(
-      ConsigneeBusinessNameSummary.row(showActionLinks = true),
-      ConsigneeExciseSummary.row(showActionLinks = true),
-      ConsigneeAddressSummary.row(showActionLinks = true)
+      ConsigneeBusinessNameSummary.row,
+      ConsigneeExciseSummary.row,
+      ConsigneeAddressSummary.row
     ).flatten
 
     val exemptedList: Seq[SummaryListRow] = Seq(
-      ConsigneeBusinessNameSummary.row(showActionLinks = true),
-      ConsigneeExemptOrganisationSummary.row(showActionLinks = true),
-      ConsigneeAddressSummary.row(showActionLinks = true)
+      ConsigneeBusinessNameSummary.row,
+      ConsigneeExemptOrganisationSummary.row,
+      ConsigneeAddressSummary.row
     ).flatten
 
     val vatEoriList: Seq[SummaryListRow] = Seq(
-      ConsigneeBusinessNameSummary.row(showActionLinks = true),
-      ConsigneeExportVatSummary.row(showActionLinks = true),
-      ConsigneeAddressSummary.row(showActionLinks = true)
+      ConsigneeBusinessNameSummary.row,
+      ConsigneeExportInformationSummary.row,
+      ConsigneeAddressSummary.row
     ).flatten
 
     val ernSummaryList: SummaryList = SummaryListViewModel(
@@ -152,7 +152,7 @@ class CheckYourAnswersConsigneeControllerSpec extends SpecBase with SummaryListF
           emptyUserAnswers
             .set(ConsigneeAddressPage, testUserAddress)
             .set(ConsigneeBusinessNamePage, testBusinessName)
-            .set(ConsigneeExportVatPage, testEori)
+            .set(ConsigneeExportInformationPage, testEori)
             .set(DestinationTypePage, EuTaxWarehouse)
         )) {
 
@@ -177,7 +177,7 @@ class CheckYourAnswersConsigneeControllerSpec extends SpecBase with SummaryListF
           emptyUserAnswers
             .set(ConsigneeAddressPage, testUserAddress)
             .set(ConsigneeBusinessNamePage, testBusinessName)
-            .set(ConsigneeExportVatPage, testVat)
+            .set(ConsigneeExportInformationPage, testVat)
             .set(DestinationTypePage, GbTaxWarehouse)
         )) {
 

@@ -40,7 +40,7 @@ case object ConsigneeSection extends Section[JsObject] with Enumerable.Implicits
     ) match {
       case (Some(value), _, _) =>
         value match {
-          case true => checkBusinessNameAndAddressBothExistWithPage(request.userAnswers.get(ConsigneeExportVatPage))
+          case true => checkBusinessNameAndAddressBothExistWithPage(request.userAnswers.get(ConsigneeExportInformationPage))
           case false => checkBusinessNameAndAddressBothExistWithPage(request.userAnswers.get(ConsigneeExcisePage))
         }
       case (_, Some(value), _) =>
@@ -53,7 +53,7 @@ case object ConsigneeSection extends Section[JsObject] with Enumerable.Implicits
   /**
    * @param pageGetResult result from request.userAnswers.get(Whatever)
    * @param request       DataRequest
-   * @param rds           unused, but required to ensure that the value passed in is readable (as opposed to something like Some(ConsigneeExportVatPage)
+   * @param rds           unused, but required to ensure that the value passed in is readable (as opposed to something like Some(ConsigneeExportInformationPage)
    * @tparam A type used for pageGetResult and rds
    * @return
    */
@@ -90,7 +90,7 @@ case object ConsigneeSection extends Section[JsObject] with Enumerable.Implicits
       isDifferentFromIE801(ConsigneeExemptOrganisationPage),
       isDifferentFromIE801(ConsigneeBusinessNamePage),
       isDifferentFromIE801(ConsigneeAddressPage),
-      isDifferentFromIE801(ConsigneeExportVatPage)
+      isDifferentFromIE801(ConsigneeExportInformationPage)
     ).contains(true)
   }
 }

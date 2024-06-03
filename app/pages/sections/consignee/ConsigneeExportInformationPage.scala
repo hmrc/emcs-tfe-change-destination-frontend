@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,24 +18,27 @@ package pages.sections.consignee
 
 import models.requests.DataRequest
 import models.response.emcsTfe.TraderModel
+import models.sections.consignee.{ConsigneeExportInformation, ConsigneeExportInformationType}
 import models.sections.info.ChangeType.ChangeConsignee
-import models.sections.info.movementScenario.DestinationType.Export
 import pages.QuestionPage
 import pages.sections.info.ChangeTypePage
 import play.api.libs.json.JsPath
 
-case object ConsigneeExportVatPage extends QuestionPage[String] {
-  override val toString: String = "consigneeExportVat"
-  override val path: JsPath = JsPath \ toString
+case object ConsigneeExportInformationPage extends QuestionPage[ConsigneeExportInformation] {
+  override val toString: String = "exportInformation"
+  override val path: JsPath = ConsigneeSection.path \ toString
 
-  override def getValueFromIE801(implicit request: DataRequest[_]): Option[String] =
+  override def getValueFromIE801(implicit request: DataRequest[_]): Option[ConsigneeExportInformation] =
     request.userAnswers.get(ChangeTypePage) match {
       case Some(ChangeConsignee) => None
       case _ =>
-        request.movementDetails.consigneeTrader.flatMap {
-          //Both consignee ERN and VAT number are used as the traderExciseNumber, VAT number is present when the destination type is export
-          case TraderModel(Some(vatNumber), _, _, _, _) if request.movementDetails.destinationType == Export => Some(vatNumber)
-          case _ => None
+        request.movementDetails.consigneeTrader.map {
+          case TraderModel(_, _, _, Some(vatNumber), _) =>
+            ConsigneeExportInformation(ConsigneeExportInformationType.YesVatNumber, Some(vatNumber), None)
+          case TraderModel(_, _, _, _, Some(eoriNumber)) =>
+            ConsigneeExportInformation(ConsigneeExportInformationType.YesEoriNumber, None, Some(eoriNumber))
+          case _ =>
+            ConsigneeExportInformation(ConsigneeExportInformationType.No, None, None)
         }
     }
 }

@@ -19,9 +19,8 @@ package viewmodels.checkAnswers.sections.consignee
 import base.SpecBase
 import fixtures.messages.sections.consignee.ConsigneeExportVatMessages
 import models.CheckMode
-import models.sections.consignee.ConsigneeExportVat
-import models.sections.consignee.ConsigneeExportVatType.YesEoriNumber
 import models.sections.info.ChangeType
+import models.sections.info.movementScenario.DestinationType.Export
 import org.scalatest.matchers.must.Matchers
 import pages.sections.consignee.ConsigneeExportVatPage
 import pages.sections.info.ChangeTypePage
@@ -43,27 +42,31 @@ class ConsigneeExportVatSummarySpec extends SpecBase with Matchers {
 
         "when there's no answer" - {
 
-          "when the ChangeType is `Consignee`" - {
+          "when the Change Type is Consignee" - {
 
-            "must output None" in {
+            "must output None (i.e. don't use the IE801 data)" in {
 
               implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(ChangeTypePage, ChangeType.ChangeConsignee))
 
-              ConsigneeExportVatSummary.row(showActionLinks = true) mustBe None
+              ConsigneeExportVatSummary.row mustBe None
             }
           }
 
-          "when the ChangeType is NOT `Consignee`" - {
+          "when the Change Type is NOT Consignee and destination type is Export" - {
 
-            "must output data from the IE801 (where present)" in {
+            "must output data from the IE801" in {
 
-              implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(ChangeTypePage, ChangeType.Destination))
+              implicit lazy val request = dataRequest(
+                request = FakeRequest(),
+                answers = emptyUserAnswers.set(ChangeTypePage, ChangeType.Destination),
+                movementDetails = maxGetMovementResponse.copy(destinationType = Export)
+              )
 
-              ConsigneeExportVatSummary.row(showActionLinks = true) mustBe
+              ConsigneeExportVatSummary.row mustBe
                 Some(
                   SummaryListRowViewModel(
-                    key = messagesForLanguage.cyaEoriLabel,
-                    value = Value(Text(maxGetMovementResponse.consigneeTrader.get.eoriNumber.get)),
+                    key = messagesForLanguage.cyaLabel,
+                    value = Value(Text("ConsigneeTraderId")),
                     actions = Seq(
                       ActionItemViewModel(
                         content = messagesForLanguage.change,
@@ -79,27 +82,25 @@ class ConsigneeExportVatSummarySpec extends SpecBase with Matchers {
 
         "when there's an answer" - {
 
-          "when the show action link boolean is true" - {
 
-            "must output the expected row" in {
+          "must output the expected row" in {
 
-              implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(ConsigneeExportVatPage, ConsigneeExportVat(YesEoriNumber,None, testEori.eoriNumber)))
+            implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(ConsigneeExportVatPage, testVatNumber))
 
-              ConsigneeExportVatSummary.row(showActionLinks = true) mustBe
-                Some(
-                  SummaryListRowViewModel(
-                    key = messagesForLanguage.cyaEoriLabel,
-                    value = Value(Text(testEori.eoriNumber.get)),
-                    actions = Seq(
-                      ActionItemViewModel(
-                        content = messagesForLanguage.change,
-                        href = controllers.sections.consignee.routes.ConsigneeExportVatController.onPageLoad(testErn, testArc, CheckMode).url,
-                        id = "changeConsigneeExportVat"
-                      ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHidden)
-                    )
+            ConsigneeExportVatSummary.row mustBe
+              Some(
+                SummaryListRowViewModel(
+                  key = messagesForLanguage.cyaLabel,
+                  value = Value(Text(testVatNumber)),
+                  actions = Seq(
+                    ActionItemViewModel(
+                      content = messagesForLanguage.change,
+                      href = controllers.sections.consignee.routes.ConsigneeExportVatController.onPageLoad(testErn, testArc, CheckMode).url,
+                      id = "changeConsigneeExportVat"
+                    ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHidden)
                   )
                 )
-            }
+              )
           }
         }
       }

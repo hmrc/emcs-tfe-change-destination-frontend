@@ -38,15 +38,24 @@ class ConsigneeNavigator @Inject() extends BaseNavigator {
     case ConsigneeExportPage => (userAnswers: UserAnswers) =>
       userAnswers.get(ConsigneeExportPage) match {
         case Some(true) =>
-          controllers.sections.consignee.routes.ConsigneeExportVatController.onPageLoad(userAnswers.ern, userAnswers.arc, NormalMode)
+          controllers.sections.consignee.routes.ConsigneeExportInformationController.onPageLoad(userAnswers.ern, userAnswers.arc, NormalMode)
         case Some(false) =>
           controllers.sections.consignee.routes.ConsigneeExciseController.onPageLoad(userAnswers.ern, userAnswers.arc, NormalMode)
         case _ =>
           controllers.routes.JourneyRecoveryController.onPageLoad()
       }
 
-    case ConsigneeExportVatPage => (userAnswers: UserAnswers) =>
+    case ConsigneeExportInformationPage => (userAnswers: UserAnswers) =>
       controllers.sections.consignee.routes.ConsigneeBusinessNameController.onPageLoad(userAnswers.ern, userAnswers.arc, NormalMode)
+
+    case ConsigneeExportVatPage => (userAnswers: UserAnswers) =>
+      userAnswers.get(ConsigneeExportInformationPage) match {
+        //TODO: implement in ETFE-3250
+//        case Some(answers) if answers.contains(YesEoriNumber) =>
+//        controllers.sections.consignee.routes.ConsigneeExportEoriController.onPageLoad(userAnswers.ern, userAnswers.draftId, NormalMode)
+        case _ =>
+          controllers.sections.consignee.routes.ConsigneeBusinessNameController.onPageLoad(userAnswers.ern, userAnswers.arc, NormalMode)
+      }
 
     case ConsigneeExcisePage => (userAnswers: UserAnswers) =>
       controllers.sections.consignee.routes.ConsigneeBusinessNameController.onPageLoad(userAnswers.ern, userAnswers.arc, NormalMode)

@@ -27,14 +27,14 @@ import viewmodels.implicits._
 
 object ConsigneeExciseSummary {
 
-  def row(showActionLinks: Boolean)(implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] =
+  def row(implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] =
     request.userAnswers.get(ConsigneeExcisePage).map {
       answer =>
 
         SummaryListRowViewModel(
           key = "consigneeExcise.checkYourAnswersLabel",
           value = ValueViewModel(answer),
-          actions = if (!showActionLinks) Seq() else Seq(
+          actions = Seq(
             ActionItemViewModel(
               content = "site.change",
               href = controllers.sections.consignee.routes.ConsigneeExciseController.onPageLoad(request.ern, request.arc, CheckMode).url,

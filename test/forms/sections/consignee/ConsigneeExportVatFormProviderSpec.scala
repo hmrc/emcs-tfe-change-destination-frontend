@@ -16,77 +16,47 @@
 
 package forms.sections.consignee
 
-import forms.behaviours.OptionFieldBehaviours
-import models.sections.consignee.ConsigneeExportVatType.{YesEoriNumber, YesVatNumber}
+import forms.ONLY_ALPHANUMERIC_REGEX
+import forms.behaviours.StringFieldBehaviours
 import play.api.data.FormError
 
-class ConsigneeExportVatFormProviderSpec extends OptionFieldBehaviours {
+class ConsigneeExportVatFormProviderSpec extends StringFieldBehaviours {
 
-  "ConsigneeExportVatFormProvider" - {
+  val requiredKey = "consigneeExportVat.error.required"
+  val lengthKey = "consigneeExportVat.error.length"
+  val invalidKey = "consigneeExportVat.error.invalid"
+  val maxLength = 16
 
-    val form = new ConsigneeExportVatFormProvider().apply()
+  val form = new ConsigneeExportVatFormProvider()()
 
-    "when a value is not provided" - {
+  ".value" - {
 
-      "must error with the expected message key" in {
-        val boundForm = form.bind(Map("exportType" -> ""))
-        boundForm.errors.headOption mustBe Some(FormError("exportType", "consigneeExportVat.consigneeExportType.error.required", Seq()))
+    val fieldName = "value"
+
+    behave like fieldThatBindsValidData(
+      form,
+      fieldName,
+      "0" * maxLength
+    )
+
+    behave like fieldWithMaxLength(
+      form,
+      fieldName,
+      maxLength = maxLength,
+      lengthError = FormError(fieldName, lengthKey, Seq(maxLength))
+    )
+
+    behave like mandatoryField(
+      form,
+      fieldName,
+      requiredError = FormError(fieldName, requiredKey)
+    )
+
+    "when the value contains invalid characters" - {
+      "must error with the expected msg key" in {
+        val boundForm = form.bind(Map(fieldName -> "!@£$%^&*()_+"))
+        boundForm.errors.headOption mustBe Some(FormError(fieldName, invalidKey, Seq(ONLY_ALPHANUMERIC_REGEX)))
       }
     }
-
-    "when choosing VAT Number" - {
-
-      val vatNumberMaxLength: Int = 14
-
-      "when a value is not provided" in {
-        val boundForm = form.bind(
-          Map(
-            "exportType" -> YesVatNumber.toString,
-            "vatNumber" -> ""
-          )
-        )
-
-        boundForm.errors.headOption mustBe Some(FormError("vatNumber", "consigneeExportVat.vatNumber.error.required", Seq()))
-      }
-
-      "when a value is too long" in {
-        val boundForm = form.bind(
-          Map(
-            "exportType" -> YesVatNumber.toString,
-            "vatNumber" -> "A" * (vatNumberMaxLength + 1)
-          )
-        )
-
-        boundForm.errors.headOption mustBe Some(FormError("vatNumber", "consigneeExportVat.vatNumber.error.length", Seq(vatNumberMaxLength)))
-      }
-    }
-
-    "when choosing EORI Number" - {
-
-      val eoriNumberMaxLength: Int = 17
-
-      "when a value is not provided" in {
-        val boundForm = form.bind(
-          Map(
-            "exportType" -> YesEoriNumber.toString,
-            "eoriNumber" -> ""
-          )
-        )
-
-        boundForm.errors.headOption mustBe Some(FormError("eoriNumber", "consigneeExportVat.eoriNumber.error.required", Seq()))
-      }
-
-      "when a value is too long" in {
-        val boundForm = form.bind(
-          Map(
-            "exportType" -> YesEoriNumber.toString,
-            "eoriNumber" -> "A" * (eoriNumberMaxLength + 1)
-          )
-        )
-
-        boundForm.errors.headOption mustBe Some(FormError("eoriNumber", "consigneeExportVat.eoriNumber.error.length", Seq(eoriNumberMaxLength)))
-      }
-    }
-
   }
 }

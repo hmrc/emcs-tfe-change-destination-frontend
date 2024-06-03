@@ -19,7 +19,7 @@ package fixtures
 import models.UserAnswers
 import models.response.SubmitChangeDestinationResponse
 import models.sections.ReviewAnswer.ChangeAnswers
-import models.sections.consignee.{ConsigneeExportVat, ConsigneeExportVatType}
+import models.sections.consignee.{ConsigneeExportInformation, ConsigneeExportInformationType}
 import models.sections.guarantor.GuarantorArranger
 import models.sections.info.ChangeType.ChangeConsignee
 import models.sections.info.movementScenario.{DestinationType, MovementScenario}
@@ -28,7 +28,7 @@ import models.sections.journeyType.JourneyTime.Hours
 import models.sections.transportArranger.TransportArranger
 import models.sections.transportUnit.{TransportSealTypeModel, TransportUnitType}
 import models.submitChangeDestination._
-import pages.sections.consignee.{ConsigneeAddressPage, ConsigneeBusinessNamePage, ConsigneeExcisePage, ConsigneeExportVatPage}
+import pages.sections.consignee.{ConsigneeAddressPage, ConsigneeBusinessNamePage, ConsigneeExcisePage, ConsigneeExportInformationPage}
 import pages.sections.exportInformation.ExportCustomsOfficePage
 import pages.sections.firstTransporter.{FirstTransporterAddressPage, FirstTransporterNamePage, FirstTransporterReviewPage, FirstTransporterVatPage}
 import pages.sections.guarantor._
@@ -177,7 +177,7 @@ trait SubmitChangeDestinationFixtures extends GetMovementResponseFixtures { _: B
     // consignee
     .set(ConsigneeBusinessNamePage, "consignee name")
     .set(ConsigneeExcisePage, "consignee ern")
-    .set(ConsigneeExportVatPage, ConsigneeExportVat(ConsigneeExportVatType.YesEoriNumber, Some("vat no"), Some("consignee eori")))
+    .set(ConsigneeExportInformationPage, ConsigneeExportInformation(ConsigneeExportInformationType.YesEoriNumber, Some("vat no"), Some("consignee eori")))
     .set(ConsigneeAddressPage, testUserAddress.copy(street = "consignee street"))
     // deliveryPlaceCustomsOffice
     .set(ExportCustomsOfficePage, "exportOffice")
