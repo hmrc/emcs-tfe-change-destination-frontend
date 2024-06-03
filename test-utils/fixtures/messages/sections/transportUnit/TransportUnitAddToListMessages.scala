@@ -29,11 +29,11 @@ object TransportUnitAddToListMessages {
 
     val question = "Do you need to add another transport unit?"
     val yesOption = "Yes"
-    val noOption = "No, this is the only transport unit for this movement"
+    val noOptionSingular = "No, this is the only transport unit for this movement"
+    val noOptionPlural = "No, these are all the transport units"
     val optionDivider = "or"
     val laterOption = "I will add more transport units later"
     val errorMessage = "Select yes if you need to add another transport unit"
-    val errorMessageHelper: String => String = s"Error: " + _
 
 
     val transportUnit1 = "Transport unit 1"

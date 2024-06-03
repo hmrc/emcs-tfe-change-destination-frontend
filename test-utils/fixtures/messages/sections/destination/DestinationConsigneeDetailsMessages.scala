@@ -28,8 +28,6 @@ object DestinationConsigneeDetailsMessages {
     val cyaLabel: String = "Use consignee details"
 
     val cyaChangeHidden: String = "use consignee details"
-
-    val errorMessageHelper: String => String = s"Error: " + _
   }
 
   object English extends ViewMessages with BaseEnglish
