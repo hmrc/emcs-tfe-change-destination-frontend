@@ -76,7 +76,7 @@ class TransportUnitTypeSummarySpec extends SpecBase with Matchers {
 
               implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers)
 
-              TransportUnitTypeSummary.row(testIndex1, onReviewPage = false) mustBe None
+              TransportUnitTypeSummary.row(testIndex1, hideChangeLinks = false) mustBe None
             }
           }
 
@@ -94,7 +94,7 @@ class TransportUnitTypeSummarySpec extends SpecBase with Matchers {
 
                   implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(TransportUnitTypePage(testIndex1), transportUnitType))
 
-                  TransportUnitTypeSummary.row(testIndex1, onReviewPage = false) mustBe
+                  TransportUnitTypeSummary.row(testIndex1, hideChangeLinks = false) mustBe
                     Some(
                       SummaryListRowViewModel(
                         key = messagesForLanguage.addToListLabel,
@@ -114,7 +114,7 @@ class TransportUnitTypeSummarySpec extends SpecBase with Matchers {
 
                   implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(TransportUnitTypePage(testIndex1), transportUnitType))
 
-                  TransportUnitTypeSummary.row(testIndex1, onReviewPage = true) mustBe
+                  TransportUnitTypeSummary.row(testIndex1, hideChangeLinks = true) mustBe
                     Some(
                       SummaryListRowViewModel(
                         key = messagesForLanguage.addToListLabel,

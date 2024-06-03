@@ -45,7 +45,7 @@ class TransportUnitIdentitySummarySpec extends SpecBase with Matchers {
 
             implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers, movementDetails = maxGetMovementResponse.copy(transportDetails = Seq.empty))
 
-            TransportUnitIdentitySummary.row(testIndex1, onReviewPage = false) mustBe
+            TransportUnitIdentitySummary.row(testIndex1, hideChangeLinks = false) mustBe
               SummaryListRowViewModel(
                 key = messagesForLanguage.cyaLabel,
                 value = Value(Text(messagesForLanguage.notProvided)),
@@ -63,7 +63,7 @@ class TransportUnitIdentitySummarySpec extends SpecBase with Matchers {
 
             implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers, movementDetails = maxGetMovementResponse.copy(transportDetails = Seq.empty))
 
-            TransportUnitIdentitySummary.row(testIndex1, onReviewPage = true) mustBe
+            TransportUnitIdentitySummary.row(testIndex1, hideChangeLinks = true) mustBe
               SummaryListRowViewModel(
                 key = messagesForLanguage.cyaLabel,
                 value = Value(Text(messagesForLanguage.notProvided)),
@@ -78,7 +78,7 @@ class TransportUnitIdentitySummarySpec extends SpecBase with Matchers {
 
             implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(TransportUnitIdentityPage(testIndex1), "testName"))
 
-            TransportUnitIdentitySummary.row(testIndex1, onReviewPage = false) mustBe
+            TransportUnitIdentitySummary.row(testIndex1, hideChangeLinks = false) mustBe
               SummaryListRowViewModel(
                 key = messagesForLanguage.cyaLabel,
                 value = Value(Text("testName")),
@@ -96,7 +96,7 @@ class TransportUnitIdentitySummarySpec extends SpecBase with Matchers {
 
             implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(TransportUnitIdentityPage(testIndex1), "testName"))
 
-            TransportUnitIdentitySummary.row(testIndex1, onReviewPage = true) mustBe
+            TransportUnitIdentitySummary.row(testIndex1, hideChangeLinks = true) mustBe
               SummaryListRowViewModel(
                 key = messagesForLanguage.cyaLabel,
                 value = Value(Text("testName")),

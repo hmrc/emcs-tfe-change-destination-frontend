@@ -188,10 +188,10 @@ class TransportUnitsAddToListHelperSpec extends SpecBase {
                     )
                   ))))),
                 rows = Seq(
-                  TransportUnitTypeSummary.row(testIndex1, onReviewPage = false).get,
-                  TransportUnitIdentitySummary.row(testIndex1, onReviewPage = false),
-                  TransportSealChoiceSummary.row(testIndex1, onReviewPage = false),
-                  TransportUnitGiveMoreInformationSummary.row(testIndex1, onReviewPage = false)
+                  TransportUnitTypeSummary.row(testIndex1, hideChangeLinks = true).get,
+                  TransportUnitIdentitySummary.row(testIndex1, hideChangeLinks = true),
+                  TransportSealChoiceSummary.row(testIndex1, hideChangeLinks = true),
+                  TransportUnitGiveMoreInformationSummary.row(testIndex1, hideChangeLinks = true)
                 )
               )
             )

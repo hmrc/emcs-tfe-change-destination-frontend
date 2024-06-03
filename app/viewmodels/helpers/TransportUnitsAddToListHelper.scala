@@ -47,15 +47,16 @@ class TransportUnitsAddToListHelper @Inject()(implicit link: link, tagHelper: Ta
     val isTransportUnitAFixedTransportInstallation = request.userAnswers.get(TransportUnitTypePage(idx)).contains(FixedTransport)
 
     val transportUnitStatus = TransportUnitSection(idx).status
+    val hideChangeLinks = onReviewPage || transportUnitStatus != Completed
 
     SummaryListViewModel(
       rows = Seq(
-        TransportUnitTypeSummary.row(idx, onReviewPage),
-        if (!isTransportUnitAFixedTransportInstallation) Some(TransportUnitIdentitySummary.row(idx, onReviewPage)) else None,
-        if (!isTransportUnitAFixedTransportInstallation) Some(TransportSealChoiceSummary.row(idx, onReviewPage)) else None,
-        if (!isTransportUnitAFixedTransportInstallation) TransportSealTypeSummary.row(idx, onReviewPage) else None,
-        if (!isTransportUnitAFixedTransportInstallation) TransportSealInformationSummary.row(idx, onReviewPage) else None,
-        if (!isTransportUnitAFixedTransportInstallation) Some(TransportUnitGiveMoreInformationSummary.row(idx, onReviewPage)) else None
+        TransportUnitTypeSummary.row(idx, hideChangeLinks),
+        if (!isTransportUnitAFixedTransportInstallation) Some(TransportUnitIdentitySummary.row(idx, hideChangeLinks)) else None,
+        if (!isTransportUnitAFixedTransportInstallation) Some(TransportSealChoiceSummary.row(idx, hideChangeLinks)) else None,
+        if (!isTransportUnitAFixedTransportInstallation) TransportSealTypeSummary.row(idx, hideChangeLinks) else None,
+        if (!isTransportUnitAFixedTransportInstallation) TransportSealInformationSummary.row(idx, hideChangeLinks) else None,
+        if (!isTransportUnitAFixedTransportInstallation) Some(TransportUnitGiveMoreInformationSummary.row(idx, hideChangeLinks)) else None
       ).flatten
     ).copy(card = Some(
       Card(

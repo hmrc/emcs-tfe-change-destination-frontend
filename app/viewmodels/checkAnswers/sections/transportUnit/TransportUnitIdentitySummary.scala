@@ -29,11 +29,11 @@ import viewmodels.implicits._
 
 object TransportUnitIdentitySummary {
 
-  def row(idx: Index, onReviewPage: Boolean)(implicit request: DataRequest[_], messages: Messages): SummaryListRow =
+  def row(idx: Index, hideChangeLinks: Boolean)(implicit request: DataRequest[_], messages: Messages): SummaryListRow =
     SummaryListRowViewModel(
       key = "transportUnitIdentity.checkYourAnswersLabel",
       value = ValueViewModel(getValue(idx)),
-      actions = if(onReviewPage) Seq() else Seq(
+      actions = if(hideChangeLinks) Seq() else Seq(
         ActionItemViewModel(
           "site.change",
           routes.TransportUnitIdentityController.onPageLoad(request.userAnswers.ern, request.userAnswers.arc, idx, CheckMode).url,

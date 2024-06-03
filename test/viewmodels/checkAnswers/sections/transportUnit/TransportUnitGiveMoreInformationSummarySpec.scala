@@ -43,7 +43,7 @@ class TransportUnitGiveMoreInformationSummarySpec extends SpecBase with Matchers
           "must output the expected row - when not on review page" in {
             implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers, movementDetails = maxGetMovementResponse.copy(transportDetails = Seq.empty))
 
-            TransportUnitGiveMoreInformationSummary.row(testIndex1, onReviewPage = false) mustBe
+            TransportUnitGiveMoreInformationSummary.row(testIndex1, hideChangeLinks = false) mustBe
               SummaryListRowViewModel(
                 key = messagesForLanguage.cyaLabel,
                 value = Value(
@@ -58,7 +58,7 @@ class TransportUnitGiveMoreInformationSummarySpec extends SpecBase with Matchers
           "must output the expected row - when on review page" in {
             implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers, movementDetails = maxGetMovementResponse.copy(transportDetails = Seq.empty))
 
-            TransportUnitGiveMoreInformationSummary.row(testIndex1, onReviewPage = true) mustBe
+            TransportUnitGiveMoreInformationSummary.row(testIndex1, hideChangeLinks = true) mustBe
               SummaryListRowViewModel(
                 key = messagesForLanguage.cyaLabel,
                 value = Value(Text(messagesForLanguage.notProvided)),
@@ -72,7 +72,7 @@ class TransportUnitGiveMoreInformationSummarySpec extends SpecBase with Matchers
           "must output the expected row - with a change link when not on review page" in {
             implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(TransportUnitGiveMoreInformationPage(testIndex1), Some("value")))
 
-            TransportUnitGiveMoreInformationSummary.row(testIndex1, onReviewPage = false) mustBe
+            TransportUnitGiveMoreInformationSummary.row(testIndex1, hideChangeLinks = false) mustBe
               SummaryListRowViewModel(
                 key = messagesForLanguage.cyaLabel,
                 value = Value(Text("value")),
@@ -89,7 +89,7 @@ class TransportUnitGiveMoreInformationSummarySpec extends SpecBase with Matchers
           "must output the expected row - with no change link when on review page" in {
             implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(TransportUnitGiveMoreInformationPage(testIndex1), Some("value")))
 
-            TransportUnitGiveMoreInformationSummary.row(testIndex1, onReviewPage = true) mustBe
+            TransportUnitGiveMoreInformationSummary.row(testIndex1, hideChangeLinks = true) mustBe
               SummaryListRowViewModel(
                 key = messagesForLanguage.cyaLabel,
                 value = Value(Text("value")),
