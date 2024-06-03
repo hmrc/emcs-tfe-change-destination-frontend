@@ -1429,3 +1429,12 @@ consigneeExportVat.error.length = VAT registration number must be 16 characters 
 consigneeExportVat.error.invalid = VAT registration number must only contain letters and numbers
 consigneeExportVat.change.hidden = VAT registration number of the person representing the consignor at the office of export
 
+consigneeExportEori.title = Enter the EORI number of the person representing the consignor at the office of export
+consigneeExportEori.heading = Enter the EORI number of the person representing the consignor at the office of export
+consigneeExportEori.hint = The first 2 letters are the country code, like GB or XI. This is usually followed by 12 or 15 digits, like GB123456123456.
+consigneeExportEori.checkYourAnswersLabel = EORI number
+consigneeExportEori.error.required = Enter the EORI number
+consigneeExportEori.error.length = EORI number must be 17 characters or less
+consigneeExportEori.error.invalidFormat = EORI number starts with a 2 letter country code, followed by up to 15 numbers or mixed numbers and letters
+consigneeExportEori.change.hidden = EORI number
+

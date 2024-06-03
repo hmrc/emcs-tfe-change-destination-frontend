@@ -15,6 +15,11 @@ POST       /trader/:ern/movement/:arc/consignee/export-vat                      
 GET        /trader/:ern/movement/:arc/consignee/export-vat/change                       controllers.sections.consignee.ConsigneeExportVatController.onPageLoad(ern: String, arc: String, mode: Mode = CheckMode)
 POST       /trader/:ern/movement/:arc/consignee/export-vat/change                       controllers.sections.consignee.ConsigneeExportVatController.onSubmit(ern: String, arc: String, mode: Mode = CheckMode)
 
+GET        /trader/:ern/movement/:arc/consignee/export-eori                             controllers.sections.consignee.ConsigneeExportEoriController.onPageLoad(ern: String, arc: String, mode: Mode = NormalMode)
+POST       /trader/:ern/movement/:arc/consignee/export-eori                             controllers.sections.consignee.ConsigneeExportEoriController.onSubmit(ern: String, arc: String, mode: Mode = NormalMode)
+GET        /trader/:ern/movement/:arc/consignee/export-eori/change                      controllers.sections.consignee.ConsigneeExportEoriController.onPageLoad(ern: String, arc: String, mode: Mode = CheckMode)
+POST       /trader/:ern/movement/:arc/consignee/export-eori/change                      controllers.sections.consignee.ConsigneeExportEoriController.onSubmit(ern: String, arc: String, mode: Mode = CheckMode)
+
 GET        /trader/:ern/movement/:arc/consignee/consignee-excise                        controllers.sections.consignee.ConsigneeExciseController.onPageLoad(ern: String, arc: String, mode: Mode = NormalMode)
 POST       /trader/:ern/movement/:arc/consignee/consignee-excise                        controllers.sections.consignee.ConsigneeExciseController.onSubmit(ern: String, arc: String, mode: Mode = NormalMode)
 GET        /trader/:ern/movement/:arc/consignee/consignee-excise/change                 controllers.sections.consignee.ConsigneeExciseController.onPageLoad(ern: String, arc: String, mode: Mode = CheckMode)

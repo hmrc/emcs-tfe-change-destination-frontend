@@ -72,4 +72,25 @@ trait FieldBehaviours extends FormSpec {
       result.errors mustBe empty
     }
   }
+
+  def fieldWithEori(form: Form[_],
+                    fieldName: String,
+                    formatError: FormError): Unit = {
+
+    "bind when the EORI number is valid" in {
+      val result = form.bind(Map(fieldName -> "GB345678901234567")).apply(fieldName)
+      result.errors mustBe empty
+    }
+
+    "not bind when the EORI number is missing a 2 character prefix" in {
+      val result = form.bind(Map(fieldName -> "G2345678901234567")).apply(fieldName)
+      result.errors mustEqual Seq(formatError)
+    }
+
+    "not bind when the EORI number has a symbol" in {
+      val result = form.bind(Map(fieldName -> "GB-45678901234567")).apply(fieldName)
+      result.errors mustEqual Seq(formatError)
+    }
+
+  }
 }
