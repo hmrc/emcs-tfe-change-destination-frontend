@@ -83,10 +83,22 @@ class BaseNavigationControllerSpec extends SpecBase with GuiceOneAppPerSuite wit
 
           val newUserAnswers: UserAnswers = emptyUserAnswers.set(page, value)
 
-          MockUserAnswersService.set().returns(Future.successful(newUserAnswers))
+          MockUserAnswersService.set(newUserAnswers).returns(Future.successful(newUserAnswers))
 
           val answer: Future[Result] =
             testController.saveAndRedirect(page, value, emptyUserAnswers, NormalMode)
+
+          redirectLocation(answer) mustBe Some(testOnwardRoute.url)
+        }
+
+        "when IE801 value contains the same answer" in new Test {
+
+          val newUserAnswers: UserAnswers = emptyUserAnswers.set(page2, "IE801 answer")
+
+          MockUserAnswersService.set(newUserAnswers).returns(Future.successful(newUserAnswers))
+
+          val answer: Future[Result] =
+            testController.saveAndRedirect(page2, "IE801 answer", emptyUserAnswers, NormalMode)
 
           redirectLocation(answer) mustBe Some(testOnwardRoute.url)
         }
@@ -110,7 +122,7 @@ class BaseNavigationControllerSpec extends SpecBase with GuiceOneAppPerSuite wit
       "must save the answer and redirect" in new Test {
         val newUserAnswers: UserAnswers = emptyUserAnswers.set(page, value)
 
-        MockUserAnswersService.set().returns(Future.successful(newUserAnswers))
+        MockUserAnswersService.set(newUserAnswers).returns(Future.successful(newUserAnswers))
 
         val answer: Future[Result] =
           testController.saveAndRedirect(page, value, NormalMode)(dataRequest(FakeRequest()), implicitly)

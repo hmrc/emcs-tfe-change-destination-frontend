@@ -198,6 +198,7 @@ class TransportUnitIndexControllerSpec extends SpecBase with MockUserAnswersServ
         .set(TransportUnitsReviewPage, ChangeAnswers)
       ), transportUnits = Seq(maxGetMovementResponse.transportDetails.head.copy(transportUnitCode = "1", commercialSealIdentification = None))
     ) {
+
       val expectedUserAnswers = emptyUserAnswers
         .set(HowMovementTransportedPage, RoadTransport)
         .set(TransportUnitsReviewPage, ChangeAnswers)
