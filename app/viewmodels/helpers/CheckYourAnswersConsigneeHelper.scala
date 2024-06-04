@@ -33,6 +33,7 @@ class CheckYourAnswersConsigneeHelper @Inject()() {
         ConsigneeBusinessNameSummary.row,
         ConsigneeExciseSummary.row,
         ConsigneeExportVatSummary.row,
+        ConsigneeExportEoriSummary.row,
         ConsigneeExportInformationSummary.row,
         ConsigneeExemptOrganisationSummary.row,
         ConsigneeAddressSummary.row

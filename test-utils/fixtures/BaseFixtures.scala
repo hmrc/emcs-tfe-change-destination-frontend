@@ -36,6 +36,7 @@ trait BaseFixtures {
   val testGreatBritainErn = "GBRC123456789"
   val testArc: String = "arc"
   val testVatNumber: String = "123456789"
+  val testEoriNumber = "AB1234"
   val testExportCustomsOffice: String = "AA123456"
   val testDateOfArrival: LocalDate = LocalDate.now()
   val testSubmissionDate: LocalDateTime = LocalDateTime.now()
@@ -49,8 +50,8 @@ trait BaseFixtures {
   val testIndex3: Index = Index(2)
 
   val testExemptedOrganisation = ExemptOrganisationDetailsModel("AT", "12345")
-  val testEori = ConsigneeExportInformation(ConsigneeExportInformationType.YesEoriNumber, None, Some("1234"))
-  val testVat = ConsigneeExportInformation(ConsigneeExportInformationType.YesVatNumber, Some("1234"), None)
+  val testEori = ConsigneeExportInformation(ConsigneeExportInformationType.YesEoriNumber, None, Some(testEoriNumber))
+  val testVat = ConsigneeExportInformation(ConsigneeExportInformationType.YesVatNumber, Some(testVatNumber), None)
 
   val emptyUserAnswers: UserAnswers = UserAnswers(
     ern = testErn,
