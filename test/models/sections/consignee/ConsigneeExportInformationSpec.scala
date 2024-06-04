@@ -17,40 +17,47 @@
 package models.sections.consignee
 
 import base.SpecBase
-import fixtures.ConsigneeExportInformationFixtures
-import play.api.libs.json.{JsSuccess, Json}
+import fixtures.messages.sections.consignee.ConsigneeExportInformationMessages
+import models.sections.consignee.ConsigneeExportInformation.{EoriNumber, NoInformation, VatNumber}
+import play.api.i18n.Messages
+import play.api.test.FakeRequest
+import uk.gov.hmrc.govukfrontend.views.Aliases.Text
+import uk.gov.hmrc.govukfrontend.views.viewmodels.checkboxes.{CheckboxItem, ExclusiveCheckbox}
 
-class ConsigneeExportInformationSpec extends SpecBase with ConsigneeExportInformationFixtures {
+class ConsigneeExportInformationSpec extends SpecBase {
+
+  implicit val msgs: Messages = messages(FakeRequest())
 
   "ConsigneeExportInformation" - {
 
-    "ConsigneeExportInformation with a VAT number" - {
+    ".options" - {
 
-      "should read from json" in {
-        Json.fromJson[ConsigneeExportInformation](exportTypeVatJson) mustBe JsSuccess(exportTypeVatModel)
-      }
-      "should write to json" in {
-        Json.toJson(exportTypeVatModel) mustBe exportTypeVatJson
-      }
-    }
+      Seq(ConsigneeExportInformationMessages.English).foreach { messagesForLang =>
 
-    "ConsigneeExportInformation with an EORI number" - {
+        "should render the correct set of checkboxes" in {
 
-      "should read from json" in {
-        Json.fromJson[ConsigneeExportInformation](exportTypeEoriJson) mustBe JsSuccess(exportTypeEoriModel)
-      }
-      "should write to json" in {
-        Json.toJson(exportTypeEoriModel) mustBe exportTypeEoriJson
-      }
-    }
-
-    "ConsigneeExportInformation with neither a VAT or EORI number" - {
-
-      "should read from json" in {
-        Json.fromJson[ConsigneeExportInformation](exportTypeNoJson) mustBe JsSuccess(exportTypeNoModel)
-      }
-      "should write to json" in {
-        Json.toJson(exportTypeNoModel) mustBe exportTypeNoJson
+          ConsigneeExportInformation.options() mustBe Seq(
+            CheckboxItem(
+              content = Text(messagesForLang.checkboxItemForVat),
+              value = VatNumber.toString,
+              id = Some("value")
+            ),
+            CheckboxItem(
+              content = Text(messagesForLang.checkboxItemForEori),
+              value = EoriNumber.toString,
+              id = Some("value_1")
+            ),
+            CheckboxItem(
+              divider = Some(messagesForLang.or)
+            ),
+            CheckboxItem(
+              content = Text(messagesForLang.checkboxItemForNoInfo),
+              value = NoInformation.toString,
+              id = Some("value_2"),
+              behaviour = Some(ExclusiveCheckbox)
+            )
+          )
+        }
       }
     }
 

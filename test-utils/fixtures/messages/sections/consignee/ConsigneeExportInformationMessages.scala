@@ -21,13 +21,20 @@ import fixtures.messages.{BaseEnglish, BaseMessages, i18n}
 object ConsigneeExportInformationMessages {
 
   sealed trait ViewMessages extends BaseMessages { _: i18n =>
-    val title = titleHelper("Do you know the VAT or EORI number of the person representing the consignor at the office of export?")
-    val heading = "Do you know the VAT or EORI number of the person representing the consignor at the office of export?"
-    val yesVatNumberRadioOption = "Yes - VAT number"
-    val yesEoriNumberRadioOption = "Yes - EORI number"
-    val noRadioOption = "No"
-    val cyaEoriLabel: String = "EORI Number"
-    val cyaVatLabel: String = "VAT Number"
+    val title = titleHelper("What information do you have about the person representing the consignor at the office of export?")
+    val heading = "What information do you have about the person representing the consignor at the office of export?"
+
+    val hint = "Select all that apply."
+
+    val checkboxItemForVat = "VAT registration number"
+    val checkboxItemForEori = "EORI number"
+    val checkboxItemForNoInfo = "I don’t have any information about this person"
+
+    val cyaLabel: String = "Identification provided"
+    val cyaValueVatNumber: String = "VAT registration number"
+    val cyaValueEoriNumber: String = "EORI number"
+    val cyaValueNoInformation: String = "None"
+
     val cyaChangeHidden: String = "VAT or EORI number of the person representing the consignor"
   }
 

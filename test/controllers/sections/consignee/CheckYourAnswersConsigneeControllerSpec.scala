@@ -20,9 +20,10 @@ import base.SpecBase
 import controllers.actions.{FakeDataRetrievalAction, FakeMovementAction}
 import controllers.routes
 import mocks.services.MockUserAnswersService
-import mocks.viewmodels.MockConsigneeCheckYourAnswersHelper
+import mocks.viewmodels.MockConsigneeCheckAnswersHelper
 import models.UserAnswers
 import models.requests.DataRequest
+import models.sections.consignee.ConsigneeExportInformation.{EoriNumber, VatNumber}
 import models.sections.info.movementScenario.MovementScenario.{EuTaxWarehouse, ExemptedOrganisation, GbTaxWarehouse}
 import navigation.FakeNavigators.FakeConsigneeNavigator
 import pages.sections.consignee._
@@ -37,9 +38,11 @@ import viewmodels.govuk.SummaryListFluency
 import views.html.sections.consignee.CheckYourAnswersConsigneeView
 
 class CheckYourAnswersConsigneeControllerSpec extends SpecBase with SummaryListFluency
-  with MockConsigneeCheckYourAnswersHelper with MockUserAnswersService {
+  with MockConsigneeCheckAnswersHelper with MockUserAnswersService {
 
   lazy val view: CheckYourAnswersConsigneeView = app.injector.instanceOf[CheckYourAnswersConsigneeView]
+
+  val consigneeExportInformationSummary: ConsigneeExportInformationSummary = app.injector.instanceOf[ConsigneeExportInformationSummary]
 
   implicit val testDataRequest: DataRequest[AnyContentAsEmpty.type] = dataRequest(
     FakeRequest(GET, controllers.sections.consignee.routes.CheckYourAnswersConsigneeController.onPageLoad(testErn, testArc).url)
@@ -63,7 +66,7 @@ class CheckYourAnswersConsigneeControllerSpec extends SpecBase with SummaryListF
 
     val vatEoriList: Seq[SummaryListRow] = Seq(
       ConsigneeBusinessNameSummary.row,
-      ConsigneeExportInformationSummary.row,
+      consigneeExportInformationSummary.row,
       ConsigneeAddressSummary.row
     ).flatten
 
@@ -88,7 +91,7 @@ class CheckYourAnswersConsigneeControllerSpec extends SpecBase with SummaryListF
       new FakeMovementAction(maxGetMovementResponse),
       messagesControllerComponents,
       new FakeConsigneeNavigator(testOnwardRoute),
-      mockConsigneeCheckYourAnswersHelper,
+      mockConsigneeCheckAnswersHelper,
       view
     )
 
@@ -152,7 +155,7 @@ class CheckYourAnswersConsigneeControllerSpec extends SpecBase with SummaryListF
           emptyUserAnswers
             .set(ConsigneeAddressPage, testUserAddress)
             .set(ConsigneeBusinessNamePage, testBusinessName)
-            .set(ConsigneeExportInformationPage, testEori)
+            .set(ConsigneeExportInformationPage, Set(EoriNumber))
             .set(DestinationTypePage, EuTaxWarehouse)
         )) {
 
@@ -177,7 +180,8 @@ class CheckYourAnswersConsigneeControllerSpec extends SpecBase with SummaryListF
           emptyUserAnswers
             .set(ConsigneeAddressPage, testUserAddress)
             .set(ConsigneeBusinessNamePage, testBusinessName)
-            .set(ConsigneeExportInformationPage, testVat)
+            .set(ConsigneeExportInformationPage, Set(VatNumber))
+            .set(ConsigneeExportVatPage, testVatNumber)
             .set(DestinationTypePage, GbTaxWarehouse)
         )) {
 

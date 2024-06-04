@@ -18,18 +18,58 @@ package pages.sections.consignee
 
 import base.SpecBase
 import models.requests.DataRequest
-import models.sections.consignee.{ConsigneeExportInformation, ConsigneeExportInformationType}
-import models.{Enumerable, ExemptOrganisationDetailsModel, UserAddress}
+import models.sections.consignee.ConsigneeExportInformation.{EoriNumber, NoInformation, VatNumber}
+import models.{ExemptOrganisationDetailsModel, UserAddress}
 import play.api.test.FakeRequest
 
-class ConsigneeSectionSpec extends SpecBase with Enumerable.Implicits {
+class ConsigneeSectionSpec extends SpecBase {
   "isCompleted" - {
     "must return true" - {
+      "when user starts on ConsigneeExportInformation and selects only VAT number (and provided it)" in {
+        implicit val dr: DataRequest[_] = dataRequest(FakeRequest(),
+          emptyUserAnswers
+            .set(ConsigneeExportInformationPage, Set(VatNumber))
+            .set(ConsigneeExportVatPage, testVatNumber)
+            .set(ConsigneeBusinessNamePage, "")
+            .set(ConsigneeAddressPage, UserAddress(None, "", "", ""))
+        )
+        ConsigneeSection.isCompleted mustBe true
+      }
+      "when user starts on ConsigneeExportInformation and selects only EORI number (and provided it)" in {
+        implicit val dr: DataRequest[_] = dataRequest(FakeRequest(),
+          emptyUserAnswers
+            .set(ConsigneeExportInformationPage, Set(EoriNumber))
+            .set(ConsigneeExportEoriPage, testEoriNumber)
+            .set(ConsigneeBusinessNamePage, "")
+            .set(ConsigneeAddressPage, UserAddress(None, "", "", ""))
+        )
+        ConsigneeSection.isCompleted mustBe true
+      }
+      "when user starts on ConsigneeExportInformation and selects both VAT / EORI number (and provided then)" in {
+        implicit val dr: DataRequest[_] = dataRequest(FakeRequest(),
+          emptyUserAnswers
+            .set(ConsigneeExportInformationPage, Set(VatNumber, EoriNumber))
+            .set(ConsigneeExportVatPage, testVatNumber)
+//            .set(ConsigneeExportEoriPage, testEori)
+            .set(ConsigneeBusinessNamePage, "")
+            .set(ConsigneeAddressPage, UserAddress(None, "", "", ""))
+        )
+        ConsigneeSection.isCompleted mustBe true
+      }
+      "when user starts on ConsigneeExportInformation and selects Not provided" in {
+        implicit val dr: DataRequest[_] = dataRequest(FakeRequest(),
+          emptyUserAnswers
+            .set(ConsigneeExportInformationPage, Set(NoInformation))
+            .set(ConsigneeBusinessNamePage, "")
+            .set(ConsigneeAddressPage, UserAddress(None, "", "", ""))
+        )
+        ConsigneeSection.isCompleted mustBe true
+      }
       "when user starts on ConsigneeExportUkEu and selects yes" in {
         implicit val dr: DataRequest[_] = dataRequest(FakeRequest(),
           emptyUserAnswers
             .set(ConsigneeExportPage, true)
-            .set(ConsigneeExportInformationPage, ConsigneeExportInformation(ConsigneeExportInformationType.No, None, None))
+            .set(ConsigneeExportInformationPage, Set(NoInformation))
             .set(ConsigneeBusinessNamePage, "")
             .set(ConsigneeAddressPage, UserAddress(None, "", "", ""))
         )
@@ -41,7 +81,8 @@ class ConsigneeSectionSpec extends SpecBase with Enumerable.Implicits {
             .set(ConsigneeExportPage, false)
             .set(ConsigneeExcisePage, "")
             .set(ConsigneeBusinessNamePage, "")
-            .set(ConsigneeAddressPage, UserAddress(None, "", "", ""))
+            .set(ConsigneeAddressPage, UserAddress(None, "", "", "")),
+          movementDetails = maxGetMovementResponse.copy(consigneeTrader = None)
         )
         ConsigneeSection.isCompleted mustBe true
       }
@@ -50,7 +91,8 @@ class ConsigneeSectionSpec extends SpecBase with Enumerable.Implicits {
           emptyUserAnswers
             .set(ConsigneeExcisePage, "")
             .set(ConsigneeBusinessNamePage, "")
-            .set(ConsigneeAddressPage, UserAddress(None, "", "", ""))
+            .set(ConsigneeAddressPage, UserAddress(None, "", "", "")),
+          movementDetails = maxGetMovementResponse.copy(consigneeTrader = None)
         )
         ConsigneeSection.isCompleted mustBe true
       }
@@ -59,7 +101,8 @@ class ConsigneeSectionSpec extends SpecBase with Enumerable.Implicits {
           emptyUserAnswers
             .set(ConsigneeExemptOrganisationPage, ExemptOrganisationDetailsModel("", ""))
             .set(ConsigneeBusinessNamePage, "")
-            .set(ConsigneeAddressPage, UserAddress(None, "", "", ""))
+            .set(ConsigneeAddressPage, UserAddress(None, "", "", "")),
+          movementDetails = maxGetMovementResponse.copy(consigneeTrader = None)
         )
         ConsigneeSection.isCompleted mustBe true
       }
@@ -71,6 +114,58 @@ class ConsigneeSectionSpec extends SpecBase with Enumerable.Implicits {
           FakeRequest(),
           emptyUserAnswers,
           movementDetails = maxGetMovementResponse.copy(consigneeTrader = None)
+        )
+        ConsigneeSection.isCompleted mustBe false
+      }
+      "when user starts on ConsigneeExportInformation and selects only VAT number (and has NOT provided it)" in {
+        implicit val dr: DataRequest[_] = dataRequest(FakeRequest(),
+          emptyUserAnswers
+            .set(ConsigneeExportInformationPage, Set(VatNumber))
+            .set(ConsigneeBusinessNamePage, "")
+            .set(ConsigneeAddressPage, UserAddress(None, "", "", "")),
+          movementDetails = maxGetMovementResponse.copy(consigneeTrader = None)
+        )
+        ConsigneeSection.isCompleted mustBe false
+      }
+      "when user starts on ConsigneeExportInformation and selects only EORI number (and has NOT provided it)" in {
+        implicit val dr: DataRequest[_] = dataRequest(FakeRequest(),
+          emptyUserAnswers
+            .set(ConsigneeExportInformationPage, Set(EoriNumber))
+            .set(ConsigneeBusinessNamePage, "")
+            .set(ConsigneeAddressPage, UserAddress(None, "", "", "")),
+          movementDetails = maxGetMovementResponse.copy(consigneeTrader = None)
+        )
+        ConsigneeSection.isCompleted mustBe false
+      }
+
+      "when user starts on ConsigneeExportInformation and selects both VAT / EORI number (and has NOT provided VAT)" in {
+        implicit val dr: DataRequest[_] = dataRequest(FakeRequest(),
+          emptyUserAnswers
+            .set(ConsigneeExportInformationPage, Set(VatNumber, EoriNumber))
+            .set(ConsigneeExportEoriPage, testEoriNumber)
+            .set(ConsigneeBusinessNamePage, "")
+            .set(ConsigneeAddressPage, UserAddress(None, "", "", ""))
+        )
+        ConsigneeSection.isCompleted mustBe false
+      }
+
+      "when user starts on ConsigneeExportInformation and selects both VAT / EORI number (and has NOT provided EORI)" in {
+        implicit val dr: DataRequest[_] = dataRequest(FakeRequest(),
+          emptyUserAnswers
+            .set(ConsigneeExportInformationPage, Set(VatNumber, EoriNumber))
+            .set(ConsigneeExportVatPage, testVatNumber)
+            .set(ConsigneeBusinessNamePage, "")
+            .set(ConsigneeAddressPage, UserAddress(None, "", "", "")),
+          movementDetails = maxGetMovementResponse.copy(consigneeTrader = None)
+        )
+        ConsigneeSection.isCompleted mustBe false
+      }
+      "when user starts on ConsigneeExportInformation and selects both VAT / EORI number (and has NOT provided either)" in {
+        implicit val dr: DataRequest[_] = dataRequest(FakeRequest(),
+          emptyUserAnswers
+            .set(ConsigneeExportInformationPage, Set(VatNumber, EoriNumber))
+            .set(ConsigneeBusinessNamePage, "")
+            .set(ConsigneeAddressPage, UserAddress(None, "", "", ""))
         )
         ConsigneeSection.isCompleted mustBe false
       }
@@ -111,7 +206,8 @@ class ConsigneeSectionSpec extends SpecBase with Enumerable.Implicits {
         ConsigneeExemptOrganisationPage -> emptyUserAnswers.set(ConsigneeExemptOrganisationPage, ExemptOrganisationDetailsModel("member state changed", "certificate serial number changed")),
         ConsigneeBusinessNamePage -> emptyUserAnswers.set(ConsigneeBusinessNamePage, "business name changed"),
         ConsigneeAddressPage -> emptyUserAnswers.set(ConsigneeAddressPage, testUserAddress),
-        ConsigneeExportInformationPage -> emptyUserAnswers.set(ConsigneeExportInformationPage, ConsigneeExportInformation(ConsigneeExportInformationType.YesVatNumber, Some("vat number changed"), None))
+        ConsigneeExportVatPage -> emptyUserAnswers.set(ConsigneeExportVatPage, "vat no"),
+        ConsigneeExportEoriPage -> emptyUserAnswers.set(ConsigneeExportEoriPage, "eori no")
       ).foreach { pageToUserAnswers =>
 
         s"when the answer for ${pageToUserAnswers._1} has changed" in {
@@ -130,7 +226,7 @@ class ConsigneeSectionSpec extends SpecBase with Enumerable.Implicits {
           .set(ConsigneeExemptOrganisationPage, ExemptOrganisationDetailsModel(maxGetMovementResponse.memberStateCode.get, maxGetMovementResponse.serialNumberOfCertificateOfExemption.get))
           .set(ConsigneeBusinessNamePage, maxGetMovementResponse.consigneeTrader.get.traderName.get)
           .set(ConsigneeAddressPage, maxGetMovementResponse.consigneeTrader.get.address.map(UserAddress.userAddressFromTraderAddress).get)
-          .set(ConsigneeExportInformationPage, ConsigneeExportInformation(ConsigneeExportInformationType.YesEoriNumber, None, Some(maxGetMovementResponse.consigneeTrader.get.eoriNumber.get)))
+          .set(ConsigneeExportInformationPage, Set(EoriNumber))
 
         ConsigneeSection.hasConsigneeChanged(dataRequest(FakeRequest(), userAnswers)) mustBe false
       }

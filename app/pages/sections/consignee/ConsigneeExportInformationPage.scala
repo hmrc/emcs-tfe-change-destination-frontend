@@ -18,27 +18,32 @@ package pages.sections.consignee
 
 import models.requests.DataRequest
 import models.response.emcsTfe.TraderModel
-import models.sections.consignee.{ConsigneeExportInformation, ConsigneeExportInformationType}
+import models.sections.consignee.ConsigneeExportInformation
+import models.sections.consignee.ConsigneeExportInformation.{EoriNumber, NoInformation, VatNumber}
 import models.sections.info.ChangeType.ChangeConsignee
+import models.sections.info.movementScenario.DestinationType.Export
 import pages.QuestionPage
 import pages.sections.info.ChangeTypePage
 import play.api.libs.json.JsPath
 
-case object ConsigneeExportInformationPage extends QuestionPage[ConsigneeExportInformation] {
+case object ConsigneeExportInformationPage extends QuestionPage[Set[ConsigneeExportInformation]] {
   override val toString: String = "exportInformation"
   override val path: JsPath = ConsigneeSection.path \ toString
 
-  override def getValueFromIE801(implicit request: DataRequest[_]): Option[ConsigneeExportInformation] =
+  //scalastyle:off
+  override def getValueFromIE801(implicit request: DataRequest[_]): Option[Set[ConsigneeExportInformation]] =
     request.userAnswers.get(ChangeTypePage) match {
       case Some(ChangeConsignee) => None
       case _ =>
         request.movementDetails.consigneeTrader.map {
-          case TraderModel(_, _, _, Some(vatNumber), _) =>
-            ConsigneeExportInformation(ConsigneeExportInformationType.YesVatNumber, Some(vatNumber), None)
-          case TraderModel(_, _, _, _, Some(eoriNumber)) =>
-            ConsigneeExportInformation(ConsigneeExportInformationType.YesEoriNumber, None, Some(eoriNumber))
+          case TraderModel(Some(_), _, _, _, Some(_)) if request.movementDetails.destinationType == Export =>
+            Set(VatNumber, EoriNumber)
+          case TraderModel(Some(_), _, _, _, None) if request.movementDetails.destinationType == Export =>
+            Set(VatNumber)
+          case TraderModel(_, _, _, _, Some(_)) =>
+            Set(EoriNumber)
           case _ =>
-            ConsigneeExportInformation(ConsigneeExportInformationType.No, None, None)
+            Set(NoInformation)
         }
     }
 }

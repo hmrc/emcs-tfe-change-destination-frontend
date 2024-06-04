@@ -28,7 +28,7 @@ import viewmodels.implicits._
 
 object ConsigneeExportEoriSummary  {
 
-  def row()(implicit request: DataRequest[_],  messages: Messages): Option[SummaryListRow] =
+  def row(implicit request: DataRequest[_],  messages: Messages): Option[SummaryListRow] =
     request.userAnswers.get(ConsigneeExportEoriPage).map { answer =>
       SummaryListRowViewModel(
         key     = "consigneeExportEori.checkYourAnswersLabel",

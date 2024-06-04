@@ -27,9 +27,11 @@ object CheckYourAnswersConsigneeMessages {
     val ern: String = "Excise registration number (ERN)"
     val traderName: String = "Trader name"
     val address: String = "Address"
-    val eori: String = "EORI Number"
-    val vat: String = "VAT Number"
+    val eori: String = "EORI number"
+    val vat: String = "Identification number"
+    val identificationProvided: String = "Identification provided"
     val exempt: String = "Exempted organisation details"
+
   }
 
   object English extends ViewMessages with BaseEnglish

@@ -57,6 +57,7 @@ trait BaseMessages { _: i18n =>
   val none: String = "None"
   val change: String = "Change"
   val remove: String = "Remove"
+  val or: String = "or"
   val continueEditing: String = "Continue editing"
   val sectionNotComplete: String => String = section => s"$section section not complete"
   val incompleteTag: String = "Incomplete"

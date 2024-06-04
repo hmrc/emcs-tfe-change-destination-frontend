@@ -18,8 +18,9 @@ package views.sections.consignee
 
 import base.SpecBase
 import fixtures.messages.sections.consignee.CheckYourAnswersConsigneeMessages
-import models.CheckMode
+import models.{CheckMode, NormalMode}
 import models.requests.DataRequest
+import models.sections.consignee.ConsigneeExportInformation.{EoriNumber, VatNumber}
 import models.sections.info.movementScenario.MovementScenario._
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
@@ -34,6 +35,10 @@ import views.html.sections.consignee.CheckYourAnswersConsigneeView
 import views.{BaseSelectors, ViewBehaviours}
 
 class CheckYourAnswersConsigneeViewSpec extends SpecBase with ViewBehaviours {
+
+  val consigneeExportInformationSummary: ConsigneeExportInformationSummary = app.injector.instanceOf[ConsigneeExportInformationSummary]
+
+  lazy val view = app.injector.instanceOf[CheckYourAnswersConsigneeView]
 
   object Selectors extends BaseSelectors {
     def govukSummaryListKey(id: Int) = s".govuk-summary-list__row:nth-of-type($id) .govuk-summary-list__key"
@@ -57,7 +62,6 @@ class CheckYourAnswersConsigneeViewSpec extends SpecBase with ViewBehaviours {
             .set(ConsigneeExcisePage, testErn)
             .set(DestinationTypePage, GbTaxWarehouse)
           )
-       lazy val view = app.injector.instanceOf[CheckYourAnswersConsigneeView]
 
         implicit val doc: Document = Jsoup.parse(view(
           controllers.sections.consignee.routes.CheckYourAnswersConsigneeController.onSubmit(testErn, testArc),
@@ -108,8 +112,6 @@ class CheckYourAnswersConsigneeViewSpec extends SpecBase with ViewBehaviours {
             .set(DestinationTypePage, ExemptedOrganisation)
           )
 
-       lazy val view = app.injector.instanceOf[CheckYourAnswersConsigneeView]
-
         implicit val doc: Document = Jsoup.parse(view(
           controllers.sections.consignee.routes.CheckYourAnswersConsigneeController.onSubmit(testErn, testArc),
           testErn,
@@ -155,11 +157,11 @@ class CheckYourAnswersConsigneeViewSpec extends SpecBase with ViewBehaviours {
             .set(ConsigneeAddressPage, testUserAddress)
             .set(ConsigneeBusinessNamePage, testBusinessName)
             .set(ConsigneeExcisePage, testErn)
-            .set(ConsigneeExportInformationPage, testVat)
+            .set(ConsigneeExportInformationPage, Set(VatNumber))
+            .set(ConsigneeExportVatPage, testVatNumber)
             .set(DestinationTypePage, GbTaxWarehouse)
           )
 
-       lazy val view = app.injector.instanceOf[CheckYourAnswersConsigneeView]
 
         implicit val doc: Document = Jsoup.parse(view(
           controllers.sections.consignee.routes.CheckYourAnswersConsigneeController.onSubmit(testErn, testArc),
@@ -167,7 +169,8 @@ class CheckYourAnswersConsigneeViewSpec extends SpecBase with ViewBehaviours {
           testArc,
           SummaryList(Seq(
             ConsigneeBusinessNameSummary.row,
-            ConsigneeExportInformationSummary.row,
+            consigneeExportInformationSummary.row,
+            ConsigneeExportVatSummary.row,
             ConsigneeAddressSummary.row
           ).flatten)
         ).toString())
@@ -177,8 +180,9 @@ class CheckYourAnswersConsigneeViewSpec extends SpecBase with ViewBehaviours {
           Selectors.h1 -> messagesForLanguage.heading,
           Selectors.h2(1) -> messagesForLanguage.caption,
           Selectors.govukSummaryListKey(1) -> messagesForLanguage.traderName,
-          Selectors.govukSummaryListKey(2) -> messagesForLanguage.vat,
-          Selectors.govukSummaryListKey(3) -> messagesForLanguage.address,
+          Selectors.govukSummaryListKey(2) -> messagesForLanguage.identificationProvided,
+          Selectors.govukSummaryListKey(3) -> messagesForLanguage.vat,
+          Selectors.govukSummaryListKey(4) -> messagesForLanguage.address,
           Selectors.button -> messagesForLanguage.confirmAnswers,
         ))
 
@@ -189,7 +193,7 @@ class CheckYourAnswersConsigneeViewSpec extends SpecBase with ViewBehaviours {
 
         "have a link to change Vat Number" in {
           doc.getElementById("changeConsigneeExportInformation").attr("href") mustBe
-            controllers.sections.consignee.routes.ConsigneeExportInformationController.onPageLoad(testErn, testArc, CheckMode).url
+            controllers.sections.consignee.routes.ConsigneeExportInformationController.onPageLoad(testErn, testArc, NormalMode).url
         }
 
         "have a link to change Address" in {
@@ -198,7 +202,7 @@ class CheckYourAnswersConsigneeViewSpec extends SpecBase with ViewBehaviours {
         }
       }
 
-      s"when being rendered in lang code of '${messagesForLanguage.lang.code} for Eori'" - {
+      s"when being rendered in lang code of '${messagesForLanguage.lang.code}' for Eori" - {
 
         implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
         implicit val request: DataRequest[AnyContentAsEmpty.type] =
@@ -206,11 +210,9 @@ class CheckYourAnswersConsigneeViewSpec extends SpecBase with ViewBehaviours {
             .set(ConsigneeAddressPage, testUserAddress)
             .set(ConsigneeBusinessNamePage, testBusinessName)
             .set(ConsigneeExcisePage, testErn)
-            .set(ConsigneeExportInformationPage, testEori)
+            .set(ConsigneeExportInformationPage, Set(EoriNumber))
             .set(DestinationTypePage, GbTaxWarehouse)
           )
-
-       lazy val view = app.injector.instanceOf[CheckYourAnswersConsigneeView]
 
         implicit val doc: Document = Jsoup.parse(view(
           controllers.sections.consignee.routes.CheckYourAnswersConsigneeController.onSubmit(testErn, testArc),
@@ -218,7 +220,8 @@ class CheckYourAnswersConsigneeViewSpec extends SpecBase with ViewBehaviours {
           testArc,
           SummaryList(Seq(
             ConsigneeBusinessNameSummary.row,
-            ConsigneeExportInformationSummary.row,
+            consigneeExportInformationSummary.row,
+            ConsigneeExportEoriSummary.row,
             ConsigneeAddressSummary.row
           ).flatten)
         ).toString())
@@ -228,9 +231,10 @@ class CheckYourAnswersConsigneeViewSpec extends SpecBase with ViewBehaviours {
           Selectors.h1 -> messagesForLanguage.heading,
           Selectors.h2(1) -> messagesForLanguage.caption,
           Selectors.govukSummaryListKey(1) -> messagesForLanguage.traderName,
-          Selectors.govukSummaryListKey(2) -> messagesForLanguage.eori,
-          Selectors.govukSummaryListKey(3) -> messagesForLanguage.address,
-          Selectors.button -> messagesForLanguage.confirmAnswers,
+          Selectors.govukSummaryListKey(2) -> messagesForLanguage.identificationProvided,
+          Selectors.govukSummaryListKey(3) -> messagesForLanguage.eori,
+          Selectors.govukSummaryListKey(4) -> messagesForLanguage.address,
+          Selectors.button -> messagesForLanguage.confirmAnswers
         ))
 
         "have a link to change business name" in {
@@ -240,7 +244,7 @@ class CheckYourAnswersConsigneeViewSpec extends SpecBase with ViewBehaviours {
 
         "have a link to change Eori Number" in {
           doc.getElementById("changeConsigneeExportInformation").attr("href") mustBe
-            controllers.sections.consignee.routes.ConsigneeExportInformationController.onPageLoad(testErn, testArc, CheckMode).url
+            controllers.sections.consignee.routes.ConsigneeExportInformationController.onPageLoad(testErn, testArc, NormalMode).url
         }
 
         "have a link to change Address" in {

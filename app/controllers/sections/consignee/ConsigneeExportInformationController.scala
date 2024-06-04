@@ -20,10 +20,13 @@ import controllers.BaseNavigationController
 import controllers.actions._
 import forms.sections.consignee.ConsigneeExportInformationFormProvider
 import models.Mode
+import models.requests.DataRequest
+import models.sections.consignee.ConsigneeExportInformation.{EoriNumber, NoInformation, VatNumber}
 import navigation.ConsigneeNavigator
-import pages.sections.consignee.ConsigneeExportInformationPage
+import pages.sections.consignee.{ConsigneeExportEoriPage, ConsigneeExportInformationPage, ConsigneeExportVatPage}
+import play.api.data.Form
 import play.api.i18n.MessagesApi
-import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
+import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
 import services.UserAnswersService
 import views.html.sections.consignee.ConsigneeExportInformationView
 
@@ -44,18 +47,43 @@ class ConsigneeExportInformationController @Inject()(
                                               view: ConsigneeExportInformationView
                                             ) extends BaseNavigationController with AuthActionHelper {
 
-  def onPageLoad(ern: String, arc: String, mode: Mode): Action[AnyContent] =
-    authorisedDataRequestWithUpToDateMovement(ern, arc) { implicit request =>
-      Ok(view(fillForm(ConsigneeExportInformationPage, formProvider()), mode))
+  def onPageLoad(ern: String, draftId: String, mode: Mode): Action[AnyContent] =
+    authorisedDataRequestWithUpToDateMovement(ern, draftId) { implicit request =>
+      renderView(Ok, fillForm(ConsigneeExportInformationPage, formProvider()), mode)
     }
 
-  def onSubmit(ern: String, arc: String, mode: Mode): Action[AnyContent] =
-    authorisedDataRequestWithUpToDateMovementAsync(ern, arc) { implicit request =>
+  def onSubmit(ern: String, draftId: String, mode: Mode): Action[AnyContent] =
+    authorisedDataRequestWithUpToDateMovementAsync(ern, draftId) { implicit request =>
       formProvider().bindFromRequest().fold(
         formWithErrors =>
-          Future.successful(BadRequest(view(formWithErrors, mode))),
-        value =>
-          saveAndRedirect(ConsigneeExportInformationPage, value, mode)
+          Future.successful(renderView(BadRequest, formWithErrors, mode)),
+        value => {
+          val cleansedAnswers = value.toList match {
+            case NoInformation :: Nil =>
+              request.userAnswers
+                .remove(ConsigneeExportVatPage)
+                .remove(ConsigneeExportEoriPage)
+            case identifiers if !identifiers.contains(VatNumber) =>
+              request.userAnswers.remove(ConsigneeExportVatPage)
+            case identifiers if !identifiers.contains(EoriNumber) =>
+              request.userAnswers.remove(ConsigneeExportEoriPage)
+            case _ => request.userAnswers
+          }
+
+          saveAndRedirect(ConsigneeExportInformationPage, value, cleansedAnswers, mode)
+        }
       )
     }
+
+  private def renderView(
+                          status: Status,
+                          form: Form[_],
+                          mode: Mode
+                        )(implicit request: DataRequest[_]): Result =
+    status(
+      view(
+        form = form,
+        action = routes.ConsigneeExportInformationController.onSubmit(request.ern, request.arc, mode)
+      )
+    )
 }

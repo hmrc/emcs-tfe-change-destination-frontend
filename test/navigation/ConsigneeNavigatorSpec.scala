@@ -19,8 +19,7 @@ package navigation
 import base.SpecBase
 import controllers.routes
 import models.requests.DataRequest
-import models.sections.consignee.ConsigneeExportInformation
-import models.sections.consignee.ConsigneeExportInformationType.{No, YesEoriNumber, YesVatNumber}
+import models.sections.consignee.ConsigneeExportInformation.{EoriNumber, NoInformation, VatNumber}
 import models.{CheckMode, NormalMode, ReviewMode}
 import pages.Page
 import pages.sections.consignee._
@@ -107,57 +106,58 @@ class ConsigneeNavigatorSpec extends SpecBase {
 
       "for the ConsigneeExportInformationPage" - {
 
+        "must go to CAM-NEE12 export-vat page" - {
+          "when VAT has been selected" in {
+            val userAnswers = emptyUserAnswers
+              .set(ConsigneeExportInformationPage, Set(VatNumber))
+
+            navigator.nextPage(ConsigneeExportInformationPage, NormalMode, userAnswers) mustBe
+              controllers.sections.consignee.routes.ConsigneeExportVatController.onPageLoad(testErn, testArc, NormalMode)
+          }
+        }
+
+        "must go to CAM-NEE13 export-eori page" - {
+          "when EORI has been selected" in {
+            val userAnswers = emptyUserAnswers
+              .set(ConsigneeExportInformationPage, Set(EoriNumber))
+
+            navigator.nextPage(ConsigneeExportInformationPage, NormalMode, userAnswers) mustBe
+              controllers.sections.consignee.routes.ConsigneeExportEoriController.onPageLoad(testErn, testArc, NormalMode)
+          }
+        }
+
         "must go to CAM-NEE03 business name page" - {
-
-          "when YES - VAT Number is answered'" in {
+          "when neither VAT or EORI are selected" in {
             val userAnswers = emptyUserAnswers
-              .set(ConsigneeExportInformationPage, ConsigneeExportInformation(YesVatNumber, Some("vatnumber"), None))
-
-            navigator.nextPage(ConsigneeExportInformationPage, NormalMode, userAnswers) mustBe
-              controllers.sections.consignee.routes.ConsigneeBusinessNameController.onPageLoad(testErn, testArc, NormalMode)
-          }
-
-          "when YES - EORI Number is answered'" in {
-            val userAnswers = emptyUserAnswers
-              .set(ConsigneeExportInformationPage, ConsigneeExportInformation(YesEoriNumber, None, Some("eorinumber")))
-
-            navigator.nextPage(ConsigneeExportInformationPage, NormalMode, userAnswers) mustBe
-              controllers.sections.consignee.routes.ConsigneeBusinessNameController.onPageLoad(testErn, testArc, NormalMode)
-          }
-
-
-          "when NO is answered'" in {
-            val userAnswers = emptyUserAnswers
-              .set(ConsigneeExportInformationPage, ConsigneeExportInformation(No, None, None))
+              .set(ConsigneeExportInformationPage, Set(NoInformation))
 
             navigator.nextPage(ConsigneeExportInformationPage, NormalMode, userAnswers) mustBe
               controllers.sections.consignee.routes.ConsigneeBusinessNameController.onPageLoad(testErn, testArc, NormalMode)
           }
         }
+
       }
 
       "for the ConsigneeExportVat page" - {
 
         "must go to the ConsigneeExportEori page" - {
 
-          "when the user selected both VAT and EORI on ConsigneeExportInformation" ignore {
+          "when the user selected both VAT and EORI on ConsigneeExportInformation" in {
 
-            //TODO change in ETFE-3250 and CHANGE IGNORE TO IN (please)
             val userAnswers = emptyUserAnswers
-              .set(ConsigneeExportInformationPage, ConsigneeExportInformation(YesEoriNumber, None, None))
+              .set(ConsigneeExportInformationPage, Set(VatNumber, EoriNumber))
 
             navigator.nextPage(ConsigneeExportVatPage, NormalMode, userAnswers) mustBe
-              controllers.sections.consignee.routes.ConsigneeExportInformationController.onPageLoad(testErn, testArc, NormalMode)
+              controllers.sections.consignee.routes.ConsigneeExportEoriController.onPageLoad(testErn, testArc, NormalMode)
           }
         }
 
         "must go to the ConsigneeBusinessName page" - {
 
-          "when the user selected both VAT and EORI on ConsigneeExportInformation" in {
+          "when the user selected only VAT on ConsigneeExportInformation" in {
 
-            //TODO change in ETFE-3250
             val userAnswers = emptyUserAnswers
-              .set(ConsigneeExportInformationPage, ConsigneeExportInformation(YesVatNumber, None, None))
+              .set(ConsigneeExportInformationPage, Set(VatNumber))
 
             navigator.nextPage(ConsigneeExportVatPage, NormalMode, userAnswers) mustBe
               controllers.sections.consignee.routes.ConsigneeBusinessNameController.onPageLoad(testErn, testArc, NormalMode)
@@ -168,7 +168,7 @@ class ConsigneeNavigatorSpec extends SpecBase {
       "for the ConsigneeExportEoriPage" - {
         "must go to CAM-NEE03 consignee-business-name page" in {
           val userAnswers = emptyUserAnswers
-            .set(ConsigneeExportInformationPage, ConsigneeExportInformation(YesEoriNumber, None, None))
+            .set(ConsigneeExportInformationPage, Set(EoriNumber))
             .set(ConsigneeExportEoriPage, testEoriNumber)
 
           navigator.nextPage(ConsigneeExportEoriPage, NormalMode, userAnswers) mustBe

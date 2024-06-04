@@ -44,18 +44,16 @@ object TraderModel extends ModelConstructorHelpers {
       // If the ConsigneeExcisePage is defined, use that, otherwise use the VAT number entered on the ConsigneeExportInformationPage.
       traderExciseNumber = (
         request.userAnswers.get(ConsigneeExcisePage),
-        request.userAnswers.get(ConsigneeExportInformationPage).flatMap(_.vatNumber), //TODO: remove in ETFE-3250
         request.userAnswers.get(ConsigneeExportVatPage)
       ) match {
-        case (ern@Some(_), _, _) => ern
-        case (_, ern@Some(_), _) => ern
-        case (_, _, ern@Some(_)) => ern
+        case (ern@Some(_), _) => ern
+        case (_, ern@Some(_)) => ern
         case _ => None
       },
       traderName = Some(mandatoryPage(ConsigneeBusinessNamePage)),
       address = Some(AddressModel.fromUserAddress(mandatoryPage(ConsigneeAddressPage))),
       vatNumber = None,
-      eoriNumber = request.userAnswers.get(ConsigneeExportInformationPage).flatMap(_.eoriNumber) //TODO: replace with EORI page in ETFE-3250
+      eoriNumber = request.userAnswers.get(ConsigneeExportEoriPage)
     )
 
   def applyConsignor(implicit request: DataRequest[_]): TraderModel = {
@@ -163,7 +161,7 @@ object TraderModel extends ModelConstructorHelpers {
           traderExciseNumber = None,
           traderName = consigneeTrader.traderName,
           address = consigneeTrader.address,
-          vatNumber = request.userAnswers.get(ConsigneeExportInformationPage).flatMap(_.vatNumber),
+          vatNumber = request.userAnswers.get(ConsigneeExportVatPage),
           eoriNumber = None
         )
       case _ => TraderModel(

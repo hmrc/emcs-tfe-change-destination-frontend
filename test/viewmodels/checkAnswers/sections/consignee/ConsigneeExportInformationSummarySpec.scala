@@ -18,87 +18,236 @@ package viewmodels.checkAnswers.sections.consignee
 
 import base.SpecBase
 import fixtures.messages.sections.consignee.ConsigneeExportInformationMessages
-import models.CheckMode
+import models.NormalMode
 import models.sections.consignee.ConsigneeExportInformation
-import models.sections.consignee.ConsigneeExportInformationType.YesEoriNumber
 import models.sections.info.ChangeType
+import models.sections.info.movementScenario.DestinationType.Export
 import org.scalatest.matchers.must.Matchers
 import pages.sections.consignee.ConsigneeExportInformationPage
 import pages.sections.info.ChangeTypePage
 import play.api.i18n.Messages
 import play.api.test.FakeRequest
-import uk.gov.hmrc.govukfrontend.views.Aliases.Value
-import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
+import play.twirl.api.Html
+import uk.gov.hmrc.govukfrontend.views.Aliases.HtmlContent
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
+import views.html.components.list
 
 class ConsigneeExportInformationSummarySpec extends SpecBase with Matchers {
+  
+  val list: list = app.injector.instanceOf[list]
+  val summary: ConsigneeExportInformationSummary = new ConsigneeExportInformationSummary(list)
+
   "ConsigneeExportInformationSummary" - {
 
     Seq(ConsigneeExportInformationMessages.English).foreach { messagesForLanguage =>
 
       s"when being rendered in lang code of '${messagesForLanguage.lang.code}'" - {
-
         implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
 
-        "when there's no answer" - {
-
-          "when the ChangeType is `Consignee`" - {
-
-            "must output None" in {
-
-              implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(ChangeTypePage, ChangeType.ChangeConsignee))
-
-              ConsigneeExportInformationSummary.row mustBe None
-            }
-          }
-
-          "when the ChangeType is NOT `Consignee`" - {
-
-            "must output data from the IE801 (where present)" in {
-
-              implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(ChangeTypePage, ChangeType.Destination))
-
-              ConsigneeExportInformationSummary.row mustBe
-                Some(
-                  SummaryListRowViewModel(
-                    key = messagesForLanguage.cyaEoriLabel,
-                    value = Value(Text(maxGetMovementResponse.consigneeTrader.get.eoriNumber.get)),
-                    actions = Seq(
-                      ActionItemViewModel(
-                        content = messagesForLanguage.change,
-                        href = controllers.sections.consignee.routes.ConsigneeExportInformationController.onPageLoad(testErn, testArc, CheckMode).url,
-                        id = "changeConsigneeExportInformation"
-                      ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHidden)
-                    )
-                  )
-                )
-            }
+        "when there is no answer" - {
+          "must output no summary row" in {
+            implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers, movementDetails = maxGetMovementResponse.copy(consigneeTrader = None))
+            summary.row mustBe None
           }
         }
 
-        "when there's an answer" - {
+        "when there are multiple answers" - {
+          "must output the expected row" in {
+            implicit lazy val request = dataRequest(
+              FakeRequest(),
+              emptyUserAnswers
+                .set(ConsigneeExportInformationPage, ConsigneeExportInformation.values)
+            )
 
-          "when the show action link boolean is true" - {
-
-            "must output the expected row" in {
-
-              implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(ConsigneeExportInformationPage, ConsigneeExportInformation(YesEoriNumber, None, testEori.eoriNumber)))
-
-              ConsigneeExportInformationSummary.row mustBe
-                Some(
-                  SummaryListRowViewModel(
-                    key = messagesForLanguage.cyaEoriLabel,
-                    value = Value(Text(testEori.eoriNumber.get)),
-                    actions = Seq(
-                      ActionItemViewModel(
-                        content = messagesForLanguage.change,
-                        href = controllers.sections.consignee.routes.ConsigneeExportInformationController.onPageLoad(testErn, testArc, CheckMode).url,
-                        id = "changeConsigneeExportInformation"
-                      ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHidden)
-                    )
+            summary.row mustBe
+              Some(
+                SummaryListRowViewModel(
+                  key = messagesForLanguage.cyaLabel,
+                  value = ValueViewModel(
+                    HtmlContent(list(Seq(
+                      Html(messagesForLanguage.cyaValueVatNumber),
+                      Html(messagesForLanguage.cyaValueEoriNumber),
+                      Html(messagesForLanguage.cyaValueNoInformation)
+                    )))
+                  ),
+                  actions = Seq(
+                    ActionItemViewModel(
+                      content = messagesForLanguage.change,
+                      href = controllers.sections.consignee.routes.ConsigneeExportInformationController.onPageLoad(testErn, testArc, NormalMode).url,
+                      id = "changeConsigneeExportInformation"
+                    ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHidden)
                   )
                 )
+              )
+          }
+        }
+
+        Seq(
+          ConsigneeExportInformation.VatNumber -> messagesForLanguage.cyaValueVatNumber,
+          ConsigneeExportInformation.EoriNumber -> messagesForLanguage.cyaValueEoriNumber,
+          ConsigneeExportInformation.NoInformation -> messagesForLanguage.cyaValueNoInformation,
+        ).foreach {
+          case (identification, text) =>
+            s"when there is only one answer of $identification" - {
+
+              "must output the expected row" in {
+                implicit lazy val request = dataRequest(
+                  FakeRequest(),
+                  emptyUserAnswers
+                    .set(ConsigneeExportInformationPage, Set(identification))
+                )
+
+                summary.row mustBe
+                  Some(
+                    SummaryListRowViewModel(
+                      key = messagesForLanguage.cyaLabel,
+                      value = ValueViewModel(
+                        HtmlContent(list(Seq(
+                          Html(text)
+                        )))
+                      ),
+                      actions = Seq(
+                        ActionItemViewModel(
+                          content = messagesForLanguage.change,
+                          href = controllers.sections.consignee.routes.ConsigneeExportInformationController.onPageLoad(testErn, testArc, NormalMode).url,
+                          id = "changeConsigneeExportInformation"
+                        ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHidden)
+                      )
+                    )
+                  )
+              }
+            }
+        }
+
+        "when there's no answer" - {
+
+          "when the Change Type is Consignee" - {
+
+            "must output None (i.e. don't use the IE801 data)" in {
+
+              implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(ChangeTypePage, ChangeType.ChangeConsignee))
+
+              summary.row mustBe None
+            }
+          }
+
+          "when the Change Type is NOT Consignee" - {
+
+            "must output data from the IE801" - {
+
+              "when VAT and EORI entered" in {
+
+                implicit lazy val request = dataRequest(
+                  request = FakeRequest(),
+                  answers = emptyUserAnswers.set(ChangeTypePage, ChangeType.Destination),
+                  movementDetails = maxGetMovementResponse.copy(destinationType = Export)
+                )
+
+                summary.row mustBe
+                  Some(
+                    SummaryListRowViewModel(
+                      key = messagesForLanguage.cyaLabel,
+                      value = ValueViewModel(
+                        HtmlContent(list(Seq(
+                          Html(messagesForLanguage.cyaValueVatNumber),
+                          Html(messagesForLanguage.cyaValueEoriNumber)
+                        )))
+                      ),
+                      actions = Seq(
+                        ActionItemViewModel(
+                          content = messagesForLanguage.change,
+                          href = controllers.sections.consignee.routes.ConsigneeExportInformationController.onPageLoad(testErn, testArc, NormalMode).url,
+                          id = "changeConsigneeExportInformation"
+                        ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHidden)
+                      )
+                    )
+                  )
+              }
+
+              "when only VAT has been entered" in {
+
+                implicit lazy val request = dataRequest(
+                  request = FakeRequest(),
+                  answers = emptyUserAnswers.set(ChangeTypePage, ChangeType.Destination),
+                  movementDetails = maxGetMovementResponse.copy(destinationType = Export, consigneeTrader = maxGetMovementResponse.consigneeTrader.map(_.copy(eoriNumber = None)))
+                )
+
+                summary.row mustBe
+                  Some(
+                    SummaryListRowViewModel(
+                      key = messagesForLanguage.cyaLabel,
+                      value = ValueViewModel(
+                        HtmlContent(list(Seq(
+                          Html(messagesForLanguage.cyaValueVatNumber)
+                        )))
+                      ),
+                      actions = Seq(
+                        ActionItemViewModel(
+                          content = messagesForLanguage.change,
+                          href = controllers.sections.consignee.routes.ConsigneeExportInformationController.onPageLoad(testErn, testArc, NormalMode).url,
+                          id = "changeConsigneeExportInformation"
+                        ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHidden)
+                      )
+                    )
+                  )
+              }
+
+              "when only EORI has been entered" in {
+
+                implicit lazy val request = dataRequest(
+                  request = FakeRequest(),
+                  answers = emptyUserAnswers.set(ChangeTypePage, ChangeType.Destination),
+                  movementDetails = maxGetMovementResponse.copy(destinationType = Export, consigneeTrader = maxGetMovementResponse.consigneeTrader.map(_.copy(traderExciseNumber = None)))
+                )
+
+                summary.row mustBe
+                  Some(
+                    SummaryListRowViewModel(
+                      key = messagesForLanguage.cyaLabel,
+                      value = ValueViewModel(
+                        HtmlContent(list(Seq(
+                          Html(messagesForLanguage.cyaValueEoriNumber)
+                        )))
+                      ),
+                      actions = Seq(
+                        ActionItemViewModel(
+                          content = messagesForLanguage.change,
+                          href = controllers.sections.consignee.routes.ConsigneeExportInformationController.onPageLoad(testErn, testArc, NormalMode).url,
+                          id = "changeConsigneeExportInformation"
+                        ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHidden)
+                      )
+                    )
+                  )
+              }
+
+              "when nothing has been entered" in {
+
+                implicit lazy val request = dataRequest(
+                  request = FakeRequest(),
+                  answers = emptyUserAnswers.set(ChangeTypePage, ChangeType.Destination),
+                  movementDetails = maxGetMovementResponse.copy(destinationType = Export, consigneeTrader = maxGetMovementResponse.consigneeTrader.map(_.copy(traderExciseNumber = None, eoriNumber = None)))
+                )
+
+                summary.row mustBe
+                  Some(
+                    SummaryListRowViewModel(
+                      key = messagesForLanguage.cyaLabel,
+                      value = ValueViewModel(
+                        HtmlContent(list(Seq(
+                          Html(messagesForLanguage.cyaValueNoInformation)
+                        )))
+                      ),
+                      actions = Seq(
+                        ActionItemViewModel(
+                          content = messagesForLanguage.change,
+                          href = controllers.sections.consignee.routes.ConsigneeExportInformationController.onPageLoad(testErn, testArc, NormalMode).url,
+                          id = "changeConsigneeExportInformation"
+                        ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHidden)
+                      )
+                    )
+                  )
+              }
             }
           }
         }

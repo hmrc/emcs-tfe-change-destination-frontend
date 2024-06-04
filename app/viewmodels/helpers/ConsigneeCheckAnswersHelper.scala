@@ -24,17 +24,17 @@ import viewmodels.govuk.summarylist._
 
 import javax.inject.Inject
 
-class CheckYourAnswersConsigneeHelper @Inject()() {
+class ConsigneeCheckAnswersHelper @Inject()(consigneeExportInformationSummary: ConsigneeExportInformationSummary) {
 
   def summaryList()(implicit request: DataRequest[_], messages: Messages): SummaryList = {
     SummaryListViewModel(
       rows = Seq(
+        consigneeExportInformationSummary.row,
         ConsigneeExportSummary.row,
         ConsigneeBusinessNameSummary.row,
         ConsigneeExciseSummary.row,
         ConsigneeExportVatSummary.row,
         ConsigneeExportEoriSummary.row,
-        ConsigneeExportInformationSummary.row,
         ConsigneeExemptOrganisationSummary.row,
         ConsigneeAddressSummary.row
       ).flatten
