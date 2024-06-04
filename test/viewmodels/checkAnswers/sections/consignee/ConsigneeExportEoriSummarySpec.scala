@@ -50,20 +50,43 @@ class ConsigneeExportEoriSummarySpec extends SpecBase with Matchers {
           }
         }
 
+        "when there's an answer from the IE801" - {
+
+          "must output the expected row" in {
+
+            implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers)
+
+            ConsigneeExportEoriSummary.row() mustBe
+              Some(
+                SummaryListRowViewModel(
+                  key = messagesForLanguage.cyaLabel,
+                  value = Value(Text("ConsigneeTraderEori")),
+                  actions = Seq(
+                    ActionItemViewModel(
+                      content = messagesForLanguage.change,
+                      href = controllers.sections.consignee.routes.ConsigneeExportEoriController.onPageLoad(testErn, testArc, CheckMode).url,
+                      id = "changeConsigneeExportEori"
+                    ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHidden)
+                  )
+                )
+              )
+          }
+        }
+
         "when there's an answer" - {
 
           "must output the expected row" in {
 
             implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers
               .set(ChangeTypePage, ChangeConsignee)
-              .set(ConsigneeExportEoriPage, "GB345678901234567")
+              .set(ConsigneeExportEoriPage, testEoriNumber)
             )
 
             ConsigneeExportEoriSummary.row() mustBe
               Some(
                 SummaryListRowViewModel(
                   key = messagesForLanguage.cyaLabel,
-                  value = Value(Text("GB345678901234567")),
+                  value = Value(Text(testEoriNumber)),
                   actions = Seq(
                     ActionItemViewModel(
                       content = messagesForLanguage.change,

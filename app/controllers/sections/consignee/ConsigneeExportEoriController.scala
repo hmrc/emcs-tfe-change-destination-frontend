@@ -54,8 +54,7 @@ class ConsigneeExportEoriController @Inject()(
       formProvider().bindFromRequest().fold(
         formWithErrors =>
           Future.successful(BadRequest(view(formWithErrors, routes.ConsigneeExportEoriController.onSubmit(request.ern, request.arc, mode)))),
-        value =>
-          saveAndRedirect(ConsigneeExportEoriPage, value, mode)
+        saveAndRedirect(ConsigneeExportEoriPage, _, mode)
       )
     }
 }

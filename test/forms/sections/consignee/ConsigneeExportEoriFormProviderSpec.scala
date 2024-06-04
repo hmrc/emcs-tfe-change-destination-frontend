@@ -21,11 +21,13 @@ import fixtures.messages.sections.consignee.ConsigneeExportEoriMesssages
 import forms.behaviours.StringFieldBehaviours
 import play.api.data.FormError
 import play.api.i18n.Messages
+import forms.EORI_NUMBER_REGEX
 
 class ConsigneeExportEoriFormProviderSpec extends SpecBase with StringFieldBehaviours {
 
   val requiredKey = "consigneeExportEori.error.required"
   val lengthKey = "consigneeExportEori.error.length"
+  val invalidKey = "consigneeExportEori.error.invalidFormat"
 
   val maxLength = 17
 
@@ -51,9 +53,12 @@ class ConsigneeExportEoriFormProviderSpec extends SpecBase with StringFieldBehav
     behave like fieldWithEori(
       form = form,
       fieldName = fieldName,
-      formatError = FormError(fieldName, "consigneeExportEori.error.invalidFormat", Seq("[A-Z]{2}[A-Za-z0-9]{0,15}"))
+      formatError = FormError(fieldName, invalidKey, Seq(EORI_NUMBER_REGEX))
     )
 
+    "must trim any spaces before validating and accepting" in {
+      form.bind(Map(fieldName -> "  GB123  45 6789  ")).value mustBe Some("GB123456789")
+    }
   }
 
   "Error Messages" - {
@@ -66,19 +71,19 @@ class ConsigneeExportEoriFormProviderSpec extends SpecBase with StringFieldBehav
 
         "have the correct required error message" in {
 
-          msgs("consigneeExportEori.error.required") mustBe
+          msgs(requiredKey) mustBe
             messagesForLanguage.errorRequired
         }
 
         "have the correct length error message" in {
 
-          msgs("consigneeExportEori.error.length") mustBe
+          msgs(lengthKey) mustBe
             messagesForLanguage.errorLength
         }
 
         "have the correct regex error message" in {
 
-          msgs("consigneeExportEori.error.invalidFormat") mustBe
+          msgs(invalidKey) mustBe
             messagesForLanguage.errorInvalid
         }
 

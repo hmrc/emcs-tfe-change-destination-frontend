@@ -79,9 +79,11 @@ class ConsigneeExportEoriControllerSpec extends SpecBase with MockUserAnswersSer
 
     "must redirect to the next page when valid data is submitted" in new Test(Some(emptyUserAnswers)) {
 
-      MockUserAnswersService.set().returns(Future.successful(emptyUserAnswers))
+      val expectedSavedAnswers = emptyUserAnswers.set(ConsigneeExportEoriPage, testEoriNumber)
 
-      val result = controller.onSubmit(testErn, testArc, NormalMode)(request.withFormUrlEncodedBody(("value", "GB123456789012345")))
+      MockUserAnswersService.set(expectedSavedAnswers).returns(Future.successful(expectedSavedAnswers))
+
+      val result = controller.onSubmit(testErn, testArc, NormalMode)(request.withFormUrlEncodedBody(("value", testEoriNumber)))
 
       status(result) mustEqual SEE_OTHER
       redirectLocation(result).value mustEqual testOnwardRoute.url

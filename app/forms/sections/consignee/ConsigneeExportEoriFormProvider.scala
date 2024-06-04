@@ -29,6 +29,7 @@ class ConsigneeExportEoriFormProvider @Inject() extends Mappings {
   def apply(): Form[String] =
     Form(
       "value" -> text("consigneeExportEori.error.required")
+        .transform[String](_.replace(" ", ""), identity)
         .verifying(
           firstError(
             maxLength(EORI_NUMBER_MAX_LENGTH, "consigneeExportEori.error.length"),

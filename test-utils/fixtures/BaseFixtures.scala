@@ -36,7 +36,7 @@ trait BaseFixtures {
   val testGreatBritainErn = "GBRC123456789"
   val testArc: String = "arc"
   val testVatNumber: String = "123456789"
-  val testEoriNumber = "1234"
+  val testEoriNumber = "AB1234"
   val testExportCustomsOffice: String = "AA123456"
   val testDateOfArrival: LocalDate = LocalDate.now()
   val testSubmissionDate: LocalDateTime = LocalDateTime.now()

@@ -38,6 +38,13 @@ class ConsigneeExportEoriPageSpec extends SpecBase {
           emptyUserAnswers.set(ChangeTypePage, ChangeConsignee)
         )) mustBe None
       }
+
+      "when consignee trader doesn't exist" in {
+        ConsigneeExportEoriPage.getValueFromIE801(dataRequest(
+          FakeRequest(),
+          movementDetails = maxGetMovementResponse.copy(consigneeTrader = None))
+        ) mustBe None
+      }
     }
   }
 }
