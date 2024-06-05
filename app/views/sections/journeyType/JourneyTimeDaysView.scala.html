@@ -49,6 +49,7 @@
             )
             .asNumeric()
             .withWidth(Fixed2)
+            .withHint(HintViewModel(messages("journeyTimeDays.hint")))
             .withSuffix(PrefixOrSuffix(classes = "days-suffix", content = Text(messages("journeyTimeDays.input.suffix"))))
         )
 

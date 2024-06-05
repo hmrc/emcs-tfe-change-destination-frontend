@@ -51,6 +51,7 @@ class JourneyTimeDaysViewSpec extends SpecBase with ViewBehaviours {
           Selectors.title -> messagesForLanguage.title,
           Selectors.subHeadingCaptionSelector -> messagesForLanguage.journeyTypeSection,
           Selectors.h1 -> messagesForLanguage.heading,
+          Selectors.hint -> messagesForLanguage.hint,
           Selectors.inputSuffix -> messagesForLanguage.suffix,
           Selectors.link(1) -> messagesForLanguage.toJourneyHoursLink,
           Selectors.button -> messagesForLanguage.saveAndContinue
