@@ -344,25 +344,27 @@ giveInformationOtherTransport.change.hidden = give information about your other 
 
 journeyTimeDays.title = How many days will the journey take?
 journeyTimeDays.heading = How many days will the journey take?
+journeyTimeDays.hint = Journey time in days must be a whole number.
 journeyTimeDays.input.suffix = days
 journeyTimeDays.switchToHours = Journey time is shorter than one day
 journeyTimeDays.checkYourAnswersLabel = Journey time
 journeyTimeDays.checkYourAnswersValue = {0} days
 journeyTimeDays.error.nonNumeric = Days must only contain numbers
 journeyTimeDays.error.required = Enter how many days the journey will take
-journeyTimeDays.error.wholeNumber = Days must only contain numbers
+journeyTimeDays.error.wholeNumber = The number of days must not include a decimal place
 journeyTimeDays.error.outOfRange = Days must be between {0} and {1}
 journeyTimeDays.change.hidden = how many days the journey will take
 
 journeyTimeHours.title = How many hours will the journey take?
 journeyTimeHours.heading = How many hours will the journey take?
+journeyTimeHours.hint = Journey time in hours must be a whole number.
 journeyTimeHours.input.suffix = hours
 journeyTimeHours.switchToDays = Journey time is longer than 24 hours
 journeyTimeHours.checkYourAnswersLabel = Journey time
 journeyTimeHours.checkYourAnswersValue = {0} hours
 journeyTimeHours.error.nonNumeric = Hours must only contain numbers
 journeyTimeHours.error.required = Enter how many hours the journey will take
-journeyTimeHours.error.wholeNumber = Hours must only contain numbers
+journeyTimeHours.error.wholeNumber = The number of hours must not include a decimal place
 journeyTimeHours.error.outOfRange = Hours must be between {0} and {1}
 journeyTimeHours.change.hidden = how many hours the journey will take
 

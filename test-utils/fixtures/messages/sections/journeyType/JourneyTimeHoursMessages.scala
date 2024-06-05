@@ -22,6 +22,7 @@ object JourneyTimeHoursMessages {
   sealed trait ViewMessages extends BaseMessages { _: i18n =>
     val heading = "How many hours will the journey take?"
     val title: String = titleHelper(heading)
+    val hint: String = "Journey time in hours must be a whole number."
     val suffix: String = "hours"
     val toJourneyDaysLink: String = "Journey time is longer than 24 hours"
     val cyaLabel: String = "Journey time"
