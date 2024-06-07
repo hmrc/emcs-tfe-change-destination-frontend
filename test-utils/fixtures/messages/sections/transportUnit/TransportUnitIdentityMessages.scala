@@ -54,8 +54,6 @@ object TransportUnitIdentityMessages {
     val cyaLabel: String = "Transport identifier"
 
     val cyaChangeHidden: String = "transport identifier"
-
-    val errorMessageHelper: String => String = s"Error: " + _
   }
 
   object English extends ViewMessages with BaseEnglish

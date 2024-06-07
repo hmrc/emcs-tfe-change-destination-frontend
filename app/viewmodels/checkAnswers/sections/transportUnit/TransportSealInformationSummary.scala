@@ -30,13 +30,13 @@ import viewmodels.implicits._
 
 object TransportSealInformationSummary {
 
-  def row(idx: Index, onReviewPage: Boolean)(implicit request: DataRequest[_], messages: Messages, link: views.html.components.link): Option[SummaryListRow] = {
+  def row(idx: Index, hideChangeLinks: Boolean)(implicit request: DataRequest[_], messages: Messages, link: views.html.components.link): Option[SummaryListRow] = {
     request.userAnswers.get(TransportSealChoicePage(idx)).filter(identity).map { _ =>
       request.userAnswers.get(TransportSealTypePage(idx)) match {
         case Some(TransportSealTypeModel(_, Some(info))) => SummaryListRowViewModel(
           key = "transportSealType.moreInfo.checkYourAnswersLabel",
           value = ValueViewModel(info),
-          actions = if(onReviewPage) Seq() else Seq(
+          actions = if(hideChangeLinks) Seq() else Seq(
             ActionItemViewModel(
               "site.change",
               routes.TransportSealTypeController.onPageLoad(request.userAnswers.ern, request.userAnswers.arc, idx, CheckMode).url,
@@ -45,7 +45,7 @@ object TransportSealInformationSummary {
           )
         )
         case _ =>
-          val summaryRowValue = if(onReviewPage) Text(messages("site.notProvided")) else HtmlContent(link(
+          val summaryRowValue = if(hideChangeLinks) Text(messages("site.notProvided")) else HtmlContent(link(
             link = routes.TransportSealTypeController.onPageLoad(request.userAnswers.ern, request.userAnswers.arc, idx, CheckMode).url,
             messageKey = s"transportSealType.moreInfo.checkYourAnswersAddInfo"))
           SummaryListRowViewModel(

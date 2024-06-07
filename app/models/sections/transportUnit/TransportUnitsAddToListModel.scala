@@ -16,10 +16,15 @@
 
 package models.sections.transportUnit
 
+import models.requests.DataRequest
 import models.{Enumerable, WithName}
+import pages.sections.transportUnit.TransportUnitsSectionUnits
 import play.api.i18n.Messages
+import queries.TransportUnitsCount
 import uk.gov.hmrc.govukfrontend.views.Aliases.Text
 import uk.gov.hmrc.govukfrontend.views.viewmodels.radios.RadioItem
+import viewmodels.taskList.InProgress
+import views.ViewUtils.pluralSingular
 
 sealed trait TransportUnitsAddToListModel
 
@@ -35,9 +40,18 @@ object TransportUnitsAddToListModel extends Enumerable.Implicits {
     Yes, MoreToCome, NoMoreToCome
   )
 
-  def options(implicit messages: Messages): Seq[RadioItem] = {
+  def options(implicit messages: Messages, request: DataRequest[_]): Seq[RadioItem] = {
+
+    val showNoOption = TransportUnitsSectionUnits.status != InProgress
+
+    val numberOfTransportUnits = request.userAnswers.get(TransportUnitsCount).getOrElse(0)
+
     def radioItem(value: TransportUnitsAddToListModel, index: Int): RadioItem = RadioItem(
-      content = Text(messages(s"transportUnitsAddToList.${value.toString}")),
+      content = if (index == 1) {
+        Text(pluralSingular(s"transportUnitsAddToList.${value.toString}", numberOfTransportUnits))
+      } else {
+        Text(messages(s"transportUnitsAddToList.${value.toString}"))
+      },
       value = Some(value.toString),
       id = Some(s"value_$index")
     )
@@ -47,11 +61,11 @@ object TransportUnitsAddToListModel extends Enumerable.Implicits {
     )
 
     Seq(
-      radioItem(Yes, 0),
-      radioItem(NoMoreToCome, 1),
-      orDivider,
-      radioItem(MoreToCome, 2)
-    )
+      Some(radioItem(Yes, 0)),
+      if (showNoOption) Some(radioItem(NoMoreToCome, 1)) else None,
+      if (showNoOption) Some(orDivider) else None,
+      Some(radioItem(MoreToCome, 2))
+    ).flatten
   }
 
   implicit val enumerable: Enumerable[TransportUnitsAddToListModel] =

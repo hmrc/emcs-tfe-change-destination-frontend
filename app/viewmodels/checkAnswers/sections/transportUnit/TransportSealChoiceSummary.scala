@@ -27,19 +27,18 @@ import viewmodels.implicits._
 
 object TransportSealChoiceSummary {
 
-  def row(idx: Index, onReviewPage: Boolean)(implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] =
-    Some(
-      SummaryListRowViewModel(
-        key = "transportSealChoice.checkYourAnswersLabel",
-        value = ValueViewModel(getValue(idx)),
-        actions = if(onReviewPage) Seq() else Seq(
-          ActionItemViewModel(
-            content = "site.change",
-            href = controllers.sections.transportUnit.routes.TransportSealChoiceController.onPageLoad(request.userAnswers.ern, request.userAnswers.arc, idx, CheckMode).url,
-            id = s"changeTransportSealChoice${idx.displayIndex}")
-            .withVisuallyHiddenText(messages("transportSealChoice.change.hidden"))
-        )
-      ))
+  def row(idx: Index, hideChangeLinks: Boolean)(implicit request: DataRequest[_], messages: Messages): SummaryListRow =
+    SummaryListRowViewModel(
+      key = "transportSealChoice.checkYourAnswersLabel",
+      value = ValueViewModel(getValue(idx)),
+      actions = if(hideChangeLinks) Seq() else Seq(
+        ActionItemViewModel(
+          content = "site.change",
+          href = controllers.sections.transportUnit.routes.TransportSealChoiceController.onPageLoad(request.userAnswers.ern, request.userAnswers.arc, idx, CheckMode).url,
+          id = s"changeTransportSealChoice${idx.displayIndex}")
+          .withVisuallyHiddenText(messages("transportSealChoice.change.hidden"))
+      )
+    )
 
 
   private def getValue(idx: Index)(implicit request: DataRequest[_], messages: Messages): Content =

@@ -59,7 +59,10 @@ trait BaseMessages { _: i18n =>
   val remove: String = "Remove"
   val continueEditing: String = "Continue editing"
   val sectionNotComplete: String => String = section => s"$section section not complete"
-  val incomplete: String = "Incomplete"
+  val incompleteTag: String = "Incomplete"
+  val updateNeededTag: String = "Update Needed"
+  val errorMessageHelper: String => String = s"Error: " + _
+  val incompleteMessageHelper: String => String = _ + " " + incompleteTag
 }
 
 trait BaseEnglish extends BaseMessages with EN

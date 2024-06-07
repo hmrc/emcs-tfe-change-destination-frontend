@@ -47,6 +47,11 @@ case object CannotStartYet extends TaskListStatus {
   override val tagClass = Some("govuk-tag--grey")
 }
 
+case object UpdateNeeded extends TaskListStatus {
+  override val msgKey: String = "taskListStatus.updateNeeded"
+  override val tagClass = Some("govuk-tag--orange")
+}
+
 case class TaskListSectionRow(taskName: String,
                               id: String,
                               link: Option[String],

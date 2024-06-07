@@ -29,12 +29,5 @@ case class TransportSealTypePage(idx: Index) extends QuestionPage[TransportSealT
   override val toString: String = "transportSealType"
   override val path: JsPath = TransportUnitSection(idx).path \ toString
 
-  override def getValueFromIE801(implicit request: DataRequest[_]): Option[TransportSealTypeModel] =
-    ifIndexIsValid(TransportUnitsCount, idx)(valueIfIndexIsValid = Try {
-      val transportDetails = request.movementDetails.transportDetails(idx.position)
-      transportDetails.commercialSealIdentification.map {
-        identification =>
-          TransportSealTypeModel(identification, transportDetails.sealInformation)
-      }
-    }.getOrElse(None)) // In case the number of transport units in user answers exceeds the number of TU's in 801 (return None as out of bounds)
+  override def getValueFromIE801(implicit request: DataRequest[_]): Option[TransportSealTypeModel] = None
 }

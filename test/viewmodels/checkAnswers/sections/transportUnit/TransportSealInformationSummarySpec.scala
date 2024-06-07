@@ -50,7 +50,7 @@ class TransportSealInformationSummarySpec extends SpecBase with Matchers with Tr
 
             implicit lazy val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), emptyUserAnswers)
 
-            TransportSealInformationSummary.row(testIndex1, onReviewPage = false) mustBe None
+            TransportSealInformationSummary.row(testIndex1, hideChangeLinks = false) mustBe None
           }
         }
 
@@ -62,7 +62,7 @@ class TransportSealInformationSummarySpec extends SpecBase with Matchers with Tr
               .set(TransportSealChoicePage(testIndex1), false)
             )
 
-            TransportSealInformationSummary.row(testIndex1, onReviewPage = false) mustBe None
+            TransportSealInformationSummary.row(testIndex1, hideChangeLinks = false) mustBe None
           }
 
           "must output no rows if TransportSealChoicePage is not present" in {
@@ -70,7 +70,7 @@ class TransportSealInformationSummarySpec extends SpecBase with Matchers with Tr
               .set(TransportSealTypePage(testIndex1), transportSealTypeModelMax)
             )
 
-            TransportSealInformationSummary.row(testIndex1, onReviewPage = false) mustBe None
+            TransportSealInformationSummary.row(testIndex1, hideChangeLinks = false) mustBe None
           }
 
           "must output the expected row for TransportSealInformation if TransportSealChoicePage is true" in {
@@ -80,7 +80,7 @@ class TransportSealInformationSummarySpec extends SpecBase with Matchers with Tr
               .set(TransportSealChoicePage(testIndex1), true)
             )
 
-            TransportSealInformationSummary.row(testIndex1, onReviewPage = false) mustBe
+            TransportSealInformationSummary.row(testIndex1, hideChangeLinks = false) mustBe
               Some(
                 SummaryListRowViewModel(
                   key = messagesForLanguage.moreInfoCYA,
@@ -104,7 +104,7 @@ class TransportSealInformationSummarySpec extends SpecBase with Matchers with Tr
               .set(TransportSealChoicePage(testIndex1), true)
             )
 
-            TransportSealInformationSummary.row(testIndex1, onReviewPage = true) mustBe
+            TransportSealInformationSummary.row(testIndex1, hideChangeLinks = true) mustBe
               Some(
                 SummaryListRowViewModel(
                   key = messagesForLanguage.moreInfoCYA,
@@ -122,7 +122,7 @@ class TransportSealInformationSummarySpec extends SpecBase with Matchers with Tr
               .set(TransportSealChoicePage(testIndex1), false)
             )
 
-            TransportSealInformationSummary.row(testIndex1, onReviewPage = false) mustBe None
+            TransportSealInformationSummary.row(testIndex1, hideChangeLinks = false) mustBe None
           }
 
           "must output no rows if TransportSealChoicePage is not present" in {
@@ -130,7 +130,7 @@ class TransportSealInformationSummarySpec extends SpecBase with Matchers with Tr
               .set(TransportSealTypePage(testIndex1), transportSealTypeModelMin)
             )
 
-            TransportSealInformationSummary.row(testIndex1, onReviewPage = false) mustBe None
+            TransportSealInformationSummary.row(testIndex1, hideChangeLinks = false) mustBe None
           }
 
           "must output a row with a link to add more information and TransportSealChoicePage is true" in {
@@ -140,7 +140,7 @@ class TransportSealInformationSummarySpec extends SpecBase with Matchers with Tr
               .set(TransportSealChoicePage(testIndex1), true)
             )
 
-            TransportSealInformationSummary.row(testIndex1, onReviewPage = false) mustBe
+            TransportSealInformationSummary.row(testIndex1, hideChangeLinks = false) mustBe
               Some(
                 SummaryListRowViewModel(
                   key = messagesForLanguage.moreInfoCYA,
@@ -159,7 +159,7 @@ class TransportSealInformationSummarySpec extends SpecBase with Matchers with Tr
               .set(TransportSealChoicePage(testIndex1), true)
             )
 
-            TransportSealInformationSummary.row(testIndex1, onReviewPage = true) mustBe
+            TransportSealInformationSummary.row(testIndex1, hideChangeLinks = true) mustBe
               Some(
                 SummaryListRowViewModel(
                   key = messagesForLanguage.moreInfoCYA,

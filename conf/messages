@@ -47,6 +47,7 @@ taskListStatus.notStarted = Not Started
 taskListStatus.cannotStartYet = Cannot Start Yet
 taskListStatus.incomplete = Incomplete
 taskListStatus.review = Review
+taskListStatus.updateNeeded = Update Needed
 
 unitOfMeasure.kilograms.short = kg
 unitOfMeasure.kilograms.long = kilograms
@@ -757,7 +758,8 @@ transportUnitsAddToList.transportUnitCardTitle = Transport unit {0}
 transportUnitsAddToList.legend = Do you need to add another transport unit?
 transportUnitsAddToList.1 = Yes
 transportUnitsAddToList.2 = I will add more transport units later
-transportUnitsAddToList.3 = No, this is the only transport unit for this movement
+transportUnitsAddToList.3.singular = No, this is the only transport unit for this movement
+transportUnitsAddToList.3.plural = No, these are all the transport units
 transportUnitsAddToList.error.required = Select yes if you need to add another transport unit
 
 transportUnitRemoveUnit.title = Are you sure you want to remove transport unit {0}?

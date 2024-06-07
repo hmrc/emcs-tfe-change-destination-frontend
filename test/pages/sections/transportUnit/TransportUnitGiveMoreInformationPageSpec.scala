@@ -17,40 +17,13 @@
 package pages.sections.transportUnit
 
 import base.SpecBase
-import models.Index
-import models.response.emcsTfe.TransportDetailsModel
-import play.api.libs.json.Json
 import play.api.test.FakeRequest
 
 class TransportUnitGiveMoreInformationPageSpec extends SpecBase {
 
-  val transportDetails: TransportDetailsModel = maxGetMovementResponse.transportDetails.head
-
   "getValueFromIE801" - {
-    "must return Some(_)" - {
-      "when the index is valid" in {
-        TransportUnitGiveMoreInformationPage(testIndex1).getValueFromIE801(dataRequest(FakeRequest(), emptyUserAnswers.set(
-          TransportUnitsSectionUnits, Json.arr(Json.obj())
-        ))) mustBe Some(transportDetails.complementaryInformation)
-      }
-    }
-
-    "must return None" - {
-
-      //scalastyle:off
-      "when the index exceeds the transport units in 801" in {
-        TransportUnitGiveMoreInformationPage(Index(3)).getValueFromIE801(dataRequest(FakeRequest(), emptyUserAnswers.set(
-          TransportUnitsSectionUnits, Json.arr(Json.obj(), Json.obj(), Json.obj(), Json.obj())
-        ))) mustBe None
-      }
-
-      "when there are no transport units" in {
-        TransportUnitGiveMoreInformationPage(testIndex1).getValueFromIE801(dataRequest(
-          FakeRequest(),
-          movementDetails = maxGetMovementResponse.copy(transportDetails = Seq.empty)
-        )) mustBe None
-      }
+    "must return None" in {
+      TransportUnitGiveMoreInformationPage(testIndex1).getValueFromIE801(dataRequest(FakeRequest())) mustBe None
     }
   }
-
 }
