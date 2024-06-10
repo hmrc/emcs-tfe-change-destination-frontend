@@ -10,7 +10,7 @@ import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.must.Matchers
 import org.scalatest.{EitherValues, OptionValues}
 import play.api.Application
-import play.api.http.Status.{INTERNAL_SERVER_ERROR, NOT_FOUND, OK}
+import play.api.http.Status.{INTERNAL_SERVER_ERROR, NO_CONTENT, OK}
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.test.Helpers.AUTHORIZATION
 import uk.gov.hmrc.http.{Authorization, HeaderCarrier}
@@ -53,12 +53,12 @@ class BetaAllowListConnectorISpec extends AnyFreeSpec
       connector.check(testErn).futureValue mustBe Right(true)
     }
 
-    "must return false when the server responds NOT_FOUND" in {
+    "must return false when the server responds NO_CONTENT" in {
 
       server.stubFor(
         get(urlEqualTo(url))
           .withHeader(AUTHORIZATION, equalTo(authToken))
-          .willReturn(aResponse().withStatus(NOT_FOUND))
+          .willReturn(aResponse().withStatus(NO_CONTENT))
       )
 
       connector.check(testErn).futureValue mustBe Right(false)
