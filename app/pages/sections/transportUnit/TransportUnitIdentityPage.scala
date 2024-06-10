@@ -20,9 +20,6 @@ import models.Index
 import models.requests.DataRequest
 import pages.QuestionPage
 import play.api.libs.json.JsPath
-import queries.TransportUnitsCount
-
-import scala.util.Try
 
 case class TransportUnitIdentityPage(idx: Index) extends QuestionPage[String] {
   override val toString: String = "transportUnitIdentity"

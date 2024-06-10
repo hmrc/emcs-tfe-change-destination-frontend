@@ -18,6 +18,7 @@ package pages.sections.consignee
 
 import models.Enumerable
 import models.requests.DataRequest
+import models.sections.consignee.ConsigneeExportInformation.{EoriNumber, NoInformation, VatNumber}
 import models.sections.info.ChangeType.ChangeConsignee
 import models.sections.info.movementScenario.MovementScenario.UnknownDestination
 import pages.QuestionPage
@@ -32,38 +33,42 @@ import scala.collection.Seq
 case object ConsigneeSection extends Section[JsObject] with Enumerable.Implicits {
   override val path: JsPath = JsPath \ "consignee"
 
-  override def status(implicit request: DataRequest[_]): TaskListStatus =
-    (
-      request.userAnswers.get(ConsigneeExportPage),
+  override def status(implicit request: DataRequest[_]): TaskListStatus = {
+    lazy val exportVatPageAnswer = request.userAnswers.get(ConsigneeExportVatPage)
+    lazy val exportEoriPageAnswer = request.userAnswers.get(ConsigneeExportEoriPage)
+    val pagesToCheck = (
+      request.userAnswers.get(ConsigneeExportInformationPage),
       request.userAnswers.get(ConsigneeExcisePage),
       request.userAnswers.get(ConsigneeExemptOrganisationPage)
     ) match {
       case (Some(value), _, _) =>
-        value match {
-          case true => checkBusinessNameAndAddressBothExistWithPage(request.userAnswers.get(ConsigneeExportInformationPage))
-          case false => checkBusinessNameAndAddressBothExistWithPage(request.userAnswers.get(ConsigneeExcisePage))
+        value.toList match {
+          case NoInformation :: Nil => Seq(Some(NoInformation.toString))
+          case VatNumber :: Nil => Seq(exportVatPageAnswer)
+          case EoriNumber :: Nil => Seq(exportEoriPageAnswer)
+          //Both VAT and EORI selected - check both answers exist
+          case _ => Seq(exportVatPageAnswer, exportEoriPageAnswer)
         }
-      case (_, Some(value), _) =>
-        checkBusinessNameAndAddressBothExistWithPage(Some(value))
-      case (_, _, Some(value)) =>
-        checkBusinessNameAndAddressBothExistWithPage(Some(value))
-      case _ => NotStarted
+      case (_, Some(value), _) => Seq(Some(value))
+      case (_, _, Some(value)) => Seq(Some(value).map(_.certificateSerialNumber))
+      case _ => Seq(None)
     }
+    checkBusinessNameAndAddressBothExistWithPage(pagesToCheck)
+  }
 
   /**
-   * @param pageGetResult result from request.userAnswers.get(Whatever)
+   * @param pageGetResults result from page answer retrievals
    * @param request       DataRequest
    * @param rds           unused, but required to ensure that the value passed in is readable (as opposed to something like Some(ConsigneeExportInformationPage)
-   * @tparam A type used for pageGetResult and rds
+   * @tparam A            type used for pageGetResult and rds
    * @return
    */
-  private def checkBusinessNameAndAddressBothExistWithPage[A](pageGetResult: Option[A])
+  private def checkBusinessNameAndAddressBothExistWithPage[A](pageGetResults: Seq[Option[A]])
                                                              (implicit request: DataRequest[_], @unused rds: Reads[A]): TaskListStatus = {
     val pages: Seq[Option[_]] = Seq(
-      pageGetResult,
       request.userAnswers.get(ConsigneeBusinessNamePage),
       request.userAnswers.get(ConsigneeAddressPage)
-    )
+    ) ++ pageGetResults
 
     if (pages.forall(_.nonEmpty)) {
       Completed
@@ -90,7 +95,8 @@ case object ConsigneeSection extends Section[JsObject] with Enumerable.Implicits
       isDifferentFromIE801(ConsigneeExemptOrganisationPage),
       isDifferentFromIE801(ConsigneeBusinessNamePage),
       isDifferentFromIE801(ConsigneeAddressPage),
-      isDifferentFromIE801(ConsigneeExportInformationPage)
+      isDifferentFromIE801(ConsigneeExportVatPage),
+      isDifferentFromIE801(ConsigneeExportEoriPage)
     ).contains(true)
   }
 }

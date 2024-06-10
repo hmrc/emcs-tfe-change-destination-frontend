@@ -17,73 +17,45 @@
 package models.sections.consignee
 
 import models.{Enumerable, WithName}
-import play.api.data.Form
 import play.api.i18n.Messages
-import play.api.libs.json.{Json, OFormat}
-import play.twirl.api.Html
-import uk.gov.hmrc.govukfrontend.views.Aliases.Text
-import uk.gov.hmrc.govukfrontend.views.html.components.{GovukErrorMessage, GovukHint, GovukInput, GovukLabel}
-import uk.gov.hmrc.govukfrontend.views.viewmodels.content.HtmlContent
-import uk.gov.hmrc.govukfrontend.views.viewmodels.errormessage.ErrorMessage
-import uk.gov.hmrc.govukfrontend.views.viewmodels.input.Input
-import uk.gov.hmrc.govukfrontend.views.viewmodels.label.Label
-import uk.gov.hmrc.govukfrontend.views.viewmodels.radios.RadioItem
+import uk.gov.hmrc.govukfrontend.views.Aliases.{ExclusiveCheckbox, Text}
+import uk.gov.hmrc.govukfrontend.views.viewmodels.checkboxes.CheckboxItem
 
-case class ConsigneeExportInformation(exportType: ConsigneeExportInformationType, vatNumber: Option[String], eoriNumber: Option[String])
+sealed trait ConsigneeExportInformation
 
-object ConsigneeExportInformation {
-  implicit val format: OFormat[ConsigneeExportInformation] = Json.format[ConsigneeExportInformation]
-}
+object ConsigneeExportInformation extends Enumerable.Implicits {
 
-sealed trait ConsigneeExportInformationType
+  case object VatNumber extends WithName("vatNumber") with ConsigneeExportInformation
 
-object ConsigneeExportInformationType extends Enumerable.Implicits {
+  case object EoriNumber extends WithName("eoriNumber") with ConsigneeExportInformation
 
-  case object YesVatNumber extends WithName("yesVatNumber") with ConsigneeExportInformationType
+  case object NoInformation extends WithName("noInformation") with ConsigneeExportInformation
 
-  case object YesEoriNumber extends WithName("yesEoriNumber") with ConsigneeExportInformationType
+  val values: Seq[ConsigneeExportInformation] = Seq(
+    VatNumber, EoriNumber, NoInformation
+  )
 
-  case object No extends WithName("no") with ConsigneeExportInformationType
+  def options()(implicit messages: Messages): Seq[CheckboxItem] = {
 
-  val values: Seq[ConsigneeExportInformationType] = Seq(YesVatNumber, YesEoriNumber, No)
+    def checkBoxItem(index: Int, value: ConsigneeExportInformation, exclusive: Boolean = false): CheckboxItem = CheckboxItem(
+      content = Text(messages(s"consigneeExportInformation.${value.toString}")),
+      value = value.toString,
+      id = Some(if (index == 0) "value" else s"value_$index"),
+      behaviour = if (exclusive) Some(ExclusiveCheckbox) else None
+    )
 
-  def options(form: Form[_])(implicit messages: Messages): Seq[RadioItem] = {
+    val orDivider = CheckboxItem(
+      divider = Some(messages("site.divider"))
+    )
 
-    def createConditionalField(fieldName: String)(implicit messages: Messages) =
-      new GovukInput(
-        new GovukErrorMessage(),
-        new GovukHint(),
-        new GovukLabel())(
-        Input(
-          id = fieldName,
-          value = form(fieldName).value,
-          name = fieldName,
-          label = Label(content = Text(messages(s"consigneeExportInformation.$fieldName.label")), isPageHeading = false),
-          errorMessage = {
-            form.error(fieldName).flatMap { error =>
-              Some(
-                ErrorMessage(content = HtmlContent(Html(messages(error.message))))
-              )
-            }
-          }
-        )
-      )
-
-    values.map {
-      value =>
-        RadioItem(
-          content = Text(messages(s"consigneeExportInformation.${value.toString}")),
-          value = Some(value.toString),
-          id = Some(s"value_$value"),
-          conditionalHtml = value match {
-            case YesVatNumber => Some(createConditionalField(fieldName = "vatNumber"))
-            case YesEoriNumber => Some(createConditionalField(fieldName = "eoriNumber"))
-            case _ => None
-          }
-        )
-    }
+    Seq(
+      Some(checkBoxItem(0, VatNumber)),
+      Some(checkBoxItem(1, EoriNumber)),
+      Some(orDivider),
+      Some(checkBoxItem(2, NoInformation, exclusive = true))
+    ).flatten
   }
 
-  implicit val enumerable: Enumerable[ConsigneeExportInformationType] =
+  implicit val enumerable: Enumerable[ConsigneeExportInformation] =
     Enumerable(values.map(v => v.toString -> v): _*)
 }

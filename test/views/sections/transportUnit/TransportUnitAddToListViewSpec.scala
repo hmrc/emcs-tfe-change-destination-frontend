@@ -83,6 +83,7 @@ class TransportUnitAddToListViewSpec extends SpecBase with ViewBehaviours {
             Selectors.legendQuestion -> messagesForLanguage.question,
             Selectors.radioButton(1) -> messagesForLanguage.yesOption,
             Selectors.radioButton(2) -> messagesForLanguage.noOptionSingular,
+            Selectors.radioDividerButton(3) -> messagesForLanguage.or,
             Selectors.radioButton(4) -> messagesForLanguage.laterOption,
             Selectors.button -> messagesForLanguage.saveAndContinue,
             Selectors.returnToDraftLink -> messagesForLanguage.returnToDraft
@@ -120,6 +121,7 @@ class TransportUnitAddToListViewSpec extends SpecBase with ViewBehaviours {
             Selectors.errorField -> messagesForLanguage.errorMessageHelper(messagesForLanguage.errorMessage),
             Selectors.radioButton(1) -> messagesForLanguage.yesOption,
             Selectors.radioButton(2) -> messagesForLanguage.noOptionSingular,
+            Selectors.radioDividerButton(3) -> messagesForLanguage.or,
             Selectors.radioButton(4) -> messagesForLanguage.laterOption,
             Selectors.button -> messagesForLanguage.saveAndContinue,
             Selectors.returnToDraftLink -> messagesForLanguage.returnToDraft
@@ -163,6 +165,7 @@ class TransportUnitAddToListViewSpec extends SpecBase with ViewBehaviours {
             Selectors.legendQuestion -> messagesForLanguage.question,
             Selectors.radioButton(1) -> messagesForLanguage.yesOption,
             Selectors.radioButton(2) -> messagesForLanguage.noOptionPlural,
+            Selectors.radioDividerButton(3) -> messagesForLanguage.or,
             Selectors.radioButton(4) -> messagesForLanguage.laterOption,
             Selectors.button -> messagesForLanguage.saveAndContinue,
             Selectors.returnToDraftLink -> messagesForLanguage.returnToDraft
@@ -210,6 +213,7 @@ class TransportUnitAddToListViewSpec extends SpecBase with ViewBehaviours {
               Selectors.legendQuestion,
               Selectors.radioButton(1),
               Selectors.radioButton(2),
+              Selectors.radioDividerButton(3),
               Selectors.radioButton(4)
             )
           )
@@ -241,6 +245,12 @@ class TransportUnitAddToListViewSpec extends SpecBase with ViewBehaviours {
             Selectors.button -> messagesForLanguage.saveAndContinue,
             Selectors.returnToDraftLink -> messagesForLanguage.returnToDraft
           ))
+
+          behave like pageWithElementsNotPresent(
+            Seq(
+              Selectors.radioDividerButton(3)
+            )
+          )
         }
       }
     }

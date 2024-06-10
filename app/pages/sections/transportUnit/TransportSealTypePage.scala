@@ -21,9 +21,6 @@ import models.requests.DataRequest
 import models.sections.transportUnit.TransportSealTypeModel
 import pages.QuestionPage
 import play.api.libs.json.JsPath
-import queries.TransportUnitsCount
-
-import scala.util.Try
 
 case class TransportSealTypePage(idx: Index) extends QuestionPage[TransportSealTypeModel] {
   override val toString: String = "transportSealType"

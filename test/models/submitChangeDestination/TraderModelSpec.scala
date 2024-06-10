@@ -18,7 +18,7 @@ package models.submitChangeDestination
 
 import base.SpecBase
 import models.requests.DataRequest
-import models.sections.consignee.{ConsigneeExportInformation, ConsigneeExportInformationType}
+import models.sections.consignee.ConsigneeExportInformation.{EoriNumber, VatNumber}
 import models.sections.guarantor.GuarantorArranger
 import models.sections.info.movementScenario.MovementScenario
 import models.sections.info.movementScenario.MovementScenario._
@@ -45,11 +45,25 @@ class TraderModelSpec extends SpecBase {
     eoriNumber = Some("consignee eori")
   )
   val consigneeTraderWithVatNo: TraderModel = TraderModel(
-    traderExciseNumber = Some("vat no"),
+    traderExciseNumber = Some(testVatNumber),
     traderName = Some("consignee name"),
     address = Some(AddressModel.fromUserAddress(testUserAddress.copy(street = "consignee street"))),
     vatNumber = None,
     eoriNumber = None
+  )
+  val consigneeTraderWithVatAndEoriNo: TraderModel = TraderModel(
+    traderExciseNumber = Some("vat no"),
+    traderName = Some("consignee name"),
+    address = Some(AddressModel.fromUserAddress(testUserAddress.copy(street = "consignee street"))),
+    vatNumber = None,
+    eoriNumber = Some("eori no")
+  )
+  val consigneeTraderWithEoriNo: TraderModel = TraderModel(
+    traderExciseNumber = Some("consignee ern"),
+    traderName = Some("consignee name"),
+    address = Some(AddressModel.fromUserAddress(testUserAddress.copy(street = "consignee street"))),
+    vatNumber = None,
+    eoriNumber = Some("eori no")
   )
   val consigneeTraderWithNeitherErnNorVatNo: TraderModel = TraderModel(
     traderExciseNumber = None,
@@ -104,7 +118,7 @@ class TraderModelSpec extends SpecBase {
     traderExciseNumber = None,
     traderName = Some("consignee name"),
     address = Some(AddressModel.fromUserAddress(testUserAddress.copy(street = "consignee street"))),
-    vatNumber = Some("vat no"),
+    vatNumber = Some(testVatNumber),
     eoriNumber = None
   )
 
@@ -118,28 +132,13 @@ class TraderModelSpec extends SpecBase {
                 .set(DestinationTypePage, movementScenario)
                 .set(ConsigneeBusinessNamePage, "consignee name")
                 .set(ConsigneeExcisePage, "consignee ern")
-                .set(ConsigneeExportInformationPage, ConsigneeExportInformation(ConsigneeExportInformationType.YesEoriNumber, Some("vat no"), Some("consignee eori")))
+                .set(ConsigneeExportInformationPage, Set(VatNumber, EoriNumber))
+                .set(ConsigneeExportVatPage, testVatNumber)
+                .set(ConsigneeExportEoriPage, "consignee eori")
                 .set(ConsigneeAddressPage, testUserAddress.copy(street = "consignee street"))
             )
 
             TraderModel.applyConsignee mustBe consigneeTraderWithErn
-        }
-      }
-
-      //TODO: remove in ETFE-3250
-      "when an VAT number is provided" in {
-        MovementScenario.values.filterNot(_ == UnknownDestination).map {
-          movementScenario =>
-            implicit val dr: DataRequest[_] = dataRequest(fakeRequest,
-              emptyUserAnswers
-                .set(DestinationTypePage, movementScenario)
-                .set(ConsigneeBusinessNamePage, "consignee name")
-                .set(ConsigneeExportInformationPage, ConsigneeExportInformation(ConsigneeExportInformationType.YesVatNumber, Some("vat no"), None))
-                .set(ConsigneeAddressPage, testUserAddress.copy(street = "consignee street")),
-              movementDetails = maxGetMovementResponse.copy(consigneeTrader = None)
-            )
-
-            TraderModel.applyConsignee mustBe consigneeTraderWithVatNo
         }
       }
 
@@ -150,12 +149,46 @@ class TraderModelSpec extends SpecBase {
               emptyUserAnswers
                 .set(DestinationTypePage, movementScenario)
                 .set(ConsigneeBusinessNamePage, "consignee name")
-                .set(ConsigneeExportVatPage, "vat no")
+                .set(ConsigneeExportVatPage, testVatNumber)
                 .set(ConsigneeAddressPage, testUserAddress.copy(street = "consignee street")),
               movementDetails = maxGetMovementResponse.copy(consigneeTrader = None)
             )
 
             TraderModel.applyConsignee mustBe consigneeTraderWithVatNo
+        }
+      }
+
+      "when both VAT and EORI number are provided (on export VAT and EORI page)" in {
+        MovementScenario.values.filterNot(_ == UnknownDestination).map {
+          movementScenario =>
+            implicit val dr: DataRequest[_] = dataRequest(fakeRequest,
+              emptyUserAnswers
+                .set(DestinationTypePage, movementScenario)
+                .set(ConsigneeBusinessNamePage, "consignee name")
+                .set(ConsigneeExportVatPage, "vat no")
+                .set(ConsigneeExportEoriPage, "eori no")
+                .set(ConsigneeAddressPage, testUserAddress.copy(street = "consignee street")),
+              movementDetails = maxGetMovementResponse.copy(consigneeTrader = None)
+            )
+
+            TraderModel.applyConsignee mustBe consigneeTraderWithVatAndEoriNo
+        }
+      }
+
+      "when EORI number is provided (on export EORI page)" in {
+        MovementScenario.values.filterNot(_ == UnknownDestination).map {
+          movementScenario =>
+            implicit val dr: DataRequest[_] = dataRequest(fakeRequest,
+              emptyUserAnswers
+                .set(ConsigneeExcisePage, "consignee ern")
+                .set(DestinationTypePage, movementScenario)
+                .set(ConsigneeBusinessNamePage, "consignee name")
+                .set(ConsigneeExportEoriPage, "eori no")
+                .set(ConsigneeAddressPage, testUserAddress.copy(street = "consignee street")),
+              movementDetails = maxGetMovementResponse.copy(consigneeTrader = None)
+            )
+
+            TraderModel.applyConsignee mustBe consigneeTraderWithEoriNo
         }
       }
 
@@ -200,7 +233,7 @@ class TraderModelSpec extends SpecBase {
                   .set(DestinationAddressPage, testUserAddress.copy(street = "destination street"))
                   .set(ConsigneeBusinessNamePage, "consignee name")
                   .set(ConsigneeExcisePage, "consignee ern")
-                  .set(ConsigneeExportInformationPage, ConsigneeExportInformation(ConsigneeExportInformationType.YesEoriNumber, Some("vat no"), Some("consignee eori")))
+                  .set(ConsigneeExportInformationPage, Set(VatNumber, EoriNumber))
                   .set(ConsigneeAddressPage, testUserAddress.copy(street = "consignee street"))
               )
 
@@ -333,7 +366,9 @@ class TraderModelSpec extends SpecBase {
             .set(DestinationTypePage, MovementScenario.GbTaxWarehouse)
             .set(ConsigneeBusinessNamePage, "consignee name")
             .set(ConsigneeExcisePage, "consignee ern")
-            .set(ConsigneeExportInformationPage, ConsigneeExportInformation(ConsigneeExportInformationType.YesEoriNumber, Some("vat no"), Some("consignee eori")))
+            .set(ConsigneeExportInformationPage, Set(EoriNumber))
+            .set(ConsigneeExportVatPage, testVatNumber)
+            .set(ConsigneeExportEoriPage, "consignee eori")
             .set(ConsigneeAddressPage, testUserAddress.copy(street = "consignee street"))
         )
 
@@ -389,7 +424,9 @@ class TraderModelSpec extends SpecBase {
             .set(DestinationTypePage, MovementScenario.GbTaxWarehouse)
             .set(ConsigneeBusinessNamePage, "consignee name")
             .set(ConsigneeExcisePage, "consignee ern")
-            .set(ConsigneeExportInformationPage, ConsigneeExportInformation(ConsigneeExportInformationType.YesEoriNumber, Some("vat no"), Some("consignee eori")))
+            .set(ConsigneeExportInformationPage, Set(EoriNumber))
+            .set(ConsigneeExportVatPage, testVatNumber)
+            .set(ConsigneeExportEoriPage, testEoriNumber)
             .set(ConsigneeAddressPage, testUserAddress.copy(street = "consignee street"))
         )
 

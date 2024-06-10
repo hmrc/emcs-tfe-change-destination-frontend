@@ -24,7 +24,7 @@ import models.requests.DataRequest
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import play.api.i18n.Messages
-import play.api.mvc.AnyContentAsEmpty
+import play.api.mvc.{AnyContentAsEmpty, Call}
 import play.api.test.FakeRequest
 import views.html.sections.consignee.ConsigneeExportInformationView
 import views.{BaseSelectors, ViewBehaviours}
@@ -32,6 +32,12 @@ import views.{BaseSelectors, ViewBehaviours}
 class ConsigneeExportInformationViewSpec extends SpecBase with ViewBehaviours {
   object Selectors extends BaseSelectors
 
+  val action: Call = controllers.sections.consignee.routes.ConsigneeExportInformationController.onSubmit(testErn, testArc, NormalMode)
+
+  lazy val view = app.injector.instanceOf[ConsigneeExportInformationView]
+  val form = app.injector.instanceOf[ConsigneeExportInformationFormProvider].apply()
+
+  //scalastyle:off
   "ConsigneeExportInformationView" - {
 
     Seq(ConsigneeExportInformationMessages.English).foreach { messagesForLanguage =>
@@ -41,21 +47,21 @@ class ConsigneeExportInformationViewSpec extends SpecBase with ViewBehaviours {
         implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
         implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), emptyUserAnswers)
 
-       lazy val view = app.injector.instanceOf[ConsigneeExportInformationView]
-        val form = app.injector.instanceOf[ConsigneeExportInformationFormProvider].apply()
-
         implicit val doc: Document = Jsoup.parse(
           view(
             form = form,
-            mode = NormalMode
+            testOnwardRoute
           ).toString())
 
         behave like pageWithExpectedElementsAndMessages(Seq(
           Selectors.title -> messagesForLanguage.title,
           Selectors.h1 -> messagesForLanguage.heading,
-          Selectors.radioButton(1) -> messagesForLanguage.yesVatNumberRadioOption,
-          Selectors.radioButton(3) -> messagesForLanguage.yesEoriNumberRadioOption,
-          Selectors.radioButton(5) -> messagesForLanguage.noRadioOption,
+          Selectors.subHeadingCaptionSelector -> messagesForLanguage.consigneeInformationSection,
+          Selectors.hint -> messagesForLanguage.hint,
+          Selectors.checkboxItem(1) -> messagesForLanguage.checkboxItemForVat,
+          Selectors.checkboxItem(2) -> messagesForLanguage.checkboxItemForEori,
+          Selectors.checkboxDividerItem(3) -> messagesForLanguage.or,
+          Selectors.checkboxItem(4) -> messagesForLanguage.checkboxItemForNoInfo,
           Selectors.button -> messagesForLanguage.saveAndContinue,
           Selectors.link(1) -> messagesForLanguage.returnToDraft
         ))

@@ -17,37 +17,24 @@
 package forms.sections.consignee
 
 import forms.mappings.Mappings
-import models.sections.consignee.{ConsigneeExportInformation, ConsigneeExportInformationType}
+import models.sections.consignee.ConsigneeExportInformation
+import models.sections.consignee.ConsigneeExportInformation.NoInformation
 import play.api.data.Form
-import play.api.data.Forms.mapping
-import uk.gov.voa.play.form.ConditionalMappings.mandatoryIfEqual
+import play.api.data.Forms.set
 
 import javax.inject.Inject
 
 class ConsigneeExportInformationFormProvider @Inject() extends Mappings {
 
-  private val VAT_NUMBER_MAX_LENGTH = 14
-  private val EORI_NUMBER_MAX_LENGTH = 17
-
-  def apply(): Form[ConsigneeExportInformation] = {
+  def apply(): Form[Set[ConsigneeExportInformation]] =
     Form(
-      mapping(
-        "exportType" -> enumerable[ConsigneeExportInformationType]("consigneeExportInformation.consigneeExportType.error.required"),
-        "vatNumber" ->
-          mandatoryIfEqual(
-            fieldName = "exportType",
-            value = "yesVatNumber",
-            mapping = text("consigneeExportInformation.vatNumber.error.required")
-              .verifying(firstError(maxLength(VAT_NUMBER_MAX_LENGTH, s"consigneeExportInformation.vatNumber.error.length")))
-          ),
-        "eoriNumber" ->
-          mandatoryIfEqual(
-            fieldName = "exportType",
-            value = "yesEoriNumber",
-            mapping = text("consigneeExportInformation.eoriNumber.error.required")
-            .verifying(firstError(maxLength(EORI_NUMBER_MAX_LENGTH, s"consigneeExportInformation.eoriNumber.error.length")))
-          )
-      )(ConsigneeExportInformation.apply)(ConsigneeExportInformation.unapply)
+      "value" -> set(
+        enumerable[ConsigneeExportInformation](
+          requiredKey = "consigneeExportInformation.error.required",
+          invalidKey = "consigneeExportInformation.error.invalid"
+        )
+      )
+        .verifying(nonEmptySet("consigneeExportInformation.error.required"))
+        .verifying(exclusiveItemInSet("consigneeExportInformation.error.exclusive", NoInformation.toString))
     )
-  }
 }

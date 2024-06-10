@@ -41,7 +41,6 @@ class DeclarationControllerSpec extends SpecBase with MockUserAnswersService wit
 
   lazy val submitRoute = routes.DeclarationController.onSubmit(testGreatBritainErn, testArc)
 
-
   class Test(userAnswers: UserAnswers = baseFullUserAnswers) {
 
     implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(

@@ -22,10 +22,10 @@ import controllers.routes
 import forms.sections.consignee.ConsigneeExportFormProvider
 import mocks.services.MockUserAnswersService
 import models.response.emcsTfe.GetMovementResponse
-import models.sections.consignee.{ConsigneeExportInformation, ConsigneeExportInformationType}
+import models.sections.consignee.ConsigneeExportInformation.NoInformation
 import models.{NormalMode, UserAnswers}
 import navigation.FakeNavigators.FakeConsigneeNavigator
-import pages.sections.consignee.{ConsigneeExportPage, ConsigneeExportInformationPage}
+import pages.sections.consignee.{ConsigneeExportInformationPage, ConsigneeExportPage}
 import play.api.data.Form
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
@@ -108,7 +108,7 @@ class ConsigneeExportControllerSpec extends SpecBase with MockUserAnswersService
 
       val userAnswersChanged = emptyUserAnswers
         .set(ConsigneeExportPage, true)
-        .set(ConsigneeExportInformationPage, ConsigneeExportInformation(ConsigneeExportInformationType.No, None, None))
+        .set(ConsigneeExportInformationPage, Set(NoInformation))
 
       "must redirect to the next page when valid data is submitted - data has changed" in new Fixture(Some(userAnswersChanged)) {
         MockUserAnswersService.set(emptyUserAnswers.set(ConsigneeExportPage, false)).returns(Future.successful(emptyUserAnswers))

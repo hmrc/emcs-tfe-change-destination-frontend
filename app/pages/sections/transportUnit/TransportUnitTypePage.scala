@@ -21,9 +21,6 @@ import models.sections.transportUnit.TransportUnitType
 import models.{Enumerable, Index}
 import pages.QuestionPage
 import play.api.libs.json._
-import queries.TransportUnitsCount
-
-import scala.util.Try
 
 case class TransportUnitTypePage(idx: Index) extends QuestionPage[TransportUnitType] with Enumerable.Implicits {
   override val toString: String = "transportUnitType"

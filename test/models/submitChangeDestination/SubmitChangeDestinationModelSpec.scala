@@ -22,7 +22,7 @@ import fixtures.SubmitChangeDestinationFixtures
 import models.requests.DataRequest
 import models.response.emcsTfe.GuarantorType.NoGuarantor
 import models.sections.ReviewAnswer.KeepAnswers
-import models.sections.consignee.{ConsigneeExportInformation, ConsigneeExportInformationType}
+import models.sections.consignee.ConsigneeExportInformation.EoriNumber
 import models.sections.info.ChangeType.Destination
 import pages.sections.consignee.{ConsigneeAddressPage, ConsigneeBusinessNamePage, ConsigneeExcisePage, ConsigneeExportInformationPage}
 import pages.sections.destination.{DestinationAddressPage, DestinationBusinessNamePage, DestinationConsigneeDetailsPage, DestinationWarehouseExcisePage}
@@ -174,7 +174,7 @@ class SubmitChangeDestinationModelSpec extends SpecBase with SubmitChangeDestina
           // consignee
           .set(ConsigneeBusinessNamePage, "consignee name")
           .set(ConsigneeExcisePage, "consignee ern")
-          .set(ConsigneeExportInformationPage, ConsigneeExportInformation(ConsigneeExportInformationType.YesEoriNumber, Some("vat no"), Some("consignee eori")))
+          .set(ConsigneeExportInformationPage, Set(EoriNumber))
           .set(ConsigneeAddressPage, testUserAddress.copy(street = "consignee street"))
           // deliveryPlaceTrader
           .set(DestinationWarehouseExcisePage, testGreatBritainErn)

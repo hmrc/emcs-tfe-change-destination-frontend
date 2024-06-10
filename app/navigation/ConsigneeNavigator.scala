@@ -18,15 +18,17 @@ package navigation
 
 import controllers.routes
 import models.requests.DataRequest
+import models.sections.consignee.ConsigneeExportInformation.{EoriNumber, NoInformation, VatNumber}
 import models.{CheckMode, Mode, NormalMode, ReviewMode, UserAnswers}
 import pages.Page
 import pages.sections.consignee._
 import play.api.mvc.Call
+import utils.Logging
 
 import javax.inject.Inject
 
 //noinspection ScalaStyle
-class ConsigneeNavigator @Inject() extends BaseNavigator {
+class ConsigneeNavigator @Inject() extends BaseNavigator with Logging {
 
   private def normalRoutes(implicit request: DataRequest[_]): Page => UserAnswers => Call = {
 
@@ -46,13 +48,22 @@ class ConsigneeNavigator @Inject() extends BaseNavigator {
       }
 
     case ConsigneeExportInformationPage => (userAnswers: UserAnswers) =>
-      controllers.sections.consignee.routes.ConsigneeBusinessNameController.onPageLoad(userAnswers.ern, userAnswers.arc, NormalMode)
+      userAnswers.get(ConsigneeExportInformationPage) match {
+        case Some(answers) if answers.contains(VatNumber) =>
+          controllers.sections.consignee.routes.ConsigneeExportVatController.onPageLoad(userAnswers.ern, userAnswers.arc, NormalMode)
+        case Some(answers) if answers.contains(EoriNumber) =>
+          controllers.sections.consignee.routes.ConsigneeExportEoriController.onPageLoad(userAnswers.ern, userAnswers.arc, NormalMode)
+        case Some(answers) if answers.contains(NoInformation) =>
+          controllers.sections.consignee.routes.ConsigneeBusinessNameController.onPageLoad(userAnswers.ern, userAnswers.arc, NormalMode)
+        case _ =>
+          logger.warn("[normalRoutes] - Unexpected answer for ConsigneeExportInformationPage")
+          controllers.routes.JourneyRecoveryController.onPageLoad()
+      }
 
     case ConsigneeExportVatPage => (userAnswers: UserAnswers) =>
       userAnswers.get(ConsigneeExportInformationPage) match {
-        //TODO: implement in ETFE-3250
-//        case Some(answers) if answers.contains(YesEoriNumber) =>
-//        controllers.sections.consignee.routes.ConsigneeExportEoriController.onPageLoad(userAnswers.ern, userAnswers.draftId, NormalMode)
+        case Some(answers) if answers.contains(EoriNumber) =>
+          controllers.sections.consignee.routes.ConsigneeExportEoriController.onPageLoad(userAnswers.ern, userAnswers.arc, NormalMode)
         case _ =>
           controllers.sections.consignee.routes.ConsigneeBusinessNameController.onPageLoad(userAnswers.ern, userAnswers.arc, NormalMode)
       }

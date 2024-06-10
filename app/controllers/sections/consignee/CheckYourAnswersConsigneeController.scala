@@ -24,7 +24,7 @@ import pages.sections.consignee.{CheckAnswersConsigneePage, ConsigneeAddressPage
 import pages.sections.info.DestinationTypePage
 import play.api.i18n.MessagesApi
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
-import viewmodels.helpers.CheckYourAnswersConsigneeHelper
+import viewmodels.helpers.ConsigneeCheckAnswersHelper
 import views.html.sections.consignee.CheckYourAnswersConsigneeView
 
 import javax.inject.Inject
@@ -37,7 +37,7 @@ class CheckYourAnswersConsigneeController @Inject()(override val messagesApi: Me
                                                     override val withMovement: MovementAction,
                                                     val controllerComponents: MessagesControllerComponents,
                                                     val navigator: ConsigneeNavigator,
-                                                    val checkYourAnswersConsigneeHelper: CheckYourAnswersConsigneeHelper,
+                                                    val consigneeCheckAnswersHelper: ConsigneeCheckAnswersHelper,
                                                     view: CheckYourAnswersConsigneeView
                                                    ) extends BaseController with AuthActionHelper {
 
@@ -54,7 +54,7 @@ class CheckYourAnswersConsigneeController @Inject()(override val messagesApi: Me
                       controllers.sections.consignee.routes.CheckYourAnswersConsigneeController.onSubmit(ern, arc),
                       ern,
                       arc,
-                      checkYourAnswersConsigneeHelper.summaryList
+                      consigneeCheckAnswersHelper.summaryList
                     ))
                 }
             }
