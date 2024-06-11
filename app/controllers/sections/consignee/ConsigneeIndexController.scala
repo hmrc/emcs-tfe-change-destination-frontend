@@ -55,8 +55,8 @@ class ConsigneeIndexController @Inject()(override val messagesApi: MessagesApi,
             } else {
               if (shouldStartFlowFromConsigneeExemptOrganisation(destinationTypePageAnswer)) {
                 Redirect(controllers.sections.consignee.routes.ConsigneeExemptOrganisationController.onPageLoad(ern, arc, NormalMode))
-              } else if (shouldStartFlowFromConsigneeExportUkEu(ur.userTypeFromErn, destinationTypePageAnswer)) {
-                Redirect(controllers.sections.consignee.routes.ConsigneeExportController.onPageLoad(ern, arc, NormalMode))
+              } else if (shouldStartFlowFromConsigneeInformation(destinationTypePageAnswer)) {
+                Redirect(controllers.sections.consignee.routes.ConsigneeExportInformationController.onPageLoad(ern, arc, NormalMode))
               } else if (shouldStartFlowFromConsigneeExcise(ur.userTypeFromErn, destinationTypePageAnswer)) {
                 Redirect(controllers.sections.consignee.routes.ConsigneeExciseController.onPageLoad(ern, arc, NormalMode))
               } else {
@@ -70,23 +70,11 @@ class ConsigneeIndexController @Inject()(override val messagesApi: MessagesApi,
     }
   }
 
-  private def shouldStartFlowFromConsigneeExportUkEu(
-                                                      userTypeFromErn: UserType,
-                                                      destinationTypePageAnswer: MovementScenario
-                                                    ): Boolean = {
-    val gbwkAndSpecificDestinationTypes: Boolean =
-      userTypeFromErn == GreatBritainWarehouseKeeper && destinationTypePageAnswer == ExportWithCustomsDeclarationLodgedInTheUk
-
-    val xiwkAndSpecificDestinationTypes: Boolean = {
-      val validDestinationTypes: Seq[MovementScenario] = Seq(
-        RegisteredConsignee,
-        ExportWithCustomsDeclarationLodgedInTheUk,
-        ExportWithCustomsDeclarationLodgedInTheEu
-      )
-      userTypeFromErn == NorthernIrelandWarehouseKeeper && validDestinationTypes.contains(destinationTypePageAnswer)
-    }
-
-    gbwkAndSpecificDestinationTypes || xiwkAndSpecificDestinationTypes
+  private def shouldStartFlowFromConsigneeInformation(destinationTypePageAnswer: MovementScenario): Boolean = {
+    Seq(
+      ExportWithCustomsDeclarationLodgedInTheUk,
+      ExportWithCustomsDeclarationLodgedInTheEu
+    ).contains(destinationTypePageAnswer)
   }
 
   private def shouldStartFlowFromConsigneeExcise(

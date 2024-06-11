@@ -101,21 +101,6 @@ class ConsigneeIndexControllerSpec extends SpecBase with MockUserAnswersService 
                 Some(controllers.sections.consignee.routes.ConsigneeExciseController.onPageLoad(ern, testArc, NormalMode).url)
             }
         )
-
-        Seq(ExportWithCustomsDeclarationLodgedInTheUk).foreach(
-          movementScenario =>
-            s"and destination is $movementScenario" in new Fixture(
-              Some(emptyUserAnswers
-                .set(DestinationTypePage, movementScenario)
-              )) {
-
-              val result: Future[Result] = testController.onPageLoad(ern, testArc)(request)
-
-              status(result) mustBe SEE_OTHER
-              redirectLocation(result) mustBe
-                Some(controllers.sections.consignee.routes.ConsigneeExciseController.onPageLoad(ern, testArc, NormalMode).url)
-            }
-        )
       }
       "when UserType is XIRC" - {
         val ern: String = "XIRC123"
@@ -141,9 +126,7 @@ class ConsigneeIndexControllerSpec extends SpecBase with MockUserAnswersService 
 
         Seq(
           RegisteredConsignee,
-          TemporaryRegisteredConsignee,
-          ExportWithCustomsDeclarationLodgedInTheUk,
-          ExportWithCustomsDeclarationLodgedInTheEu
+          TemporaryRegisteredConsignee
         ).foreach(
           movementScenario =>
             s"and destination is $movementScenario" in new Fixture(
@@ -196,47 +179,21 @@ class ConsigneeIndexControllerSpec extends SpecBase with MockUserAnswersService 
       }
     }
 
-    "must redirect to ConsigneeExportController" - {
-      "when UserType is GBWK" - {
-        val ern = "GBWK123"
+    "must redirect to ConsigneeExportInformationController" - {
+      Seq(
+        ExportWithCustomsDeclarationLodgedInTheUk,
+        ExportWithCustomsDeclarationLodgedInTheEu
+      ).foreach(
+        movementScenario =>
+          s"when destination is $movementScenario" in new Fixture(Some(emptyUserAnswers.set(DestinationTypePage, movementScenario))) {
 
-        Seq(ExportWithCustomsDeclarationLodgedInTheUk).foreach(
-          movementScenario =>
-            s"and destination is $movementScenario" in new Fixture(
-              Some(emptyUserAnswers
-                .set(DestinationTypePage, movementScenario)
-              )) {
+            val result: Future[Result] = testController.onPageLoad(testErn, testArc)(request)
 
-              val result: Future[Result] = testController.onPageLoad(ern, testArc)(request)
-
-              status(result) mustBe SEE_OTHER
-              redirectLocation(result) mustBe
-                Some(controllers.sections.consignee.routes.ConsigneeExportController.onPageLoad(ern, testArc, NormalMode).url)
-            }
-        )
-      }
-
-      "when UserType is XIWK" - {
-        val ern = "XIWK123"
-
-        Seq(
-          RegisteredConsignee,
-          ExportWithCustomsDeclarationLodgedInTheUk,
-          ExportWithCustomsDeclarationLodgedInTheEu
-        ).foreach(
-          movementScenario =>
-            s"and destination is $movementScenario" in new Fixture(Some(emptyUserAnswers
-              .set(DestinationTypePage, movementScenario)
-            )) {
-
-              val result: Future[Result] = testController.onPageLoad(ern, testArc)(request)
-
-              status(result) mustBe SEE_OTHER
-              redirectLocation(result) mustBe
-                Some(controllers.sections.consignee.routes.ConsigneeExportController.onPageLoad(ern, testArc, NormalMode).url)
-            }
-        )
-      }
+            status(result) mustBe SEE_OTHER
+            redirectLocation(result) mustBe
+              Some(controllers.sections.consignee.routes.ConsigneeExportInformationController.onPageLoad(testErn, testArc, NormalMode).url)
+          }
+      )
     }
 
     "must redirect to the tasklist" - {
