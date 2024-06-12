@@ -73,31 +73,6 @@ class ConsigneeNavigatorSpec extends SpecBase {
 
       }
 
-      "for the ConsigneeExportPage" - {
-
-        "must go to CAM-NEE11" - {
-
-          "when 'YES' is answered'" in {
-            val userAnswers = emptyUserAnswers
-              .set(ConsigneeExportPage, true)
-
-            navigator.nextPage(ConsigneeExportPage, NormalMode, userAnswers) mustBe
-              controllers.sections.consignee.routes.ConsigneeExportInformationController.onPageLoad(userAnswers.ern, userAnswers.arc, NormalMode)
-          }
-        }
-
-        "must go to ConsigneeExcise page" - {
-
-          "when 'NO' is answered'" in {
-            val userAnswers = emptyUserAnswers
-              .set(ConsigneeExportPage, false)
-
-            navigator.nextPage(ConsigneeExportPage, NormalMode, userAnswers) mustBe
-              controllers.sections.consignee.routes.ConsigneeExciseController.onPageLoad(testErn, testArc, NormalMode)
-          }
-        }
-      }
-
       "from ConsigneeExemptOrganisationPage to ConsigneeBusinessName" in {
 
         navigator.nextPage(ConsigneeExemptOrganisationPage, NormalMode, emptyUserAnswers) mustBe

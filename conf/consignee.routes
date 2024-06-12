@@ -1,10 +1,5 @@
 GET         /trader/:ern/movement/:arc/consignee                                        controllers.sections.consignee.ConsigneeIndexController.onPageLoad(ern: String, arc: String)
 
-GET         /trader/:ern/movement/:arc/consignee/export-uk-eu                           controllers.sections.consignee.ConsigneeExportController.onPageLoad(ern: String, arc: String, mode: Mode = NormalMode)
-POST        /trader/:ern/movement/:arc/consignee/export-uk-eu                           controllers.sections.consignee.ConsigneeExportController.onSubmit(ern: String, arc: String, mode: Mode = NormalMode)
-GET         /trader/:ern/movement/:arc/consignee/export-uk-eu/change                    controllers.sections.consignee.ConsigneeExportController.onPageLoad(ern: String, arc: String, mode: Mode = CheckMode)
-POST        /trader/:ern/movement/:arc/consignee/export-uk-eu/change                    controllers.sections.consignee.ConsigneeExportController.onSubmit(ern: String, arc: String, mode: Mode = CheckMode)
-
 GET        /trader/:ern/movement/:arc/consignee/export-information                      controllers.sections.consignee.ConsigneeExportInformationController.onPageLoad(ern: String, arc: String, mode: Mode = NormalMode)
 POST       /trader/:ern/movement/:arc/consignee/export-information                      controllers.sections.consignee.ConsigneeExportInformationController.onSubmit(ern: String, arc: String, mode: Mode = NormalMode)
 GET        /trader/:ern/movement/:arc/consignee/export-information/change               controllers.sections.consignee.ConsigneeExportInformationController.onPageLoad(ern: String, arc: String, mode: Mode = CheckMode)

@@ -32,20 +32,8 @@ class ConsigneeNavigator @Inject() extends BaseNavigator with Logging {
 
   private def normalRoutes(implicit request: DataRequest[_]): Page => UserAnswers => Call = {
 
-    // if the [destinationType] was Exempted Organisation
     case ConsigneeExemptOrganisationPage => (userAnswers: UserAnswers) =>
       controllers.sections.consignee.routes.ConsigneeBusinessNameController.onPageLoad(userAnswers.ern, userAnswers.arc, NormalMode)
-
-    // else
-    case ConsigneeExportPage => (userAnswers: UserAnswers) =>
-      userAnswers.get(ConsigneeExportPage) match {
-        case Some(true) =>
-          controllers.sections.consignee.routes.ConsigneeExportInformationController.onPageLoad(userAnswers.ern, userAnswers.arc, NormalMode)
-        case Some(false) =>
-          controllers.sections.consignee.routes.ConsigneeExciseController.onPageLoad(userAnswers.ern, userAnswers.arc, NormalMode)
-        case _ =>
-          controllers.routes.JourneyRecoveryController.onPageLoad()
-      }
 
     case ConsigneeExportInformationPage => (userAnswers: UserAnswers) =>
       userAnswers.get(ConsigneeExportInformationPage) match {

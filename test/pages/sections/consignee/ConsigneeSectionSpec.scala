@@ -50,7 +50,7 @@ class ConsigneeSectionSpec extends SpecBase {
           emptyUserAnswers
             .set(ConsigneeExportInformationPage, Set(VatNumber, EoriNumber))
             .set(ConsigneeExportVatPage, testVatNumber)
-//            .set(ConsigneeExportEoriPage, testEori)
+            .set(ConsigneeExportEoriPage, testEoriNumber)
             .set(ConsigneeBusinessNamePage, "")
             .set(ConsigneeAddressPage, UserAddress(None, "", "", ""))
         )
@@ -62,27 +62,6 @@ class ConsigneeSectionSpec extends SpecBase {
             .set(ConsigneeExportInformationPage, Set(NoInformation))
             .set(ConsigneeBusinessNamePage, "")
             .set(ConsigneeAddressPage, UserAddress(None, "", "", ""))
-        )
-        ConsigneeSection.isCompleted mustBe true
-      }
-      "when user starts on ConsigneeExportUkEu and selects yes" in {
-        implicit val dr: DataRequest[_] = dataRequest(FakeRequest(),
-          emptyUserAnswers
-            .set(ConsigneeExportPage, true)
-            .set(ConsigneeExportInformationPage, Set(NoInformation))
-            .set(ConsigneeBusinessNamePage, "")
-            .set(ConsigneeAddressPage, UserAddress(None, "", "", ""))
-        )
-        ConsigneeSection.isCompleted mustBe true
-      }
-      "when user starts on ConsigneeExportUkEu and selects no" in {
-        implicit val dr: DataRequest[_] = dataRequest(FakeRequest(),
-          emptyUserAnswers
-            .set(ConsigneeExportPage, false)
-            .set(ConsigneeExcisePage, "")
-            .set(ConsigneeBusinessNamePage, "")
-            .set(ConsigneeAddressPage, UserAddress(None, "", "", "")),
-          movementDetails = maxGetMovementResponse.copy(consigneeTrader = None)
         )
         ConsigneeSection.isCompleted mustBe true
       }
@@ -166,15 +145,6 @@ class ConsigneeSectionSpec extends SpecBase {
             .set(ConsigneeExportInformationPage, Set(VatNumber, EoriNumber))
             .set(ConsigneeBusinessNamePage, "")
             .set(ConsigneeAddressPage, UserAddress(None, "", "", ""))
-        )
-        ConsigneeSection.isCompleted mustBe false
-      }
-      "when user starts on ConsigneeExportUkEu, not all answers are in IE801" in {
-        implicit val dr: DataRequest[_] = dataRequest(
-          FakeRequest(),
-          emptyUserAnswers
-            .set(ConsigneeExportPage, true),
-          movementDetails = maxGetMovementResponse.copy(consigneeTrader = None)
         )
         ConsigneeSection.isCompleted mustBe false
       }
