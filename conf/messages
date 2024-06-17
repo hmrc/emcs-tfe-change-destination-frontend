@@ -320,10 +320,6 @@ destinationType.error.required.import = Select the place of destination for this
 destinationType.checkYourAnswersLabel = Destination type
 destinationType.change.hidden = destination type
 
-destinationWarehouse.title = Where is the destination warehouse located?
-destinationWarehouse.heading = Where is the destination warehouse located?
-destinationWarehouse.error.required = Select the location of the destination warehouse
-
 howMovementTransported.title = How will the goods be transported?
 howMovementTransported.heading = How will the goods be transported?
 howMovementTransported.4 = Air transport
