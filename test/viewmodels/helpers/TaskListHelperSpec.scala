@@ -79,27 +79,29 @@ class TaskListHelperSpec extends SpecBase {
           }
           "must return the taskList.heading.gbTaxWarehouseTo message" in {
             Seq[(String, MovementScenario)](
-              ("GBWK123", GbTaxWarehouse)
+              ("GBWK123", UkTaxWarehouse.GB),
+              ("GBWK123", UkTaxWarehouse.NI)
             ).foreach {
               case (ern, movementScenario) =>
                 implicit val request: DataRequest[_] = dataRequest(FakeRequest(), ern = ern, answers = emptyUserAnswers.set(DestinationTypePage, movementScenario))
 
-                val input1 = msgs(s"taskList.heading.$movementScenario")
+                val destination = msgs(s"taskList.heading.$movementScenario")
 
-                helper.heading mustBe messagesForLanguage.headingGbTaxWarehouseTo(input1)
-                titleNoForm(helper.heading) mustBe messagesForLanguage.titleGbTaxWarehouseTo(input1)
+                helper.heading mustBe messagesForLanguage.headingGbTaxWarehouseTo(destination)
+                titleNoForm(helper.heading) mustBe messagesForLanguage.titleGbTaxWarehouseTo(destination)
             }
           }
           "must return the taskList.heading.dispatchPlaceTo message" in {
             Seq[(String, DispatchPlace, MovementScenario)](
-              ("XIWK123", GreatBritain, GbTaxWarehouse),
+              ("XIWK123", GreatBritain, UkTaxWarehouse.GB),
+              ("XIWK123", GreatBritain, UkTaxWarehouse.NI),
               ("XIWK123", GreatBritain, EuTaxWarehouse),
               ("XIWK123", GreatBritain, RegisteredConsignee),
               ("XIWK123", GreatBritain, TemporaryRegisteredConsignee),
               ("XIWK123", GreatBritain, ExemptedOrganisation),
               ("XIWK123", GreatBritain, UnknownDestination),
               ("XIWK123", GreatBritain, DirectDelivery),
-              ("XIWK123", NorthernIreland, GbTaxWarehouse),
+              ("XIWK123", NorthernIreland, UkTaxWarehouse.GB),
               ("XIWK123", NorthernIreland, EuTaxWarehouse),
               ("XIWK123", NorthernIreland, RegisteredConsignee),
               ("XIWK123", NorthernIreland, TemporaryRegisteredConsignee),
@@ -257,7 +259,8 @@ class TaskListHelperSpec extends SpecBase {
           "should render the destination row" - {
             "when MovementScenario is valid" in {
               Seq(
-                GbTaxWarehouse,
+                UkTaxWarehouse.GB,
+                UkTaxWarehouse.NI,
                 EuTaxWarehouse,
                 RegisteredConsignee,
                 TemporaryRegisteredConsignee,
@@ -277,7 +280,8 @@ class TaskListHelperSpec extends SpecBase {
           "should not render the destination row" - {
             "when MovementScenario is invalid" in {
               MovementScenario.values.filterNot(Seq(
-                GbTaxWarehouse,
+                UkTaxWarehouse.GB,
+                UkTaxWarehouse.NI,
                 EuTaxWarehouse,
                 RegisteredConsignee,
                 TemporaryRegisteredConsignee,
@@ -335,7 +339,7 @@ class TaskListHelperSpec extends SpecBase {
         "should render the Guarantor section when NI changed from UKtoEU to anything else" in {
           implicit val request: DataRequest[_] = dataRequest(FakeRequest(), ern = testNorthernIrelandErn,
             answers = emptyUserAnswers
-              .set(DestinationTypePage, GbTaxWarehouse),
+              .set(DestinationTypePage, UkTaxWarehouse.GB),
             movementDetails = maxGetMovementResponse.copy(movementGuarantee = MovementGuaranteeModel(Transporter, None))
           )
           helper.guarantorSection mustBe Some(TaskListSection(
@@ -377,7 +381,7 @@ class TaskListHelperSpec extends SpecBase {
           implicit val request: DataRequest[_] = dataRequest(FakeRequest(), ern = testGreatBritainErn,
             answers = emptyUserAnswers
               .set(HowMovementTransportedPage, RoadTransport)
-              .set(DestinationTypePage, GbTaxWarehouse),
+              .set(DestinationTypePage, UkTaxWarehouse.GB),
             movementDetails = maxGetMovementResponse.copy(movementGuarantee = MovementGuaranteeModel(NoGuarantor, None))
           )
           helper.guarantorSection mustBe None
@@ -734,7 +738,7 @@ class TaskListHelperSpec extends SpecBase {
                 ern = testGreatBritainErn,
                 answers = emptyUserAnswers
                   .set(HowMovementTransportedPage, FixedTransportInstallations)
-                  .set(DestinationTypePage, GbTaxWarehouse),
+                  .set(DestinationTypePage, UkTaxWarehouse.GB),
                 movementDetails = maxGetMovementResponse.copy(movementGuarantee = MovementGuaranteeModel(NoGuarantor, None))
               )
               helper.sections.map(_.sectionHeading) mustBe

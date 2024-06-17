@@ -36,7 +36,7 @@ class SessionRepositorySpec extends SpecBase with PlayMongoRepositorySupport[Use
   )
 
   val userAnswers = emptyUserAnswers
-    .set(DestinationTypePage, MovementScenario.GbTaxWarehouse)
+    .set(DestinationTypePage, MovementScenario.UkTaxWarehouse.GB)
 
 
   ".get" - {

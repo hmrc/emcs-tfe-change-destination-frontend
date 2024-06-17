@@ -19,7 +19,7 @@ package pages.sections.destination
 import models.Enumerable
 import models.requests.DataRequest
 import models.sections.info.movementScenario.MovementScenario
-import models.sections.info.movementScenario.MovementScenario.{CertifiedConsignee, DirectDelivery, EuTaxWarehouse, ExemptedOrganisation, GbTaxWarehouse, RegisteredConsignee, TemporaryCertifiedConsignee, TemporaryRegisteredConsignee}
+import models.sections.info.movementScenario.MovementScenario.{CertifiedConsignee, DirectDelivery, EuTaxWarehouse, ExemptedOrganisation, RegisteredConsignee, TemporaryCertifiedConsignee, TemporaryRegisteredConsignee, UkTaxWarehouse}
 import pages.sections.Section
 import pages.sections.info.DestinationTypePage
 import play.api.libs.json.{JsObject, JsPath}
@@ -31,10 +31,9 @@ case object DestinationSection extends Section[JsObject] with JsonOptionFormatte
   override val path: JsPath = JsPath \ "destination"
 
   def shouldStartFlowAtDestinationWarehouseExcise(implicit destinationTypePageAnswer: MovementScenario): Boolean =
-    Seq(
-      GbTaxWarehouse,
+    (UkTaxWarehouse.values ++ Seq(
       EuTaxWarehouse
-    ).contains(destinationTypePageAnswer)
+    )).contains(destinationTypePageAnswer)
 
   def shouldStartFlowAtDestinationWarehouseVat(implicit destinationTypePageAnswer: MovementScenario): Boolean =
     Seq(
@@ -121,8 +120,7 @@ case object DestinationSection extends Section[JsObject] with JsonOptionFormatte
 
   override def canBeCompletedForTraderAndDestinationType(implicit request: DataRequest[_]): Boolean =
     request.userAnswers.get(DestinationTypePage) match {
-      case Some(value) if Seq(
-        GbTaxWarehouse,
+      case Some(value) if (UkTaxWarehouse.values ++ Seq(
         EuTaxWarehouse,
         RegisteredConsignee,
         TemporaryRegisteredConsignee,
@@ -130,7 +128,7 @@ case object DestinationSection extends Section[JsObject] with JsonOptionFormatte
         TemporaryCertifiedConsignee,
         ExemptedOrganisation,
         DirectDelivery
-      ).contains(value) => true
+      )).contains(value) => true
       case _ => false
     }
 }

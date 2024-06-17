@@ -21,7 +21,7 @@ import fixtures.messages.sections.destination.DestinationBusinessNameMessages
 import forms.sections.destination.DestinationBusinessNameFormProvider
 import models.NormalMode
 import models.requests.DataRequest
-import models.sections.info.movementScenario.MovementScenario.{DirectDelivery, GbTaxWarehouse}
+import models.sections.info.movementScenario.MovementScenario.{DirectDelivery, UkTaxWarehouse}
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import play.api.i18n.Messages
@@ -45,7 +45,7 @@ class DestinationBusinessNameViewSpec extends SpecBase with ViewBehaviours {
         lazy val view = app.injector.instanceOf[DestinationBusinessNameView]
         val form = app.injector.instanceOf[DestinationBusinessNameFormProvider].apply()
 
-        implicit val doc: Document = Jsoup.parse(view(form, testOnwardRoute, GbTaxWarehouse, controllers.sections.destination.routes.DestinationBusinessNameController.skipThisQuestion(testErn, testArc, NormalMode)).toString())
+        implicit val doc: Document = Jsoup.parse(view(form, testOnwardRoute, UkTaxWarehouse.GB, controllers.sections.destination.routes.DestinationBusinessNameController.skipThisQuestion(testErn, testArc, NormalMode)).toString())
 
         behave like pageWithExpectedElementsAndMessages(Seq(
           Selectors.subHeadingCaptionSelector -> messagesForLanguage.destinationSection,

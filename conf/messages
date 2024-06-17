@@ -175,6 +175,7 @@ taskList.delete = Delete this draft
 taskList.heading.importFor = Import for {0}
 taskList.heading.gbTaxWarehouseTo = Great Britain tax warehouse to {0}
 taskList.heading.gbTaxWarehouse = Great Britain tax warehouse
+taskList.heading.niTaxWarehouse = Northern Ireland tax warehouse
 taskList.heading.euTaxWarehouse = European Union tax warehouse
 taskList.heading.dispatchPlaceTo = {0} tax warehouse to {1}
 taskList.heading.dutyPaid.certifiedConsignee = Northern Ireland tax warehouse to certified consignee
@@ -301,6 +302,8 @@ newDestinationType.title.import = What is the new destination type for this impo
 
 destinationType.exportWithCustomsDeclarationLodgedInTheUk = Export with customs declaration lodged in the United Kingdom
 destinationType.gbTaxWarehouse = Tax warehouse in Great Britain
+destinationType.gbTaxWarehouse.hint = (England, Scotland and Wales)
+destinationType.niTaxWarehouse = Tax warehouse in Northern Ireland
 destinationType.directDelivery = Direct delivery
 destinationType.euTaxWarehouse = Tax warehouse in the European Union
 destinationType.exemptedOrganisation = Exempted organisation
@@ -316,6 +319,10 @@ destinationType.error.required.movement = Select the place of destination for th
 destinationType.error.required.import = Select the place of destination for this import
 destinationType.checkYourAnswersLabel = Destination type
 destinationType.change.hidden = destination type
+
+destinationWarehouse.title = Where is the destination warehouse located?
+destinationWarehouse.heading = Where is the destination warehouse located?
+destinationWarehouse.error.required = Select the location of the destination warehouse
 
 howMovementTransported.title = How will the goods be transported?
 howMovementTransported.heading = How will the goods be transported?

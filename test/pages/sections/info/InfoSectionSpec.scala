@@ -19,7 +19,7 @@ package pages.sections.info
 import base.SpecBase
 import models.requests.DataRequest
 import models.sections.info.DispatchPlace.NorthernIreland
-import models.sections.info.movementScenario.MovementScenario.GbTaxWarehouse
+import models.sections.info.movementScenario.MovementScenario.UkTaxWarehouse
 import play.api.test.FakeRequest
 
 class InfoSectionSpec extends SpecBase {
@@ -29,7 +29,7 @@ class InfoSectionSpec extends SpecBase {
       "when the user is a XIWK and the dispatch place has been provided (all other answers provided)" in {
         implicit val dr: DataRequest[_] = dataRequest(FakeRequest(),
           emptyUserAnswers
-            .set(DestinationTypePage, GbTaxWarehouse)
+            .set(DestinationTypePage, UkTaxWarehouse.GB)
             .set(DispatchDetailsPage(), dispatchDetailsModel)
             .set(DispatchPlacePage, NorthernIreland),
           ern = testNorthernIrelandErn
@@ -40,7 +40,7 @@ class InfoSectionSpec extends SpecBase {
       "when the user is a GBWK (all other answers provided)" in {
         implicit val dr: DataRequest[_] = dataRequest(FakeRequest(),
           emptyUserAnswers
-            .set(DestinationTypePage, GbTaxWarehouse)
+            .set(DestinationTypePage, UkTaxWarehouse.GB)
             .set(DispatchDetailsPage(), dispatchDetailsModel)
         )
         InfoSection.isCompleted mustBe true
@@ -51,7 +51,7 @@ class InfoSectionSpec extends SpecBase {
       "when not finished" in {
         implicit val dr: DataRequest[_] = dataRequest(FakeRequest(),
           emptyUserAnswers
-            .set(DestinationTypePage, GbTaxWarehouse)
+            .set(DestinationTypePage, UkTaxWarehouse.GB)
         )
         InfoSection.isCompleted mustBe false
       }

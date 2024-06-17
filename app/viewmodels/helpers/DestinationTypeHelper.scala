@@ -26,6 +26,7 @@ import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
 import uk.gov.hmrc.govukfrontend.views.viewmodels.radios.RadioItem
 import utils.Logging
+import viewmodels.govuk.all.HintViewModel
 
 class DestinationTypeHelper extends Logging {
 
@@ -50,8 +51,8 @@ class DestinationTypeHelper extends Logging {
   def options(dispatchPlace: DispatchPlace)(implicit request: DataRequest[_], messages: Messages): Seq[RadioItem] = {
     // Note: __RC can only do imports, __WK can only do exports
     request.userTypeFromErn match {
-      case GreatBritainWarehouseKeeper | GreatBritainRegisteredConsignor => MovementScenario.valuesUk.map(radioOption)
-      case NorthernIrelandWarehouseKeeper if dispatchPlace == GreatBritain => MovementScenario.valuesUk.map(radioOption)
+      case GreatBritainWarehouseKeeper | GreatBritainRegisteredConsignor => MovementScenario.valuesGb.map(radioOption)
+      case NorthernIrelandWarehouseKeeper if dispatchPlace == GreatBritain => MovementScenario.valuesXIWKWithGbDispatchPlace.map(radioOption)
       case NorthernIrelandWarehouseKeeper if dispatchPlace == NorthernIreland => MovementScenario.valuesEu.map(radioOption)
       case NorthernIrelandRegisteredConsignor => MovementScenario.valuesEu.map(radioOption)
       case NorthernIrelandCertifiedConsignor | NorthernIrelandTemporaryCertifiedConsignor => MovementScenario.valuesForDutyPaidTraders.map(radioOption)
@@ -64,6 +65,7 @@ class DestinationTypeHelper extends Logging {
   private[helpers] def radioOption(value: MovementScenario)(implicit messages: Messages): RadioItem = RadioItem(
     content = Text(messages(s"destinationType.${value.toString}")),
     value = Some(value.toString),
-    id = Some(s"value_${value.toString}")
+    id = Some(s"value_${value.toString}"),
+    hint = if(messages.isDefinedAt(s"destinationType.$value.hint")) Some(HintViewModel(Text(messages(s"destinationType.$value.hint")))) else None
   )
 }

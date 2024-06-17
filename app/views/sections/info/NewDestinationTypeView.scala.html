@@ -33,8 +33,10 @@
 )
 
 @(dispatchPlace: DispatchPlace, form: Form[_], action: Call)(implicit request: DataRequest[_], messages: Messages)
-@radioOptions = @{ destinationTypeHelper.options(dispatchPlace) }
 
+@radioOptions = @{
+    destinationTypeHelper.options(dispatchPlace)
+}
 
 @layout(pageTitle = title(form, destinationTypeHelper.title), maybeShowActiveTrader = maybeShowActiveTrader(request)) {
 

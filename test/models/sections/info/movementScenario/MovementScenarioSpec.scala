@@ -89,18 +89,20 @@ class MovementScenarioSpec extends SpecBase {
       }
     }
     "when DestinationType is TaxWarehouse" - {
-      "must return GbTaxWarehouse" - {
+      "must return TaxWarehouse.GB" - {
         "when deliveryPlaceTrader.traderExciseNumber starts with GB" in {
           MovementScenario.getMovementScenarioFromMovement(testDataRequestWithDeliveryPlaceTrader(
             value = Some("GBWK123"),
             destinationType = DestinationType.TaxWarehouse
-          )) mustBe GbTaxWarehouse
+          )) mustBe UkTaxWarehouse.GB
         }
+      }
+      "must return TaxWarehouse.XI" - {
         "when deliveryPlaceTrader.traderExciseNumber starts with XI" in {
           MovementScenario.getMovementScenarioFromMovement(testDataRequestWithDeliveryPlaceTrader(
             value = Some("XIWK123"),
             destinationType = DestinationType.TaxWarehouse
-          )) mustBe GbTaxWarehouse
+          )) mustBe UkTaxWarehouse.NI
         }
       }
       "must return EuTaxWarehouse" - {
@@ -222,43 +224,85 @@ class MovementScenarioSpec extends SpecBase {
     }
   }
 
-  "GbTaxWarehouse" - {
+  "UkTaxWarehouse.GB" - {
     ".originType" - {
       "when user is a warehouse keeper" - {
         "must return TaxWarehouse" in {
-          GbTaxWarehouse.originType(warehouseKeeperDataRequest) mustBe OriginType.TaxWarehouse
+          UkTaxWarehouse.GB.originType(warehouseKeeperDataRequest) mustBe OriginType.TaxWarehouse
         }
       }
       "when user is a registered consignor" - {
         "must return Imports" in {
-          GbTaxWarehouse.originType(registeredConsignorDataRequest) mustBe OriginType.Imports
+          UkTaxWarehouse.GB.originType(registeredConsignorDataRequest) mustBe OriginType.Imports
         }
       }
       "when user is not a warehouse keeper or a registered consignor" - {
         "must return an error" in {
-          intercept[InvalidUserTypeException](GbTaxWarehouse.originType(nonWKRCDataRequest))
+          intercept[InvalidUserTypeException](UkTaxWarehouse.GB.originType(nonWKRCDataRequest))
         }
       }
     }
     ".destinationType" - {
       "must return TaxWarehouse" in {
-        GbTaxWarehouse.destinationType mustBe DestinationType.TaxWarehouse
+        UkTaxWarehouse.GB.destinationType mustBe DestinationType.TaxWarehouse
       }
     }
     ".movementType" - {
       "when user is a warehouse keeper" - {
         "must return UkToUk" in {
-          GbTaxWarehouse.movementType(warehouseKeeperDataRequest) mustBe MovementType.UkToUk
+          UkTaxWarehouse.GB.movementType(warehouseKeeperDataRequest) mustBe MovementType.UkToUk
         }
       }
       "when user is a registered consignor" - {
         "must return ImportUk" in {
-          GbTaxWarehouse.movementType(registeredConsignorDataRequest) mustBe MovementType.ImportUk
+          UkTaxWarehouse.GB.movementType(registeredConsignorDataRequest) mustBe MovementType.ImportUk
         }
       }
       "when user is not a warehouse keeper or a registered consignor" - {
         "must return an error" in {
-          intercept[InvalidUserTypeException](GbTaxWarehouse.movementType(nonWKRCDataRequest))
+          intercept[InvalidUserTypeException](UkTaxWarehouse.GB.movementType(nonWKRCDataRequest))
+        }
+      }
+    }
+  }
+
+  "UkTaxWarehouse.NI" - {
+    ".originType" - {
+      "when user is a warehouse keeper" - {
+        "must return TaxWarehouse" in {
+          UkTaxWarehouse.NI.originType(warehouseKeeperDataRequest) mustBe OriginType.TaxWarehouse
+        }
+      }
+      "when user is a registered consignor" - {
+        "must return Imports" in {
+          UkTaxWarehouse.NI.originType(registeredConsignorDataRequest) mustBe OriginType.Imports
+        }
+      }
+      "when user is not a warehouse keeper or a registered consignor" - {
+        "must return an error" in {
+          intercept[InvalidUserTypeException](UkTaxWarehouse.NI.originType(nonWKRCDataRequest))
+        }
+      }
+    }
+    ".destinationType" - {
+      "must return TaxWarehouse" in {
+        UkTaxWarehouse.NI.destinationType mustBe DestinationType.TaxWarehouse
+      }
+    }
+    ".movementType" - {
+      "when user is a warehouse keeper" - {
+        "must return UkToUk" in {
+          UkTaxWarehouse.NI.movementType(warehouseKeeperDataRequest) mustBe MovementType.UkToUk
+        }
+      }
+      "when user is a registered consignor" - {
+        "must return ImportUk" in {
+          UkTaxWarehouse.NI.movementType(registeredConsignorDataRequest) mustBe MovementType.ImportUk
+        }
+      }
+      "when user is not a warehouse keeper or a registered consignor" - {
+        "must return an error" in {
+          intercept[InvalidUserTypeException](UkTaxWarehouse.NI.movementType(nonWKRCDataRequest))
         }
       }
     }

@@ -19,7 +19,7 @@ package viewmodels.checkAnswers.sections.destination
 import base.SpecBase
 import fixtures.messages.sections.destination.DestinationDetailsChoiceMessages
 import models.CheckMode
-import models.sections.info.movementScenario.MovementScenario.GbTaxWarehouse
+import models.sections.info.movementScenario.MovementScenario.UkTaxWarehouse
 import org.scalatest.matchers.must.Matchers
 import pages.sections.destination.DestinationDetailsChoicePage
 import pages.sections.info.DestinationTypePage
@@ -55,21 +55,21 @@ class DestinationDetailsChoiceSummarySpec extends SpecBase with Matchers {
           "must output the expected row when user answers yes" in {
 
             implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers
-              .set(DestinationTypePage, GbTaxWarehouse)
+              .set(DestinationTypePage, UkTaxWarehouse.GB)
               .set(DestinationDetailsChoicePage, true)
             )
 
             DestinationDetailsChoiceSummary.row() mustBe
               Some(
                 SummaryListRowViewModel(
-                  key = messagesForLanguage.cyaLabel(GbTaxWarehouse.stringValue),
+                  key = messagesForLanguage.cyaLabel(UkTaxWarehouse.GB.stringValue),
                   value = Value(Text(messagesForLanguage.yes)),
                   actions = Seq(
                     ActionItemViewModel(
                       content = messagesForLanguage.change,
                       href = controllers.sections.destination.routes.DestinationDetailsChoiceController.onPageLoad(testErn, testArc, CheckMode).url,
                       id = "changeDestinationDetailsChoice"
-                    ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHidden(GbTaxWarehouse.stringValue))
+                    ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHidden(UkTaxWarehouse.GB.stringValue))
                   )
                 )
               )
@@ -78,21 +78,21 @@ class DestinationDetailsChoiceSummarySpec extends SpecBase with Matchers {
           "must output the expected row when user answers no" in {
 
             implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers
-              .set(DestinationTypePage, GbTaxWarehouse)
+              .set(DestinationTypePage, UkTaxWarehouse.GB)
               .set(DestinationDetailsChoicePage, false)
             )
 
             DestinationDetailsChoiceSummary.row() mustBe
               Some(
                 SummaryListRowViewModel(
-                  key = messagesForLanguage.cyaLabel(GbTaxWarehouse.stringValue),
+                  key = messagesForLanguage.cyaLabel(UkTaxWarehouse.GB.stringValue),
                   value = Value(Text(messagesForLanguage.no)),
                   actions = Seq(
                     ActionItemViewModel(
                       content = messagesForLanguage.change,
                       href = controllers.sections.destination.routes.DestinationDetailsChoiceController.onPageLoad(testErn, testArc, CheckMode).url,
                       id = "changeDestinationDetailsChoice"
-                    ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHidden(GbTaxWarehouse.stringValue))
+                    ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHidden(UkTaxWarehouse.GB.stringValue))
                   )
                 )
               )
