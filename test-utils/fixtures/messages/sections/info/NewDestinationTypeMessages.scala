@@ -28,6 +28,7 @@ object NewDestinationTypeMessages {
 
     val exportWithCustomsDeclarationLodgedInTheUk = "Export with customs declaration lodged in the United Kingdom"
     val gbTaxWarehouse = "Tax warehouse in Great Britain"
+    val niTaxWarehouse = "Tax warehouse in Northern Ireland"
     val directDelivery = "Direct delivery"
     val euTaxWarehouse = "Tax warehouse in the European Union"
     val exemptedOrganisation = "Exempted organisation"

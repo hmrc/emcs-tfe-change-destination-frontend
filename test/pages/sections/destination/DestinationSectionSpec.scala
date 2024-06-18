@@ -37,7 +37,8 @@ class DestinationSectionSpec extends SpecBase with UserAddressFixtures with Json
       "must return Completed" - {
         "when mandatory pages have an answer and DestinationConsigneeDetailsPage = true, and the section has been reviewed" in {
           Seq(
-            GbTaxWarehouse,
+            UkTaxWarehouse.GB,
+            UkTaxWarehouse.NI,
             EuTaxWarehouse
           ).foreach {
             implicit destinationTypePageAnswer =>
@@ -58,7 +59,8 @@ class DestinationSectionSpec extends SpecBase with UserAddressFixtures with Json
 
         "when mandatory pages have an answer and DestinationConsigneeDetailsPage = false, and the section has been reviewed" in {
           Seq(
-            GbTaxWarehouse,
+            UkTaxWarehouse.GB,
+            UkTaxWarehouse.NI,
             EuTaxWarehouse
           ).foreach {
             implicit destinationTypePageAnswer =>
@@ -83,7 +85,8 @@ class DestinationSectionSpec extends SpecBase with UserAddressFixtures with Json
       "must return InProgress" - {
         "when some, but not all, mandatory pages have an answer and DestinationConsigneeDetailsPage = true" in {
           Seq(
-            GbTaxWarehouse,
+            UkTaxWarehouse.GB,
+            UkTaxWarehouse.NI,
             EuTaxWarehouse
           ).foreach {
             implicit destinationTypePageAnswer =>
@@ -113,7 +116,8 @@ class DestinationSectionSpec extends SpecBase with UserAddressFixtures with Json
 
         "when some, but not all, mandatory pages have an answer and DestinationConsigneeDetailsPage = false" in {
           Seq(
-            GbTaxWarehouse,
+            UkTaxWarehouse.GB,
+            UkTaxWarehouse.NI,
             EuTaxWarehouse
           ).foreach {
             implicit destinationTypePageAnswer =>
@@ -148,7 +152,8 @@ class DestinationSectionSpec extends SpecBase with UserAddressFixtures with Json
       "must return NotStarted" - {
         "when no mandatory pages have an answer" in {
           Seq(
-            GbTaxWarehouse,
+            UkTaxWarehouse.GB,
+            UkTaxWarehouse.NI,
             EuTaxWarehouse
           ).foreach {
             implicit destinationTypePageAnswer =>
@@ -416,7 +421,7 @@ class DestinationSectionSpec extends SpecBase with UserAddressFixtures with Json
     "when canBeCompletedForTraderAndDestinationType = false" - {
       "must return NotStarted" in {
         MovementScenario.values
-          .filterNot(Seq(GbTaxWarehouse, EuTaxWarehouse, RegisteredConsignee, TemporaryRegisteredConsignee, TemporaryCertifiedConsignee, CertifiedConsignee, ExemptedOrganisation, DirectDelivery).contains)
+          .filterNot(Seq(UkTaxWarehouse.GB, UkTaxWarehouse.NI, EuTaxWarehouse, RegisteredConsignee, TemporaryRegisteredConsignee, TemporaryCertifiedConsignee, CertifiedConsignee, ExemptedOrganisation, DirectDelivery).contains)
           .foreach {
             movementScenario =>
               implicit val dr: DataRequest[_] = dataRequest(request, emptyUserAnswers

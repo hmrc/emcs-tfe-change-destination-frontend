@@ -20,7 +20,7 @@ import base.SpecBase
 import controllers.actions.{FakeDataRetrievalAction, FakeMovementAction}
 import forms.sections.destination.DestinationBusinessNameFormProvider
 import mocks.services.MockUserAnswersService
-import models.sections.info.movementScenario.MovementScenario.{DirectDelivery, GbTaxWarehouse}
+import models.sections.info.movementScenario.MovementScenario.{DirectDelivery, UkTaxWarehouse}
 import models.{NormalMode, UserAnswers}
 import navigation.FakeNavigators.FakeDestinationNavigator
 import pages.sections.destination.DestinationBusinessNamePage
@@ -66,7 +66,7 @@ class DestinationBusinessNameControllerSpec extends SpecBase with MockUserAnswer
   }
 
   "DestinationBusinessName Controller" - {
-    Seq(DirectDelivery, GbTaxWarehouse).foreach { destinationType =>
+    Seq(DirectDelivery, UkTaxWarehouse.GB, UkTaxWarehouse.NI).foreach { destinationType =>
       s"must populate the view correctly on a GET when the question has previously been answered when destinationType is '$destinationType'" in new Fixture(Some(emptyUserAnswers
         .set(DestinationTypePage, destinationType).set(DestinationBusinessNamePage, "answer")
       )) {

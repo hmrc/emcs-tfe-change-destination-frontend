@@ -56,7 +56,7 @@ class NewDestinationTypeViewSpec extends SpecBase with ViewBehaviours {
               Selectors.h2(1) -> messagesForLanguage.changeOfDestinationSection(testArc),
               Selectors.button -> messagesForLanguage.continue,
               Selectors.radioButton(1) -> messagesForLanguage.exportWithCustomsDeclarationLodgedInTheUk,
-              Selectors.radioButton(2) -> messagesForLanguage.gbTaxWarehouse,
+              Selectors.radioButton(2) -> messagesForLanguage.gbTaxWarehouse
             ))
           }
       }
@@ -68,7 +68,7 @@ class NewDestinationTypeViewSpec extends SpecBase with ViewBehaviours {
         ernWithExpectedHeadingAndTitle =>
           val (ern, expectedHeading, expectedTitle) = ernWithExpectedHeadingAndTitle
 
-          s"for ERN starting with ${ern}, dispatch place NI" - {
+          s"for ERN starting with $ern, dispatch place NI" - {
             implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
             implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), ern = s"${ern}123")
 
@@ -91,7 +91,8 @@ class NewDestinationTypeViewSpec extends SpecBase with ViewBehaviours {
               Selectors.radioButton(5) -> messagesForLanguage.registeredConsignee,
               Selectors.radioButton(6) -> messagesForLanguage.euTaxWarehouse,
               Selectors.radioButton(7) -> messagesForLanguage.gbTaxWarehouse,
-              Selectors.radioButton(8) -> messagesForLanguage.temporaryRegisteredConsignee
+              Selectors.radioButton(8) -> messagesForLanguage.niTaxWarehouse,
+              Selectors.radioButton(9) -> messagesForLanguage.temporaryRegisteredConsignee
             ))
           }
       }

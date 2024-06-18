@@ -84,7 +84,8 @@ class ConsigneeIndexControllerSpec extends SpecBase with MockUserAnswersService 
         val ern: String = "GBRC123"
 
         Seq(
-          GbTaxWarehouse,
+          UkTaxWarehouse.GB,
+          UkTaxWarehouse.NI,
           EuTaxWarehouse,
           DirectDelivery
         ).foreach(
@@ -106,7 +107,8 @@ class ConsigneeIndexControllerSpec extends SpecBase with MockUserAnswersService 
         val ern: String = "XIRC123"
 
         Seq(
-          GbTaxWarehouse,
+          UkTaxWarehouse.GB,
+          UkTaxWarehouse.NI,
           EuTaxWarehouse,
           DirectDelivery
         ).foreach(
@@ -147,7 +149,8 @@ class ConsigneeIndexControllerSpec extends SpecBase with MockUserAnswersService 
         val ern: String = "XIWK123"
 
         Seq(
-          GbTaxWarehouse,
+          UkTaxWarehouse.GB,
+          UkTaxWarehouse.NI,
           EuTaxWarehouse,
           DirectDelivery
         ).foreach(

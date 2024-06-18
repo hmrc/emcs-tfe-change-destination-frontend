@@ -28,7 +28,7 @@ import views.html.TaskListView
 class TaskListControllerSpec extends SpecBase {
   "onPageLoad" - {
 
-    val userAnswers = emptyUserAnswers.set(DestinationTypePage, MovementScenario.GbTaxWarehouse)
+    val userAnswers = emptyUserAnswers.set(DestinationTypePage, MovementScenario.UkTaxWarehouse.GB)
     lazy val view = app.injector.instanceOf[TaskListView]
 
     lazy val testController = new TaskListController(

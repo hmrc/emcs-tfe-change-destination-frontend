@@ -60,7 +60,7 @@ class CheckYourAnswersConsigneeViewSpec extends SpecBase with ViewBehaviours {
             .set(ConsigneeAddressPage, testUserAddress)
             .set(ConsigneeBusinessNamePage, testBusinessName)
             .set(ConsigneeExcisePage, testErn)
-            .set(DestinationTypePage, GbTaxWarehouse)
+            .set(DestinationTypePage, UkTaxWarehouse.GB)
           )
 
         implicit val doc: Document = Jsoup.parse(view(
@@ -159,7 +159,7 @@ class CheckYourAnswersConsigneeViewSpec extends SpecBase with ViewBehaviours {
             .set(ConsigneeExcisePage, testErn)
             .set(ConsigneeExportInformationPage, Set(VatNumber))
             .set(ConsigneeExportVatPage, testVatNumber)
-            .set(DestinationTypePage, GbTaxWarehouse)
+            .set(DestinationTypePage, UkTaxWarehouse.GB)
           )
 
 
@@ -211,7 +211,7 @@ class CheckYourAnswersConsigneeViewSpec extends SpecBase with ViewBehaviours {
             .set(ConsigneeBusinessNamePage, testBusinessName)
             .set(ConsigneeExcisePage, testErn)
             .set(ConsigneeExportInformationPage, Set(EoriNumber))
-            .set(DestinationTypePage, GbTaxWarehouse)
+            .set(DestinationTypePage, UkTaxWarehouse.GB)
           )
 
         implicit val doc: Document = Jsoup.parse(view(

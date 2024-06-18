@@ -82,11 +82,10 @@ class ConsigneeIndexController @Inject()(override val messagesApi: MessagesApi,
                                                   destinationTypePageAnswer: MovementScenario
                                                 ): Boolean = {
     val validDestinationTypesRegardlessOfUserTypes: Boolean =
-      Seq(
-        GbTaxWarehouse,
+      (UkTaxWarehouse.values ++ Seq(
         EuTaxWarehouse,
         DirectDelivery
-      ).contains(destinationTypePageAnswer)
+      )).contains(destinationTypePageAnswer)
 
     val gbrcAndValidDestinationType: Boolean =
       userTypeFromErn == GreatBritainRegisteredConsignor && destinationTypePageAnswer == ExportWithCustomsDeclarationLodgedInTheUk

@@ -221,7 +221,7 @@ class TraderModelSpec extends SpecBase {
     "must return a TraderModel" - {
       "when DestinationTypePage means shouldStartFlowAtDestinationWarehouseExcise" - {
         "when useConsigneeDetails = true" in {
-          Seq(GbTaxWarehouse, EuTaxWarehouse).foreach {
+          Seq(UkTaxWarehouse.GB, UkTaxWarehouse.NI, EuTaxWarehouse).foreach {
             movementScenario =>
               implicit val dr: DataRequest[_] = dataRequest(
                 fakeRequest,
@@ -242,7 +242,7 @@ class TraderModelSpec extends SpecBase {
           }
         }
         "when useConsigneeDetails = false" in {
-          Seq(GbTaxWarehouse, EuTaxWarehouse).foreach {
+          Seq(UkTaxWarehouse.GB, UkTaxWarehouse.NI, EuTaxWarehouse).foreach {
             movementScenario =>
               implicit val dr: DataRequest[_] = dataRequest(
                 fakeRequest,
@@ -327,7 +327,7 @@ class TraderModelSpec extends SpecBase {
       "DestinationType is invalid" in {
         MovementScenario
           .values
-          .filterNot(Seq(GbTaxWarehouse, EuTaxWarehouse, RegisteredConsignee, TemporaryRegisteredConsignee, CertifiedConsignee, TemporaryCertifiedConsignee, ExemptedOrganisation, DirectDelivery).contains)
+          .filterNot(Seq(UkTaxWarehouse.GB, UkTaxWarehouse.NI, EuTaxWarehouse, RegisteredConsignee, TemporaryRegisteredConsignee, CertifiedConsignee, TemporaryCertifiedConsignee, ExemptedOrganisation, DirectDelivery).contains)
           .foreach {
             movementScenario =>
               implicit val dr: DataRequest[_] = dataRequest(
@@ -363,7 +363,7 @@ class TraderModelSpec extends SpecBase {
           fakeRequest,
           emptyUserAnswers
             .set(TransportArrangerPage, TransportArranger.Consignee)
-            .set(DestinationTypePage, MovementScenario.GbTaxWarehouse)
+            .set(DestinationTypePage, MovementScenario.UkTaxWarehouse.GB)
             .set(ConsigneeBusinessNamePage, "consignee name")
             .set(ConsigneeExcisePage, "consignee ern")
             .set(ConsigneeExportInformationPage, Set(EoriNumber))
@@ -421,7 +421,7 @@ class TraderModelSpec extends SpecBase {
         implicit val dr: DataRequest[_] = dataRequest(
           fakeRequest,
           emptyUserAnswers
-            .set(DestinationTypePage, MovementScenario.GbTaxWarehouse)
+            .set(DestinationTypePage, MovementScenario.UkTaxWarehouse.GB)
             .set(ConsigneeBusinessNamePage, "consignee name")
             .set(ConsigneeExcisePage, "consignee ern")
             .set(ConsigneeExportInformationPage, Set(EoriNumber))

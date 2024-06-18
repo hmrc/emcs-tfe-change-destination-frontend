@@ -43,10 +43,13 @@ class TaskListHelper @Inject()() extends Logging {
   // noinspection ScalaStyle
   def heading(implicit request: DataRequest[_], messages: Messages): String =
     (request.userTypeFromErn, request.userAnswers.get(DestinationTypePage)) match {
-      case (GreatBritainWarehouseKeeper, Some(GbTaxWarehouse)) =>
-        messages("taskList.heading.gbTaxWarehouseTo", messages(Seq(s"taskList.heading.$GbTaxWarehouse", s"destinationType.$GbTaxWarehouse")))
+      case (GreatBritainWarehouseKeeper, Some(UkTaxWarehouse.GB)) =>
+        messages("taskList.heading.gbTaxWarehouseTo", messages(Seq(s"taskList.heading.${UkTaxWarehouse.GB}", s"destinationType.${UkTaxWarehouse.GB}")))
 
-      case (NorthernIrelandWarehouseKeeper, Some(destinationType@(GbTaxWarehouse | EuTaxWarehouse | DirectDelivery | RegisteredConsignee | TemporaryRegisteredConsignee | ExemptedOrganisation | UnknownDestination))) =>
+      case (GreatBritainWarehouseKeeper, Some(UkTaxWarehouse.NI)) =>
+        messages("taskList.heading.gbTaxWarehouseTo", messages(Seq(s"taskList.heading.${UkTaxWarehouse.NI}", s"destinationType.${UkTaxWarehouse.NI}")))
+
+      case (NorthernIrelandWarehouseKeeper, Some(destinationType@(UkTaxWarehouse.GB | UkTaxWarehouse.NI | EuTaxWarehouse | DirectDelivery | RegisteredConsignee | TemporaryRegisteredConsignee | ExemptedOrganisation | UnknownDestination))) =>
         request.userAnswers.get(DispatchPlacePage) match {
           case Some(value) =>
             messages("taskList.heading.dispatchPlaceTo", messages(s"dispatchPlace.$value"), messages(Seq(s"taskList.heading.$destinationType", s"destinationType.$destinationType")))
