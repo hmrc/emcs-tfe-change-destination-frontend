@@ -51,8 +51,8 @@ class DestinationTypeHelper extends Logging {
   def options(dispatchPlace: DispatchPlace)(implicit request: DataRequest[_], messages: Messages): Seq[RadioItem] = {
     // Note: __RC can only do imports, __WK can only do exports
     request.userTypeFromErn match {
-      case GreatBritainWarehouseKeeper | GreatBritainRegisteredConsignor => MovementScenario.valuesGb.map(radioOption)
-      case NorthernIrelandWarehouseKeeper if dispatchPlace == GreatBritain => MovementScenario.valuesXIWKWithGbDispatchPlace.map(radioOption)
+      case GreatBritainWarehouseKeeper | GreatBritainRegisteredConsignor => MovementScenario.valuesExportUkAndUkTaxWarehouse.map(radioOption)
+      case NorthernIrelandWarehouseKeeper if dispatchPlace == GreatBritain => MovementScenario.valuesExportUkAndUkTaxWarehouse.map(radioOption)
       case NorthernIrelandWarehouseKeeper if dispatchPlace == NorthernIreland => MovementScenario.valuesEu.map(radioOption)
       case NorthernIrelandRegisteredConsignor => MovementScenario.valuesEu.map(radioOption)
       case NorthernIrelandCertifiedConsignor | NorthernIrelandTemporaryCertifiedConsignor => MovementScenario.valuesForDutyPaidTraders.map(radioOption)

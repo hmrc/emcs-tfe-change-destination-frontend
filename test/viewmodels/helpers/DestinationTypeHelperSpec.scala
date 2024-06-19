@@ -86,27 +86,28 @@ class DestinationTypeHelperSpec extends SpecBase {
       }
 
       "options" - {
-        "must return two options" - {
+        "must return 3 options (export in UK, GB tax warehouse, NI tax warehouse)" - {
           "when ERN is a GBRC" in {
             implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), ern = "GBRC123")
-            helper.options(GreatBritain) mustBe MovementScenario.valuesGb.map(helper.radioOption)
+            helper.options(GreatBritain) mustBe MovementScenario.valuesExportUkAndUkTaxWarehouse.map(helper.radioOption)
           }
 
           "when ERN is a GBWK" in {
             implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), ern = "GBWK123")
-            helper.options(GreatBritain) mustBe MovementScenario.valuesGb.map(helper.radioOption)
+            helper.options(GreatBritain) mustBe MovementScenario.valuesExportUkAndUkTaxWarehouse.map(helper.radioOption)
           }
-        }
-        "must return more than two options" - {
+
           "when ERN is a XIWK and dispatchPlace=GB" in {
             implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), ern = "XIWK123")
-            helper.options(GreatBritain) mustBe MovementScenario.valuesXIWKWithGbDispatchPlace.map(helper.radioOption)
+            helper.options(GreatBritain) mustBe MovementScenario.valuesExportUkAndUkTaxWarehouse.map(helper.radioOption)
           }
+        }
+        "must return more than 3 options" - {
           "when ERN is XIWK and dispatchPlace=XI" in {
             implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), ern = "XIWK123")
             helper.options(NorthernIreland) mustBe MovementScenario.valuesEu.map(helper.radioOption)
           }
-          "when ERN is XIRC and dispatchPlace=XI" in {
+          "when ERN is XIRC" in {
             implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), ern = "XIRC123")
             helper.options(NorthernIreland) mustBe MovementScenario.valuesEu.map(helper.radioOption)
           }
