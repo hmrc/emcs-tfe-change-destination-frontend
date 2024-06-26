@@ -66,7 +66,7 @@ class IndexController @Inject()(override val messagesApi: MessagesApi,
     }
 
   private def reinitialiseAndRedirect(implicit request: OptionalDataRequest[_]): Future[Result] = {
-    val answers = UserAnswers(request.ern, request.arc)
+    val answers = UserAnswers(request.ern, request.arc, validationErrors = Seq.empty)
     preDraftService.set(answers).flatMap { _ =>
       userAnswersService.set(answers).map { _ =>
         Redirect(controllers.sections.info.routes.InfoIndexController.onPageLoad(answers.ern, answers.arc))

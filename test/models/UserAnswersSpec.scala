@@ -14,11 +14,6 @@
  * limitations under the License.
  */
 
-/*
- * Copyright 2022 HM Revenue & Customs
- *
- */
-
 package models
 
 import base.SpecBase
@@ -444,7 +439,7 @@ class UserAnswersSpec extends SpecBase {
         override def getValueFromIE801(implicit request: DataRequest[_]): Option[String] = None
       }
 
-      val baseUserAnswers = UserAnswers(ern = "my ern", arc = "my arc")
+      val baseUserAnswers = UserAnswers(ern = "my ern", arc = "my arc", validationErrors = Seq.empty)
 
       "must only return pages in the supplied Seq" in {
         val existingUserAnswers = baseUserAnswers

@@ -29,6 +29,7 @@ import scala.annotation.unused
 final case class UserAnswers(ern: String,
                              arc: String,
                              data: JsObject = Json.obj(),
+                             validationErrors: Seq[MovementValidationFailure],
                              lastUpdated: Instant = Instant.now) {
 
   /**
@@ -104,6 +105,7 @@ object UserAnswers {
   val ern = "ern"
   val arc = "arc"
   val data = "data"
+  val validationErrors = "validationErrors"
   val lastUpdated = "lastUpdated"
 
   val reads: Reads[UserAnswers] =
@@ -111,6 +113,7 @@ object UserAnswers {
       (__ \ ern).read[String] and
         (__ \ arc).read[String] and
         (__ \ data).read[JsObject] and
+        (__ \ validationErrors).readNullable[Seq[MovementValidationFailure]].map(_.getOrElse(Seq.empty)) and
         (__ \ lastUpdated).read(MongoJavatimeFormats.instantFormat)
       )(UserAnswers.apply _)
 
@@ -119,6 +122,7 @@ object UserAnswers {
       (__ \ ern).write[String] and
         (__ \ arc).write[String] and
         (__ \ data).write[JsObject] and
+        (__ \ validationErrors).write[Seq[MovementValidationFailure]] and
         (__ \ lastUpdated).write(MongoJavatimeFormats.instantFormat)
       )(unlift(UserAnswers.unapply))
 
