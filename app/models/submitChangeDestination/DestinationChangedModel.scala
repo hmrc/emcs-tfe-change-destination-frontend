@@ -16,13 +16,16 @@
 
 package models.submitChangeDestination
 
+import models.audit.Auditable
 import models.requests.DataRequest
 import models.sections.info.movementScenario.DestinationType
 import pages.sections.consignee.ConsigneeSection
 import pages.sections.guarantor.GuarantorSection
 import pages.sections.info.DestinationTypePage
-import play.api.libs.json.{Json, OFormat}
+import play.api.libs.functional.syntax.{toFunctionalBuilderOps, unlift}
+import play.api.libs.json.{Json, OFormat, OWrites, __}
 import utils.ModelConstructorHelpers
+
 
 case class DestinationChangedModel(
                                     destinationTypeCode: DestinationType,
@@ -44,4 +47,12 @@ object DestinationChangedModel extends ModelConstructorHelpers {
       deliveryPlaceCustomsOffice = DeliveryPlaceCustomsOfficeModel.apply,
       movementGuarantee = Option.when(GuarantorSection.requiresGuarantorToBeProvided)(MovementGuaranteeModel.apply)
     )
+
+  val auditWrites: OWrites[DestinationChangedModel] = (
+    (__ \ "destinationTypeCode").write[DestinationType](Auditable.writes[DestinationType]) and
+      (__ \ "newConsigneeTrader").writeNullable[TraderModel] and
+      (__ \ "deliveryPlaceTrader").writeNullable[TraderModel] and
+      (__ \ "deliveryPlaceCustomsOffice").writeNullable[DeliveryPlaceCustomsOfficeModel] and
+      (__ \ "movementGuarantee").writeNullable[MovementGuaranteeModel](MovementGuaranteeModel.auditWrites)
+    )(unlift(DestinationChangedModel.unapply))
 }

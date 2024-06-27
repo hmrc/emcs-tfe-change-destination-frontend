@@ -19,19 +19,29 @@ package services
 import base.SpecBase
 import fixtures.SubmitChangeDestinationFixtures
 import mocks.connectors.MockSubmitChangeDestinationConnector
+import mocks.services.MockAuditingService
+import models.audit.SubmitChangeDestinationAudit
 import models.response.{SubmitChangeDestinationException, UnexpectedDownstreamResponseError}
 import play.api.test.FakeRequest
 import play.api.test.Helpers.{await, defaultAwaitTimeout}
 import uk.gov.hmrc.http.HeaderCarrier
+import utils.TimeMachine
 
+import java.time.LocalDateTime
 import scala.concurrent.{ExecutionContext, ExecutionContextExecutor, Future}
 
-class SubmitChangeDestinationServiceSpec extends SpecBase with MockSubmitChangeDestinationConnector with SubmitChangeDestinationFixtures {
+class SubmitChangeDestinationServiceSpec
+  extends SpecBase
+    with MockSubmitChangeDestinationConnector
+    with SubmitChangeDestinationFixtures
+    with MockAuditingService {
 
   implicit val hc: HeaderCarrier = HeaderCarrier()
   implicit val ec: ExecutionContextExecutor = ExecutionContext.global
 
-  lazy val testService = new SubmitChangeDestinationService(mockSubmitChangeDestinationConnector)
+  val timeMachine: TimeMachine = () => LocalDateTime.parse(testReceiptDateTime)
+
+  lazy val testService = new SubmitChangeDestinationService(mockSubmitChangeDestinationConnector, mockAuditingService, timeMachine)
 
   ".submit(ern: String, submission: SubmitChangeDestinationModel)" - {
 
@@ -42,6 +52,10 @@ class SubmitChangeDestinationServiceSpec extends SpecBase with MockSubmitChangeD
         val request = dataRequest(FakeRequest())
 
         MockSubmitChangeDestinationConnector.submit(minimumSubmitChangeDestinationModel).returns(Future.successful(Right(submitChangeDestinationResponseEIS)))
+
+        MockAuditingService
+          .audit(SubmitChangeDestinationAudit(testErn, testReceiptDateTime, minimumSubmitChangeDestinationModel, Right(submitChangeDestinationResponseEIS)))
+          .once()
 
         testService.submit(minimumSubmitChangeDestinationModel)(request, hc).futureValue mustBe submitChangeDestinationResponseEIS
       }
@@ -54,6 +68,11 @@ class SubmitChangeDestinationServiceSpec extends SpecBase with MockSubmitChangeD
         val request = dataRequest(FakeRequest())
 
         MockSubmitChangeDestinationConnector.submit(minimumSubmitChangeDestinationModel).returns(Future.successful(Left(UnexpectedDownstreamResponseError)))
+
+        MockAuditingService
+          .audit(SubmitChangeDestinationAudit(testErn, testReceiptDateTime, minimumSubmitChangeDestinationModel, Left(UnexpectedDownstreamResponseError)))
+          .once()
+
         intercept[SubmitChangeDestinationException](await(testService.submit(minimumSubmitChangeDestinationModel)(request, hc))).getMessage mustBe
           s"Failed to submit Change Destination to emcs-tfe for ern: '$testErn' & arc: '$testArc'"
       }

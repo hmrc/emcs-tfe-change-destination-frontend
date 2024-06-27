@@ -120,7 +120,7 @@ trait SubmitChangeDestinationFixtures extends GetMovementResponseFixtures { _: B
     sequenceNumber = None,
     invoiceDate = Some(invoiceDetailsModel.date.toString),
     invoiceNumber = Some(invoiceDetailsModel.reference),
-    transportModeCode = Some(HowMovementTransported.Other.toString),
+    transportModeCode = Some(HowMovementTransported.Other),
     complementaryInformation = Some("info")
   )
 
@@ -136,7 +136,7 @@ trait SubmitChangeDestinationFixtures extends GetMovementResponseFixtures { _: B
   )
 
   val transportDetails = TransportDetailsModel(
-      transportUnitCode = TransportUnitType.Vehicle.toString,
+      transportUnitCode = TransportUnitType.Vehicle,
       identityOfTransportUnits = Some("identity"),
       commercialSealIdentification = Some("seal type"),
       complementaryInformation = Some("more info"),

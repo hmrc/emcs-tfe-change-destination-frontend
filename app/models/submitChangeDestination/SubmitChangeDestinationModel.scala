@@ -19,7 +19,8 @@ package models.submitChangeDestination
 import models.requests.DataRequest
 import pages.sections.transportArranger.TransportArrangerReviewPage
 import pages.sections.transportUnit.TransportUnitsReviewPage
-import play.api.libs.json.{Json, OFormat}
+import play.api.libs.functional.syntax.{toFunctionalBuilderOps, unlift}
+import play.api.libs.json._
 import utils.ModelConstructorHelpers
 
 case class SubmitChangeDestinationModel(
@@ -42,4 +43,12 @@ object SubmitChangeDestinationModel extends ModelConstructorHelpers {
       newTransporterTrader = Some(TraderModel.applyFirstTransporter),
       transportDetails = whenSectionChanged(TransportUnitsReviewPage)(TransportDetailsModel.apply)
     )
+
+  val auditWrites: OWrites[SubmitChangeDestinationModel] = (
+    (__ \ "newTransportArrangerTrader").writeNullable[TraderModel] and
+    (__ \ "updateEadEsad").write[UpdateEadEsadModel](UpdateEadEsadModel.auditWrites) and
+    (__ \ "destinationChanged").write[DestinationChangedModel](DestinationChangedModel.auditWrites) and
+    (__ \ "newTransporterTrader").writeNullable[TraderModel] and
+    (__ \ "transportDetails").writeNullable[Seq[TransportDetailsModel]](Writes.seq(TransportDetailsModel.auditWrites))
+  )(unlift(SubmitChangeDestinationModel.unapply))
 }

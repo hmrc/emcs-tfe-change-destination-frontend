@@ -16,6 +16,7 @@
 
 package models.sections.transportArranger
 
+import models.audit.Auditable
 import models.{Enumerable, WithName}
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.Aliases.Text
@@ -25,13 +26,21 @@ sealed trait TransportArranger
 
 object TransportArranger extends Enumerable.Implicits {
 
-  case object Consignor extends WithName("1") with TransportArranger
+  case object Consignor extends WithName("1") with TransportArranger with Auditable {
+    override val auditDescription: String = "Consignor"
+  }
 
-  case object Consignee extends WithName("2") with TransportArranger
+  case object Consignee extends WithName("2") with TransportArranger with Auditable {
+    override val auditDescription: String = "Consignee"
+  }
 
-  case object GoodsOwner extends WithName("3") with TransportArranger
+  case object GoodsOwner extends WithName("3") with TransportArranger with Auditable {
+    override val auditDescription: String = "GoodsOwner"
+  }
 
-  case object Other extends WithName("4") with TransportArranger
+  case object Other extends WithName("4") with TransportArranger with Auditable {
+    override val auditDescription: String = "Other"
+  }
 
   val values: Seq[TransportArranger] = Seq(
     Consignor, Consignee, GoodsOwner, Other
