@@ -374,11 +374,11 @@ journeyTimeHours.change.hidden = how many hours the journey will take
 
 consigneeBusinessName.title = What is the consignee’s business name?
 consigneeBusinessName.heading = What is the consignee’s business name?
-consigneeBusinessName.checkYourAnswersLabel = Trader name
+consigneeBusinessName.checkYourAnswersLabel = Business name
 consigneeBusinessName.error.required = Enter the consignee business name
 consigneeBusinessName.error.length = Consignee business name must be {0} characters or less
 consigneeBusinessName.error.invalidCharacter = Consignee business name must not contain < and > and : and ;
-consigneeBusinessName.change.hidden = consignee trader name
+consigneeBusinessName.change.hidden = consignee business name
 
 consigneeAddress.title = StringPageH1
 consigneeAddress.heading = StringPageH1
@@ -496,7 +496,13 @@ consigneeExcise.hint = An ERN contains 13 characters, starting with GB. It can b
 consigneeExcise.error.noInput = Enter the consignee’s ERN
 consigneeExcise.error.tooLong = The ERN must be 13 characters or less
 consigneeExcise.error.invalidCharacters = The ERN must only contain letters and numbers
-consigneeExcise.checkYourAnswersLabel = Excise registration number (ERN)
+consigneeExcise.checkYourAnswersLabel.ern = Excise registration number (ERN)
+consigneeExcise.change.hidden.ern = consignee excise registration number (ERN)
+consigneeExcise.checkYourAnswersLabel.ernForTemporaryRegisteredConsignee = Identification number for Temporary Registered Consignee
+consigneeExcise.change.hidden.ernForTemporaryRegisteredConsignee = consignee identification number for Temporary Registered Consignee
+consigneeExcise.checkYourAnswersLabel.ernForTemporaryCertifiedConsignee = Identification number for Temporary Certified Consignee
+consigneeExcise.change.hidden.ernForTemporaryCertifiedConsignee = consignee identification number for Temporary Certified Consignee
+
 
 transportUnitType.title = What will the goods be transported in?
 transportUnitType.heading = What will the goods be transported in?

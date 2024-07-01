@@ -33,10 +33,12 @@ trait BaseFixtures {
   val testNorthernIrelandErn = "XIWK123456789"
   val testNorthernIrelandDutyPaidErn = "XIPA123456789"
   val testGreatBritainErn = "GBRC123456789"
+  val testTemporaryRegisteredConsignee = "XITC12345679"
   val testArc: String = "arc"
   val testVatNumber: String = "123456789"
   val testEoriNumber: String = "GB123456123456"
   val testExportCustomsOffice: String = "AA123456"
+  val testIdentificationNumber: String = "ID123456"
   val testDateOfArrival: LocalDate = LocalDate.now()
   val testSubmissionDate: LocalDateTime = LocalDateTime.now()
   val testConfirmationReference: String = "UYVQBLMXCYK6HAEBZI7TSWAQ6XDTXFYU"
