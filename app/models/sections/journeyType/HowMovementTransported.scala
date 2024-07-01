@@ -16,6 +16,7 @@
 
 package models.sections.journeyType
 
+import models.audit.Auditable
 import models.{Enumerable, WithName}
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
@@ -25,21 +26,37 @@ sealed trait HowMovementTransported
 
 object HowMovementTransported extends Enumerable.Implicits {
 
-  case object AirTransport extends WithName("4") with HowMovementTransported
+  case object AirTransport extends WithName("4") with HowMovementTransported with Auditable {
+    override val auditDescription: String = "AirTransport"
+  }
 
-  case object FixedTransportInstallations extends WithName("7") with HowMovementTransported
+  case object FixedTransportInstallations extends WithName("7") with HowMovementTransported with Auditable {
+    override val auditDescription: String = "FixedTransportInstallations"
+  }
 
-  case object InlandWaterwayTransport extends WithName("8") with HowMovementTransported
+  case object InlandWaterwayTransport extends WithName("8") with HowMovementTransported with Auditable {
+    override val auditDescription: String = "InlandWaterwayTransport"
+  }
 
-  case object PostalConsignment extends WithName("5") with HowMovementTransported
+  case object PostalConsignment extends WithName("5") with HowMovementTransported with Auditable {
+    override val auditDescription: String = "PostalConsignment"
+  }
 
-  case object RailTransport extends WithName("2") with HowMovementTransported
+  case object RailTransport extends WithName("2") with HowMovementTransported with Auditable {
+    override val auditDescription: String = "RailTransport"
+  }
 
-  case object RoadTransport extends WithName("3") with HowMovementTransported
+  case object RoadTransport extends WithName("3") with HowMovementTransported with Auditable {
+    override val auditDescription: String = "RoadTransport"
+  }
 
-  case object SeaTransport extends WithName("1") with HowMovementTransported
+  case object SeaTransport extends WithName("1") with HowMovementTransported with Auditable {
+    override val auditDescription: String = "SeaTransport"
+  }
 
-  case object Other extends WithName("0") with HowMovementTransported
+  case object Other extends WithName("0") with HowMovementTransported with Auditable {
+    override val auditDescription: String = "Other"
+  }
 
   val values: Seq[HowMovementTransported] = Seq(
     AirTransport,

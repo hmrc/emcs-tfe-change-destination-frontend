@@ -16,6 +16,7 @@
 
 package models.sections.transportUnit
 
+import models.audit.Auditable
 import models.{Enumerable, WithName}
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
@@ -26,15 +27,25 @@ sealed trait TransportUnitType
 
 object TransportUnitType extends Enumerable.Implicits {
 
-  case object Container extends WithName("1") with TransportUnitType
+  case object Container extends WithName("1") with TransportUnitType with Auditable {
+    override val auditDescription: String = "Container"
+  }
 
-  case object Vehicle extends WithName("2") with TransportUnitType
+  case object Vehicle extends WithName("2") with TransportUnitType with Auditable {
+    override val auditDescription: String = "Vehicle"
+  }
 
-  case object Trailer extends WithName("3") with TransportUnitType
+  case object Trailer extends WithName("3") with TransportUnitType with Auditable {
+    override val auditDescription: String = "Trailer"
+  }
 
-  case object Tractor extends WithName("4") with TransportUnitType
+  case object Tractor extends WithName("4") with TransportUnitType with Auditable {
+    override val auditDescription: String = "Tractor"
+  }
 
-  case object FixedTransport extends WithName("5") with TransportUnitType
+  case object FixedTransport extends WithName("5") with TransportUnitType with Auditable {
+    override val auditDescription: String = "FixedTransport"
+  }
 
   val values: Seq[TransportUnitType] = Seq(
     Container, FixedTransport, Tractor, Trailer, Vehicle

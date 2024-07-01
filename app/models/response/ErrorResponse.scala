@@ -20,6 +20,8 @@ import scala.util.control.NoStackTrace
 
 sealed trait ErrorResponse {
   val message: String
+
+  val statusCode: Option[Int] = None
 }
 
 case object UnexpectedDownstreamResponseError extends ErrorResponse {

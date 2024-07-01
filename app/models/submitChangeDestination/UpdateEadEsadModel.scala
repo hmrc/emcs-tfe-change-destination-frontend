@@ -16,15 +16,17 @@
 
 package models.submitChangeDestination
 
+import models.audit.Auditable
 import models.requests.DataRequest
 import models.sections.journeyType.HowMovementTransported.Other
-import models.sections.journeyType.JourneyTime
 import models.sections.journeyType.JourneyTime.{Days, Hours}
+import models.sections.journeyType.{HowMovementTransported, JourneyTime}
 import models.sections.transportArranger.TransportArranger
 import pages.sections.journeyType._
 import pages.sections.movement.{InvoiceDetailsPage, MovementReviewAnswersPage}
 import pages.sections.transportArranger.{TransportArrangerPage, TransportArrangerReviewPage}
-import play.api.libs.json.{Json, OFormat}
+import play.api.libs.functional.syntax.{toFunctionalBuilderOps, unlift}
+import play.api.libs.json.{Json, OFormat, OWrites, __}
 import utils.{Logging, ModelConstructorHelpers}
 
 case class UpdateEadEsadModel(
@@ -34,7 +36,7 @@ case class UpdateEadEsadModel(
                                sequenceNumber: Option[String],
                                invoiceDate: Option[String],
                                invoiceNumber: Option[String],
-                               transportModeCode: Option[String],
+                               transportModeCode: Option[HowMovementTransported],
                                complementaryInformation: Option[String]
                              )
 
@@ -57,11 +59,22 @@ object UpdateEadEsadModel extends ModelConstructorHelpers with Logging {
       sequenceNumber = None, // As per DDNEA rules, the sequence number should be added to the XML payload only after it has passed the RIM validation
       invoiceDate = whenSectionChanged(MovementReviewAnswersPage)(mandatoryPage(InvoiceDetailsPage).date.toString),
       invoiceNumber = whenSectionChanged(MovementReviewAnswersPage)(mandatoryPage(InvoiceDetailsPage).reference),
-      transportModeCode = whenSectionChanged(JourneyTypeReviewPage)(mandatoryPage(HowMovementTransportedPage).toString),
+      transportModeCode = whenSectionChanged(JourneyTypeReviewPage)(mandatoryPage(HowMovementTransportedPage)),
       complementaryInformation = whenSectionChanged(JourneyTypeReviewPage){
         Option.when(request.userAnswers.get(HowMovementTransportedPage).contains(Other)) {
           mandatoryPage(GiveInformationOtherTransportPage)
         }
       }.flatten
     )
+
+  val auditWrites: OWrites[UpdateEadEsadModel] = (
+    (__ \ "administrativeReferenceCode").write[String] and
+      (__ \ "journeyTime").writeNullable[JourneyTime] and
+      (__ \ "changedTransportArrangement").writeNullable[TransportArranger](Auditable.writes[TransportArranger]) and
+      (__ \ "sequenceNumber").writeNullable[String] and
+      (__ \ "invoiceDate").writeNullable[String] and
+      (__ \ "invoiceNumber").writeNullable[String] and
+      (__ \ "transportModeCode").writeNullable[HowMovementTransported](Auditable.writes[HowMovementTransported]) and
+      (__ \ "complementaryInformation").writeNullable[String]
+    )(unlift(UpdateEadEsadModel.unapply))
 }

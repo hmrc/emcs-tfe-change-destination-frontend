@@ -48,6 +48,8 @@ trait BaseFixtures {
   val testIndex2: Index = Index(1)
   val testIndex3: Index = Index(2)
 
+  val testReceiptDateTime = "2024-06-27T12:03:04"
+
   val testExemptedOrganisation = ExemptOrganisationDetailsModel("AT", "12345")
 
   val emptyUserAnswers: UserAnswers = UserAnswers(

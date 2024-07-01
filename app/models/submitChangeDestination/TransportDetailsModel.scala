@@ -17,15 +17,17 @@
 package models.submitChangeDestination
 
 import models.Index
+import models.audit.Auditable
 import models.requests.DataRequest
 import models.response.MissingMandatoryPage
-import models.sections.transportUnit.TransportSealTypeModel
+import models.sections.transportUnit.{TransportSealTypeModel, TransportUnitType}
 import pages.sections.transportUnit._
-import play.api.libs.json.{Json, OFormat}
+import play.api.libs.functional.syntax.{toFunctionalBuilderOps, unlift}
+import play.api.libs.json.{Json, OFormat, OWrites, __}
 import queries.TransportUnitsCount
 import utils.{JsonOptionFormatter, Logging, ModelConstructorHelpers}
 
-case class TransportDetailsModel(transportUnitCode: String,
+case class TransportDetailsModel(transportUnitCode: TransportUnitType,
                                  identityOfTransportUnits: Option[String],
                                  commercialSealIdentification: Option[String],
                                  complementaryInformation: Option[String],
@@ -47,7 +49,7 @@ object TransportDetailsModel extends ModelConstructorHelpers with Logging with J
             idx =>
               val sealType: Option[TransportSealTypeModel] = request.userAnswers.get(TransportSealTypePage(idx))
               TransportDetailsModel(
-                transportUnitCode = mandatoryPage(TransportUnitTypePage(idx)).toString,
+                transportUnitCode = mandatoryPage(TransportUnitTypePage(idx)),
                 identityOfTransportUnits = request.userAnswers.get(TransportUnitIdentityPage(idx)),
                 commercialSealIdentification = sealType.map(_.sealType),
                 complementaryInformation = request.userAnswers.get(TransportUnitGiveMoreInformationPage(idx)).flatten,
@@ -56,4 +58,12 @@ object TransportDetailsModel extends ModelConstructorHelpers with Logging with J
           }
     }
   }
+
+  val auditWrites: OWrites[TransportDetailsModel] = (
+    (__ \ "transportUnitCode").write[TransportUnitType](Auditable.writes[TransportUnitType]) and
+      (__ \ "identityOfTransportUnits").writeNullable[String] and
+      (__ \ "commercialSealIdentification").writeNullable[String] and
+      (__ \ "complementaryInformation").writeNullable[String] and
+      (__ \ "sealInformation").writeNullable[String]
+    )(unlift(TransportDetailsModel.unapply))
 }

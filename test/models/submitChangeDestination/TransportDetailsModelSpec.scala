@@ -52,7 +52,7 @@ class TransportDetailsModelSpec extends SpecBase {
 
         TransportDetailsModel.apply mustBe Seq(
           TransportDetailsModel(
-            transportUnitCode = TransportUnitType.FixedTransport.toString,
+            transportUnitCode = TransportUnitType.FixedTransport,
             identityOfTransportUnits = Some("identity"),
             commercialSealIdentification = Some("seal type"),
             complementaryInformation = Some("more info"),
@@ -76,14 +76,14 @@ class TransportDetailsModelSpec extends SpecBase {
 
         TransportDetailsModel.apply mustBe Seq(
           TransportDetailsModel(
-            transportUnitCode = TransportUnitType.FixedTransport.toString,
+            transportUnitCode = TransportUnitType.FixedTransport,
             identityOfTransportUnits = Some("identity"),
             commercialSealIdentification = Some("seal type"),
             complementaryInformation = Some("more info"),
             sealInformation = Some("seal info")
           ),
           TransportDetailsModel(
-            transportUnitCode = TransportUnitType.Trailer.toString,
+            transportUnitCode = TransportUnitType.Trailer,
             identityOfTransportUnits = Some("identity 2"),
             commercialSealIdentification = Some("seal type 2"),
             complementaryInformation = Some("more info 2"),

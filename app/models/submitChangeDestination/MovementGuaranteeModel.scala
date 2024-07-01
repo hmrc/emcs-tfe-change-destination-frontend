@@ -16,10 +16,12 @@
 
 package models.submitChangeDestination
 
+import models.audit.Auditable
 import models.requests.DataRequest
 import models.sections.guarantor.GuarantorArranger
 import pages.sections.guarantor.GuarantorArrangerPage
-import play.api.libs.json.{Json, OFormat}
+import play.api.libs.functional.syntax.{toFunctionalBuilderOps, unlift}
+import play.api.libs.json.{Json, OFormat, OWrites, __}
 import utils.ModelConstructorHelpers
 
 case class MovementGuaranteeModel(
@@ -38,4 +40,9 @@ object MovementGuaranteeModel extends ModelConstructorHelpers {
   }
 
   implicit val fmt: OFormat[MovementGuaranteeModel] = Json.format
+
+  val auditWrites: OWrites[MovementGuaranteeModel] = (
+    (__ \ "guarantorTypeCode").write[GuarantorArranger](Auditable.writes[GuarantorArranger]) and
+      (__ \ "guarantorTrader").writeNullable[Seq[TraderModel]]
+    )(unlift(MovementGuaranteeModel.unapply))
 }

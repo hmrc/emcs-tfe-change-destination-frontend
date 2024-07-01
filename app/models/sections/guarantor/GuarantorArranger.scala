@@ -16,6 +16,7 @@
 
 package models.sections.guarantor
 
+import models.audit.Auditable
 import models.{Enumerable, WithName}
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.Aliases.Text
@@ -25,17 +26,29 @@ sealed trait GuarantorArranger
 
 object GuarantorArranger extends Enumerable.Implicits {
 
-  case object Consignor extends WithName("1") with GuarantorArranger
+  case object Consignor extends WithName("1") with GuarantorArranger with Auditable {
+    override val auditDescription: String = "Consignor"
+  }
 
-  case object Consignee extends WithName("4") with GuarantorArranger
+  case object Consignee extends WithName("4") with GuarantorArranger with Auditable {
+    override val auditDescription: String = "Consignee"
+  }
 
-  case object GoodsOwner extends WithName("3") with GuarantorArranger
+  case object GoodsOwner extends WithName("3") with GuarantorArranger with Auditable {
+    override val auditDescription: String = "GoodsOwner"
+  }
 
-  case object Transporter extends WithName("2") with GuarantorArranger
+  case object Transporter extends WithName("2") with GuarantorArranger with Auditable {
+    override val auditDescription: String = "Transporter"
+  }
 
-  case object NoGuarantorRequiredUkToEu extends WithName("5") with GuarantorArranger
+  case object NoGuarantorRequiredUkToEu extends WithName("5") with GuarantorArranger with Auditable {
+    override val auditDescription: String = "NoGuarantorRequiredUkToEu"
+  }
 
-  case object NoGuarantorRequired extends WithName("0") with GuarantorArranger
+  case object NoGuarantorRequired extends WithName("0") with GuarantorArranger with Auditable {
+    override val auditDescription: String = "NoGuarantorRequired"
+  }
 
   val displayValues: Seq[GuarantorArranger] = Seq(
     Consignor, Consignee, GoodsOwner, Transporter
