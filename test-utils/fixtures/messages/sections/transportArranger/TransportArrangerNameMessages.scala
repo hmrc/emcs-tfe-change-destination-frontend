@@ -29,8 +29,8 @@ object TransportArrangerNameMessages {
     }
 
     def heading()(implicit transportArranger: TransportArranger): String = transportArranger match {
-      case GoodsOwner => "What is the goods owner's business name?"
-      case _ => "What is the transport arranger's business name?"
+      case GoodsOwner => "What is the goods owner’s business name?"
+      case _ => "What is the transport arranger’s business name?"
     }
 
     val cyaLabel = "Business name"

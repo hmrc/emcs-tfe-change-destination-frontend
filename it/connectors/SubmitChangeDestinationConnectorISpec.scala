@@ -5,7 +5,7 @@ import com.github.tomakehurst.wiremock.http.Fault
 import connectors.emcsTfe.SubmitChangeDestinationConnector
 import fixtures.{BaseFixtures, GetMovementResponseFixtures, SubmitChangeDestinationFixtures}
 import models.requests.{DataRequest, MovementRequest, UserRequest}
-import models.response.UnexpectedDownstreamResponseError
+import models.response.{UnexpectedDownstreamResponseError, UnexpectedDownstreamSubmissionResponseError}
 import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
 import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.must.Matchers
@@ -15,7 +15,6 @@ import play.api.http.Status.{INTERNAL_SERVER_ERROR, NOT_FOUND, OK}
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.libs.json.Json
 import play.api.test.FakeRequest
-import play.api.test.Helpers.AUTHORIZATION
 import uk.gov.hmrc.http.HeaderCarrier
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -75,31 +74,28 @@ class SubmitChangeDestinationConnectorISpec extends AnyFreeSpec
 
       server.stubFor(
         post(urlEqualTo(url))
-          .withHeader(AUTHORIZATION, equalTo("token"))
           .withRequestBody(equalToJson(Json.stringify(requestBody)))
           .willReturn(aResponse().withStatus(NOT_FOUND))
       )
 
-      connector.submit(minimumSubmitChangeDestinationModel).futureValue mustBe Left(UnexpectedDownstreamResponseError)
+      connector.submit(minimumSubmitChangeDestinationModel).futureValue mustBe Left(UnexpectedDownstreamSubmissionResponseError(NOT_FOUND))
     }
 
     "must fail when the server responds with any other status" in {
 
       server.stubFor(
         post(urlEqualTo(url))
-          .withHeader(AUTHORIZATION, equalTo("token"))
           .withRequestBody(equalToJson(Json.stringify(requestBody)))
           .willReturn(aResponse().withStatus(INTERNAL_SERVER_ERROR))
       )
 
-      connector.submit(minimumSubmitChangeDestinationModel).futureValue mustBe Left(UnexpectedDownstreamResponseError)
+      connector.submit(minimumSubmitChangeDestinationModel).futureValue mustBe Left(UnexpectedDownstreamSubmissionResponseError(INTERNAL_SERVER_ERROR))
     }
 
     "must fail when the connection fails" in {
 
       server.stubFor(
         post(urlEqualTo(url))
-          .withHeader(AUTHORIZATION, equalTo("token"))
           .withRequestBody(equalToJson(Json.stringify(requestBody)))
           .willReturn(aResponse().withFault(Fault.RANDOM_DATA_THEN_CLOSE))
       )

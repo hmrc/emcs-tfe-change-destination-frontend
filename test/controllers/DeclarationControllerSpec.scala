@@ -22,7 +22,7 @@ import fixtures.SubmitChangeDestinationFixtures
 import mocks.services.{MockSubmitChangeDestinationService, MockUserAnswersService}
 import models.UserAnswers
 import models.requests.DataRequest
-import models.response.SubmitChangeDestinationException
+import models.response.UnexpectedDownstreamSubmissionResponseError
 import models.response.emcsTfe.GuarantorType.NoGuarantor
 import models.response.emcsTfe.MovementGuaranteeModel
 import navigation.FakeNavigators.FakeNavigator
@@ -83,7 +83,7 @@ class DeclarationControllerSpec extends SpecBase with MockUserAnswersService wit
       "when downstream call is successful" - {
         "must save the timestamp and redirect" in new Test() {
 
-          MockSubmitChangeDestinationService.submit(maxSubmitChangeDestination).returns(Future.successful(submitChangeDestinationResponseEIS))
+          MockSubmitChangeDestinationService.submit(maxSubmitChangeDestination).returns(Future.successful(Right(submitChangeDestinationResponseEIS)))
           MockUserAnswersService.set().returns(Future.successful(emptyUserAnswers))
 
           val res = controller.onSubmit(testGreatBritainErn, testArc)(request)
@@ -94,13 +94,27 @@ class DeclarationControllerSpec extends SpecBase with MockUserAnswersService wit
       }
 
       "when downstream call is unsuccessful" - {
-        "must return an InternalServerError" in new Test() {
+        "when downstream returns a 422" - {
+          "must redirect to the DraftMovementController" in new Test() {
+            MockSubmitChangeDestinationService.submit(maxSubmitChangeDestination).returns(Future.successful(Left(UnexpectedDownstreamSubmissionResponseError(UNPROCESSABLE_ENTITY))))
 
-          MockSubmitChangeDestinationService.submit(maxSubmitChangeDestination).returns(Future.failed(SubmitChangeDestinationException("test error")))
+            val res = controller.onSubmit(testGreatBritainErn, testArc)(request)
 
-          val res = controller.onSubmit(testGreatBritainErn, testArc)(request)
+            status(res) mustBe SEE_OTHER
+            redirectLocation(res) mustBe Some(routes.TaskListController.onPageLoad(testGreatBritainErn, testArc).url)
+          }
+        }
+        "when downstream returns an unexpected response status" - {
+          "must return an InternalServerError" in new Test() {
+            // arbitrary 5xx status codes
+            Seq(INTERNAL_SERVER_ERROR, BAD_GATEWAY, SERVICE_UNAVAILABLE, GATEWAY_TIMEOUT).foreach { responseStatus =>
+              MockSubmitChangeDestinationService.submit(maxSubmitChangeDestination).returns(Future.successful(Left(UnexpectedDownstreamSubmissionResponseError(responseStatus))))
 
-          status(res) mustBe INTERNAL_SERVER_ERROR
+              val res = controller.onSubmit(testGreatBritainErn, testArc)(request)
+
+              status(res) mustBe INTERNAL_SERVER_ERROR
+            }
+          }
         }
       }
 

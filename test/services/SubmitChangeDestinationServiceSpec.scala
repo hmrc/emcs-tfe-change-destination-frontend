@@ -21,9 +21,8 @@ import fixtures.SubmitChangeDestinationFixtures
 import mocks.connectors.MockSubmitChangeDestinationConnector
 import mocks.services.MockAuditingService
 import models.audit.SubmitChangeDestinationAudit
-import models.response.{SubmitChangeDestinationException, UnexpectedDownstreamResponseError}
+import models.response.UnexpectedDownstreamResponseError
 import play.api.test.FakeRequest
-import play.api.test.Helpers.{await, defaultAwaitTimeout}
 import uk.gov.hmrc.http.HeaderCarrier
 import utils.TimeMachine
 
@@ -45,7 +44,7 @@ class SubmitChangeDestinationServiceSpec
 
   ".submit(ern: String, submission: SubmitChangeDestinationModel)" - {
 
-    "should return Success response" - {
+    "should return a Right" - {
 
       "when Connector returns success from downstream" in {
 
@@ -57,11 +56,11 @@ class SubmitChangeDestinationServiceSpec
           .audit(SubmitChangeDestinationAudit(testErn, testReceiptDateTime, minimumSubmitChangeDestinationModel, Right(submitChangeDestinationResponseEIS)))
           .once()
 
-        testService.submit(minimumSubmitChangeDestinationModel)(request, hc).futureValue mustBe submitChangeDestinationResponseEIS
+        testService.submit(minimumSubmitChangeDestinationModel)(request, hc).futureValue mustBe Right(submitChangeDestinationResponseEIS)
       }
     }
 
-    "should return Failure response" - {
+    "should return a Left" - {
 
       "when Connector returns failure from downstream" in {
 
@@ -73,8 +72,7 @@ class SubmitChangeDestinationServiceSpec
           .audit(SubmitChangeDestinationAudit(testErn, testReceiptDateTime, minimumSubmitChangeDestinationModel, Left(UnexpectedDownstreamResponseError)))
           .once()
 
-        intercept[SubmitChangeDestinationException](await(testService.submit(minimumSubmitChangeDestinationModel)(request, hc))).getMessage mustBe
-          s"Failed to submit Change Destination to emcs-tfe for ern: '$testErn' & arc: '$testArc'"
+        testService.submit(minimumSubmitChangeDestinationModel)(request, hc).futureValue mustBe Left(UnexpectedDownstreamResponseError)
       }
     }
   }

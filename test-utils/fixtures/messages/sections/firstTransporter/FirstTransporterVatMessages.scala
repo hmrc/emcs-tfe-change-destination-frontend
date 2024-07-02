@@ -21,7 +21,7 @@ import fixtures.messages.{BaseEnglish, BaseMessages, i18n}
 object FirstTransporterVatMessages {
 
   sealed trait ViewMessages extends BaseMessages { _: i18n =>
-    val heading = "What is the first transporter's VAT registration number?"
+    val heading = "What is the first transporter’s VAT registration number?"
     val title = titleHelper(heading)
     val hint = "This is 9 or 12 numbers, sometimes with ‘GB’ at the start, like 123456789 or GB123456789."
     val nonGbVatLink = "The first transporter is not VAT registered"

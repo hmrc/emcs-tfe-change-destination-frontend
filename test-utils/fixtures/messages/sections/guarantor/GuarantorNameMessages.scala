@@ -31,8 +31,8 @@ object GuarantorNameMessages {
     }
 
     def heading()(implicit guarantorArranger: GuarantorArranger): String = guarantorArranger match {
-      case GoodsOwner => "What is the goods owner's business name?"
-      case _ => "What is the transporter's business name?"
+      case GoodsOwner => "What is the goods owner’s business name?"
+      case _ => "What is the transporter’s business name?"
     }
 
     val cyaLabel = "Business name"

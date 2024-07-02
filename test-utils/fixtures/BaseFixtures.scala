@@ -55,6 +55,7 @@ trait BaseFixtures {
   val emptyUserAnswers: UserAnswers = UserAnswers(
     ern = testErn,
     arc = testArc,
+    validationErrors = Seq.empty,
     lastUpdated = Instant.now().truncatedTo(ChronoUnit.MILLIS)
   )
 

@@ -34,6 +34,7 @@ class UserAnswersConnectorISpec extends AnyFreeSpec
   val emptyUserAnswers: UserAnswers = UserAnswers(
     ern = testErn,
     arc = testDraftId,
+    validationErrors = Seq.empty,
     lastUpdated = Instant.now().truncatedTo(ChronoUnit.MILLIS)
   )
 

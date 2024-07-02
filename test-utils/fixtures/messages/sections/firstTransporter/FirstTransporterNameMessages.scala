@@ -21,7 +21,7 @@ import fixtures.messages.{BaseEnglish, BaseMessages, i18n}
 object FirstTransporterNameMessages {
 
   sealed trait ViewMessages extends BaseMessages { _: i18n =>
-    val heading = "What is the first transporter's business name?"
+    val heading = "What is the first transporter’s business name?"
     val title = titleHelper(heading)
 
     val errorRequired = "Enter the business name"

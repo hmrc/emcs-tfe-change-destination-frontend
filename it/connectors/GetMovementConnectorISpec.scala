@@ -4,7 +4,7 @@ import com.github.tomakehurst.wiremock.client.WireMock.{aResponse, get, urlEqual
 import com.github.tomakehurst.wiremock.http.Fault
 import connectors.emcsTfe.GetMovementConnector
 import fixtures.GetMovementResponseFixtures
-import models.response.UnexpectedDownstreamResponseError
+import models.response.{UnexpectedDownstreamResponseError, UnexpectedDownstreamSubmissionResponseError}
 import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
 import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.must.Matchers
@@ -60,7 +60,7 @@ class GetMovementConnectorISpec extends AnyFreeSpec
           .willReturn(aResponse().withStatus(INTERNAL_SERVER_ERROR))
       )
 
-      connector.getMovement(testErn, testArc, forceFetchNew = true).futureValue mustBe Left(UnexpectedDownstreamResponseError)
+      connector.getMovement(testErn, testArc, forceFetchNew = true).futureValue mustBe Left(UnexpectedDownstreamSubmissionResponseError(INTERNAL_SERVER_ERROR))
     }
 
     "must fail when the connection fails" in {

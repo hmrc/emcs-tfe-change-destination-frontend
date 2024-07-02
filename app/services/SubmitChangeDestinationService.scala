@@ -19,7 +19,7 @@ package services
 import connectors.emcsTfe.SubmitChangeDestinationConnector
 import models.audit.SubmitChangeDestinationAudit
 import models.requests.DataRequest
-import models.response.{ErrorResponse, SubmitChangeDestinationException, SubmitChangeDestinationResponse}
+import models.response.{ErrorResponse, SubmitChangeDestinationResponse}
 import models.submitChangeDestination.SubmitChangeDestinationModel
 import uk.gov.hmrc.http.HeaderCarrier
 import utils.{Logging, TimeMachine}
@@ -33,16 +33,12 @@ class SubmitChangeDestinationService @Inject()(
                                                 timeMachine: TimeMachine)(implicit ec: ExecutionContext) extends Logging {
 
   def submit(submitChangeDestinationModel: SubmitChangeDestinationModel)
-            (implicit request: DataRequest[_], hc: HeaderCarrier): Future[SubmitChangeDestinationResponse] =
+            (implicit request: DataRequest[_], hc: HeaderCarrier): Future[Either[ErrorResponse, SubmitChangeDestinationResponse]] =
 
     connector.submit(submitChangeDestinationModel).map {
-      case Right(success) =>
-        writeAudit(submitChangeDestinationModel, Right(success))
-        success
-      case Left(value) =>
-        writeAudit(submitChangeDestinationModel, Left(value))
-        logger.warn(s"Received Left from SubmitChangeDestinationConnector: $value")
-        throw SubmitChangeDestinationException(s"Failed to submit Change Destination to emcs-tfe for ern: '${request.ern}' & arc: '${request.arc}'")
+      response =>
+        writeAudit(submitChangeDestinationModel, response)
+        response
     }
 
   private def writeAudit(

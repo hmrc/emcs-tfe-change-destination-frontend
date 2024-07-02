@@ -18,6 +18,7 @@ package viewmodels.helpers
 
 import base.SpecBase
 import fixtures.messages.TaskListMessages
+import models.MovementValidationFailure
 import models.UserType._
 import models.requests.DataRequest
 import models.response.InvalidUserTypeException
@@ -45,12 +46,17 @@ import pages.sections.transportUnit.{TransportUnitsReviewPage, TransportUnitsSec
 import play.api.i18n.{Messages, MessagesApi}
 import play.api.libs.json.{JsObject, JsPath}
 import play.api.test.FakeRequest
+import play.twirl.api.{Html, HtmlFormat}
+import uk.gov.hmrc.govukfrontend.views.Aliases.HtmlContent
 import viewmodels.taskList._
 import views.ViewUtils.titleNoForm
+import views.html.components.{list, p}
 
 class TaskListHelperSpec extends SpecBase {
 
-  lazy val helper = new TaskListHelper()
+  lazy val helper = app.injector.instanceOf[TaskListHelper]
+  lazy val p: p = app.injector.instanceOf[p]
+  lazy val list: list = app.injector.instanceOf[list]
 
   Seq(TaskListMessages.English).foreach { messagesForLanguage =>
     s"when being rendered in lang code of ${messagesForLanguage.lang.code}" - {
@@ -811,6 +817,246 @@ class TaskListHelperSpec extends SpecBase {
                 messagesForLanguage.transportSectionHeading,
                 messagesForLanguage.submitSectionHeading,
               )
+          }
+        }
+      }
+
+      "validationFailureContent" - {
+        "when errorType is 12 or 13" - {
+          "must return the correct content for a validation failure" in {
+            Seq(12, 13).foreach {
+              errorType =>
+                val failure = MovementValidationFailure(Some(errorType), Some("This is an error. Please amend your entry and resubmit."))
+                val result = helper.validationFailureContent(Seq(failure))
+                result mustBe HtmlContent(HtmlFormat.fill(Seq(
+                  p("govuk-notification-banner__heading")(Html(messagesForLanguage.notificationBannerValidationFailuresContent)),
+                  list(Seq(p()(Html("This is an error."))))
+                )))
+            }
+          }
+        }
+
+        "when errorType is not 12 or 13" - {
+          "must return the correct content for a validation failure" in {
+            Seq(14, 9999, 123456).foreach {
+              errorType =>
+                val failure = MovementValidationFailure(Some(errorType), Some("This is an error. Please amend your entry and resubmit."))
+                val result = helper.validationFailureContent(Seq(failure))
+                result mustBe HtmlContent(HtmlFormat.fill(Seq(
+                  p("govuk-notification-banner__heading")(Html(messagesForLanguage.notificationBannerValidationFailuresContent)),
+                  list(Seq(p()(Html(s"errors.validation.notificationBanner.$errorType.content"))))
+                )))
+            }
+          }
+        }
+
+        "when errorType is missing" - {
+          "must return an empty list" in {
+            val failure = MovementValidationFailure(None, Some("This is an error. Please amend your entry and resubmit."))
+            val result = helper.validationFailureContent(Seq(failure))
+            result mustBe HtmlContent(HtmlFormat.fill(Seq(
+              p("govuk-notification-banner__heading")(Html(messagesForLanguage.notificationBannerValidationFailuresContent)),
+              list(Seq())
+            )))
+          }
+        }
+
+        "when errorReason is missing" - {
+          "for errorType 12 or 13" - {
+            "must return an empty list" in {
+              Seq(12, 13).foreach {
+                errorType =>
+                  val failure = MovementValidationFailure(Some(errorType), None)
+                  val result = helper.validationFailureContent(Seq(failure))
+                  result mustBe HtmlContent(HtmlFormat.fill(Seq(
+                    p("govuk-notification-banner__heading")(Html(messagesForLanguage.notificationBannerValidationFailuresContent)),
+                    list(Seq())
+                  )))
+              }
+            }
+          }
+
+          "for other errorTypes" - {
+            "must return a non-empty list" in {
+              Seq(14, 9999, 123456).foreach {
+                errorType =>
+                  val failure = MovementValidationFailure(Some(errorType), None)
+                  val result = helper.validationFailureContent(Seq(failure))
+                  result mustBe HtmlContent(HtmlFormat.fill(Seq(
+                    p("govuk-notification-banner__heading")(Html(messagesForLanguage.notificationBannerValidationFailuresContent)),
+                    list(Seq(p()(Html(s"errors.validation.notificationBanner.$errorType.content"))))
+                  )))
+              }
+            }
+          }
+
+          "for all valid errors" - {
+            "must return the correct content" in {
+              val validationFailures = Seq(
+                MovementValidationFailure(Some(8024), Some("beans")),
+                MovementValidationFailure(Some(8601), Some("beans")),
+                MovementValidationFailure(Some(12), Some("The transport arranger trader information is not required if they are the consignee or the consignor.")),
+                MovementValidationFailure(Some(12), Some("The delivery place customs office is not required for an export.")),
+                MovementValidationFailure(Some(13), Some("The transport arranger trader information is required if they are not the consignee or the consignor.")),
+                MovementValidationFailure(Some(13), Some("The place of delivery information must be present where the destination is a Tax Warehouse, Direct Delivery, Certified consignee or Temporary certified consignee.")),
+                MovementValidationFailure(Some(13), Some("The customs office must be present for an export.")),
+                MovementValidationFailure(Some(13), Some("The Trader ID must be present where the destination is one of the following: Tax Warehouse, Registered Consignee, Temporary Registered Consignee, Direct Delivery, Certified Consignee, Temporary Certified Consignee, or Destination-Return to the place of dispatch of the consignor, for a Duty Paid B2B movement.")),
+                MovementValidationFailure(Some(8020), Some("beans")),
+                MovementValidationFailure(Some(8021), Some("beans")),
+                MovementValidationFailure(Some(8022), Some("beans")),
+                MovementValidationFailure(Some(8023), Some("beans")),
+                MovementValidationFailure(Some(8025), Some("beans")),
+                MovementValidationFailure(Some(8026), Some("beans")),
+                MovementValidationFailure(Some(8027), Some("beans")),
+                MovementValidationFailure(Some(8028), Some("beans")),
+                MovementValidationFailure(Some(8029), Some("beans")),
+                MovementValidationFailure(Some(8030), Some("beans")),
+                MovementValidationFailure(Some(8032), Some("beans")),
+                MovementValidationFailure(Some(8089), Some("beans")),
+                MovementValidationFailure(Some(8092), Some("beans")),
+                MovementValidationFailure(Some(8093), Some("beans")),
+                MovementValidationFailure(Some(8094), Some("beans")),
+                MovementValidationFailure(Some(8095), Some("beans")),
+                MovementValidationFailure(Some(8138), Some("beans")),
+                MovementValidationFailure(Some(8147), Some("beans")),
+                MovementValidationFailure(Some(8148), Some("beans")),
+                MovementValidationFailure(Some(8149), Some("beans")),
+                MovementValidationFailure(Some(8150), Some("beans")),
+                MovementValidationFailure(Some(8151), Some("beans")),
+                MovementValidationFailure(Some(8163), Some("beans")),
+                MovementValidationFailure(Some(8200), Some("beans")),
+                MovementValidationFailure(Some(8201), Some("beans")),
+                MovementValidationFailure(Some(8202), Some("beans")),
+                MovementValidationFailure(Some(8203), Some("beans")),
+                MovementValidationFailure(Some(8204), Some("beans")),
+                MovementValidationFailure(Some(8205), Some("beans")),
+                MovementValidationFailure(Some(8206), Some("beans")),
+                MovementValidationFailure(Some(8207), Some("beans")),
+                MovementValidationFailure(Some(8208), Some("beans")),
+                MovementValidationFailure(Some(8209), Some("beans")),
+                MovementValidationFailure(Some(8210), Some("beans")),
+                MovementValidationFailure(Some(8211), Some("beans")),
+                MovementValidationFailure(Some(8212), Some("beans")),
+                MovementValidationFailure(Some(8213), Some("beans")),
+                MovementValidationFailure(Some(8214), Some("beans")),
+                MovementValidationFailure(Some(8215), Some("beans")),
+                MovementValidationFailure(Some(8550), Some("beans")),
+                MovementValidationFailure(Some(8551), Some("beans")),
+                MovementValidationFailure(Some(8555), Some("beans")),
+                MovementValidationFailure(Some(8556), Some("beans")),
+                MovementValidationFailure(Some(8600), Some("beans")),
+                MovementValidationFailure(Some(8602), Some("beans")),
+                MovementValidationFailure(Some(8603), Some("beans")),
+                MovementValidationFailure(Some(8604), Some("beans")),
+                MovementValidationFailure(Some(8605), Some("beans")),
+                MovementValidationFailure(Some(8606), Some("beans")),
+                MovementValidationFailure(Some(8607), Some("beans")),
+                MovementValidationFailure(Some(8608), Some("beans")),
+                MovementValidationFailure(Some(8609), Some("beans"))
+              )
+
+              val result = helper.validationFailureContent(validationFailures)
+
+              result mustBe HtmlContent(HtmlFormat.fill(Seq(
+                p("govuk-notification-banner__heading")(Html(messagesForLanguage.notificationBannerValidationFailuresContent)),
+                list(Seq(
+                  p()(Html("You must either select ‘Tax Warehouse’ or ‘Export’ if the Trader ID begins with ‘GB’ or ‘XI’.")),
+                  p()(Html("If the MessageRecipient in the header ends in GB or XI then a change of destination can only be to a consignee in Northern Ireland or Great Britain, or for export.")),
+                  p()(Html("The transport arranger trader information is not required if they are the consignee or the consignor.")),
+                  p()(Html("The delivery place customs office is not required for an export.")),
+                  p()(Html("The transport arranger trader information is required if they are not the consignee or the consignor.")),
+                  p()(Html("The place of delivery information must be present where the destination is a Tax Warehouse, Direct Delivery, Certified consignee or Temporary certified consignee.")),
+                  p()(Html("The customs office must be present for an export.")),
+                  p()(Html("The Trader ID must be present where the destination is one of the following: Tax Warehouse, Registered Consignee, Temporary Registered Consignee, Direct Delivery, Certified Consignee, Temporary Certified Consignee, or Destination-Return to the place of dispatch of the consignor, for a Duty Paid B2B movement.")),
+                  p()(Html("The transport details can repeat up to a maximum of 30 times.")),
+                  p()(Html("The date and time that has been submitted is not allowed.")),
+                  p()(Html("The sequence number is not allowed.")),
+                  p()(Html("You must select at least one of the following for the Destination Type: Trader Place of Delivery, Office Place of Delivery, or New Consignee details.")),
+                  p()(Html("You must provide a valid Excise Number if the Destination is to any of the following: Tax Warehouse, Registered Consignee, Temporary Registered Consignee, Direct Delivery, Certified Consignee, Temporary Certified Consignee.")),
+                  p()(Html("You must provide a Trader ID for the place of delivery if the destination is to a Tax Warehouse, Certified Consignee, or Temporary certified consignee.")),
+                  p()(Html("You must provide a trader name for the selected movement type.")),
+                  p()(Html("You must provide a Street Name for the selected movement type.")),
+                  p()(Html("You must provide a Postcode for the selected movement type.")),
+                  p()(Html("You must provide a City Name for the selected movement type.")),
+                  p()(Html("A Trader ID is not required for Direct Deliveries.")),
+                  p()(Html("You must provide the new transporter trader information.")),
+                  p()(Html("The language code for the place of delivery on the Change of Destination must be provided.")),
+                  p()(Html("A valid excise number must be present where the destination is a Tax Warehouse.")),
+                  p()(Html("The Transport Unit information must be provided unless the movement is to an Exempted Consignee.")),
+                  p()(Html("The Transport Unit information must not be provided if the movement is to an Exempted Consignee.")),
+                  p()(Html("The destination type must be one of the following: Tax warehouse, Registered consignee, Temporary registered consignee, Direct Delivery, Export, Certified Consignee, Temporary Certified Consignee, Return to the place of dispatch of the consignor for a Duty Paid B2B movement.")),
+                  p()(Html("Complementary information must be present if the transport code is other.")),
+                  p()(Html("Complementary information must not be present if the transport code is one of the following: Sea Transport, Rail Transport, Road Transport, Air Transport, Postal Consignment, Fixed Transport Installation, or Inland Waterway Transport.")),
+                  p()(Html("The place of delivery information must not be present where the destination is to an Unknown Destination.")),
+                  p()(Html("The place of delivery information must not be present where the destination is for Export.")),
+                  p()(Html("The place of delivery information must not be present where the destination is Return to the place of dispatch of the Consignor.")),
+                  p()(Html("The consignee EORI number must only be present for an export movement.")),
+                  p()(Html("A guarantor must be provided if the ‘transporter of goods’ or ‘the owner of goods’ has been selected.")),
+                  p()(Html("Only one guarantor can be selected. Please amend your entry and resubmit.")),
+                  p()(Html("If a guarantor is not required for a UK to UK movement then the destination must be to an authorised warehouse. Please amend your entry and resubmit.")),
+                  p()(Html("If a guarantor is not required for a UK to UK movement then the Excise ID must start with ‘GB’ or ‘XI’.")),
+                  p()(Html("The consignee Excise ID must start with ‘GB’ or ‘XI’.")),
+                  p()(Html("The trader place of delivery Excise ID must start with ‘GB’ or ‘XI’.")),
+                  p()(Html("If a guarantor is not required for qualifying UK to EU Movements then the mode of transport must be Sea Transport or Fixed Transport Installation.")),
+                  p()(Html("You must provide a trading name if the trader Excise ID is absent.")),
+                  p()(Html("You must provide a street name if the trader Excise ID is absent.")),
+                  p()(Html("You must provide a city if the trader Excise ID is absent.")),
+                  p()(Html("You must provide a postcode if the trader Excise ID is absent.")),
+                  p()(Html("The language code must be provided if the street name is present.")),
+                  p()(Html("The language code must be provided if the street number is present.")),
+                  p()(Html("The language code must be provided if the postcode is present.")),
+                  p()(Html("The language code must be provided if the city is present.")),
+                  p()(Html("An Excise ID is not required where the guarantor is the consignor or a consignee, or for a qualifying movement.")),
+                  p()(Html("The UK consignee Trader ID must start with GBWK or XIWK where the place of destination is a UK excise warehouse.")),
+                  p()(Html("The consignee Trader ID must not start with GB or XI when the place of destination is a non-UK excise warehouse.")),
+                  p()(Html("The UK place of delivery excise warehouse ID must start with GB00 where the place of destination is a UK excise warehouse.")),
+                  p()(Html("The consignee delivery place trader ID must not start with GB or XI where the place of destination is either a non-UK excise warehouse or Temporary Registered Consignee.")),
+                  p()(Html("If the country code in the Administrative Reference Code is GB then the MessageRecipient in the header must be either GB or XI.")),
+                  p()(Html("The consignee trader ID must start with XIWK where the place of destination is a NI excise warehouse.")),
+                  p()(Html("The consignee must not have a Northern Ireland postcode starting with ‘BT’ if the consignee Traders ID starts with GB.")),
+                  p()(Html("The consignee must have a Northern Ireland postcode starting with ‘BT’ if the consignee Traders ID starts with XI.")),
+                  p()(Html("The consignee delivery place Trader ID must start with XI00 where the place of destination is to an excise warehouse in Northern Ireland.")),
+                  p()(Html("The consignee delivery place trader postcode must start with ‘BT’ where the place of destination is to an excise warehouse in Northern Ireland.")),
+                  p()(Html("The consignee delivery place trader postcode must not start with ‘BT’ where the place of destination is to an excise warehouse in Great Britain.")),
+                  p()(Html("If the country code in the Administrative Reference Code is GB then the delivery place customs office must also start with GB.")),
+                  p()(Html("If the country code in the Administrative Reference Code is XI then the delivery place customs office must not start with GB."))
+                ))
+              )))
+            }
+          }
+        }
+
+        "removeAmendEntryMessageFromErrorReason" - {
+          "must remove 'Please amend your entry and resubmit.' from the error reason" in {
+            Seq(
+              "This is an error. Please amend your entry and resubmit.",
+              "This is an error.       Please amend your entry and resubmit.",
+              "This is an error.Please amend your entry and resubmit.",
+              "This is an error. Please amend your entry and resubmit",
+              "This is an error.        Please amend your entry and resubmit",
+              "This is an error.Please amend your entry and resubmit"
+            ).foreach { errorMessage =>
+              val result = helper.removeAmendEntryMessageFromErrorReason(errorMessage)
+              result mustBe "This is an error."
+            }
+          }
+
+          "must replace single quotes around 'Import', 'Tax Warehouse', 'Duty Paid', and 'Export', with smart quotes" in {
+            Seq("Import", "Tax Warehouse", "Duty Paid", "Export").foreach {
+              text =>
+                val result = helper.removeAmendEntryMessageFromErrorReason(s"This is an error. '$text'.")
+                result mustBe s"This is an error. ‘$text’."
+            }
+          }
+
+          "must replace 'origin type code is 'Tax Warehouse'.' with 'origin type code is 'Tax Warehouse' or 'Duty Paid'.'" in {
+            val result = helper.removeAmendEntryMessageFromErrorReason("This is an error. origin type code is 'Tax Warehouse'.")
+            result mustBe "This is an error. origin type code is ‘Tax Warehouse’ or ‘Duty Paid’."
+          }
+
+          "must not modify the error reason if 'Please amend your entry and resubmit.' is not present, 'origin type code is 'Tax Warehouse'.' is not present, and there are no quotes to be replaced with smart quotes" in {
+            val result = helper.removeAmendEntryMessageFromErrorReason("This is an error.")
+            result mustBe "This is an error."
           }
         }
       }

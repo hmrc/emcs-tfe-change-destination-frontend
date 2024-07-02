@@ -20,6 +20,7 @@ import controllers.actions._
 import handlers.ErrorHandler
 import models.NormalMode
 import models.requests.DataRequest
+import models.response.{SubmitChangeDestinationException, UnexpectedDownstreamSubmissionResponseError}
 import models.submitChangeDestination.SubmitChangeDestinationModel
 import navigation.Navigator
 import pages.DeclarationPage
@@ -50,18 +51,27 @@ class DeclarationController @Inject()(
                                      ) extends BaseNavigationController with I18nSupport with AuthActionHelper with Logging {
 
   def onPageLoad(ern: String, arc: String): Action[AnyContent] =
-    authorisedDataRequestWithUpToDateMovement(ern, arc) { implicit request =>
+    authorisedDataRequestWithCachedMovement(ern, arc) { implicit request =>
       Ok(view(submitAction = routes.DeclarationController.onSubmit(ern, arc)))
     }
 
   def onSubmit(ern: String, arc: String): Action[AnyContent] =
-    authorisedDataRequestWithUpToDateMovementAsync(ern, arc) { implicit request =>
+    authorisedDataRequestWithCachedMovementAsync(ern, arc) { implicit request =>
       withSubmitChangeDestinationModel { submitChangeDestinationModel =>
         service.submit(submitChangeDestinationModel).flatMap {
-          response =>
+          case Right(response) =>
             logger.debug(s"[onSubmit] response received from downstream service ${response.downstreamService}: ${response.receipt}")
 
             saveAndRedirect(DeclarationPage, LocalDateTime.now(), NormalMode)
+          case Left(UnexpectedDownstreamSubmissionResponseError(UNPROCESSABLE_ENTITY)) =>
+            // emcs-tfe returns an UNPROCESSABLE_ENTITY when downstream responds with RIM validation errors,
+            // so we redirect to TaskListController to display these errors
+            logger.warn(s"Received UnexpectedDownstreamDraftSubmissionResponseError(UNPROCESSABLE_ENTITY) from SubmitChangeDestinationService, " +
+              s"redirecting to TaskListController")
+            Future.successful(Redirect(routes.TaskListController.onPageLoad(ern, arc)))
+          case Left(value) =>
+            logger.warn(s"Received Left from SubmitChangeDestinationService: $value")
+            throw SubmitChangeDestinationException(s"Failed to submit Change Destination to emcs-tfe for ern: '${request.ern}' & ARC: '${request.arc}'")
         }.recover {
           case exception =>
             logger.error(s"Error thrown when calling Submit Change Destination: ${exception.getMessage}")

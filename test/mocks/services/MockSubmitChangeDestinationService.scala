@@ -17,7 +17,7 @@
 package mocks.services
 
 import models.requests.DataRequest
-import models.response.SubmitChangeDestinationResponse
+import models.response.{ErrorResponse, SubmitChangeDestinationResponse}
 import models.submitChangeDestination.SubmitChangeDestinationModel
 import org.scalamock.handlers.CallHandler3
 import org.scalamock.scalatest.MockFactory
@@ -32,7 +32,7 @@ trait MockSubmitChangeDestinationService extends MockFactory {
 
   object MockSubmitChangeDestinationService {
 
-    def submit(model: SubmitChangeDestinationModel): CallHandler3[SubmitChangeDestinationModel, DataRequest[_], HeaderCarrier, Future[SubmitChangeDestinationResponse]] =
+    def submit(model: SubmitChangeDestinationModel): CallHandler3[SubmitChangeDestinationModel, DataRequest[_], HeaderCarrier, Future[Either[ErrorResponse, SubmitChangeDestinationResponse]]] =
       (mockSubmitChangeDestinationService.submit(_: SubmitChangeDestinationModel)(_: DataRequest[_], _: HeaderCarrier)).expects(model, *, *)
   }
 }
