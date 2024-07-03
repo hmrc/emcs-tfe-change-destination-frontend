@@ -16,16 +16,21 @@
 
 package models.sections.guarantor
 
-import org.mockito.ArgumentMatchers.{any, anyString}
-import org.mockito.Mockito.when
+import models.sections.guarantor.GuarantorArranger.{Consignee, Consignor, GoodsOwner, Transporter}
+import models.sections.info.movementScenario.MovementScenario
+import models.sections.info.movementScenario.MovementScenario.{CertifiedConsignee, TemporaryCertifiedConsignee, UkTaxWarehouse}
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
-import org.scalatestplus.mockito.MockitoSugar.mock
 import play.api.i18n.Messages
-import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
+import play.api.test.Helpers.stubMessages
+import uk.gov.hmrc.govukfrontend.views.Aliases.Text
 import uk.gov.hmrc.govukfrontend.views.viewmodels.radios.RadioItem
 
 class GuarantorArrangerSpec extends AnyFlatSpec with Matchers {
+
+  implicit lazy val msgs: Messages = stubMessages()
+  val scenariosWithConsignee: Seq[MovementScenario] =
+    UkTaxWarehouse.toList ++ Seq(CertifiedConsignee, TemporaryCertifiedConsignee)
 
   "GuarantorArranger" should "have correct values" in {
     GuarantorArranger.values should contain allOf(
@@ -47,18 +52,29 @@ class GuarantorArrangerSpec extends AnyFlatSpec with Matchers {
     GuarantorArranger.NoGuarantorRequired.auditDescription shouldBe "NoGuarantorRequired"
   }
 
-  it should "generate correct options" in {
-    implicit val messages: Messages = mock[Messages]
-    when(messages.apply(anyString(), any())).thenReturn("test")
+  it should "generate correct options when scenario is one which includes the consignee option" in {
 
-    val options = GuarantorArranger.options
+    scenariosWithConsignee.foreach { scenario =>
+      GuarantorArranger.options(scenario) shouldBe Seq(Consignor, Consignee, GoodsOwner, Transporter).map { value =>
+        RadioItem(
+          content = Text(msgs(s"guarantorArranger.${value.toString}")),
+          value = Some(value.toString),
+          id = Some(s"value_${value.toString}")
+        )
+      }
+    }
+  }
 
-    options should contain theSameElementsAs Seq(
-      RadioItem(content = Text("test"), value = Some(GuarantorArranger.Consignor.toString), id = Some("value_1")),
-      RadioItem(content = Text("test"), value = Some(GuarantorArranger.Consignee.toString), id = Some("value_4")),
-      RadioItem(content = Text("test"), value = Some(GuarantorArranger.GoodsOwner.toString), id = Some("value_3")),
-      RadioItem(content = Text("test"), value = Some(GuarantorArranger.Transporter.toString), id = Some("value_2"))
-    )
+  it should "generate correct options when scenario is one which should NOT include the consignee option" in {
+    MovementScenario.values.filterNot(scenariosWithConsignee.contains).foreach { scenario =>
+      GuarantorArranger.options(scenario) shouldBe Seq(Consignor, GoodsOwner, Transporter).map { value =>
+        RadioItem(
+          content = Text(msgs(s"guarantorArranger.${value.toString}")),
+          value = Some(value.toString),
+          id = Some(s"value_${value.toString}")
+        )
+      }
+    }
   }
 
   it should "have correct enumerable" in {

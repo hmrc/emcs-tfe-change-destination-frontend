@@ -17,6 +17,8 @@
 package models.sections.guarantor
 
 import models.audit.Auditable
+import models.sections.info.movementScenario.MovementScenario
+import models.sections.info.movementScenario.MovementScenario.{CertifiedConsignee, TemporaryCertifiedConsignee, UkTaxWarehouse}
 import models.{Enumerable, WithName}
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.Aliases.Text
@@ -56,13 +58,26 @@ object GuarantorArranger extends Enumerable.Implicits {
 
   val values: Seq[GuarantorArranger] = displayValues ++ Seq(NoGuarantorRequiredUkToEu, NoGuarantorRequired)
 
-  def options(implicit messages: Messages): Seq[RadioItem] = displayValues.map {
-    value =>
-      RadioItem(
-        content = Text(messages(s"guarantorArranger.${value.toString}")),
-        value = Some(value.toString),
-        id = Some(s"value_${value.toString}")
-      )
+  def options(movementScenario: MovementScenario)(implicit messages: Messages): Seq[RadioItem] = {
+    val scenariosWithConsignee: Seq[MovementScenario] = {
+      // Consignee is only available for the following movement scenarios
+      UkTaxWarehouse.toList ++ Seq(CertifiedConsignee, TemporaryCertifiedConsignee)
+    }
+
+    val radioItems = if (scenariosWithConsignee.contains(movementScenario)) {
+      displayValues
+    } else {
+      displayValues.filterNot(_ == Consignee)
+    }
+
+    radioItems.map {
+      value =>
+        RadioItem(
+          content = Text(messages(s"guarantorArranger.${value.toString}")),
+          value = Some(value.toString),
+          id = Some(s"value_${value.toString}")
+        )
+    }
   }
 
   implicit val enumerable: Enumerable[GuarantorArranger] =

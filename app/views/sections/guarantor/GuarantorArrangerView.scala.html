@@ -17,6 +17,7 @@
 @import models.requests.DataRequest
 @import models.sections.guarantor.GuarantorArranger
 @import viewmodels.LegendSize
+@import models.sections.info.movementScenario.MovementScenario
 
 @this(
     layout: templates.Layout,
@@ -28,7 +29,7 @@
     continueOrExit: components.continueOrExit
 )
 
-@(form: Form[_], mode: Mode)(implicit request: DataRequest[_], messages: Messages)
+@(form: Form[_], mode: Mode, movementScenario: MovementScenario)(implicit request: DataRequest[_], messages: Messages)
 
 @layout(pageTitle = title(form, messages("guarantorArranger.title")), maybeShowActiveTrader = maybeShowActiveTrader(request)) {
 
@@ -43,7 +44,7 @@
             RadiosViewModel(
                 field  = form("value"),
                 legend = LegendViewModel(Text(messages("guarantorArranger.heading"))).asPageHeading(LegendSize.Large),
-                items  = GuarantorArranger.options
+                items  = GuarantorArranger.options(movementScenario)
             )
         )
 

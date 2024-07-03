@@ -21,6 +21,7 @@ import fixtures.messages.sections.guarantor.GuarantorArrangerMessages
 import forms.sections.guarantor.GuarantorArrangerFormProvider
 import models.NormalMode
 import models.requests.DataRequest
+import models.sections.info.movementScenario.MovementScenario.UkTaxWarehouse.GB
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import play.api.i18n.Messages
@@ -47,7 +48,8 @@ class GuarantorArrangerViewSpec extends SpecBase with ViewBehaviours {
         implicit val doc: Document = Jsoup.parse(
           view(
             form = form,
-            mode = NormalMode
+            mode = NormalMode,
+            movementScenario = GB
           ).toString())
 
         behave like pageWithExpectedElementsAndMessages(Seq(
