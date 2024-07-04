@@ -29,6 +29,7 @@
         link: components.link,
         taskList: components.taskList,
         helper: TaskListHelper,
+        notificationBanner: GovukNotificationBanner,
         saveAndContinue: components.saveAndContinue
 )
 
@@ -39,6 +40,13 @@
   maybeShowActiveTrader = maybeShowActiveTrader(request),
   showBackLink = false
 ) {
+
+    @if(request.userAnswers.validationErrors.nonEmpty) {
+        @notificationBanner(NotificationBanner(
+            title = Text(messages("errors.validation.notificationBanner.title")),
+            content = helper.validationFailureContent(request.userAnswers.validationErrors)
+        ))
+    }
 
     @h2(messages("arc.subHeading", request.arc), "govuk-caption-l", hiddenContent = Some(messages("subHeading.hidden")))
     @h1(helper.heading, classes = "govuk-heading-l")

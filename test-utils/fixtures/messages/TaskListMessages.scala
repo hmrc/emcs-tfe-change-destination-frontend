@@ -36,6 +36,9 @@ object TaskListMessages {
     def headingImportFor(input1: String): String = s"Import for $input1"
     def titleImportFor(input1: String): String = titleHelper(headingImportFor(input1))
 
+    val notificationBannerValidationFailuresContent =
+      "This movement has failed submission. Once you have updated the movement using the guidance below, please resubmit."
+
     val movementSectionHeading: String = "Movement"
     val movementDetails: String = "Movement details"
 
