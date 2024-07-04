@@ -18,8 +18,10 @@ package controllers.sections.guarantor
 
 import controllers.actions._
 import models.NormalMode
+import models.response.emcsTfe.GuarantorType.Consignee
 import navigation.GuarantorNavigator
 import pages.sections.guarantor.GuarantorSection
+import pages.sections.info.DestinationTypePage
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import services.UserAnswersService
 
@@ -40,9 +42,14 @@ class GuarantorIndexController @Inject()(
     authorisedDataRequestWithUpToDateMovement(ern, arc) { implicit request =>
       Redirect(
         if (GuarantorSection.isCompleted) {
-          controllers.sections.guarantor.routes.GuarantorCheckAnswersController.onPageLoad(ern, arc)
+          routes.GuarantorCheckAnswersController.onPageLoad(ern, arc)
         } else {
-          controllers.sections.guarantor.routes.GuarantorArrangerController.onPageLoad(ern, arc, NormalMode)
+          request.movementDetails.movementGuarantee.guarantorTypeCode match {
+            case Consignee if DestinationTypePage.isExport =>
+              routes.GuarantorRequiredController.onPageLoad(ern, arc)
+            case _ =>
+              routes.GuarantorArrangerController.onPageLoad(ern, arc, NormalMode)
+          }
         }
       )
     }

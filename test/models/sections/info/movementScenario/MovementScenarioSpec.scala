@@ -677,4 +677,26 @@ class MovementScenarioSpec extends SpecBase {
     }
   }
 
+  "isExport" - {
+
+    val exportValues = Seq(ExportWithCustomsDeclarationLodgedInTheUk, ExportWithCustomsDeclarationLodgedInTheEu)
+
+    "must return true" - {
+      exportValues.map(scenario =>
+        s"when MovementScenario is $scenario" in {
+          scenario.isExport mustBe true
+        }
+      )
+    }
+
+    "must return false" - {
+      MovementScenario.values.filterNot(exportValues.contains)
+        .map(scenario =>
+          s"when MovementScenario is $scenario" in {
+            scenario.isExport mustBe false
+          }
+        )
+    }
+  }
+
 }

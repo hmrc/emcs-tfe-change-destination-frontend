@@ -18,7 +18,7 @@ package models.sections.info.movementScenario
 
 import models.requests.DataRequest
 import models.response.InvalidUserTypeException
-import models.sections.info.movementScenario.MovementScenario.logger
+import models.sections.info.movementScenario.MovementScenario.{ExportWithCustomsDeclarationLodgedInTheEu, ExportWithCustomsDeclarationLodgedInTheUk, logger}
 import models.{Enumerable, UserType, WithName}
 import utils.Logging
 
@@ -39,6 +39,8 @@ sealed trait MovementScenario {
 
   //TODO we should probably change this to use the messages file instead of having the message here directly
   val stringValue: String
+
+  val isExport = Seq(ExportWithCustomsDeclarationLodgedInTheUk, ExportWithCustomsDeclarationLodgedInTheEu).contains(this)
 }
 
 object MovementScenario extends Enumerable.Implicits with Logging {
