@@ -33,6 +33,7 @@ trait BaseFixtures {
   val testNorthernIrelandErn = "XIWK123456789"
   val testNorthernIrelandDutyPaidErn = "XIPA123456789"
   val testGreatBritainErn = "GBRC123456789"
+  val testGreatBritainWarehouseErn = "GBWK123456789"
   val testTemporaryRegisteredConsignee = "XITC12345679"
   val testArc: String = "arc"
   val testVatNumber: String = "123456789"

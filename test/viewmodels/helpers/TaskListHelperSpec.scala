@@ -22,15 +22,14 @@ import models.MovementValidationFailure
 import models.UserType._
 import models.requests.DataRequest
 import models.response.InvalidUserTypeException
-import models.response.emcsTfe.GuarantorType.{NoGuarantor, Transporter}
-import models.response.emcsTfe.{HeaderEadEsadModel, MovementGuaranteeModel, TransportModeModel}
+import models.response.emcsTfe.HeaderEadEsadModel
 import models.sections.ReviewAnswer.ChangeAnswers
 import models.sections.info.ChangeType.ReturnToConsignor
 import models.sections.info.DispatchPlace.{GreatBritain, NorthernIreland}
 import models.sections.info.movementScenario.MovementScenario._
 import models.sections.info.movementScenario.{DestinationType, MovementScenario}
 import models.sections.info.{ChangeType, DispatchPlace}
-import models.sections.journeyType.HowMovementTransported.{AirTransport, FixedTransportInstallations, RoadTransport}
+import models.sections.journeyType.HowMovementTransported.AirTransport
 import models.sections.transportArranger.TransportArranger
 import pages.sections.Section
 import pages.sections.consignee.ConsigneeSection
@@ -342,34 +341,10 @@ class TaskListHelperSpec extends SpecBase {
 
       "guarantorSection" - {
 
-        "should render the Guarantor section when NI changed from UKtoEU to anything else" in {
-          implicit val request: DataRequest[_] = dataRequest(FakeRequest(), ern = testNorthernIrelandErn,
-            answers = emptyUserAnswers
-              .set(DestinationTypePage, UkTaxWarehouse.GB),
-            movementDetails = maxGetMovementResponse.copy(movementGuarantee = MovementGuaranteeModel(Transporter, None))
-          )
-          helper.guarantorSection mustBe Some(TaskListSection(
-            messagesForLanguage.guarantorSectionHeading,
-            Seq(
-              TaskListSectionRow(
-                messagesForLanguage.guarantor,
-                "guarantor",
-                Some(controllers.sections.guarantor.routes.GuarantorIndexController.onPageLoad(testNorthernIrelandErn, testArc).url),
-                Some(GuarantorSection),
-                Some(NotStarted)
-              )
-            )
-          ))
-        }
+        "should render the Guarantor section" in {
+          implicit val request: DataRequest[_] = dataRequest(FakeRequest())
 
-        "should render the Guarantor section when changed to exports" in {
-          implicit val request: DataRequest[_] = dataRequest(FakeRequest(), ern = testErn,
-            answers = emptyUserAnswers
-              .set(HowMovementTransportedPage, RoadTransport)
-              .set(DestinationTypePage, ExportWithCustomsDeclarationLodgedInTheUk),
-            movementDetails = maxGetMovementResponse.copy(movementGuarantee = MovementGuaranteeModel(Transporter, None))
-          )
-          helper.guarantorSection mustBe Some(TaskListSection(
+          helper.guarantorSection mustBe TaskListSection(
             messagesForLanguage.guarantorSectionHeading,
             Seq(
               TaskListSectionRow(
@@ -377,20 +352,9 @@ class TaskListHelperSpec extends SpecBase {
                 "guarantor",
                 Some(controllers.sections.guarantor.routes.GuarantorIndexController.onPageLoad(testErn, testArc).url),
                 Some(GuarantorSection),
-                Some(NotStarted)
+                Some(Review)
               )
-            )
-          ))
-        }
-
-        "should NOT render the Guarantor section when already answered" in {
-          implicit val request: DataRequest[_] = dataRequest(FakeRequest(), ern = testGreatBritainErn,
-            answers = emptyUserAnswers
-              .set(HowMovementTransportedPage, RoadTransport)
-              .set(DestinationTypePage, UkTaxWarehouse.GB),
-            movementDetails = maxGetMovementResponse.copy(movementGuarantee = MovementGuaranteeModel(NoGuarantor, None))
-          )
-          helper.guarantorSection mustBe None
+            ))
         }
       }
 
@@ -715,109 +679,19 @@ class TaskListHelperSpec extends SpecBase {
       }
 
       "sections" - {
-        "when NO guarantor information already exists" - {
-          "when DestinationType has changed to export logged in UK" - {
-            "should return all sections including Guarantor" in {
-              implicit val request: DataRequest[_] = dataRequest(
-                request = FakeRequest(),
-                ern = testGreatBritainErn,
-                answers = emptyUserAnswers
-                  .set(HowMovementTransportedPage, AirTransport)
-                  .set(DestinationTypePage, ExportWithCustomsDeclarationLodgedInTheUk),
-                movementDetails = maxGetMovementResponse.copy(movementGuarantee = MovementGuaranteeModel(NoGuarantor, None))
-              )
-              helper.sections.map(_.sectionHeading) mustBe
-                Seq(
-                  messagesForLanguage.movementSectionHeading,
-                  messagesForLanguage.deliverySectionHeading,
-                  messagesForLanguage.guarantorSectionHeading,
-                  messagesForLanguage.transportSectionHeading,
-                  messagesForLanguage.submitSectionHeading,
-                )
-            }
-          }
-
-          "when DestinationType has NOT change to export logged in UK and is FixedTransport" - {
-            "should return all sections (excluding Guarantor)" in {
-              implicit val request: DataRequest[_] = dataRequest(
-                request = FakeRequest(),
-                ern = testGreatBritainErn,
-                answers = emptyUserAnswers
-                  .set(HowMovementTransportedPage, FixedTransportInstallations)
-                  .set(DestinationTypePage, UkTaxWarehouse.GB),
-                movementDetails = maxGetMovementResponse.copy(movementGuarantee = MovementGuaranteeModel(NoGuarantor, None))
-              )
-              helper.sections.map(_.sectionHeading) mustBe
-                Seq(
-                  messagesForLanguage.movementSectionHeading,
-                  messagesForLanguage.deliverySectionHeading,
-                  messagesForLanguage.transportSectionHeading,
-                  messagesForLanguage.submitSectionHeading,
-                )
-            }
-          }
-
-          "when transport type is NOT FixedTransportInstallations and movement is UktoEU" - {
-            "should return all sections including Guarantor" in {
-              implicit val request: DataRequest[_] = dataRequest(
-                request = FakeRequest(),
-                ern = testNorthernIrelandErn,
-                answers = emptyUserAnswers
-                  .set(HowMovementTransportedPage, RoadTransport)
-                  .set(DestinationTypePage, EuTaxWarehouse),
-                movementDetails = maxGetMovementResponse.copy(
-                  movementGuarantee = MovementGuaranteeModel(NoGuarantor, None),
-                  transportMode = TransportModeModel(FixedTransportInstallations.toString, None)
-                )
-              )
-              helper.sections.map(_.sectionHeading) mustBe
-                Seq(
-                  messagesForLanguage.movementSectionHeading,
-                  messagesForLanguage.deliverySectionHeading,
-                  messagesForLanguage.guarantorSectionHeading,
-                  messagesForLanguage.transportSectionHeading,
-                  messagesForLanguage.submitSectionHeading,
-                )
-            }
-          }
-
-          "when transport type is FixedTransportInstallations" - {
-            "should return all sections excluding Guarantor" in {
-              implicit val request: DataRequest[_] = dataRequest(
-                request = FakeRequest(),
-                ern = testNorthernIrelandErn,
-                answers = emptyUserAnswers
-                  .set(HowMovementTransportedPage, FixedTransportInstallations)
-                  .set(DestinationTypePage, EuTaxWarehouse),
-                movementDetails = maxGetMovementResponse.copy(movementGuarantee = MovementGuaranteeModel(NoGuarantor, None))
-              )
-              helper.sections.map(_.sectionHeading) mustBe
-                Seq(
-                  messagesForLanguage.movementSectionHeading,
-                  messagesForLanguage.deliverySectionHeading,
-                  messagesForLanguage.transportSectionHeading,
-                  messagesForLanguage.submitSectionHeading,
-                )
-            }
-          }
-        }
-
-        "when guarantor information already exists" - {
-
-          "should return all sections excluding Guarantor" in {
-            implicit val request: DataRequest[_] = dataRequest(
-              request = FakeRequest(),
-              ern = testErn,
-              answers = emptyUserAnswers
+        "should return all expected sections" in {
+          implicit val request: DataRequest[_] = dataRequest(
+            request = FakeRequest(),
+            answers = emptyUserAnswers.set(HowMovementTransportedPage, AirTransport)
+          )
+          helper.sections.map(_.sectionHeading) mustBe
+            Seq(
+              messagesForLanguage.movementSectionHeading,
+              messagesForLanguage.deliverySectionHeading,
+              messagesForLanguage.guarantorSectionHeading,
+              messagesForLanguage.transportSectionHeading,
+              messagesForLanguage.submitSectionHeading,
             )
-            helper.sections.map(_.sectionHeading) mustBe
-              Seq(
-                messagesForLanguage.movementSectionHeading,
-                messagesForLanguage.deliverySectionHeading,
-                messagesForLanguage.transportSectionHeading,
-                messagesForLanguage.submitSectionHeading,
-              )
-          }
         }
       }
 

@@ -22,7 +22,7 @@ import fixtures.messages.sections.guarantor.GuarantorAddressMessages.ViewMessage
 import models.requests.DataRequest
 import models.response.emcsTfe.{GuarantorType, MovementGuaranteeModel}
 import models.sections.guarantor.GuarantorArranger.{Consignee, Consignor, GoodsOwner, Transporter}
-import models.sections.info.movementScenario.MovementScenario.ExportWithCustomsDeclarationLodgedInTheUk
+import models.sections.info.movementScenario.MovementScenario.{ExportWithCustomsDeclarationLodgedInTheUk, UkTaxWarehouse}
 import models.{CheckMode, UserAddress}
 import pages.sections.consignee.ConsigneeAddressPage
 import pages.sections.consignor.ConsignorAddressPage
@@ -76,7 +76,7 @@ class GuarantorAddressSummarySpec extends SpecBase {
                   movementDetails = maxGetMovementResponse.copy(movementGuarantee = MovementGuaranteeModel(GuarantorType.NoGuarantor, None))
                 )
 
-                GuarantorAddressSummary.row() mustBe expectedRow(messagesForLanguage.notProvided, true)
+                GuarantorAddressSummary.row() mustBe expectedRow(messagesForLanguage.notProvided, showChangeLink = true)
               }
             }
 
@@ -87,10 +87,12 @@ class GuarantorAddressSummarySpec extends SpecBase {
                 val userAddressFrom801 = UserAddress(Some("GuarantorTraderStreetNumber1"), "GuarantorTraderStreetName1", "GuarantorTraderCity1", "GuarantorTraderPostcode1")
 
                 implicit lazy val request: DataRequest[_] = dataRequest(
-                  FakeRequest(),
-                  emptyUserAnswers
-                    .set(DestinationTypePage, ExportWithCustomsDeclarationLodgedInTheUk)
-                    .set(GuarantorArrangerPage, arranger)
+                  request = FakeRequest(),
+                  answers = emptyUserAnswers
+                    .set(DestinationTypePage, UkTaxWarehouse.GB)
+                    .set(GuarantorArrangerPage, arranger),
+                  ern = testGreatBritainWarehouseErn,
+                  movementDetails = maxGetMovementResponse
                 )
 
                 val expectedValue = HtmlContent(

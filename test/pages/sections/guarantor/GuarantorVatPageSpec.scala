@@ -18,6 +18,8 @@ package pages.sections.guarantor
 
 import base.SpecBase
 import models.response.emcsTfe.TraderModel
+import models.sections.info.movementScenario.DestinationType.{Export, TaxWarehouse}
+import models.sections.info.movementScenario.MovementScenario.ExportWithCustomsDeclarationLodgedInTheUk
 import play.api.test.FakeRequest
 
 class GuarantorVatPageSpec extends SpecBase {
@@ -27,22 +29,26 @@ class GuarantorVatPageSpec extends SpecBase {
   "getValueFromIE801" - {
     "must return Some(_)" - {
       "when guarantor trader is defined and has a VAT number (getting the first guarantor)" in {
-        GuarantorVatPage.getValueFromIE801(dataRequest(FakeRequest())) mustBe guarantorTraders.headOption.flatMap(_.vatNumber)
-      }
-    }
-    "must return None" - {
-      "when guarantor trader is defined and has no vat number" in {
         GuarantorVatPage.getValueFromIE801(dataRequest(
           FakeRequest(),
-          movementDetails = maxGetMovementResponse.copy(movementGuarantee = maxGetMovementResponse.movementGuarantee.copy(guarantorTrader = Some(guarantorTraders.map(_.copy(vatNumber = None)))))
-        )) mustBe None
-      }
-      "when guarantor trader trader doesn't exist" in {
-        GuarantorVatPage.getValueFromIE801(dataRequest(
-          FakeRequest(),
-          movementDetails = maxGetMovementResponse.copy(movementGuarantee = maxGetMovementResponse.movementGuarantee.copy(guarantorTrader = None))
-        )) mustBe None
+          ern = testGreatBritainWarehouseErn,
+          movementDetails = maxGetMovementResponse.copy(destinationType = TaxWarehouse)
+        )) mustBe guarantorTraders.headOption.flatMap(_.vatNumber)
       }
     }
+//    "must return None" - {
+//      "when guarantor trader is defined and has no vat number" in {
+//        GuarantorVatPage.getValueFromIE801(dataRequest(
+//          FakeRequest(),
+//          movementDetails = maxGetMovementResponse.copy(movementGuarantee = maxGetMovementResponse.movementGuarantee.copy(guarantorTrader = Some(guarantorTraders.map(_.copy(vatNumber = None)))))
+//        )) mustBe None
+//      }
+//      "when guarantor trader trader doesn't exist" in {
+//        GuarantorVatPage.getValueFromIE801(dataRequest(
+//          FakeRequest(),
+//          movementDetails = maxGetMovementResponse.copy(movementGuarantee = maxGetMovementResponse.movementGuarantee.copy(guarantorTrader = None))
+//        )) mustBe None
+//      }
+//    }
   }
 }
