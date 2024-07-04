@@ -23,6 +23,7 @@ import models.sections.guarantor.GuarantorArranger.{Consignee, Consignor, GoodsO
 import models.{Mode, NormalMode}
 import navigation.GuarantorNavigator
 import pages.sections.guarantor.{GuarantorAddressPage, GuarantorArrangerPage, GuarantorNamePage, GuarantorVatPage}
+import pages.sections.info.DestinationTypePage
 import play.api.data.Form
 import play.api.i18n.MessagesApi
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
@@ -77,10 +78,12 @@ class GuarantorArrangerController @Inject()(
       )
     }
 
-  private def renderView(status: Status, form: Form[_], mode: Mode)(implicit request: DataRequest[_]): Result = {
-    status(view(
-      form = form,
-      mode = mode
-    ))
-  }
+  private def renderView(status: Status, form: Form[_], mode: Mode)(implicit request: DataRequest[_]): Result =
+    withAnswer(DestinationTypePage) { movementScenario =>
+      status(view(
+        form = form,
+        mode = mode,
+        movementScenario
+      ))
+    }
 }

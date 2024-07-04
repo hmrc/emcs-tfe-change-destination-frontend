@@ -116,4 +116,6 @@ class AppConfig @Inject()(servicesConfig: ServicesConfig, configuration: Configu
   def betaAllowListCheckingEnabled: Boolean = isEnabled(CheckBetaAllowList)
 
   def betaCheckServiceName: String = configuration.get[String]("beta.serviceName")
+
+  lazy val guarantorRequiredUrl = configuration.get[String]("urls.guarantorRequired")
 }

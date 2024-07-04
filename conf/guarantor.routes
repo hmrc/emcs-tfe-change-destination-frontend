@@ -1,5 +1,7 @@
 GET         /trader/:ern/movement/:arc/guarantor                              controllers.sections.guarantor.GuarantorIndexController.onPageLoad(ern: String, arc: String)
 
+GET         /trader/:ern/movement/:arc/guarantor/required                     controllers.sections.guarantor.GuarantorRequiredController.onPageLoad(ern: String, arc: String)
+
 GET         /trader/:ern/movement/:arc/guarantor/arranger                     controllers.sections.guarantor.GuarantorArrangerController.onPageLoad(ern: String, arc: String, mode: Mode = NormalMode)
 POST        /trader/:ern/movement/:arc/guarantor/arranger                     controllers.sections.guarantor.GuarantorArrangerController.onSubmit(ern: String, arc: String, mode: Mode = NormalMode)
 GET         /trader/:ern/movement/:arc/guarantor/arranger/change              controllers.sections.guarantor.GuarantorArrangerController.onPageLoad(ern: String, arc: String, mode: Mode = CheckMode)

@@ -14,20 +14,16 @@
  * limitations under the License.
  */
 
-package pages.sections.info
+package pages.sections.guarantor
 
 import models.requests.DataRequest
-import models.sections.info.movementScenario.MovementScenario
 import pages.QuestionPage
 import play.api.libs.json.JsPath
 
-case object DestinationTypePage extends QuestionPage[MovementScenario] {
-  override val toString: String = "destinationType"
-  override val path: JsPath = InfoSection.path \ toString
+case object GuarantorRequiredPage extends QuestionPage[Boolean] {
 
-  override def getValueFromIE801(implicit request: DataRequest[_]): Option[MovementScenario] =
-    Some(MovementScenario.getMovementScenarioFromMovement)
+  override val toString: String = "guarantorRequired"
+  override val path: JsPath = GuarantorSection.path \ toString
 
-  def isExport(implicit request: DataRequest[_]): Boolean =
-    request.userAnswers.get(this).exists(_.isExport)
+  override def getValueFromIE801(implicit request: DataRequest[_]): Option[Boolean] = None
 }

@@ -1504,3 +1504,10 @@ errors.validation.notificationBanner.8606.content = The consignee delivery place
 errors.validation.notificationBanner.8607.content = The consignee delivery place trader postcode must not start with ‘BT’ where the place of destination is to an excise warehouse in Great Britain.
 errors.validation.notificationBanner.8608.content = If the country code in the Administrative Reference Code is GB then the delivery place customs office must also start with GB.
 errors.validation.notificationBanner.8609.content = If the country code in the Administrative Reference Code is XI then the delivery place customs office must not start with GB.
+
+guarantorRequired.export.title = Your movement requires a new guarantor
+guarantorRequired.export.heading = Your movement requires a new guarantor
+guarantorRequired.export.p1 = This movement is now an export. The original consignee can no longer be the guarantor for this movement. You must give the details of a new guarantor.
+guarantorRequired.export.p2 = It is the consignor’s responsibility to make sure that a valid movement guarantee is in place. Movement guarantees are valid if lodged with HMRC and one of the businesses named on the guarantee has a suitable connection to that movement. For example, they are the consignor or the owner of the goods.
+guarantorRequired.findOutMore.link = Read more about financial security for movements of excise goods here
+guarantorRequired.enterDetails = Enter guarantor details

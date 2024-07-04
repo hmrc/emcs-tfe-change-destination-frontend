@@ -1,0 +1,69 @@
+@*
+ * Copyright 2023 HM Revenue & Customs
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *@
+
+@import models.requests.DataRequest
+@import uk.gov.hmrc.govukfrontend.views.html.components._
+@import viewmodels.LegendSize
+@import config.AppConfig
+
+
+@this(
+        layout: templates.Layout,
+        formHelper: FormWithCSRF,
+        govukErrorSummary: GovukErrorSummary,
+        govukInsetText : GovukInsetText,
+        govukRadios: GovukRadios,
+        govukButton: GovukButton,
+        h1: components.h1,
+        h2: components.h2,
+        p: components.p,
+        link: components.link,
+        continueOrExit: components.continueOrExit,
+        bullets: components.bullets,
+        appConfig: AppConfig
+)
+
+@(onwardRoute: Call)(implicit request: DataRequest[_], messages: Messages)
+
+@layout(pageTitle = titleNoForm(messages("guarantorRequired.export.title")), maybeShowActiveTrader = maybeShowActiveTrader(request)) {
+
+    @h1("guarantorRequired.export.heading", Some(messages("guarantor.subHeading")), "govuk-heading-l", hiddenContent = Some(messages("subHeading.hidden")))
+
+    @p()(Html(messages("guarantorRequired.export.p1")))
+
+    @p()(Html(messages("guarantorRequired.export.p2")))
+
+    @p() {
+        @link(
+            link = appConfig.guarantorRequiredUrl,
+            messageKey = "guarantorRequired.findOutMore.link",
+            id = Some("read-more"),
+            opensInNewTab = true,
+            withFullStop = true
+        )
+    }
+
+    @link(
+        link = onwardRoute.url,
+        messageKey = "guarantorRequired.enterDetails",
+        button = true,
+        id = Some("enter-details")
+    )
+}
+
+@{
+    //$COVERAGE-OFF$
+}

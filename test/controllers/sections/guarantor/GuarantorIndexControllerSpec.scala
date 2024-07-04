@@ -19,8 +19,8 @@ package controllers.sections.guarantor
 import base.SpecBase
 import controllers.actions.{FakeDataRetrievalAction, FakeMovementAction}
 import mocks.services.MockUserAnswersService
-import models.response.emcsTfe.GuarantorType.NoGuarantor
-import models.response.emcsTfe.MovementGuaranteeModel
+import models.response.emcsTfe.GuarantorType.{Consignee, NoGuarantor}
+import models.response.emcsTfe.{GetMovementResponse, MovementGuaranteeModel}
 import models.sections.guarantor.GuarantorArranger.Consignor
 import models.sections.info.movementScenario.MovementScenario.ExportWithCustomsDeclarationLodgedInTheUk
 import models.{NormalMode, UserAddress, UserAnswers}
@@ -34,9 +34,9 @@ import play.api.test.Helpers._
 
 class GuarantorIndexControllerSpec extends SpecBase with MockUserAnswersService {
 
-  class Fixture(optUserAnswers: Option[UserAnswers] = Some(emptyUserAnswers)) {
+  class Fixture(optUserAnswers: Option[UserAnswers] = Some(emptyUserAnswers), movementResponse: GetMovementResponse = maxGetMovementResponse) {
 
-    val request = FakeRequest(GET, controllers.sections.guarantor.routes.GuarantorIndexController.onPageLoad(testErn, testArc).url)
+    val request = FakeRequest(GET, routes.GuarantorIndexController.onPageLoad(testErn, testArc).url)
 
     lazy val testController = new GuarantorIndexController(
       mockUserAnswersService,
@@ -44,7 +44,7 @@ class GuarantorIndexControllerSpec extends SpecBase with MockUserAnswersService 
       fakeAuthAction,
       new FakeDataRetrievalAction(optUserAnswers, Some(testMinTraderKnownFacts)),
       dataRequiredAction,
-      new FakeMovementAction(maxGetMovementResponse.copy(movementGuarantee = MovementGuaranteeModel(NoGuarantor, None))),
+      new FakeMovementAction(movementResponse),
       fakeBetaAllowListAction,
       messagesControllerComponents
     )
@@ -64,20 +64,34 @@ class GuarantorIndexControllerSpec extends SpecBase with MockUserAnswersService 
         val result = testController.onPageLoad(testErn, testArc)(request)
 
         status(result) mustEqual SEE_OTHER
-        redirectLocation(result) mustBe Some(controllers.sections.guarantor.routes.GuarantorCheckAnswersController.onPageLoad(testErn, testArc).url)
+        redirectLocation(result) mustBe Some(routes.GuarantorCheckAnswersController.onPageLoad(testErn, testArc).url)
       }
     }
 
     "when there the section is not completed or needs review" - {
 
+      "when the destination type has changed to Export and the Guarantor was previously a Consignee" - {
+
+        "must redirect to the GuarantorRequired page" in new Fixture(
+          Some(emptyUserAnswers.set(DestinationTypePage, ExportWithCustomsDeclarationLodgedInTheUk)),
+          maxGetMovementResponse.copy(movementGuarantee = MovementGuaranteeModel(Consignee, None))
+        ) {
+          val result = testController.onPageLoad(testErn, testArc)(request)
+
+          status(result) mustEqual SEE_OTHER
+          redirectLocation(result) mustBe Some(routes.GuarantorRequiredController.onPageLoad(testErn, testArc).url)
+        }
+      }
+
+      //TODO: This logic will change in subsequent PRs to introduce a Review and CYA page
       "must redirect to the guarantor arranger controller" in new Fixture(
-        Some(emptyUserAnswers
-          .set(DestinationTypePage, ExportWithCustomsDeclarationLodgedInTheUk)
-        )) {
+        movementResponse = maxGetMovementResponse.copy(movementGuarantee = MovementGuaranteeModel(NoGuarantor, None))
+      ) {
+
         val result = testController.onPageLoad(testErn, testArc)(request)
 
         status(result) mustEqual SEE_OTHER
-        redirectLocation(result) mustBe Some(controllers.sections.guarantor.routes.GuarantorArrangerController.onPageLoad(testErn, testArc, NormalMode).url)
+        redirectLocation(result) mustBe Some(routes.GuarantorArrangerController.onPageLoad(testErn, testArc, NormalMode).url)
       }
     }
   }
