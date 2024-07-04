@@ -25,12 +25,14 @@ object CheckYourAnswersConsigneeMessages {
     val title: String = titleHelper(heading)
     val caption: String = "Consignee information"
     val ern: String = "Excise registration number (ERN)"
-    val traderName: String = "Trader name"
+    val traderName: String = "Business name"
     val address: String = "Address"
     val eori: String = "EORI number"
     val vat: String = "Identification number"
     val identificationProvided: String = "Identification provided"
     val exempt: String = "Exempted organisation details"
+    val identificationForTemporaryRegisteredConsignee = "Identification number for Temporary Registered Consignee"
+    val identificationForTemporaryCertifiedConsignee = "Identification number for Temporary Certified Consignee"
 
   }
 

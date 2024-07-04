@@ -22,13 +22,13 @@ object ConsigneeBusinessNameMessages {
 
   sealed trait ViewMessages extends BaseMessages { _: i18n =>
     val heading = "What is the consignee’s business name?"
-    val title = titleHelper(heading)
+    val title: String = titleHelper(heading)
     val errorRequired = "Enter the consignee business name"
     val errorLength = "Consignee business name must be 182 characters or less"
     val errorInvalid = "Consignee business name must not contain < and > and : and ;"
 
-    val cyaLabel: String = "Trader name"
-    val cyaChangeHidden: String = "consignee trader name"
+    val cyaLabel: String = "Business name"
+    val cyaChangeHidden: String = "consignee business name"
   }
 
   object English extends ViewMessages with BaseEnglish
