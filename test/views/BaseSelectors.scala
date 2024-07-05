@@ -28,6 +28,7 @@ trait BaseSelectors {
   val strong: Int => String = i => s"main span.govuk-\\!-font-weight-bold:nth-of-type($i)"
   val link: Int => String = i => s"main a:nth-of-type($i)"
   def bullet(i: Int, ul: Int = 1) = s"main ul.govuk-list--bullet:nth-of-type($ul) li:nth-of-type($i)"
+  val inset = ".govuk-inset-text"
   val hint: String = "main .govuk-hint"
   val button = "main .govuk-button"
   val secondaryButton = ".govuk-button--secondary"

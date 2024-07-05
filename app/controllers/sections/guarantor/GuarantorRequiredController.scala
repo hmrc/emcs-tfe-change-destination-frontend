@@ -42,6 +42,6 @@ class GuarantorRequiredController @Inject()(
 
   def onPageLoad(ern: String, arc: String): Action[AnyContent] =
     authorisedDataRequestWithCachedMovement(ern, arc) { implicit request =>
-      Ok(view(routes.GuarantorArrangerController.onPageLoad(ern, arc, NormalMode)))
+      Ok(view(routes.GuarantorArrangerController.onPageLoad(ern, arc, NormalMode), true))
     }
 }

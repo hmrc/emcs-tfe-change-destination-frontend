@@ -55,7 +55,7 @@ class GuarantorRequiredControllerSpec extends SpecBase with MockUserAnswersServi
     val result = testController.onPageLoad(testErn, testArc)(request)
 
     status(result) mustEqual OK
-    contentAsString(result) mustEqual view(routes.GuarantorArrangerController.onPageLoad(testErn, testArc, NormalMode)).toString
+    contentAsString(result) mustEqual view(routes.GuarantorArrangerController.onPageLoad(testErn, testArc, NormalMode), true).toString
   }
 
   "must redirect to Journey Recovery for a GET if no existing data is found" in new Fixture(None) {
