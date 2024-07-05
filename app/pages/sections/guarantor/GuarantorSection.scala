@@ -18,11 +18,9 @@ package pages.sections.guarantor
 
 import models.Enumerable
 import models.requests.DataRequest
+import models.response.emcsTfe.GuarantorType
 import models.response.emcsTfe.GuarantorType.NoGuarantor
 import models.sections.guarantor.GuarantorArranger.{Consignee, Consignor}
-import models.sections.info.movementScenario.DestinationType.Export
-import models.sections.info.movementScenario.MovementScenario.ExportWithCustomsDeclarationLodgedInTheUk
-import models.sections.info.movementScenario.MovementType.UkToEu
 import models.sections.journeyType.HowMovementTransported.FixedTransportInstallations
 import pages.sections.Section
 import pages.sections.info.DestinationTypePage
@@ -32,6 +30,9 @@ import viewmodels.taskList.{Completed, InProgress, NotStarted, TaskListStatus}
 
 case object GuarantorSection extends Section[JsObject] with Enumerable.Implicits {
   override val path: JsPath = JsPath \ "guarantor"
+
+  def requiresNewGuarantorDetails(implicit request: DataRequest[_]): Boolean =
+    request.movementDetails.movementGuarantee.guarantorTypeCode == GuarantorType.Consignee && DestinationTypePage.isExport
 
   def requiresGuarantorToBeProvided(implicit request: DataRequest[_]): Boolean = {
 

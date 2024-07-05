@@ -204,8 +204,7 @@ trait GetMovementResponseFixtures extends BaseFixtures {
         density = Some(7),
         commercialDescription = Some("BodyEadEsadCommercialDescription1"),
         brandNameOfProduct = Some("BodyEadEsadBrandNameOfProducts1"),
-        maturationAge = Some("BodyEadEsadMaturationPeriodOrAgeOfProducts1"),
-        independentSmallProducersDeclaration = Some("BodyEadEsadIndependentSmallProducersDeclaration1")
+        maturationAge = Some("BodyEadEsadMaturationPeriodOrAgeOfProducts1")
       ),
       MovementItem(
         itemUniqueReference = 2,
@@ -223,8 +222,7 @@ trait GetMovementResponseFixtures extends BaseFixtures {
         density = Some(8),
         commercialDescription = Some("BodyEadEsadCommercialDescription2"),
         brandNameOfProduct = Some("BodyEadEsadBrandNameOfProducts2"),
-        maturationAge = Some("BodyEadEsadMaturationPeriodOrAgeOfProducts2"),
-        independentSmallProducersDeclaration = Some("BodyEadEsadIndependentSmallProducersDeclaration2")
+        maturationAge = Some("BodyEadEsadMaturationPeriodOrAgeOfProducts2")
       )
     ),
     transportDetails = Seq(

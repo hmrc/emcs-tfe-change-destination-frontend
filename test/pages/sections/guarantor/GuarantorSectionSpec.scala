@@ -20,7 +20,7 @@ import base.SpecBase
 import models.UserAddress
 import models.requests.DataRequest
 import models.response.emcsTfe.GuarantorType.NoGuarantor
-import models.response.emcsTfe.{MovementGuaranteeModel, MovementItem}
+import models.response.emcsTfe.MovementGuaranteeModel
 import models.sections.ReviewAnswer.{ChangeAnswers, KeepAnswers}
 import models.sections.guarantor.GuarantorArranger.{Consignee, Consignor, GoodsOwner, Transporter}
 import models.sections.info.movementScenario.MovementScenario.{ExportWithCustomsDeclarationLodgedInTheUk, UkTaxWarehouse}
@@ -275,7 +275,7 @@ class GuarantorSectionSpec extends SpecBase {
         }
       }
 
-      "when the section has been reviews and the user has selected to keep the same details" - {
+      "when the section has been reviewed and the user has selected to keep the same details" - {
         "must return true" - {
           implicit val dr: DataRequest[_] = dataRequest(
             request = FakeRequest(),

@@ -19,7 +19,7 @@ package viewmodels.checkAnswers.sections.guarantor
 import base.SpecBase
 import fixtures.messages.sections.guarantor.GuarantorArrangerMessages.English
 import models.requests.DataRequest
-import models.response.emcsTfe.GuarantorType.NoGuarantor
+import models.response.emcsTfe.GuarantorType._
 import models.response.emcsTfe.MovementGuaranteeModel
 import models.sections.guarantor.GuarantorArranger
 import models.sections.guarantor.GuarantorArranger.{GoodsOwner, Transporter}
@@ -79,7 +79,8 @@ class GuarantorCheckAnswersHelperSpec extends SpecBase with MockFactory {
           FakeRequest(),
           emptyUserAnswers
             .set(DestinationTypePage, ExportWithCustomsDeclarationLodgedInTheUk),
-          movementDetails = maxGetMovementResponse.copy(movementGuarantee = MovementGuaranteeModel(NoGuarantor, None))
+          testGreatBritainWarehouseErn,
+          movementDetails = maxGetMovementResponse.copy(movementGuarantee = MovementGuaranteeModel(Consignee, None))
         )
         helper.summaryList()(request, msgs).rows.length mustBe 1
       }

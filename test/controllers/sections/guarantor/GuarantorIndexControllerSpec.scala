@@ -21,12 +21,13 @@ import controllers.actions.{FakeDataRetrievalAction, FakeMovementAction}
 import mocks.services.MockUserAnswersService
 import models.response.emcsTfe.GuarantorType.{Consignee, NoGuarantor}
 import models.response.emcsTfe.{GetMovementResponse, MovementGuaranteeModel}
+import models.sections.ReviewAnswer.ChangeAnswers
 import models.sections.guarantor.GuarantorArranger.Consignor
 import models.sections.info.movementScenario.MovementScenario.ExportWithCustomsDeclarationLodgedInTheUk
 import models.{NormalMode, UserAddress, UserAnswers}
 import navigation.FakeNavigators.FakeGuarantorNavigator
 import pages.sections.consignor.ConsignorAddressPage
-import pages.sections.guarantor.GuarantorArrangerPage
+import pages.sections.guarantor.{GuarantorArrangerPage, GuarantorReviewPage}
 import pages.sections.info.DestinationTypePage
 import play.api.http.Status.SEE_OTHER
 import play.api.test.FakeRequest
@@ -56,6 +57,7 @@ class GuarantorIndexControllerSpec extends SpecBase with MockUserAnswersService 
     "when GuarantorSection.isCompleted" - {
       "must redirect to the CYA controller" in new Fixture(
         Some(emptyUserAnswers
+          .set(GuarantorReviewPage, ChangeAnswers)
           .set(DestinationTypePage, ExportWithCustomsDeclarationLodgedInTheUk)
           .set(GuarantorArrangerPage, Consignor)
           .set(ConsignorAddressPage, UserAddress(None, "", "", ""))
@@ -70,6 +72,22 @@ class GuarantorIndexControllerSpec extends SpecBase with MockUserAnswersService 
 
     "when there the section is not completed or needs review" - {
 
+      "when it needs review" - {
+
+        "must redirect to the GuarantorReview page" in new Fixture(
+          Some(emptyUserAnswers
+            .set(DestinationTypePage, ExportWithCustomsDeclarationLodgedInTheUk)
+            .set(GuarantorArrangerPage, Consignor)
+            .set(ConsignorAddressPage, UserAddress(None, "", "", ""))
+          )) {
+
+          val result = testController.onPageLoad(testErn, testArc)(request)
+
+          status(result) mustEqual SEE_OTHER
+          redirectLocation(result) mustBe Some(testOnly.controllers.routes.UnderConstructionController.onPageLoad().url)
+        }
+      }
+
       "when the destination type has changed to Export and the Guarantor was previously a Consignee" - {
 
         "must redirect to the GuarantorRequired page" in new Fixture(
@@ -83,8 +101,7 @@ class GuarantorIndexControllerSpec extends SpecBase with MockUserAnswersService 
         }
       }
 
-      //TODO: This logic will change in subsequent PRs to introduce a Review and CYA page
-      "must redirect to the guarantor arranger controller" in new Fixture(
+      "when in progress must redirect to the guarantor arranger controller" in new Fixture(
         movementResponse = maxGetMovementResponse.copy(movementGuarantee = MovementGuaranteeModel(NoGuarantor, None))
       ) {
 

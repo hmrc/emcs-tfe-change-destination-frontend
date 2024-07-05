@@ -33,8 +33,7 @@ case class MovementItem(itemUniqueReference: Int,
                         density: Option[BigDecimal],
                         commercialDescription: Option[String],
                         brandNameOfProduct: Option[String],
-                        maturationAge: Option[String],
-                        independentSmallProducersDeclaration: Option[String]) {
+                        maturationAge: Option[String]) {
 
   val isBeerOrWine: Boolean = productCode.startsWith("B") || productCode.startsWith("W")
   val isEnergy: Boolean = productCode.startsWith("E")

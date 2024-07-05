@@ -172,6 +172,7 @@ trait SubmitChangeDestinationFixtures extends GetMovementResponseFixtures { _: B
     .set(FirstTransporterReviewPage, ChangeAnswers)
     .set(TransportUnitsReviewPage, ChangeAnswers)
     .set(TransportArrangerReviewPage, ChangeAnswers)
+    .set(GuarantorReviewPage, ChangeAnswers)
     // Movement
     .set(InvoiceDetailsPage, invoiceDetailsModel)
     // consignee

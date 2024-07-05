@@ -20,7 +20,7 @@ import base.SpecBase
 import controllers.actions.{FakeDataRetrievalAction, FakeMovementAction}
 import forms.sections.guarantor.GuarantorNameFormProvider
 import mocks.services.MockUserAnswersService
-import models.response.emcsTfe.{GuarantorType, MovementGuaranteeModel}
+import models.response.emcsTfe.{GetMovementResponse, GuarantorType, MovementGuaranteeModel}
 import models.sections.guarantor.GuarantorArranger.{Consignee, GoodsOwner}
 import models.sections.info.movementScenario.MovementScenario.ExportWithCustomsDeclarationLodgedInTheUk
 import models.{NormalMode, UserAnswers}
@@ -42,7 +42,10 @@ class GuarantorNameControllerSpec extends SpecBase with MockUserAnswersService {
 
   lazy val guarantorNameRoute: String = controllers.sections.guarantor.routes.GuarantorNameController.onPageLoad(testErn, testArc, NormalMode).url
 
-  class Fixture(optUserAnswers: Option[UserAnswers] = Some(emptyUserAnswers)) {
+  class Fixture(
+                 optUserAnswers: Option[UserAnswers] = Some(emptyUserAnswers),
+                 movementResponse: GetMovementResponse = maxGetMovementResponse.copy(movementGuarantee = MovementGuaranteeModel(GuarantorType.NoGuarantor, None))
+               ) {
     val request = FakeRequest(GET, guarantorNameRoute)
 
     lazy val testController = new GuarantorNameController(
@@ -52,7 +55,7 @@ class GuarantorNameControllerSpec extends SpecBase with MockUserAnswersService {
       fakeAuthAction,
       new FakeDataRetrievalAction(optUserAnswers, Some(testMinTraderKnownFacts)),
       dataRequiredAction,
-      new FakeMovementAction(maxGetMovementResponse.copy(movementGuarantee = MovementGuaranteeModel(GuarantorType.NoGuarantor, None))),
+      new FakeMovementAction(movementResponse),
       fakeBetaAllowListAction,
       formProvider,
       messagesControllerComponents,
@@ -107,14 +110,15 @@ class GuarantorNameControllerSpec extends SpecBase with MockUserAnswersService {
       redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url
     }
 
-    "must redirect to the guarantor index controller for a GET if no guarantor arranger value is found (and guarantor should be provided)" in new Fixture(
-      Some(emptyUserAnswers.set(DestinationTypePage, ExportWithCustomsDeclarationLodgedInTheUk))
+    "must redirect to the guarantor index controller for a GET if no guarantor arranger value is found (and new guarantor should be provided)" in new Fixture(
+      Some(emptyUserAnswers.set(DestinationTypePage, ExportWithCustomsDeclarationLodgedInTheUk)),
+      maxGetMovementResponse.copy(movementGuarantee = MovementGuaranteeModel(GuarantorType.Consignee, None))
     ) {
-      val result = testController.onPageLoad(testErn, testArc, NormalMode)(request)
+      val result = testController.onPageLoad(testGreatBritainWarehouseErn, testArc, NormalMode)(request)
 
       status(result) mustEqual SEE_OTHER
       redirectLocation(result).value mustEqual
-        controllers.sections.guarantor.routes.GuarantorIndexController.onPageLoad(testErn, testArc).url
+        controllers.sections.guarantor.routes.GuarantorIndexController.onPageLoad(testGreatBritainWarehouseErn, testArc).url
     }
 
     "must redirect to CYA for a GET if the guarantor arranger value is invalid for this controller/page" in new Fixture(

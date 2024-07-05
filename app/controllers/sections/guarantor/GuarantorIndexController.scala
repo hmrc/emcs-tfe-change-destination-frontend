@@ -41,15 +41,15 @@ class GuarantorIndexController @Inject()(
   def onPageLoad(ern: String, arc: String): Action[AnyContent] =
     authorisedDataRequestWithUpToDateMovement(ern, arc) { implicit request =>
       Redirect(
-        if (GuarantorSection.isCompleted) {
+        if(GuarantorSection.requiresNewGuarantorDetails) {
+          routes.GuarantorRequiredController.onPageLoad(ern, arc)
+        } else if(GuarantorSection.needsReview) {
+          //TODO: Route to the Review page
+          testOnly.controllers.routes.UnderConstructionController.onPageLoad()
+        } else if (GuarantorSection.isCompleted) {
           routes.GuarantorCheckAnswersController.onPageLoad(ern, arc)
         } else {
-          request.movementDetails.movementGuarantee.guarantorTypeCode match {
-            case Consignee if DestinationTypePage.isExport =>
-              routes.GuarantorRequiredController.onPageLoad(ern, arc)
-            case _ =>
-              routes.GuarantorArrangerController.onPageLoad(ern, arc, NormalMode)
-          }
+          routes.GuarantorArrangerController.onPageLoad(ern, arc, NormalMode)
         }
       )
     }

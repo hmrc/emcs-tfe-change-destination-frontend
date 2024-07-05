@@ -30,4 +30,6 @@ trait QuestionPage[+A] extends Page with Gettable[A] with Settable[A] {
       case Some(value) if idx.position >= 0 && idx.position < value => valueIfIndexIsValid
       case _ => None
     }
+
+  def value[T >: A](implicit request: DataRequest[_], reads: Reads[T]): Option[T] = request.userAnswers.get[T](this)
 }

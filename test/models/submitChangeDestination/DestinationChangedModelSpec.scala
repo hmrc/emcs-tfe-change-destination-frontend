@@ -20,8 +20,11 @@ import base.SpecBase
 import fixtures.SubmitChangeDestinationFixtures
 import models.requests.DataRequest
 import models.response.emcsTfe.GuarantorType.NoGuarantor
+import models.sections.ReviewAnswer.KeepAnswers
 import models.sections.info.ChangeType.Destination
+import models.sections.info.movementScenario.MovementScenario.UkTaxWarehouse
 import pages.sections.destination.{DestinationAddressPage, DestinationBusinessNamePage, DestinationConsigneeDetailsPage, DestinationWarehouseExcisePage}
+import pages.sections.guarantor.GuarantorReviewPage
 import pages.sections.info.{ChangeTypePage, DestinationTypePage}
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
@@ -56,8 +59,10 @@ class DestinationChangedModelSpec extends SpecBase with SubmitChangeDestinationF
             .set(DestinationWarehouseExcisePage, testGreatBritainErn)
             .set(DestinationConsigneeDetailsPage, false)
             .set(DestinationBusinessNamePage, "destination name")
-            .set(DestinationAddressPage, testUserAddress.copy(street = "destination street")),
-          ern = testGreatBritainErn
+            .set(DestinationAddressPage, testUserAddress.copy(street = "destination street"))
+            .set(DestinationTypePage, UkTaxWarehouse.GB)
+            .set(GuarantorReviewPage, KeepAnswers),
+          ern = testGreatBritainWarehouseErn
         )
 
         DestinationChangedModel.apply mustBe minDestinationChanged
