@@ -17,15 +17,20 @@
 package controllers.sections.guarantor
 
 import controllers.actions._
-import models.NormalMode
+import forms.sections.guarantor.GuarantorRequiredFormProvider
+import models.requests.DataRequest
+import models.{Mode, NormalMode}
 import navigation.GuarantorNavigator
-import pages.sections.guarantor.GuarantorRequiredPage
+import pages.sections.guarantor.{GuarantorRequiredPage, GuarantorSection}
+import pages.sections.info.DestinationTypePage
+import play.api.data.Form
 import play.api.i18n.MessagesApi
-import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
+import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
 import services.UserAnswersService
-import views.html.sections.guarantor.GuarantorRequiredView
+import views.html.sections.guarantor.{GuarantorRequiredQuestionView, GuarantorRequiredView}
 
 import javax.inject.Inject
+import scala.concurrent.Future
 
 class GuarantorRequiredController @Inject()(
                                              override val messagesApi: MessagesApi,
@@ -37,11 +42,55 @@ class GuarantorRequiredController @Inject()(
                                              override val withMovement: MovementAction,
                                              override val betaAllowList: BetaAllowListAction,
                                              val controllerComponents: MessagesControllerComponents,
-                                             view: GuarantorRequiredView
+                                             view: GuarantorRequiredView,
+                                             formProvider: GuarantorRequiredFormProvider,
+                                             questionView: GuarantorRequiredQuestionView
                                            ) extends GuarantorBaseController with AuthActionHelper {
 
-  def onPageLoad(ern: String, arc: String): Action[AnyContent] =
-    authorisedDataRequestWithCachedMovement(ern, arc) { implicit request =>
-      Ok(view(routes.GuarantorArrangerController.onPageLoad(ern, arc, NormalMode), true))
+  def onPageLoad(ern: String, arc: String, mode: Mode): Action[AnyContent] =
+    authorisedDataRequestWithCachedMovementAsync(ern, arc) { implicit request =>
+      renderView(Ok, formProvider(), mode)
+    }
+
+  def onSubmit(ern: String, draftId: String, mode: Mode): Action[AnyContent] =
+    authorisedDataRequestWithCachedMovementAsync(ern, draftId) { implicit request =>
+      formProvider().bindFromRequest().fold(
+        renderView(BadRequest, _, mode),
+        value => if (request.userAnswers.get(GuarantorRequiredPage).contains(value)) {
+          Future(Redirect(navigator.nextPage(GuarantorRequiredPage, mode, request.userAnswers)))
+        } else {
+
+          val updatedUserAnswers = cleanseUserAnswersIfValueHasChanged(GuarantorRequiredPage, value, request.userAnswers.remove(GuarantorSection))
+
+          saveAndRedirect(
+            page = GuarantorRequiredPage,
+            answer = value,
+            currentAnswers = updatedUserAnswers,
+            mode = NormalMode
+          )
+        }
+      )
+    }
+
+  private def renderView(status: Status, form: Form[_], mode: Mode)
+                        (implicit request: DataRequest[_]): Future[Result] = {
+    if (GuarantorSection.requiresGuarantorToBeProvided) {
+      Future(status(view(
+        onwardRoute = routes.GuarantorRequiredController.enterGuarantorDetails(request.ern, request.arc),
+        isUkToUk = DestinationTypePage.isUktoUkMovement
+      )))
+    } else {
+      Future(status(questionView(form, routes.GuarantorRequiredController.onSubmit(request.ern, request.arc, mode))))
+    }
+  }
+
+
+  def enterGuarantorDetails(ern: String, draftId: String, mode: Mode): Action[AnyContent] =
+    authorisedDataRequestWithCachedMovementAsync(ern, draftId) { implicit request =>
+      val updatedAnswers = request.userAnswers.remove(GuarantorRequiredPage)
+
+      userAnswersService.set(updatedAnswers).map(result => {
+        Redirect(navigator.nextPage(GuarantorRequiredPage, mode, result))
+      })
     }
 }

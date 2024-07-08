@@ -31,29 +31,20 @@ import viewmodels.taskList.{Completed, InProgress, NotStarted, TaskListStatus}
 case object GuarantorSection extends Section[JsObject] with Enumerable.Implicits {
   override val path: JsPath = JsPath \ "guarantor"
 
+  def requiresGuarantorToBeProvided(implicit request: DataRequest[_]): Boolean =
+    requiresNewGuarantorDetails || !(ukNoGuarantorRequired || euNoGuarantorRequired)
+
   def requiresNewGuarantorDetails(implicit request: DataRequest[_]): Boolean =
     request.movementDetails.movementGuarantee.guarantorTypeCode == GuarantorType.Consignee && DestinationTypePage.isExport
 
-  def requiresGuarantorToBeProvided(implicit request: DataRequest[_]): Boolean = {
+  def euNoGuarantorRequired(implicit request: DataRequest[_]): Boolean =
+    request.isNorthernIrelandErn &&
+      DestinationTypePage.isUktoEuMovement &&
+      request.userAnswers.get(HowMovementTransportedPage).contains(FixedTransportInstallations) &&
+      request.movementDetails.items.forall(_.isEnergy)
 
-    val euNoGuarantorRequired =
-      request.isNorthernIrelandErn &&
-        DestinationTypePage.isUktoEuMovement &&
-        request.userAnswers.get(HowMovementTransportedPage).contains(FixedTransportInstallations) &&
-        request.movementDetails.items.forall(_.isEnergy)
-
-    val ukNoGuarantorRequired =
-      DestinationTypePage.isUktoUkMovement && request.movementDetails.items.forall(_.isBeerOrWine)
-
-    println("==================")
-    println("euNoGuarantorRequired -> " + euNoGuarantorRequired)
-    println("ukNoGuarantorRequired -> " + ukNoGuarantorRequired)
-    println("DestinationTypePage.isUktoUkMovement -> " + DestinationTypePage.isUktoUkMovement)
-    println("request.movementDetails.items.forall(_.isBeerOrWine) -> " + request.movementDetails.items.forall(_.isBeerOrWine))
-    println("required guarantor -> " + !(ukNoGuarantorRequired || euNoGuarantorRequired))
-    println("==================")
-    !(ukNoGuarantorRequired || euNoGuarantorRequired)
-  }
+  def ukNoGuarantorRequired(implicit request: DataRequest[_]): Boolean =
+    DestinationTypePage.isUktoUkMovement && request.movementDetails.items.forall(_.isBeerOrWine)
 
   //If this movement now requires a guarantor, and the original movement doesn't have one, then it's not possible to have a Review status.
   private def reviewGuard(f: => TaskListStatus)(implicit request: DataRequest[_]): TaskListStatus =

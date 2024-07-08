@@ -42,10 +42,10 @@ class GuarantorRequiredViewSpec extends SpecBase with ViewBehaviours {
     implicit val doc: Document = Jsoup.parse(view(testOnwardRoute, true).toString())
 
     behave like pageWithExpectedElementsAndMessages(Seq(
-      Selectors.title -> English.titleIsUkToUk,
-      Selectors.h1 -> English.headingIsUkToUk,
-      Selectors.p(1) -> English.p1IsUkToUk,
-      Selectors.p(2) -> English.p2,
+      Selectors.title -> English.titleRequiredUkToUk,
+      Selectors.h1 -> English.headingRequiredUkToUk,
+      Selectors.p(1) -> English.p1RequiredUkToUk,
+      Selectors.p(2) -> English.p2Required,
       Selectors.link(1) -> English.findOutMore,
       Selectors.button -> English.enterDetails
     ))
@@ -63,10 +63,10 @@ class GuarantorRequiredViewSpec extends SpecBase with ViewBehaviours {
       implicit val doc: Document = Jsoup.parse(view(testOnwardRoute, false).toString())
 
       behave like pageWithExpectedElementsAndMessages(Seq(
-        Selectors.title -> English.titleIsNiToEu,
-        Selectors.h1 -> English.headingIsNiToEu,
-        Selectors.p(1) -> English.p1IsNiToEu,
-        Selectors.p(2) -> English.p2,
+        Selectors.title -> English.titleRequiredNiToEu,
+        Selectors.h1 -> English.headingRequiredNiToEu,
+        Selectors.p(1) -> English.p1RequiredNiToEu,
+        Selectors.p(2) -> English.p2Required,
         Selectors.link(1) -> English.findOutMore,
         Selectors.inset -> English.inset,
         Selectors.button -> English.enterDetails

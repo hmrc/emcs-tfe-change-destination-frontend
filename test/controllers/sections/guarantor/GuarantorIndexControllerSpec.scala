@@ -97,7 +97,7 @@ class GuarantorIndexControllerSpec extends SpecBase with MockUserAnswersService 
           val result = testController.onPageLoad(testErn, testArc)(request)
 
           status(result) mustEqual SEE_OTHER
-          redirectLocation(result) mustBe Some(routes.GuarantorRequiredController.onPageLoad(testErn, testArc).url)
+          redirectLocation(result) mustBe Some(routes.GuarantorRequiredController.onPageLoad(testErn, testArc, NormalMode).url)
         }
       }
 

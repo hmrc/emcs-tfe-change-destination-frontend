@@ -18,17 +18,20 @@ package controllers.sections.guarantor
 
 import base.SpecBase
 import controllers.actions.{FakeDataRetrievalAction, FakeMovementAction}
+import forms.sections.guarantor.GuarantorRequiredFormProvider
 import mocks.services.MockUserAnswersService
 import models.{NormalMode, UserAnswers}
 import navigation.FakeNavigators.FakeGuarantorNavigator
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import views.html.sections.guarantor.GuarantorRequiredView
+import views.html.sections.guarantor.{GuarantorRequiredQuestionView, GuarantorRequiredView}
 
 class GuarantorRequiredControllerSpec extends SpecBase with MockUserAnswersService {
 
   lazy val view: GuarantorRequiredView = app.injector.instanceOf[GuarantorRequiredView]
-  lazy val guarantorRequiredRoute: String = routes.GuarantorRequiredController.onPageLoad(testErn, testArc).url
+  lazy val questionView: GuarantorRequiredQuestionView = app.injector.instanceOf[GuarantorRequiredQuestionView]
+  lazy val formProvider: GuarantorRequiredFormProvider = app.injector.instanceOf[GuarantorRequiredFormProvider]
+  lazy val guarantorRequiredRoute: String = routes.GuarantorRequiredController.onPageLoad(testErn, testArc, NormalMode).url
 
   class Fixture(optUserAnswers: Option[UserAnswers] = Some(emptyUserAnswers)) {
 
@@ -37,22 +40,24 @@ class GuarantorRequiredControllerSpec extends SpecBase with MockUserAnswersServi
     implicit val msgs = messages(request)
 
     lazy val testController = new GuarantorRequiredController(
-      messagesApi,
-      mockUserAnswersService,
-      new FakeGuarantorNavigator(testOnwardRoute),
-      fakeAuthAction,
-      new FakeDataRetrievalAction(optUserAnswers, Some(testMinTraderKnownFacts)),
-      dataRequiredAction,
-      new FakeMovementAction(maxGetMovementResponse),
-      fakeBetaAllowListAction,
-      messagesControllerComponents,
-      view
+      messagesApi = messagesApi,
+      userAnswersService = mockUserAnswersService,
+      navigator = new FakeGuarantorNavigator(testOnwardRoute),
+      auth = fakeAuthAction,
+      getData = new FakeDataRetrievalAction(optUserAnswers, Some(testMinTraderKnownFacts)),
+      requireData = dataRequiredAction,
+      withMovement = new FakeMovementAction(maxGetMovementResponse),
+      betaAllowList = fakeBetaAllowListAction,
+      controllerComponents = messagesControllerComponents,
+      formProvider = formProvider,
+      view = view,
+      questionView = questionView
     )
   }
 
   "must return OK and the correct view for a GET" in new Fixture() {
 
-    val result = testController.onPageLoad(testErn, testArc)(request)
+    val result = testController.onPageLoad(testErn, testArc, NormalMode)(request)
 
     status(result) mustEqual OK
     contentAsString(result) mustEqual view(routes.GuarantorArrangerController.onPageLoad(testErn, testArc, NormalMode), true).toString
@@ -60,7 +65,7 @@ class GuarantorRequiredControllerSpec extends SpecBase with MockUserAnswersServi
 
   "must redirect to Journey Recovery for a GET if no existing data is found" in new Fixture(None) {
 
-    val result = testController.onPageLoad(testErn, testArc)(request)
+    val result = testController.onPageLoad(testErn, testArc, NormalMode)(request)
 
     status(result) mustEqual SEE_OTHER
     redirectLocation(result).value mustEqual controllers.routes.JourneyRecoveryController.onPageLoad().url

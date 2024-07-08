@@ -34,8 +34,11 @@ class GuarantorSectionSpec extends SpecBase {
     "when the original movement has no guarantor" - {
 
       "when the movement now requires a guarantor" - {
+
         "must return true" - {
+
           "when Consignor is selected" in {
+
             implicit val dr: DataRequest[_] = dataRequest(
               request = FakeRequest(),
               answers = emptyUserAnswers
@@ -46,7 +49,9 @@ class GuarantorSectionSpec extends SpecBase {
             )
             GuarantorSection.isCompleted mustBe true
           }
+
           "when Consignee is selected (GB to GB, spirits, requires guarantor)" in {
+
             implicit val dr: DataRequest[_] = dataRequest(
               request = FakeRequest(),
               answers = emptyUserAnswers
@@ -60,8 +65,10 @@ class GuarantorSectionSpec extends SpecBase {
             )
             GuarantorSection.isCompleted mustBe true
           }
+
           Seq(GoodsOwner, Transporter) foreach {
             arranger =>
+
               s"when another option is selected and the rest of the Guarantor section is completed - ${arranger.getClass.getSimpleName.stripSuffix("$")}" in {
                 implicit val dr: DataRequest[_] = dataRequest(
                   request = FakeRequest(),
@@ -80,7 +87,9 @@ class GuarantorSectionSpec extends SpecBase {
         }
 
         "must return false" - {
+
           "when guarantor no answers exist" in {
+
             implicit val dr: DataRequest[_] = dataRequest(
               request = FakeRequest(),
               answers = emptyUserAnswers.set(DestinationTypePage, ExportWithCustomsDeclarationLodgedInTheUk),
@@ -89,8 +98,10 @@ class GuarantorSectionSpec extends SpecBase {
             )
             GuarantorSection.isCompleted mustBe false
           }
+
           Seq(GoodsOwner, Transporter) foreach {
             arranger =>
+
               s"when another option is selected and the rest of the Guarantor section is not completed - ${arranger.getClass.getSimpleName.stripSuffix("$")}" in {
                 implicit val dr: DataRequest[_] = dataRequest(FakeRequest(),
                   emptyUserAnswers
@@ -108,7 +119,9 @@ class GuarantorSectionSpec extends SpecBase {
       "when the movement does not mandate a guarantor" - {
 
         "when the section has been reviewed and user has selected to change details" - {
+
           "must return true" - {
+
             "when Consignor is selected" in {
               implicit val dr: DataRequest[_] = dataRequest(
                 request = FakeRequest(),
@@ -121,6 +134,7 @@ class GuarantorSectionSpec extends SpecBase {
               )
               GuarantorSection.isCompleted mustBe true
             }
+
             "when Consignee is selected" in {
               implicit val dr: DataRequest[_] = dataRequest(
                 request = FakeRequest(),
@@ -133,8 +147,10 @@ class GuarantorSectionSpec extends SpecBase {
               )
               GuarantorSection.isCompleted mustBe true
             }
+
             Seq(GoodsOwner, Transporter) foreach {
               arranger =>
+
                 s"when another option is selected and the rest of the Guarantor section is completed - ${arranger.getClass.getSimpleName.stripSuffix("$")}" in {
                   implicit val dr: DataRequest[_] = dataRequest(
                     request = FakeRequest(),
@@ -154,7 +170,9 @@ class GuarantorSectionSpec extends SpecBase {
           }
 
           "must return false" - {
+
             "when guarantor no answers exist" in {
+
               implicit val dr: DataRequest[_] = dataRequest(
                 request = FakeRequest(),
                 answers = emptyUserAnswers
@@ -165,8 +183,10 @@ class GuarantorSectionSpec extends SpecBase {
               )
               GuarantorSection.isCompleted mustBe false
             }
+
             Seq(GoodsOwner, Transporter) foreach {
               arranger =>
+
                 s"when another option is selected and the rest of the Guarantor section is not completed - ${arranger.getClass.getSimpleName.stripSuffix("$")}" in {
                   implicit val dr: DataRequest[_] = dataRequest(FakeRequest(),
                     emptyUserAnswers
@@ -183,8 +203,10 @@ class GuarantorSectionSpec extends SpecBase {
           }
         }
 
-        "when the section has been reviews and the user has selected to keep the same details" - {
-          "must return true" - {
+        "when the section has been reviewed and the user has selected to keep the same details" - {
+
+          "must return true" in {
+
             implicit val dr: DataRequest[_] = dataRequest(
               request = FakeRequest(),
               answers = emptyUserAnswers
@@ -193,6 +215,7 @@ class GuarantorSectionSpec extends SpecBase {
               ern = testGreatBritainWarehouseErn,
               movementDetails = maxGetMovementResponse.copy(movementGuarantee = MovementGuaranteeModel(NoGuarantor, None))
             )
+
             GuarantorSection.isCompleted mustBe true
           }
         }
@@ -202,8 +225,11 @@ class GuarantorSectionSpec extends SpecBase {
     "when the original movement does have a guarantor already" - {
 
       "when the section has been reviewed and user has selected to change details" - {
+
         "must return true" - {
+
           "when Consignor is selected" in {
+
             implicit val dr: DataRequest[_] = dataRequest(
               request = FakeRequest(),
               answers = emptyUserAnswers
@@ -215,7 +241,9 @@ class GuarantorSectionSpec extends SpecBase {
             )
             GuarantorSection.isCompleted mustBe true
           }
+
           "when Consignee is selected" in {
+
             implicit val dr: DataRequest[_] = dataRequest(
               request = FakeRequest(),
               answers = emptyUserAnswers
@@ -227,8 +255,10 @@ class GuarantorSectionSpec extends SpecBase {
             )
             GuarantorSection.isCompleted mustBe true
           }
+
           Seq(GoodsOwner, Transporter) foreach {
             arranger =>
+
               s"when another option is selected and the rest of the Guarantor section is completed - ${arranger.getClass.getSimpleName.stripSuffix("$")}" in {
                 implicit val dr: DataRequest[_] = dataRequest(
                   request = FakeRequest(),
@@ -248,7 +278,9 @@ class GuarantorSectionSpec extends SpecBase {
         }
 
         "must return true (from IE801 values)" - {
+
           "when no changed guarantor answers exist" in {
+
             implicit val dr: DataRequest[_] = dataRequest(
               request = FakeRequest(),
               answers = emptyUserAnswers
@@ -259,24 +291,28 @@ class GuarantorSectionSpec extends SpecBase {
             )
             GuarantorSection.isCompleted mustBe true
           }
-          Seq(GoodsOwner, Transporter) foreach {
-            arranger =>
-              s"when another option is selected and the rest of the Guarantor section is not completed - ${arranger.getClass.getSimpleName.stripSuffix("$")}" in {
-                implicit val dr: DataRequest[_] = dataRequest(FakeRequest(),
-                  emptyUserAnswers
-                    .set(GuarantorReviewPage, ChangeAnswers)
-                    .set(DestinationTypePage, UkTaxWarehouse.GB)
-                    .set(GuarantorArrangerPage, arranger),
-                  movementDetails = maxGetMovementResponse
-                )
-                GuarantorSection.isCompleted mustBe true
-              }
+
+          Seq(GoodsOwner, Transporter) foreach { arranger =>
+
+            s"when another option is selected and the rest of the Guarantor section is not completed - ${arranger.getClass.getSimpleName.stripSuffix("$")}" in {
+
+              implicit val dr: DataRequest[_] = dataRequest(FakeRequest(),
+                emptyUserAnswers
+                  .set(GuarantorReviewPage, ChangeAnswers)
+                  .set(DestinationTypePage, UkTaxWarehouse.GB)
+                  .set(GuarantorArrangerPage, arranger),
+                movementDetails = maxGetMovementResponse
+              )
+              GuarantorSection.isCompleted mustBe true
+            }
           }
         }
       }
 
       "when the section has been reviewed and the user has selected to keep the same details" - {
+
         "must return true" - {
+
           implicit val dr: DataRequest[_] = dataRequest(
             request = FakeRequest(),
             answers = emptyUserAnswers

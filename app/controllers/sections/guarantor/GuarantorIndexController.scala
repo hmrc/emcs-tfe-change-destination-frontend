@@ -41,8 +41,8 @@ class GuarantorIndexController @Inject()(
   def onPageLoad(ern: String, arc: String): Action[AnyContent] =
     authorisedDataRequestWithUpToDateMovement(ern, arc) { implicit request =>
       Redirect(
-        if(GuarantorSection.requiresNewGuarantorDetails) {
-          routes.GuarantorRequiredController.onPageLoad(ern, arc)
+        if(GuarantorSection.requiresGuarantorToBeProvided) {
+          routes.GuarantorRequiredController.onPageLoad(ern, arc, NormalMode)
         } else if(GuarantorSection.needsReview) {
           //TODO: Route to the Review page
           testOnly.controllers.routes.UnderConstructionController.onPageLoad()
