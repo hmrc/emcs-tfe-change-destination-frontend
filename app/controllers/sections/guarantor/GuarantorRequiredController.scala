@@ -19,7 +19,6 @@ package controllers.sections.guarantor
 import controllers.actions._
 import models.NormalMode
 import navigation.GuarantorNavigator
-import pages.sections.guarantor.GuarantorRequiredPage
 import play.api.i18n.MessagesApi
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import services.UserAnswersService
