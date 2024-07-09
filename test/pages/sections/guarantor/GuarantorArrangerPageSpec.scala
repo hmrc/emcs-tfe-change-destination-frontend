@@ -69,6 +69,14 @@ class GuarantorArrangerPageSpec extends SpecBase {
           ern = testNorthernIrelandErn,
           movementDetails = movementResponseWithGuaranteeSet(NoGuarantor))) mustBe Some(NoGuarantorRequiredUkToEu)
       }
+
+      "when guarantor trader is GuarantorNotRequired and destination type is UKtoEU" in {
+        GuarantorArrangerPage.getValueFromIE801(dataRequest(
+          request = FakeRequest(),
+          answers = emptyUserAnswers,
+          ern = testNorthernIrelandErn,
+          movementDetails = movementResponseWithGuaranteeSet(GuarantorNotRequired))) mustBe Some(NoGuarantorRequiredUkToEu)
+      }
     }
 
     "must return Some(NoGuarantorRequired)" - {
@@ -79,10 +87,18 @@ class GuarantorArrangerPageSpec extends SpecBase {
           ern = testErn,
           movementDetails = movementResponseWithGuaranteeSet(NoGuarantor))) mustBe Some(NoGuarantorRequired)
       }
+
+      "when guarantor trader is GuarantorNotRequired and destination type is NOT UKtoEU" in {
+        GuarantorArrangerPage.getValueFromIE801(dataRequest(
+          request = FakeRequest(),
+          answers = emptyUserAnswers,
+          ern = testErn,
+          movementDetails = movementResponseWithGuaranteeSet(GuarantorNotRequired))) mustBe Some(NoGuarantorRequired)
+      }
     }
 
     "must throw an exception" - {
-      "when guarantor trader is not Consignor, Consignee, Owner, Transporter or NoGuarantor" in {
+      "when guarantor trader is not Consignor, Consignee, Owner, Transporter, NoGuarantor or GuarantorNotRequired" in {
         intercept[InvalidGuarantorTypeException](GuarantorArrangerPage.getValueFromIE801(dataRequest(FakeRequest(),
           movementDetails = movementResponseWithGuaranteeSet(JointConsignorConsignee)))).getMessage mustBe s"Invalid guarantor type from IE801: $JointConsignorConsignee"
       }

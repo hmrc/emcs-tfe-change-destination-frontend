@@ -19,6 +19,7 @@ package pages.sections.guarantor
 import models.requests.DataRequest
 import models.response.InvalidGuarantorTypeException
 import models.response.emcsTfe.GuarantorType
+import models.response.emcsTfe.GuarantorType.GuarantorNotRequired
 import models.sections.guarantor.GuarantorArranger
 import models.sections.info.movementScenario.MovementType
 import pages.QuestionPage
@@ -36,7 +37,7 @@ case object GuarantorArrangerPage extends QuestionPage[GuarantorArranger] {
         case GuarantorType.Consignee => Some(GuarantorArranger.Consignee)
         case GuarantorType.Owner => Some(GuarantorArranger.GoodsOwner)
         case GuarantorType.Transporter => Some(GuarantorArranger.Transporter)
-        case GuarantorType.NoGuarantor =>
+        case GuarantorType.NoGuarantor | GuarantorNotRequired =>
           request.userAnswers.get(DestinationTypePage).map { destination =>
             if(destination.movementType == MovementType.UkToEu) {
               GuarantorArranger.NoGuarantorRequiredUkToEu
@@ -44,6 +45,7 @@ case object GuarantorArrangerPage extends QuestionPage[GuarantorArranger] {
               GuarantorArranger.NoGuarantorRequired
             }
           }
+
         case guarantorType => throw InvalidGuarantorTypeException(s"Invalid guarantor type from IE801: $guarantorType")
       }
     }
