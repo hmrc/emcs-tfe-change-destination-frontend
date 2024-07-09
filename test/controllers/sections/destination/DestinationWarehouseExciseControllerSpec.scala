@@ -21,6 +21,7 @@ import controllers.actions.{FakeDataRetrievalAction, FakeMovementAction}
 import controllers.routes
 import forms.sections.destination.DestinationWarehouseExciseFormProvider
 import mocks.services.MockUserAnswersService
+import models.sections.info.movementScenario.MovementScenario
 import models.sections.info.movementScenario.MovementScenario._
 import models.{NormalMode, UserAnswers}
 import navigation.FakeNavigators.FakeDestinationNavigator
@@ -37,7 +38,7 @@ import scala.concurrent.Future
 class DestinationWarehouseExciseControllerSpec extends SpecBase with MockUserAnswersService {
 
   lazy val formProvider: DestinationWarehouseExciseFormProvider = new DestinationWarehouseExciseFormProvider()
-  lazy val form: Form[String] = formProvider()
+  lazy val form: Form[String] = formProvider(MovementScenario.UkTaxWarehouse.NI)(dataRequest(FakeRequest()))
   lazy val view: DestinationWarehouseExciseView = app.injector.instanceOf[DestinationWarehouseExciseView]
 
   lazy val destinationWarehouseExciseRoute: String =

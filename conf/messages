@@ -779,6 +779,9 @@ destinationWarehouseExcise.text = This is sometimes called an excise registratio
 destinationWarehouseExcise.error.required = Enter the excise ID of the tax warehouse of destination
 destinationWarehouseExcise.error.length = Excise ID of the tax warehouse must be 16 characters or less
 destinationWarehouseExcise.error.invalidCharacter = Excise ID of the tax warehouse must not include < and > and : and ;
+destinationWarehouseExcise.error.invalidGB00 = Excise ID must begin GB00, followed by 9 characters
+destinationWarehouseExcise.error.invalidXI00 = Excise ID must begin XI00, followed by 9 characters
+destinationWarehouseExcise.error.invalidXIOrGB = Excise ID must not begin XI or GB because the destination of this movement is not to a UK tax warehouse
 destinationWarehouseExcise.checkYourAnswersLabel = Warehouse excise ID
 destinationWarehouseExcise.change.hidden = Warehouse excise ID
 

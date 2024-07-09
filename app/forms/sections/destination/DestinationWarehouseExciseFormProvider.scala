@@ -16,18 +16,32 @@
 
 package forms.sections.destination
 
-import forms.XSS_REGEX
 import forms.mappings.Mappings
+import forms.{GB_00_EXCISE_NUMBER_REGEX, XI_00_EXCISE_NUMBER_REGEX, XI_OR_GB_00_EXCISE_NUMBER_REGEX, XSS_REGEX}
+import models.requests.DataRequest
+import models.sections.info.movementScenario.MovementScenario
 import play.api.data.Form
+import play.api.data.validation.Constraint
 
 import javax.inject.Inject
 
 class DestinationWarehouseExciseFormProvider @Inject() extends Mappings {
 
-  def apply(): Form[String] =
+  private[forms] def inputIsValidForDestinationType(movementScenario: MovementScenario): Constraint[String] =
+    Constraint {
+      case answer if movementScenario == MovementScenario.UkTaxWarehouse.GB =>
+        regexp(GB_00_EXCISE_NUMBER_REGEX, "destinationWarehouseExcise.error.invalidGB00").apply(answer)
+      case answer if movementScenario == MovementScenario.UkTaxWarehouse.NI =>
+        regexp(XI_00_EXCISE_NUMBER_REGEX, "destinationWarehouseExcise.error.invalidXI00").apply(answer)
+      case answer =>
+        regexpToNotMatch(XI_OR_GB_00_EXCISE_NUMBER_REGEX, "destinationWarehouseExcise.error.invalidXIOrGB").apply(answer)
+    }
+
+  def apply(movementScenario: MovementScenario)(implicit dataRequest: DataRequest[_]): Form[String] =
     Form(
       "value" -> text("destinationWarehouseExcise.error.required")
         .verifying(regexpUnlessEmpty(XSS_REGEX, "destinationWarehouseExcise.error.invalidCharacter"))
         .verifying(maxLength(16, "destinationWarehouseExcise.error.length"))
+        .verifying(inputIsValidForDestinationType(movementScenario))
     )
 }

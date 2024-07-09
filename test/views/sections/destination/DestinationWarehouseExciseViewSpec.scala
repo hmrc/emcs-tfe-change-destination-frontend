@@ -21,6 +21,7 @@ import fixtures.messages.sections.destination.DestinationWarehouseExciseMessages
 import forms.sections.destination.DestinationWarehouseExciseFormProvider
 import models.NormalMode
 import models.requests.DataRequest
+import models.sections.info.movementScenario.MovementScenario
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import play.api.i18n.Messages
@@ -43,7 +44,7 @@ class DestinationWarehouseExciseViewSpec extends SpecBase with ViewBehaviours {
         implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest())
 
        lazy val view = app.injector.instanceOf[DestinationWarehouseExciseView]
-        val form = app.injector.instanceOf[DestinationWarehouseExciseFormProvider].apply()
+        val form = app.injector.instanceOf[DestinationWarehouseExciseFormProvider].apply(MovementScenario.UkTaxWarehouse.NI)
 
         implicit val doc: Document =
           Jsoup.parse(view(
