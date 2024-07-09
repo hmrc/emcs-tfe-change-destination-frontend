@@ -62,17 +62,33 @@ class GuarantorArrangerPageSpec extends SpecBase {
     }
 
     "must return Some(NoGuarantorRequiredUkToEu)" - {
-      "when guarantor trader is NoGuarantor" in {
+      "when guarantor trader is NoGuarantor and destination type is UKtoEU" in {
         GuarantorArrangerPage.getValueFromIE801(dataRequest(
           request = FakeRequest(),
           answers = emptyUserAnswers,
           ern = testNorthernIrelandErn,
           movementDetails = movementResponseWithGuaranteeSet(NoGuarantor))) mustBe Some(NoGuarantorRequiredUkToEu)
       }
+
+      "when guarantor trader is GuarantorNotRequired and destination type is UKtoEU" in {
+        GuarantorArrangerPage.getValueFromIE801(dataRequest(
+          request = FakeRequest(),
+          answers = emptyUserAnswers,
+          ern = testNorthernIrelandErn,
+          movementDetails = movementResponseWithGuaranteeSet(GuarantorNotRequired))) mustBe Some(NoGuarantorRequiredUkToEu)
+      }
     }
 
     "must return Some(NoGuarantorRequired)" - {
-      "when guarantor trader is GuarantorNotRequired" in {
+      "when guarantor trader is NoGuarantor and destination type is NOT UKtoEU" in {
+        GuarantorArrangerPage.getValueFromIE801(dataRequest(
+          request = FakeRequest(),
+          answers = emptyUserAnswers,
+          ern = testErn,
+          movementDetails = movementResponseWithGuaranteeSet(NoGuarantor))) mustBe Some(NoGuarantorRequired)
+      }
+
+      "when guarantor trader is GuarantorNotRequired and destination type is NOT UKtoEU" in {
         GuarantorArrangerPage.getValueFromIE801(dataRequest(
           request = FakeRequest(),
           answers = emptyUserAnswers,
