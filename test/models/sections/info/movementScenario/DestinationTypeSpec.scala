@@ -22,7 +22,7 @@ import org.scalatest.matchers.should.Matchers
 class DestinationTypeSpec extends AnyFlatSpec with Matchers {
 
   "DestinationType" should "have correct values" in {
-    DestinationType.values should contain allOf(
+    DestinationType.values shouldBe Seq(
       DestinationType.TaxWarehouse,
       DestinationType.RegisteredConsignee,
       DestinationType.TemporaryRegisteredConsignee,

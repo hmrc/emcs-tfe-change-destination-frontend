@@ -34,7 +34,7 @@ class HowMovementTransportedSpec extends AnyFreeSpec with Matchers with OptionVa
   "HowMovementTransported" - {
 
     "have correct values" in {
-      HowMovementTransported.values should contain allOf(
+      HowMovementTransported.values shouldBe Seq(
         HowMovementTransported.AirTransport,
         HowMovementTransported.FixedTransportInstallations,
         HowMovementTransported.InlandWaterwayTransport,
