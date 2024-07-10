@@ -58,13 +58,13 @@ class GuarantorNavigatorSpec extends SpecBase {
         }
 
         "when the GuarantorRequiredPage is false and the GuarantorReviewPage is KeepAnswers" - {
-          "must goto CAM-G06 (Check Answers)" in {
+          "must goto Task List" in {
             val userAnswers = emptyUserAnswers
               .set(GuarantorRequiredPage, false)
               .set(GuarantorReviewPage, KeepAnswers)
 
             navigator.nextPage(GuarantorReviewPage, NormalMode, userAnswers) mustBe
-              routes.GuarantorCheckAnswersController.onPageLoad(testErn, testArc)
+              controllers.routes.TaskListController.onPageLoad(testErn, testArc)
           }
         }
 
@@ -80,13 +80,13 @@ class GuarantorNavigatorSpec extends SpecBase {
         }
 
         "when the GuarantorRequiredPage is true and the GuarantorReviewPage is KeepAnswers" - {
-          "must goto CAM-G06 (Check Answers)" in {
+          "must goto Task List" in {
             val userAnswers = emptyUserAnswers
               .set(GuarantorRequiredPage, true)
               .set(GuarantorReviewPage, KeepAnswers)
 
             navigator.nextPage(GuarantorReviewPage, NormalMode, userAnswers) mustBe
-              routes.GuarantorCheckAnswersController.onPageLoad(testErn, testArc)
+              controllers.routes.TaskListController.onPageLoad(testErn, testArc)
           }
         }
       }

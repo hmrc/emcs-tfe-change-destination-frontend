@@ -38,7 +38,7 @@ case object GuarantorSection extends Section[JsObject] with Enumerable.Implicits
 
   def euNoGuarantorRequired(implicit request: DataRequest[_]): Boolean =
     request.isNorthernIrelandErn &&
-      DestinationTypePage.isUktoEuMovement &&
+      DestinationTypePage.isNItoEuMovement &&
       request.userAnswers.get(HowMovementTransportedPage).contains(FixedTransportInstallations) &&
       request.movementDetails.items.forall(_.isEnergy)
 

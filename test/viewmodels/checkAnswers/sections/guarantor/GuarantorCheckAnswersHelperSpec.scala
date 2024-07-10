@@ -51,7 +51,7 @@ class GuarantorCheckAnswersHelperSpec extends SpecBase with MockFactory {
                 .set(GuarantorNamePage, "guarantor name")
                 .set(GuarantorVatPage, "gurantor123")
                 .set(GuarantorAddressPage, testUserAddress),
-              movementDetails = maxGetMovementResponse.copy(movementGuarantee = MovementGuaranteeModel(NoGuarantor, None))
+              movementDetails = maxGetMovementResponse
             )
             helper.summaryList()(request, msgs).rows.length mustBe 5
           }
@@ -66,7 +66,7 @@ class GuarantorCheckAnswersHelperSpec extends SpecBase with MockFactory {
                 .set(GuarantorArrangerPage, value)
                 .set(ConsigneeBusinessNamePage, s"$value name")
                 .set(ConsigneeAddressPage, testUserAddress),
-              movementDetails = maxGetMovementResponse.copy(movementGuarantee = MovementGuaranteeModel(NoGuarantor, None))
+              movementDetails = maxGetMovementResponse
             )
             helper.summaryList()(request, msgs).rows.length mustBe 4
           }
@@ -74,15 +74,16 @@ class GuarantorCheckAnswersHelperSpec extends SpecBase with MockFactory {
     }
 
     "must render one row" - {
-      "when no answers for the guarantor section" in new Test {
+      "when GuarantorRequiredPage is `No`" in new Test {
         implicit val request: DataRequest[_] = dataRequest(
           FakeRequest(),
           emptyUserAnswers
+            .set(GuarantorRequiredPage, false)
             .set(DestinationTypePage, ExportWithCustomsDeclarationLodgedInTheUk),
           testGreatBritainWarehouseErn,
-          movementDetails = maxGetMovementResponse.copy(movementGuarantee = MovementGuaranteeModel(Consignee, None))
+          movementDetails = maxGetMovementResponse
         )
-        helper.summaryList()(request, msgs).rows.length mustBe 2
+        helper.summaryList()(request, msgs).rows.length mustBe 1
       }
     }
 

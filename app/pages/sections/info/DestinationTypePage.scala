@@ -34,6 +34,6 @@ case object DestinationTypePage extends QuestionPage[MovementScenario] {
   def isUktoUkMovement(implicit request: DataRequest[_]): Boolean =
     request.userAnswers.get(this).exists(_.movementType == MovementType.UkToUk)
 
-  def isUktoEuMovement(implicit request: DataRequest[_]): Boolean =
-    request.userAnswers.get(this).exists(_.movementType == MovementType.UkToEu)
+  def isNItoEuMovement(implicit request: DataRequest[_]): Boolean =
+    request.userAnswers.get(this).exists(_.isNItoEU)
 }

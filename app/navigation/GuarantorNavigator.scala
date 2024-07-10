@@ -18,7 +18,7 @@ package navigation
 
 import controllers.sections.guarantor.routes
 import models.requests.DataRequest
-import models.sections.ReviewAnswer.ChangeAnswers
+import models.sections.ReviewAnswer.{ChangeAnswers, KeepAnswers}
 import models.sections.guarantor.GuarantorArranger.{GoodsOwner, Transporter}
 import models.{CheckMode, Mode, NormalMode, ReviewMode, UserAnswers}
 import pages.Page
@@ -36,7 +36,11 @@ class GuarantorNavigator @Inject() extends BaseNavigator {
       if(userAnswers.get(GuarantorRequiredPage).contains(false) && userAnswers.get(GuarantorReviewPage).contains(ChangeAnswers)) {
         routes.GuarantorArrangerController.onPageLoad(userAnswers.ern, userAnswers.arc, NormalMode)
       } else {
-        routes.GuarantorCheckAnswersController.onPageLoad(userAnswers.ern, userAnswers.arc)
+        if(userAnswers.get(GuarantorReviewPage).contains(KeepAnswers)) {
+          controllers.routes.TaskListController.onPageLoad(userAnswers.ern, userAnswers.arc)
+        } else {
+          routes.GuarantorCheckAnswersController.onPageLoad(userAnswers.ern, userAnswers.arc)
+        }
       }
 
     case GuarantorRequiredPage => (userAnswers: UserAnswers) =>

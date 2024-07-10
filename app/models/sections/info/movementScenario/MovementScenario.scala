@@ -18,9 +18,11 @@ package models.sections.info.movementScenario
 
 import models.requests.DataRequest
 import models.response.InvalidUserTypeException
-import models.sections.info.movementScenario.MovementScenario.{ExportWithCustomsDeclarationLodgedInTheEu, ExportWithCustomsDeclarationLodgedInTheUk, logger}
+import models.sections.info.movementScenario.MovementScenario.{CertifiedConsignee, DirectDelivery, EuTaxWarehouse, ExemptedOrganisation, ExportWithCustomsDeclarationLodgedInTheEu, ExportWithCustomsDeclarationLodgedInTheUk, RegisteredConsignee, TemporaryCertifiedConsignee, TemporaryRegisteredConsignee, UkTaxWarehouse, logger, values, valuesEu}
 import models.{Enumerable, UserType, WithName}
 import utils.Logging
+
+import scala.language.postfixOps
 
 sealed trait MovementScenario {
   def originType(implicit request: DataRequest[_]): OriginType =
@@ -41,6 +43,18 @@ sealed trait MovementScenario {
   val stringValue: String
 
   val isExport = Seq(ExportWithCustomsDeclarationLodgedInTheUk, ExportWithCustomsDeclarationLodgedInTheEu).contains(this)
+  def isNItoEU(implicit request: DataRequest[_]) = {
+    request.isNorthernIrelandErn &&
+    Seq(
+      DirectDelivery,
+      ExemptedOrganisation,
+      RegisteredConsignee,
+      EuTaxWarehouse,
+      TemporaryRegisteredConsignee,
+      CertifiedConsignee,
+      TemporaryCertifiedConsignee
+    ).contains(this)
+  }
 }
 
 object MovementScenario extends Enumerable.Implicits with Logging {
