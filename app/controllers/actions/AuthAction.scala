@@ -99,7 +99,6 @@ class AuthActionImpl @Inject()(override val authConnector: AuthConnector,
       case emcsEnrolments =>
         emcsEnrolments.find(_.identifiers.exists(ident => ident.key == EnrolmentKeys.ERN && ident.value == ernFromUrl)) match {
           case Some(enrolment) if enrolment.isActivated =>
-            //            block(UserRequest(request, ernFromUrl, internalId, credId, sessionId.get.value, emcsEnrolments.size > 1))
             checkIfUserErnCanAccessCoD(ernFromUrl, internalId, credId, sessionId, emcsEnrolments.size > 1)(block)
           case Some(_) =>
             logger.debug(s"[checkOrganisationEMCSEnrolment] ${EnrolmentKeys.EMCS_ENROLMENT} enrolment found but not activated")
@@ -120,7 +119,7 @@ class AuthActionImpl @Inject()(override val authConnector: AuthConnector,
     val userType = UserType(ernFromUrl)
 
     if (Seq(Unknown, GreatBritainWarehouse, NorthernIrelandWarehouse).contains(userType)) {
-      logger.warn(s"[checkIfUserErnCanAccessCaM] User attempted to access CaM with invalid ern: '$ernFromUrl'")
+      logger.warn(s"[checkIfUserErnCanAccessCoD] User attempted to access CoD with invalid ern: '$ernFromUrl'")
       Future.successful(Redirect(controllers.error.routes.ErrorController.unauthorised()))
     } else {
       block(UserRequest(request, ernFromUrl, internalId, credId, sessionId.get.value, hasMultipleEnrolments))
