@@ -17,6 +17,7 @@
 package fixtures.messages.sections.transportUnit
 
 import fixtures.messages.{BaseEnglish, BaseMessages, i18n}
+import models.Index
 
 object TransportUnitGiveMoreInformationMessages {
 
@@ -26,7 +27,7 @@ object TransportUnitGiveMoreInformationMessages {
     val hintText = "You must give more information about the transport if you know it. For example, the identity of the subsequent transporter or information about subsequent transport units."
     val cyaLabel = "More information"
     val valueWhenAnswerNotPresent = "Enter more information about the transport unit (optional)"
-    val cyaChangeHidden = "more information"
+    def cyaChangeHidden(idx: Index) = s"more information for transport unit ${idx.displayIndex}"
   }
 
   object English extends ViewMessages with BaseEnglish

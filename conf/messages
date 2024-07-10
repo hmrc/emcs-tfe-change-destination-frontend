@@ -516,7 +516,7 @@ transportUnitType.2 = Vehicle
 transportUnitType.addToListLabel = Transport type
 transportUnitType.checkYourAnswersLabel = Type of transport
 transportUnitType.error.required = Select what the goods will be transported in
-transportUnitType.change.hidden = transport type
+transportUnitType.change.hidden = transport type for transport unit {0}
 
 transportUnitIdentity.title.1 = What is the container number or unique identifier for this container?
 transportUnitIdentity.title.2 = What is the vehicle registration number or unique identifier for this vehicle?
@@ -548,7 +548,7 @@ transportUnitIdentity.error.invalidCharacters.3 = Trailer number or unique ident
 transportUnitIdentity.error.invalidCharacters.4 = Vehicle registration number or unique identifier must only contain letters and numbers
 transportUnitIdentity.error.invalidCharacters.5 = Unique identifier must only contain letters and numbers
 
-transportUnitIdentity.change.hidden = transport identifier
+transportUnitIdentity.change.hidden = transport identifier for transport unit {0}
 
 dispatchPlace.title = Where is the place of dispatch for this movement?
 dispatchPlace.heading = Where is the place of dispatch for this movement?
@@ -705,7 +705,7 @@ transportSealChoice.error.required.4 = Select yes if there is a commercial seal 
 transportSealChoice.error.required.5 = Select yes if there is a commercial seal on this fixed transport installation
 transportSealChoice.hint = This is a seal that prevents items being removed or added.
 transportSealChoice.checkYourAnswersLabel = Commercial seal
-transportSealChoice.change.hidden = commercial seal
+transportSealChoice.change.hidden = commercial seal for transport unit {0}
 
 transportSealType.heading.1 = What type of commercial seal is on this container?
 transportSealType.heading.2 = What type of commercial seal is on this vehicle?
@@ -722,10 +722,10 @@ transportSealType.moreInfo.error.invalid = Information must only contain letters
 transportSealType.moreInfo.error.invalidCharacter = Information must not include < and > and : and ;
 transportSealType.moreInfo.error.length = Information must be 350 characters or less
 transportSealType.sealType.checkYourAnswersLabel = Commercial seal type
-transportSealType.sealType.change.hidden = commercial seal type
+transportSealType.sealType.change.hidden = commercial seal type for transport unit {0}
 transportSealType.moreInfo.checkYourAnswersLabel = Commercial seal information
 transportSealType.moreInfo.checkYourAnswersAddInfo = Enter more information about the commercial seal (optional)
-transportSealType.moreInfo.change.hidden = commercial seal information
+transportSealType.moreInfo.change.hidden = commercial seal information for transport unit {0}
 
 transportUnitGiveMoreInformationChoice.title = Do you know any more information about this {0}?
 transportUnitGiveMoreInformationChoice.heading = Do you know any more information about this {0}?
@@ -747,7 +747,7 @@ transportUnitGiveMoreInformation.error.required = Enter more information about t
 transportUnitGiveMoreInformation.error.length = Information must be 350 characters or less
 transportUnitGiveMoreInformation.error.xss = Information must not contain < and > and : and ;
 transportUnitGiveMoreInformation.error.character = Information must contain letters or numbers
-transportUnitGiveMoreInformation.change.hidden = more information
+transportUnitGiveMoreInformation.change.hidden = more information for transport unit {0}
 transportUnitGiveMoreInformation.transportUnitType.1 = container
 transportUnitGiveMoreInformation.transportUnitType.2 = vehicle
 transportUnitGiveMoreInformation.transportUnitType.3 = trailer

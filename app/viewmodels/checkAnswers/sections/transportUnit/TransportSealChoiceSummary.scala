@@ -36,7 +36,7 @@ object TransportSealChoiceSummary {
           content = "site.change",
           href = controllers.sections.transportUnit.routes.TransportSealChoiceController.onPageLoad(request.userAnswers.ern, request.userAnswers.arc, idx, CheckMode).url,
           id = s"changeTransportSealChoice${idx.displayIndex}")
-          .withVisuallyHiddenText(messages("transportSealChoice.change.hidden"))
+          .withVisuallyHiddenText(messages("transportSealChoice.change.hidden", idx.displayIndex))
       )
     )
 
