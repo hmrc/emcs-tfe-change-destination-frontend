@@ -16,8 +16,9 @@
 
 package navigation
 
-import controllers.routes
+import controllers.sections.guarantor.routes
 import models.requests.DataRequest
+import models.sections.ReviewAnswer.ChangeAnswers
 import models.sections.guarantor.GuarantorArranger.{GoodsOwner, Transporter}
 import models.{CheckMode, Mode, NormalMode, ReviewMode, UserAnswers}
 import pages.Page
@@ -31,40 +32,55 @@ class GuarantorNavigator @Inject() extends BaseNavigator {
 
   private def normalRoutes(implicit request: DataRequest[_]): Page => UserAnswers => Call = {
 
+    case GuarantorReviewPage => (userAnswers: UserAnswers) =>
+      if(userAnswers.get(GuarantorRequiredPage).contains(false) && userAnswers.get(GuarantorReviewPage).contains(ChangeAnswers)) {
+        routes.GuarantorArrangerController.onPageLoad(userAnswers.ern, userAnswers.arc, NormalMode)
+      } else {
+        routes.GuarantorCheckAnswersController.onPageLoad(userAnswers.ern, userAnswers.arc)
+      }
+
+    case GuarantorRequiredPage => (userAnswers: UserAnswers) =>
+      userAnswers.get(GuarantorRequiredPage) match {
+        case Some(false) =>
+          routes.GuarantorCheckAnswersController.onPageLoad(userAnswers.ern, userAnswers.arc)
+        case _ =>
+          routes.GuarantorArrangerController.onPageLoad(userAnswers.ern, userAnswers.arc, NormalMode)
+      }
+
     case GuarantorArrangerPage => (userAnswers: UserAnswers) =>
       userAnswers.get(GuarantorArrangerPage) match {
         case Some(GoodsOwner) | Some(Transporter) =>
-          controllers.sections.guarantor.routes.GuarantorNameController.onPageLoad(userAnswers.ern, userAnswers.arc, NormalMode)
+          routes.GuarantorNameController.onPageLoad(userAnswers.ern, userAnswers.arc, NormalMode)
         case _ =>
-          controllers.sections.guarantor.routes.GuarantorCheckAnswersController.onPageLoad(userAnswers.ern, userAnswers.arc)
+          routes.GuarantorCheckAnswersController.onPageLoad(userAnswers.ern, userAnswers.arc)
       }
 
     case GuarantorNamePage => (userAnswers: UserAnswers) =>
-      controllers.sections.guarantor.routes.GuarantorVatController.onPageLoad(userAnswers.ern, userAnswers.arc, NormalMode)
+      routes.GuarantorVatController.onPageLoad(userAnswers.ern, userAnswers.arc, NormalMode)
 
     case GuarantorVatPage => (userAnswers: UserAnswers) =>
-      controllers.sections.guarantor.routes.GuarantorAddressController.onPageLoad(userAnswers.ern, userAnswers.arc, NormalMode)
+      routes.GuarantorAddressController.onPageLoad(userAnswers.ern, userAnswers.arc, NormalMode)
 
     case GuarantorAddressPage => (userAnswers: UserAnswers) =>
-      controllers.sections.guarantor.routes.GuarantorCheckAnswersController.onPageLoad(userAnswers.ern, userAnswers.arc)
+      routes.GuarantorCheckAnswersController.onPageLoad(userAnswers.ern, userAnswers.arc)
 
     case GuarantorCheckAnswersPage => (userAnswers: UserAnswers) =>
-      routes.TaskListController.onPageLoad(userAnswers.ern, userAnswers.arc)
+      controllers.routes.TaskListController.onPageLoad(userAnswers.ern, userAnswers.arc)
 
     case _ =>
       (userAnswers: UserAnswers) =>
-        controllers.sections.guarantor.routes.GuarantorCheckAnswersController.onPageLoad(userAnswers.ern, userAnswers.arc)
+        routes.GuarantorCheckAnswersController.onPageLoad(userAnswers.ern, userAnswers.arc)
   }
 
   private[navigation] val reviewRouteMap: Page => UserAnswers => Call = {
     case _ =>
-      (userAnswers: UserAnswers) => routes.CheckYourAnswersController.onPageLoad(userAnswers.ern, userAnswers.arc)
+      (userAnswers: UserAnswers) => controllers.routes.CheckYourAnswersController.onPageLoad(userAnswers.ern, userAnswers.arc)
   }
 
   private val checkRoutes: Page => UserAnswers => Call = {
     case _ =>
       (userAnswers: UserAnswers) =>
-        controllers.sections.guarantor.routes.GuarantorCheckAnswersController.onPageLoad(userAnswers.ern, userAnswers.arc)
+        routes.GuarantorCheckAnswersController.onPageLoad(userAnswers.ern, userAnswers.arc)
   }
 
   override def nextPage(page: Page, mode: Mode, userAnswers: UserAnswers)(implicit request: DataRequest[_]): Call = mode match {

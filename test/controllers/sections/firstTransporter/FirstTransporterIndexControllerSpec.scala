@@ -53,7 +53,7 @@ class FirstTransporterIndexControllerSpec extends SpecBase with MockUserAnswersS
           .set(FirstTransporterNamePage, "")
           .set(FirstTransporterVatPage, "")
           .set(FirstTransporterAddressPage, UserAddress(None, "", "", ""))
-          .set(FirstTransporterReviewPage, KeepAnswers))) {
+          .set(FirstTransporterReviewPage, ChangeAnswers))) {
 
         val result = testController.onPageLoad(testErn, testArc)(request)
 
@@ -70,6 +70,19 @@ class FirstTransporterIndexControllerSpec extends SpecBase with MockUserAnswersS
           .set(FirstTransporterNamePage, "")
           .set(FirstTransporterVatPage, "")
           .set(FirstTransporterAddressPage, UserAddress(None, "", "", "")))) {
+
+        val result = testController.onPageLoad(testErn, testArc)(request)
+
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result) mustBe
+          Some(controllers.sections.firstTransporter.routes.FirstTransporterReviewController.onPageLoad(testErn, testArc).url)
+      }
+    }
+
+    "when FirstTransporterSection has been reviewed and set to KeepAnswers" - {
+      "must redirect to the Review controller" in new Fixture(Some(
+        emptyUserAnswers.set(FirstTransporterReviewPage, KeepAnswers)
+      )) {
 
         val result = testController.onPageLoad(testErn, testArc)(request)
 

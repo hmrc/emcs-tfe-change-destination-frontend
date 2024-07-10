@@ -18,10 +18,8 @@ package pages.sections.guarantor
 
 import models.Enumerable
 import models.requests.DataRequest
+import models.response.emcsTfe.GuarantorType
 import models.sections.guarantor.GuarantorArranger.{Consignee, Consignor}
-import models.sections.info.movementScenario.DestinationType.Export
-import models.sections.info.movementScenario.MovementScenario.ExportWithCustomsDeclarationLodgedInTheUk
-import models.sections.info.movementScenario.MovementType.UkToEu
 import models.sections.journeyType.HowMovementTransported.FixedTransportInstallations
 import pages.sections.Section
 import pages.sections.info.DestinationTypePage
@@ -32,35 +30,45 @@ import viewmodels.taskList.{Completed, InProgress, NotStarted, TaskListStatus}
 case object GuarantorSection extends Section[JsObject] with Enumerable.Implicits {
   override val path: JsPath = JsPath \ "guarantor"
 
-  def requiresGuarantorToBeProvided(implicit request: DataRequest[_]): Boolean = {
+  def requiresNewGuarantorDetails(implicit request: DataRequest[_]): Boolean =
+    request.movementDetails.movementGuarantee.guarantorTypeCode == GuarantorType.Consignee && DestinationTypePage.isExport
 
-    val euNoGuarantorRequired =
-      Option.when(request.isNorthernIrelandErn) {
-        request.userAnswers.get(DestinationTypePage).map(_.movementType).contains(UkToEu) &&
-          request.userAnswers.get(HowMovementTransportedPage).contains(FixedTransportInstallations)
-      }
+  def requiresGuarantorToBeProvided(implicit request: DataRequest[_]): Boolean =
+    requiresNewGuarantorDetails || !(ukNoGuarantorRequired || euNoGuarantorRequired)
 
-    val gbToExport =
-      request.userAnswers.get(DestinationTypePage).contains(ExportWithCustomsDeclarationLodgedInTheUk) &&
-        request.movementDetails.destinationType != Export
+  def euNoGuarantorRequired(implicit request: DataRequest[_]): Boolean =
+    request.isNorthernIrelandErn &&
+      DestinationTypePage.isUktoEuMovement &&
+      request.userAnswers.get(HowMovementTransportedPage).contains(FixedTransportInstallations) &&
+      request.movementDetails.items.forall(_.isEnergy)
 
-    (gbToExport || euNoGuarantorRequired.contains(false)) && request.movementDetails.movementGuarantee.guarantorTrader.isEmpty
-  }
+  def ukNoGuarantorRequired(implicit request: DataRequest[_]): Boolean =
+    DestinationTypePage.isUktoUkMovement && request.movementDetails.items.forall(_.isBeerOrWine)
+
+  //If this movement now requires a guarantor, and the original movement doesn't have one, then it's not possible to have a Review status.
+  private def reviewGuard(f: => TaskListStatus)(implicit request: DataRequest[_]): TaskListStatus =
+    if((requiresGuarantorToBeProvided && GuarantorType.noGuarantorValues.contains(request.movementDetails.movementGuarantee.guarantorTypeCode)) || requiresNewGuarantorDetails) {
+      f
+    } else {
+      sectionHasBeenReviewed(GuarantorReviewPage)(f)
+    }
 
   override def status(implicit request: DataRequest[_]): TaskListStatus =
-    request.userAnswers.get(GuarantorArrangerPage) match {
-      case Some(Consignee) | Some(Consignor) => Completed
-      case Some(_) =>
-        if (
-          request.userAnswers.get(GuarantorNamePage).nonEmpty &&
-            request.userAnswers.get(GuarantorVatPage).nonEmpty &&
-            request.userAnswers.get(GuarantorAddressPage).nonEmpty) {
-          Completed
-        } else {
-          InProgress
-        }
-      case None =>
-        NotStarted
+    reviewGuard {
+      request.userAnswers.get(GuarantorArrangerPage) match {
+        case Some(Consignee) | Some(Consignor) => Completed
+        case Some(_) =>
+          if (
+            request.userAnswers.get(GuarantorNamePage).nonEmpty &&
+              request.userAnswers.get(GuarantorVatPage).nonEmpty &&
+              request.userAnswers.get(GuarantorAddressPage).nonEmpty) {
+            Completed
+          } else {
+            InProgress
+          }
+        case None =>
+          NotStarted
+      }
     }
 
   override def canBeCompletedForTraderAndDestinationType(implicit request: DataRequest[_]): Boolean = true

@@ -54,7 +54,7 @@ class TransportUnitIndexController @Inject()(
           saveAnswersAndRedirect(Redirect(
             controllers.sections.transportUnit.routes.TransportUnitCheckAnswersController.onPageLoad(request.ern, request.arc)
           ), userAnswersWith801TransportUnits.set(TransportUnitsReviewPage, KeepAnswers)) //User can't change the answer so mark the section as complete
-        case _ if TransportUnitsSection.needsReview =>
+        case _ if TransportUnitsSection.needsReview || TransportUnitsReviewPage.value.contains(KeepAnswers) =>
           saveAnswersAndRedirect(Redirect(
             controllers.sections.transportUnit.routes.TransportUnitsReviewController.onPageLoad(request.ern, request.arc)
           ), userAnswersWith801TransportUnits)

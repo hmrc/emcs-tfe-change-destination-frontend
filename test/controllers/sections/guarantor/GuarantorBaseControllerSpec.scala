@@ -21,7 +21,7 @@ import mocks.services.MockUserAnswersService
 import models.UserAnswers
 import models.requests.DataRequest
 import models.response.emcsTfe.GuarantorType.NoGuarantor
-import models.response.emcsTfe.MovementGuaranteeModel
+import models.response.emcsTfe.{GetMovementResponse, GuarantorType, MovementGuaranteeModel}
 import models.sections.guarantor.GuarantorArranger._
 import models.sections.info.movementScenario.MovementScenario.ExportWithCustomsDeclarationLodgedInTheUk
 import navigation.BaseNavigator
@@ -46,9 +46,10 @@ class GuarantorBaseControllerSpec extends SpecBase with MockUserAnswersService w
     override protected def controllerComponents: MessagesControllerComponents = messagesControllerComponents
   }
 
-  class Test(ua: UserAnswers) {
-    implicit val dr: DataRequest[AnyContentAsEmpty.type] =
-      dataRequest(FakeRequest(), ua, movementDetails = maxGetMovementResponse.copy(movementGuarantee = MovementGuaranteeModel(NoGuarantor, None)))
+  class Test(ua: UserAnswers,
+             ern: String = testErn,
+             movementDetails: GetMovementResponse = maxGetMovementResponse.copy(movementGuarantee = MovementGuaranteeModel(NoGuarantor, None))) {
+    implicit val dr: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), ua, ern, movementDetails)
   }
 
   "withGuarantorArrangerAnswer" - {
@@ -73,13 +74,16 @@ class GuarantorBaseControllerSpec extends SpecBase with MockUserAnswersService w
       }
     }
     "must redirect to GuarantorIndexController" - {
-      "when GuarantorArrangerPage is not present in UserAnswers" in new Test(emptyUserAnswers
-        .set(DestinationTypePage, ExportWithCustomsDeclarationLodgedInTheUk)
+      "when GuarantorArrangerPage is not present in UserAnswers (new guarantor is required)" in new Test(
+        emptyUserAnswers.set(DestinationTypePage, ExportWithCustomsDeclarationLodgedInTheUk),
+        testGreatBritainWarehouseErn,
+        maxGetMovementResponse.copy(movementGuarantee = MovementGuaranteeModel(GuarantorType.Consignee, None))
       ) {
         val result: Future[Result] = TestController.withGuarantorArrangerAnswer(_ => Future.successful(Ok("beans")))
 
         status(result) mustBe SEE_OTHER
-        redirectLocation(result) mustBe Some(controllers.sections.guarantor.routes.GuarantorIndexController.onPageLoad(testErn, testArc).url)
+        redirectLocation(result) mustBe
+          Some(controllers.sections.guarantor.routes.GuarantorIndexController.onPageLoad(testGreatBritainWarehouseErn, testArc).url)
       }
     }
     "must redirect to guarantor CYA" - {

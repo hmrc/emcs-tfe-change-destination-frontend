@@ -25,13 +25,14 @@ import javax.inject.Inject
 
 class GuarantorCheckAnswersHelper @Inject()() {
 
-  def summaryList()(implicit request: DataRequest[_], messages: Messages): SummaryList = {
+  def summaryList(onReviewPage: Boolean = false)(implicit request: DataRequest[_], messages: Messages): SummaryList = {
     SummaryListViewModel(
       rows = Seq(
-        Some(GuarantorArrangerSummary.row),
-        GuarantorNameSummary.row,
-        GuarantorVatSummary.row,
-        GuarantorAddressSummary.row
+        Some(GuarantorRequiredSummary.row(onReviewPage)),
+        Some(GuarantorArrangerSummary.row(onReviewPage)),
+        GuarantorNameSummary.row(onReviewPage),
+        GuarantorVatSummary.row(onReviewPage),
+        GuarantorAddressSummary.row(onReviewPage)
       ).flatten
     ).withCssClass("govuk-!-margin-bottom-9")
   }

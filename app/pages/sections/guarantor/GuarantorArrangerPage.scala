@@ -31,7 +31,7 @@ case object GuarantorArrangerPage extends QuestionPage[GuarantorArranger] {
   override val path: JsPath = GuarantorSection.path \ toString
 
   override def getValueFromIE801(implicit request: DataRequest[_]): Option[GuarantorArranger] = {
-    if (GuarantorSection.requiresGuarantorToBeProvided) None else {
+    if (GuarantorSection.requiresNewGuarantorDetails) None else {
       request.movementDetails.movementGuarantee.guarantorTypeCode match {
         case GuarantorType.Consignor => Some(GuarantorArranger.Consignor)
         case GuarantorType.Consignee => Some(GuarantorArranger.Consignee)

@@ -30,12 +30,12 @@ import viewmodels.implicits._
 
 object GuarantorNameSummary {
 
-  def row()(implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] =
+  def row(onReviewPage: Boolean = false)(implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] =
     request.userAnswers.get(GuarantorArrangerPage).map { arranger =>
       SummaryListRowViewModel(
         key = "guarantorName.checkYourAnswersLabel",
         value = ValueViewModel(businessName(arranger)),
-        actions = if (!showChangeLink(arranger)) {
+        actions = if (!showChangeLink(arranger) || onReviewPage) {
           Seq()
         } else {
           val mode = if (request.userAnswers.get(GuarantorNamePage).nonEmpty) CheckMode else NormalMode

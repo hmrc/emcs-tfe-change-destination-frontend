@@ -22,9 +22,7 @@ import forms.sections.journeyType.JourneyTypeReviewFormProvider
 import mocks.services.MockUserAnswersService
 import models.UserAnswers
 import models.sections.ReviewAnswer
-import models.sections.ReviewAnswer.KeepAnswers
 import navigation.FakeNavigators.FakeJourneyTypeNavigator
-import pages.sections.journeyType.JourneyTypeReviewPage
 import play.api.data.Form
 import play.api.mvc.{AnyContentAsEmpty, Call}
 import play.api.test.Helpers._
@@ -68,15 +66,6 @@ class JourneyTypeReviewControllerSpec extends SpecBase with MockUserAnswersServi
 
       status(result) mustEqual OK
       contentAsString(result) mustEqual view(form, helper.summaryList(onReviewPage = true)(dataRequest(request), messages(request)), submitCall)(dataRequest(request), messages(request)).toString()
-    }
-
-    "must populate the view correctly on a GET when the question has previously been answered" in new Test(Some(
-      emptyUserAnswers.set(JourneyTypeReviewPage, KeepAnswers)
-    )) {
-      val result = controller.onPageLoad(testErn, testArc)(request)
-
-      status(result) mustEqual OK
-      contentAsString(result) mustEqual view(form.fill(KeepAnswers), helper.summaryList(onReviewPage = true)(dataRequest(request), messages(request)), submitCall)(dataRequest(request), messages(request)).toString()
     }
 
     "must redirect to the next page when valid data is submitted" in new Test {

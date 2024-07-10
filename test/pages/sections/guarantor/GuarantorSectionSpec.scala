@@ -21,61 +21,308 @@ import models.UserAddress
 import models.requests.DataRequest
 import models.response.emcsTfe.GuarantorType.NoGuarantor
 import models.response.emcsTfe.MovementGuaranteeModel
+import models.sections.ReviewAnswer.{ChangeAnswers, KeepAnswers}
 import models.sections.guarantor.GuarantorArranger.{Consignee, Consignor, GoodsOwner, Transporter}
+import models.sections.info.movementScenario.MovementScenario.{ExportWithCustomsDeclarationLodgedInTheUk, UkTaxWarehouse}
+import pages.sections.info.DestinationTypePage
 import play.api.test.FakeRequest
 
 class GuarantorSectionSpec extends SpecBase {
+
   "isCompleted" - {
-    "must return true" - {
-      "when Consignor is selected" in {
-        implicit val dr: DataRequest[_] = dataRequest(FakeRequest(),
-          emptyUserAnswers
-            .set(GuarantorArrangerPage, Consignor)
-        )
-        GuarantorSection.isCompleted mustBe true
-      }
-      "when Consignee is selected" in {
-        implicit val dr: DataRequest[_] = dataRequest(FakeRequest(),
-          emptyUserAnswers
-            .set(GuarantorArrangerPage, Consignee)
-        )
-        GuarantorSection.isCompleted mustBe true
-      }
-      Seq(GoodsOwner, Transporter) foreach {
-        arranger =>
-          s"when another option is selected and the rest of the Guarantor section is completed - ${arranger.getClass.getSimpleName.stripSuffix("$")}" in {
-            implicit val dr: DataRequest[_] = dataRequest(FakeRequest(),
-              emptyUserAnswers
-                .set(GuarantorArrangerPage, arranger)
-                .set(GuarantorNamePage, "")
-                .set(GuarantorVatPage, "")
-                .set(GuarantorAddressPage, UserAddress(None, "", "", ""))
+
+    "when the original movement has no guarantor" - {
+
+      "when the movement now requires a guarantor" - {
+
+        "must return true" - {
+
+          "when Consignor is selected" in {
+
+            implicit val dr: DataRequest[_] = dataRequest(
+              request = FakeRequest(),
+              answers = emptyUserAnswers
+                .set(DestinationTypePage, ExportWithCustomsDeclarationLodgedInTheUk)
+                .set(GuarantorArrangerPage, Consignor),
+              ern = testGreatBritainWarehouseErn,
+              movementDetails = maxGetMovementResponse.copy(movementGuarantee = MovementGuaranteeModel(NoGuarantor, None))
             )
             GuarantorSection.isCompleted mustBe true
           }
-      }
-    }
 
-    "must return false" - {
-      "when guarantor no answers exist" in {
-        implicit val dr: DataRequest[_] = dataRequest(FakeRequest(),
-          emptyUserAnswers,
-          movementDetails = maxGetMovementResponse.copy(movementGuarantee = MovementGuaranteeModel(NoGuarantor, None))
-        )
-        GuarantorSection.isCompleted mustBe false
-      }
-      Seq(GoodsOwner, Transporter) foreach {
-        arranger =>
-          s"when another option is selected and the rest of the Guarantor section is not completed - ${arranger.getClass.getSimpleName.stripSuffix("$")}" in {
-            implicit val dr: DataRequest[_] = dataRequest(FakeRequest(),
-              emptyUserAnswers
-                .set(GuarantorArrangerPage, arranger)
-                .set(GuarantorNamePage, "")
-                .set(GuarantorVatPage, ""),
+          "when Consignee is selected (GB to GB, spirits, requires guarantor)" in {
+
+            implicit val dr: DataRequest[_] = dataRequest(
+              request = FakeRequest(),
+              answers = emptyUserAnswers
+                .set(DestinationTypePage, UkTaxWarehouse.GB)
+                .set(GuarantorArrangerPage, Consignee),
+              ern = testGreatBritainWarehouseErn,
+              movementDetails = maxGetMovementResponse.copy(
+                movementGuarantee = MovementGuaranteeModel(NoGuarantor, None),
+                items = Seq(maxGetMovementResponse.items.head.copy(productCode = "S200"))
+              )
+            )
+            GuarantorSection.isCompleted mustBe true
+          }
+
+          Seq(GoodsOwner, Transporter) foreach {
+            arranger =>
+
+              s"when another option is selected and the rest of the Guarantor section is completed - ${arranger.getClass.getSimpleName.stripSuffix("$")}" in {
+                implicit val dr: DataRequest[_] = dataRequest(
+                  request = FakeRequest(),
+                  answers = emptyUserAnswers
+                    .set(DestinationTypePage, ExportWithCustomsDeclarationLodgedInTheUk)
+                    .set(GuarantorArrangerPage, arranger)
+                    .set(GuarantorNamePage, "")
+                    .set(GuarantorVatPage, "")
+                    .set(GuarantorAddressPage, UserAddress(None, "", "", "")),
+                  ern = testGreatBritainWarehouseErn,
+                  movementDetails = maxGetMovementResponse.copy(movementGuarantee = MovementGuaranteeModel(NoGuarantor, None))
+                )
+                GuarantorSection.isCompleted mustBe true
+              }
+          }
+        }
+
+        "must return false" - {
+
+          "when guarantor no answers exist" in {
+
+            implicit val dr: DataRequest[_] = dataRequest(
+              request = FakeRequest(),
+              answers = emptyUserAnswers.set(DestinationTypePage, ExportWithCustomsDeclarationLodgedInTheUk),
+              ern = testGreatBritainWarehouseErn,
               movementDetails = maxGetMovementResponse.copy(movementGuarantee = MovementGuaranteeModel(NoGuarantor, None))
             )
             GuarantorSection.isCompleted mustBe false
           }
+
+          Seq(GoodsOwner, Transporter) foreach {
+            arranger =>
+
+              s"when another option is selected and the rest of the Guarantor section is not completed - ${arranger.getClass.getSimpleName.stripSuffix("$")}" in {
+                implicit val dr: DataRequest[_] = dataRequest(FakeRequest(),
+                  emptyUserAnswers
+                    .set(GuarantorArrangerPage, arranger)
+                    .set(GuarantorNamePage, "")
+                    .set(GuarantorVatPage, ""),
+                  movementDetails = maxGetMovementResponse.copy(movementGuarantee = MovementGuaranteeModel(NoGuarantor, None))
+                )
+                GuarantorSection.isCompleted mustBe false
+              }
+          }
+        }
+      }
+
+      "when the movement does not mandate a guarantor" - {
+
+        "when the section has been reviewed and user has selected to change details" - {
+
+          "must return true" - {
+
+            "when Consignor is selected" in {
+              implicit val dr: DataRequest[_] = dataRequest(
+                request = FakeRequest(),
+                answers = emptyUserAnswers
+                  .set(GuarantorReviewPage, ChangeAnswers)
+                  .set(DestinationTypePage, UkTaxWarehouse.GB)
+                  .set(GuarantorArrangerPage, Consignor),
+                ern = testGreatBritainWarehouseErn,
+                movementDetails = maxGetMovementResponse.copy(movementGuarantee = MovementGuaranteeModel(NoGuarantor, None))
+              )
+              GuarantorSection.isCompleted mustBe true
+            }
+
+            "when Consignee is selected" in {
+              implicit val dr: DataRequest[_] = dataRequest(
+                request = FakeRequest(),
+                answers = emptyUserAnswers
+                  .set(GuarantorReviewPage, ChangeAnswers)
+                  .set(DestinationTypePage, UkTaxWarehouse.GB)
+                  .set(GuarantorArrangerPage, Consignee),
+                ern = testGreatBritainWarehouseErn,
+                movementDetails = maxGetMovementResponse.copy(movementGuarantee = MovementGuaranteeModel(NoGuarantor, None))
+              )
+              GuarantorSection.isCompleted mustBe true
+            }
+
+            Seq(GoodsOwner, Transporter) foreach {
+              arranger =>
+
+                s"when another option is selected and the rest of the Guarantor section is completed - ${arranger.getClass.getSimpleName.stripSuffix("$")}" in {
+                  implicit val dr: DataRequest[_] = dataRequest(
+                    request = FakeRequest(),
+                    answers = emptyUserAnswers
+                      .set(GuarantorReviewPage, ChangeAnswers)
+                      .set(DestinationTypePage, UkTaxWarehouse.GB)
+                      .set(GuarantorArrangerPage, arranger)
+                      .set(GuarantorNamePage, "")
+                      .set(GuarantorVatPage, "")
+                      .set(GuarantorAddressPage, UserAddress(None, "", "", "")),
+                    ern = testGreatBritainWarehouseErn,
+                    movementDetails = maxGetMovementResponse.copy(movementGuarantee = MovementGuaranteeModel(NoGuarantor, None))
+                  )
+                  GuarantorSection.isCompleted mustBe true
+                }
+            }
+          }
+
+          "must return false" - {
+
+            "when guarantor no answers exist" in {
+
+              implicit val dr: DataRequest[_] = dataRequest(
+                request = FakeRequest(),
+                answers = emptyUserAnswers
+                  .set(GuarantorReviewPage, ChangeAnswers)
+                  .set(DestinationTypePage, UkTaxWarehouse.GB),
+                ern = testGreatBritainWarehouseErn,
+                movementDetails = maxGetMovementResponse.copy(movementGuarantee = MovementGuaranteeModel(NoGuarantor, None))
+              )
+              GuarantorSection.isCompleted mustBe false
+            }
+
+            Seq(GoodsOwner, Transporter) foreach {
+              arranger =>
+
+                s"when another option is selected and the rest of the Guarantor section is not completed - ${arranger.getClass.getSimpleName.stripSuffix("$")}" in {
+                  implicit val dr: DataRequest[_] = dataRequest(FakeRequest(),
+                    emptyUserAnswers
+                      .set(GuarantorReviewPage, ChangeAnswers)
+                      .set(DestinationTypePage, UkTaxWarehouse.GB)
+                      .set(GuarantorArrangerPage, arranger)
+                      .set(GuarantorNamePage, "")
+                      .set(GuarantorVatPage, ""),
+                    movementDetails = maxGetMovementResponse.copy(movementGuarantee = MovementGuaranteeModel(NoGuarantor, None))
+                  )
+                  GuarantorSection.isCompleted mustBe false
+                }
+            }
+          }
+        }
+
+        "when the section has been reviewed and the user has selected to keep the same details" - {
+
+          "must return true" in {
+
+            implicit val dr: DataRequest[_] = dataRequest(
+              request = FakeRequest(),
+              answers = emptyUserAnswers
+                .set(GuarantorReviewPage, KeepAnswers)
+                .set(DestinationTypePage, UkTaxWarehouse.GB),
+              ern = testGreatBritainWarehouseErn,
+              movementDetails = maxGetMovementResponse.copy(movementGuarantee = MovementGuaranteeModel(NoGuarantor, None))
+            )
+
+            GuarantorSection.isCompleted mustBe true
+          }
+        }
+      }
+    }
+
+    "when the original movement does have a guarantor already" - {
+
+      "when the section has been reviewed and user has selected to change details" - {
+
+        "must return true" - {
+
+          "when Consignor is selected" in {
+
+            implicit val dr: DataRequest[_] = dataRequest(
+              request = FakeRequest(),
+              answers = emptyUserAnswers
+                .set(GuarantorReviewPage, ChangeAnswers)
+                .set(DestinationTypePage, UkTaxWarehouse.GB)
+                .set(GuarantorArrangerPage, Consignor),
+              ern = testGreatBritainWarehouseErn,
+              movementDetails = maxGetMovementResponse
+            )
+            GuarantorSection.isCompleted mustBe true
+          }
+
+          "when Consignee is selected" in {
+
+            implicit val dr: DataRequest[_] = dataRequest(
+              request = FakeRequest(),
+              answers = emptyUserAnswers
+                .set(GuarantorReviewPage, ChangeAnswers)
+                .set(DestinationTypePage, UkTaxWarehouse.GB)
+                .set(GuarantorArrangerPage, Consignee),
+              ern = testGreatBritainWarehouseErn,
+              movementDetails = maxGetMovementResponse
+            )
+            GuarantorSection.isCompleted mustBe true
+          }
+
+          Seq(GoodsOwner, Transporter) foreach {
+            arranger =>
+
+              s"when another option is selected and the rest of the Guarantor section is completed - ${arranger.getClass.getSimpleName.stripSuffix("$")}" in {
+                implicit val dr: DataRequest[_] = dataRequest(
+                  request = FakeRequest(),
+                  answers = emptyUserAnswers
+                    .set(GuarantorReviewPage, ChangeAnswers)
+                    .set(DestinationTypePage, UkTaxWarehouse.GB)
+                    .set(GuarantorArrangerPage, arranger)
+                    .set(GuarantorNamePage, "")
+                    .set(GuarantorVatPage, "")
+                    .set(GuarantorAddressPage, UserAddress(None, "", "", "")),
+                  ern = testGreatBritainWarehouseErn,
+                  movementDetails = maxGetMovementResponse
+                )
+                GuarantorSection.isCompleted mustBe true
+              }
+          }
+        }
+
+        "must return true (from IE801 values)" - {
+
+          "when no changed guarantor answers exist" in {
+
+            implicit val dr: DataRequest[_] = dataRequest(
+              request = FakeRequest(),
+              answers = emptyUserAnswers
+                .set(GuarantorReviewPage, ChangeAnswers)
+                .set(DestinationTypePage, UkTaxWarehouse.GB),
+              ern = testGreatBritainWarehouseErn,
+              movementDetails = maxGetMovementResponse
+            )
+            GuarantorSection.isCompleted mustBe true
+          }
+
+          Seq(GoodsOwner, Transporter) foreach { arranger =>
+
+            s"when another option is selected and the rest of the Guarantor section is not completed - ${arranger.getClass.getSimpleName.stripSuffix("$")}" in {
+
+              implicit val dr: DataRequest[_] = dataRequest(FakeRequest(),
+                emptyUserAnswers
+                  .set(GuarantorReviewPage, ChangeAnswers)
+                  .set(DestinationTypePage, UkTaxWarehouse.GB)
+                  .set(GuarantorArrangerPage, arranger),
+                movementDetails = maxGetMovementResponse
+              )
+              GuarantorSection.isCompleted mustBe true
+            }
+          }
+        }
+      }
+
+      "when the section has been reviewed and the user has selected to keep the same details" - {
+
+        "must return true" - {
+
+          implicit val dr: DataRequest[_] = dataRequest(
+            request = FakeRequest(),
+            answers = emptyUserAnswers
+              .set(GuarantorReviewPage, KeepAnswers)
+              .set(DestinationTypePage, UkTaxWarehouse.GB),
+            ern = testGreatBritainWarehouseErn,
+            movementDetails = maxGetMovementResponse
+          )
+          GuarantorSection.isCompleted mustBe true
+        }
       }
     }
   }

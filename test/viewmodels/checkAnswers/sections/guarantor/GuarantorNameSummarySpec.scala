@@ -73,7 +73,7 @@ class GuarantorNameSummarySpec extends SpecBase with Matchers {
               )
             )
 
-            GuarantorNameSummary.row mustBe expectedRow(messagesForLanguage.consigneeNameNotProvided, false)
+            GuarantorNameSummary.row() mustBe expectedRow(messagesForLanguage.consigneeNameNotProvided, false)
           }
 
           "and that section has been filled in" in {
@@ -86,7 +86,7 @@ class GuarantorNameSummarySpec extends SpecBase with Matchers {
               movementDetails = maxGetMovementResponse.copy(movementGuarantee = MovementGuaranteeModel(NoGuarantor, None))
             )
 
-            GuarantorNameSummary.row mustBe expectedRow("consignee name here", false)
+            GuarantorNameSummary.row() mustBe expectedRow("consignee name here", false)
           }
         }
 
@@ -100,7 +100,7 @@ class GuarantorNameSummarySpec extends SpecBase with Matchers {
               movementDetails = maxGetMovementResponse.copy(movementGuarantee = MovementGuaranteeModel(NoGuarantor, None))
             )
 
-            GuarantorNameSummary.row mustBe expectedRow(testMinTraderKnownFacts.traderName, false)
+            GuarantorNameSummary.row() mustBe expectedRow(testMinTraderKnownFacts.traderName, false)
           }
         }
 
@@ -115,7 +115,7 @@ class GuarantorNameSummarySpec extends SpecBase with Matchers {
               movementDetails = maxGetMovementResponse.copy(movementGuarantee = MovementGuaranteeModel(GuarantorType.Owner, None))
             )
 
-            GuarantorNameSummary.row mustBe expectedRow(messagesForLanguage.notProvided, showChangeLink = true, NormalMode)
+            GuarantorNameSummary.row() mustBe expectedRow(messagesForLanguage.notProvided, showChangeLink = true, NormalMode)
           }
 
           "and that section has been filled in" in {
@@ -128,7 +128,7 @@ class GuarantorNameSummarySpec extends SpecBase with Matchers {
               movementDetails = maxGetMovementResponse.copy(movementGuarantee = MovementGuaranteeModel(NoGuarantor, None))
             )
 
-            GuarantorNameSummary.row mustBe expectedRow("guarantor name here", true)
+            GuarantorNameSummary.row() mustBe expectedRow("guarantor name here", true)
           }
         }
 
@@ -143,7 +143,7 @@ class GuarantorNameSummarySpec extends SpecBase with Matchers {
               movementDetails = maxGetMovementResponse.copy(movementGuarantee = MovementGuaranteeModel(GuarantorType.Transporter, None))
             )
 
-            GuarantorNameSummary.row mustBe expectedRow(messagesForLanguage.notProvided, showChangeLink = true, NormalMode)
+            GuarantorNameSummary.row() mustBe expectedRow(messagesForLanguage.notProvided, showChangeLink = true, NormalMode)
           }
 
           "and that section has been filled in" in {
@@ -155,7 +155,7 @@ class GuarantorNameSummarySpec extends SpecBase with Matchers {
                 .set(GuarantorNamePage, "transporter name here")
             )
 
-            GuarantorNameSummary.row mustBe expectedRow("transporter name here", true)
+            GuarantorNameSummary.row() mustBe expectedRow("transporter name here", true)
           }
         }
       }

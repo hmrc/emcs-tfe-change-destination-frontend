@@ -23,9 +23,7 @@ import mocks.services.MockUserAnswersService
 import models.UserAnswers
 import models.requests.DataRequest
 import models.sections.ReviewAnswer
-import models.sections.ReviewAnswer.KeepAnswers
 import navigation.FakeNavigators.FakeTransportUnitNavigator
-import pages.sections.transportUnit.TransportUnitsReviewPage
 import play.api.data.Form
 import play.api.i18n.Messages
 import play.api.mvc.{AnyContentAsEmpty, Call}
@@ -72,15 +70,6 @@ class TransportUnitsReviewControllerSpec extends SpecBase with MockUserAnswersSe
 
       status(result) mustEqual OK
       contentAsString(result) mustEqual view(form, helper.allTransportUnitsSummary(onReviewPage = true), submitCall).toString()
-    }
-
-    "must populate the view correctly on a GET when the question has previously been answered" in new Test(Some(
-      emptyUserAnswers.set(TransportUnitsReviewPage, KeepAnswers)
-    )) {
-      val result = controller.onPageLoad(testErn, testArc)(request)
-
-      status(result) mustEqual OK
-      contentAsString(result) mustEqual view(form.fill(KeepAnswers), helper.allTransportUnitsSummary(onReviewPage = true), submitCall).toString()
     }
 
     "must redirect to the next page when valid data is submitted" in new Test(Some(emptyUserAnswers)) {

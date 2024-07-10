@@ -50,12 +50,12 @@ class JourneyTypeIndexControllerSpec extends SpecBase with MockUserAnswersServic
   "JourneyTypeIndexController" - {
 
     "when JourneyTypeSection.isCompleted" - {
-      "must redirect to the review controller" in new Test(Some(
+      "must redirect to the CYA controller" in new Test(Some(
         emptyUserAnswers
           .set(HowMovementTransportedPage, SeaTransport)
           .set(GiveInformationOtherTransportPage, "information")
           .set(JourneyTimeDaysPage, 1)
-          .set(JourneyTypeReviewPage, KeepAnswers)
+          .set(JourneyTypeReviewPage, ChangeAnswers)
       )) {
         val result = controller.onPageLoad(testErn, testArc)(request)
 
@@ -72,6 +72,22 @@ class JourneyTypeIndexControllerSpec extends SpecBase with MockUserAnswersServic
           .set(HowMovementTransportedPage, SeaTransport)
           .set(GiveInformationOtherTransportPage, "information")
           .set(JourneyTimeDaysPage, 1)
+      )) {
+        val result = controller.onPageLoad(testErn, testArc)(request)
+
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result) mustBe
+          Some(controllers.sections.journeyType.routes.JourneyTypeReviewController.onPageLoad(testErn, testArc).url)
+      }
+    }
+
+    "when chosen to KeepAnswers" - {
+      "must redirect to the Review controller" in new Test(Some(
+        emptyUserAnswers
+          .set(HowMovementTransportedPage, SeaTransport)
+          .set(GiveInformationOtherTransportPage, "information")
+          .set(JourneyTimeDaysPage, 1)
+          .set(JourneyTypeReviewPage, KeepAnswers)
       )) {
         val result = controller.onPageLoad(testErn, testArc)(request)
 

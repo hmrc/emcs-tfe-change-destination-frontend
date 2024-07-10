@@ -18,9 +18,10 @@ package models.submitChangeDestination
 
 import models.audit.Auditable
 import models.requests.DataRequest
+import models.sections.ReviewAnswer.KeepAnswers
 import models.sections.info.movementScenario.DestinationType
 import pages.sections.consignee.ConsigneeSection
-import pages.sections.guarantor.GuarantorSection
+import pages.sections.guarantor.{GuarantorReviewPage, GuarantorSection}
 import pages.sections.info.DestinationTypePage
 import play.api.libs.functional.syntax.{toFunctionalBuilderOps, unlift}
 import play.api.libs.json.{Json, OFormat, OWrites, __}
@@ -45,7 +46,7 @@ object DestinationChangedModel extends ModelConstructorHelpers {
       newConsigneeTrader = Option.when(ConsigneeSection.hasChanged)(TraderModel.applyConsignee),
       deliveryPlaceTrader = TraderModel.applyDeliveryPlace(mandatoryPage(DestinationTypePage)),
       deliveryPlaceCustomsOffice = DeliveryPlaceCustomsOfficeModel.apply,
-      movementGuarantee = Option.when(GuarantorSection.requiresGuarantorToBeProvided)(MovementGuaranteeModel.apply)
+      movementGuarantee = Option.when(GuarantorSection.requiresGuarantorToBeProvided && !GuarantorReviewPage.value.contains(KeepAnswers))(MovementGuaranteeModel.apply)
     )
 
   val auditWrites: OWrites[DestinationChangedModel] = (

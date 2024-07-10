@@ -187,6 +187,44 @@ trait GetMovementResponseFixtures extends BaseFixtures {
         )
       )
     ),
+    items = Seq(
+      MovementItem(
+        itemUniqueReference = 1,
+        productCode = "B000",
+        cnCode = "BodyEadEsadCnCode1",
+        quantity = 2,
+        grossMass = 3,
+        netMass = 4,
+        alcoholicStrength = Some(5),
+        degreePlato = Some(6),
+        fiscalMark = Some("BodyEadEsadFiscalMark1"),
+        fiscalMarkUsedFlag = Some(true),
+        designationOfOrigin = Some("BodyEadEsadDesignationOfOrigin1"),
+        sizeOfProducer = Some("BodyEadEsadSizeOfProducer1"),
+        density = Some(7),
+        commercialDescription = Some("BodyEadEsadCommercialDescription1"),
+        brandNameOfProduct = Some("BodyEadEsadBrandNameOfProducts1"),
+        maturationAge = Some("BodyEadEsadMaturationPeriodOrAgeOfProducts1")
+      ),
+      MovementItem(
+        itemUniqueReference = 2,
+        productCode = "W200",
+        cnCode = "BodyEadEsadCnCode2",
+        quantity = 3,
+        grossMass = 4,
+        netMass = 5,
+        alcoholicStrength = Some(6),
+        degreePlato = Some(7),
+        fiscalMark = Some("BodyEadEsadFiscalMark2"),
+        fiscalMarkUsedFlag = Some(false),
+        designationOfOrigin = Some("BodyEadEsadDesignationOfOrigin2"),
+        sizeOfProducer = Some("BodyEadEsadSizeOfProducer2"),
+        density = Some(8),
+        commercialDescription = Some("BodyEadEsadCommercialDescription2"),
+        brandNameOfProduct = Some("BodyEadEsadBrandNameOfProducts2"),
+        maturationAge = Some("BodyEadEsadMaturationPeriodOrAgeOfProducts2")
+      )
+    ),
     transportDetails = Seq(
       TransportDetailsModel(
         transportUnitCode = "TransportDetailsTransportUnitCode1",
@@ -345,7 +383,7 @@ trait GetMovementResponseFixtures extends BaseFixtures {
     "items" -> Json.arr(
       Json.obj(
         "itemUniqueReference"   -> 1,
-        "productCode"           -> "BodyEadEsadExciseProductCode1",
+        "productCode"           -> "B000",
         "cnCode"                -> "BodyEadEsadCnCode1",
         "quantity"              -> 2,
         "grossMass"             -> 3,
@@ -386,7 +424,7 @@ trait GetMovementResponseFixtures extends BaseFixtures {
       ),
       Json.obj(
         "itemUniqueReference"   -> 2,
-        "productCode"           -> "BodyEadEsadExciseProductCode2",
+        "productCode"           -> "W200",
         "cnCode"                -> "BodyEadEsadCnCode2",
         "quantity"              -> 3,
         "grossMass"             -> 4,

@@ -66,7 +66,7 @@ class GuarantorVatSummarySpec extends SpecBase with Matchers {
                 .set(GuarantorArrangerPage, Consignee)
             )
 
-            GuarantorVatSummary.row mustBe None
+            GuarantorVatSummary.row() mustBe None
           }
         }
 
@@ -79,7 +79,7 @@ class GuarantorVatSummarySpec extends SpecBase with Matchers {
                 .set(GuarantorArrangerPage, Consignor)
             )
 
-            GuarantorVatSummary.row mustBe None
+            GuarantorVatSummary.row() mustBe None
           }
         }
 
@@ -94,7 +94,7 @@ class GuarantorVatSummarySpec extends SpecBase with Matchers {
                 movementDetails = maxGetMovementResponse.copy(movementGuarantee = MovementGuaranteeModel(GuarantorType.Owner, None))
               )
 
-              GuarantorVatSummary.row mustBe expectedRow(messagesForLanguage.notProvided, true)
+              GuarantorVatSummary.row() mustBe expectedRow(messagesForLanguage.notProvided, true)
             }
           }
 
@@ -108,7 +108,7 @@ class GuarantorVatSummarySpec extends SpecBase with Matchers {
                   .set(GuarantorVatPage,"VAT123")
               )
 
-              GuarantorVatSummary.row mustBe expectedRow("VAT123", true)
+              GuarantorVatSummary.row() mustBe expectedRow("VAT123", true)
             }
           }
         }
@@ -125,7 +125,7 @@ class GuarantorVatSummarySpec extends SpecBase with Matchers {
 
               )
 
-              GuarantorVatSummary.row mustBe expectedRow(messagesForLanguage.notProvided, true)
+              GuarantorVatSummary.row() mustBe expectedRow(messagesForLanguage.notProvided, true)
             }
           }
 
@@ -139,7 +139,7 @@ class GuarantorVatSummarySpec extends SpecBase with Matchers {
                   .set(GuarantorVatPage, "TRAN123")
               )
 
-              GuarantorVatSummary.row mustBe expectedRow("TRAN123", true)
+              GuarantorVatSummary.row() mustBe expectedRow("TRAN123", true)
             }
           }
         }

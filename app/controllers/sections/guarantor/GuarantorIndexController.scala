@@ -18,12 +18,12 @@ package controllers.sections.guarantor
 
 import controllers.actions._
 import models.NormalMode
-import models.response.emcsTfe.GuarantorType.Consignee
+import models.sections.ReviewAnswer.KeepAnswers
 import navigation.GuarantorNavigator
-import pages.sections.guarantor.GuarantorSection
-import pages.sections.info.DestinationTypePage
+import pages.sections.guarantor.{GuarantorReviewPage, GuarantorSection}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import services.UserAnswersService
+import viewmodels.taskList.NotStarted
 
 import javax.inject.Inject
 
@@ -41,15 +41,14 @@ class GuarantorIndexController @Inject()(
   def onPageLoad(ern: String, arc: String): Action[AnyContent] =
     authorisedDataRequestWithUpToDateMovement(ern, arc) { implicit request =>
       Redirect(
-        if (GuarantorSection.isCompleted) {
+        if(GuarantorSection.needsReview || GuarantorReviewPage.value.contains(KeepAnswers)) {
+          routes.GuarantorReviewController.onPageLoad(ern, arc)
+        } else if(GuarantorSection.isCompleted) {
           routes.GuarantorCheckAnswersController.onPageLoad(ern, arc)
+        } else if (GuarantorSection.requiresGuarantorToBeProvided && GuarantorSection.status == NotStarted) {
+          routes.GuarantorRequiredController.onPageLoad(ern, arc, NormalMode)
         } else {
-          request.movementDetails.movementGuarantee.guarantorTypeCode match {
-            case Consignee if DestinationTypePage.isExport =>
-              routes.GuarantorRequiredController.onPageLoad(ern, arc)
-            case _ =>
-              routes.GuarantorArrangerController.onPageLoad(ern, arc, NormalMode)
-          }
+          routes.GuarantorArrangerController.onPageLoad(ern, arc, NormalMode)
         }
       )
     }

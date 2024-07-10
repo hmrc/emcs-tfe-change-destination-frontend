@@ -19,8 +19,9 @@ package controllers.sections.transportArranger
 import controllers.BaseNavigationController
 import controllers.actions._
 import models.NormalMode
+import models.sections.ReviewAnswer.KeepAnswers
 import navigation.TransportArrangerNavigator
-import pages.sections.transportArranger.TransportArrangerSection
+import pages.sections.transportArranger.{TransportArrangerReviewPage, TransportArrangerSection}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import services.UserAnswersService
 
@@ -40,7 +41,7 @@ class TransportArrangerIndexController @Inject()(
   def onPageLoad(ern: String, arc: String): Action[AnyContent] =
     authorisedDataRequestWithUpToDateMovement(ern, arc) { implicit request =>
       Redirect(
-        if(TransportArrangerSection.needsReview) {
+        if(TransportArrangerSection.needsReview || TransportArrangerReviewPage.value.contains(KeepAnswers)) {
           controllers.sections.transportArranger.routes.TransportArrangerReviewController.onPageLoad(ern, arc)
         } else if (TransportArrangerSection.isCompleted) {
           controllers.sections.transportArranger.routes.TransportArrangerCheckAnswersController.onPageLoad(ern, arc)

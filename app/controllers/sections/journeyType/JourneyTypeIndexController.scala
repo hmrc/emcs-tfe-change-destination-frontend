@@ -19,8 +19,9 @@ package controllers.sections.journeyType
 import controllers.BaseNavigationController
 import controllers.actions._
 import models.NormalMode
+import models.sections.ReviewAnswer.KeepAnswers
 import navigation.JourneyTypeNavigator
-import pages.sections.journeyType.JourneyTypeSection
+import pages.sections.journeyType.{JourneyTypeReviewPage, JourneyTypeSection}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import services.UserAnswersService
 
@@ -40,7 +41,7 @@ class JourneyTypeIndexController @Inject()(
   def onPageLoad(ern: String, arc: String): Action[AnyContent] =
     authorisedDataRequestWithUpToDateMovement(ern, arc) { implicit request =>
       Redirect(
-        if(JourneyTypeSection.needsReview) {
+        if(JourneyTypeSection.needsReview || JourneyTypeReviewPage.value.contains(KeepAnswers)) {
           controllers.sections.journeyType.routes.JourneyTypeReviewController.onPageLoad(ern, arc)
         } else if (JourneyTypeSection.isCompleted) {
           controllers.sections.journeyType.routes.CheckYourAnswersJourneyTypeController.onPageLoad(ern, arc)

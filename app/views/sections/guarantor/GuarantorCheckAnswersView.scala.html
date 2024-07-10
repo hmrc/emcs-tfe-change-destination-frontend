@@ -15,6 +15,7 @@
  *@
 
 @import models.requests.DataRequest
+@import pages.sections.guarantor.GuarantorSection
 
 @this(
     layout: templates.Layout,
@@ -23,7 +24,8 @@
     h1: components.h1,
     h2: components.h2,
     govukSummaryList: GovukSummaryList,
-    saveAndContinue: components.saveAndContinue
+    saveAndContinue: components.saveAndContinue,
+    inset: components.insetText
 )
 
 @(list: SummaryList, submitAction: Call)(implicit request: DataRequest[_], messages: Messages)
@@ -33,6 +35,10 @@
     @formHelper(action = submitAction) {
 
         @h1("guarantorCheckAnswers.heading", Some(messages("guarantor.subHeading")), "govuk-heading-l")
+
+        @if(GuarantorSection.requiresGuarantorToBeProvided) {
+            @inset()(Html(messages("guarantorCheckAnswers.inset")))
+        }
 
         @govukSummaryList(list)
 

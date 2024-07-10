@@ -17,7 +17,7 @@
 package views.sections.guarantor
 
 import base.SpecBase
-import fixtures.messages.sections.guarantor.GuarantorRequiredMessages
+import fixtures.messages.sections.guarantor.GuarantorRequiredMessages.English
 import models.requests.DataRequest
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
@@ -31,24 +31,45 @@ class GuarantorRequiredViewSpec extends SpecBase with ViewBehaviours {
 
   object Selectors extends BaseSelectors
 
-  Seq(GuarantorRequiredMessages.English).foreach { messagesForLanguage =>
 
-    s"when being rendered in lang code of '${messagesForLanguage.lang.code}'" - {
+  s"newGuarantorIsRequired is true" - {
 
-      implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
+    implicit val msgs: Messages = messages(Seq(English.lang))
+    implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), emptyUserAnswers)
+
+    lazy val view = app.injector.instanceOf[GuarantorRequiredView]
+
+    implicit val doc: Document = Jsoup.parse(view(testOnwardRoute, true).toString())
+
+    behave like pageWithExpectedElementsAndMessages(Seq(
+      Selectors.title -> English.titleRequiredUkToUk,
+      Selectors.h1 -> English.headingRequiredUkToUk,
+      Selectors.p(1) -> English.p1RequiredUkToUk,
+      Selectors.p(2) -> English.p2Required,
+      Selectors.link(1) -> English.findOutMore,
+      Selectors.button -> English.enterDetails
+    ))
+  }
+
+  s"newGuarantorIsRequired is false" - {
+
+    "must show correct content and show the inset text" - {
+
+      implicit val msgs: Messages = messages(Seq(English.lang))
       implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), emptyUserAnswers)
 
       lazy val view = app.injector.instanceOf[GuarantorRequiredView]
 
-      implicit val doc: Document = Jsoup.parse(view(testOnwardRoute).toString())
+      implicit val doc: Document = Jsoup.parse(view(testOnwardRoute, false).toString())
 
       behave like pageWithExpectedElementsAndMessages(Seq(
-        Selectors.title -> messagesForLanguage.title,
-        Selectors.h1 -> messagesForLanguage.heading,
-        Selectors.p(1) -> messagesForLanguage.p1,
-        Selectors.p(2) -> messagesForLanguage.p2,
-        Selectors.link(1) -> messagesForLanguage.findOutMore,
-        Selectors.button -> messagesForLanguage.enterDetails
+        Selectors.title -> English.titleRequiredNiToEu,
+        Selectors.h1 -> English.headingRequiredNiToEu,
+        Selectors.p(1) -> English.p1RequiredNiToEu,
+        Selectors.p(2) -> English.p2Required,
+        Selectors.link(1) -> English.findOutMore,
+        Selectors.inset -> English.inset,
+        Selectors.button -> English.enterDetails
       ))
     }
   }

@@ -32,7 +32,7 @@ import viewmodels.implicits._
 
 object GuarantorAddressSummary {
 
-  def row()(implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] =
+  def row(onReviewPage: Boolean = false)(implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] =
     request.userAnswers.get(GuarantorArrangerPage).map {
 
       guarantorArranger => {
@@ -64,7 +64,7 @@ object GuarantorAddressSummary {
         SummaryListRowViewModel(
           key = "address.guarantorAddress.checkYourAnswers.label",
           value = ValueViewModel(value),
-          actions = if (!showChangeLink) Seq() else Seq(
+          actions = if (!showChangeLink || onReviewPage) Seq() else Seq(
             ActionItemViewModel(
               content = "site.change",
               href = controllers.sections.guarantor.routes.GuarantorAddressController.onPageLoad(

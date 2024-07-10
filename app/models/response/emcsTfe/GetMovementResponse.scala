@@ -45,6 +45,7 @@ case class GetMovementResponse(
                                 headerEadEsad: HeaderEadEsadModel,
                                 transportMode: TransportModeModel,
                                 movementGuarantee: MovementGuaranteeModel,
+                                items: Seq[MovementItem],
                                 transportDetails: Seq[TransportDetailsModel]
                               ) {
 }
@@ -75,6 +76,7 @@ object GetMovementResponse {
     headerEadEsad <- (__ \ "headerEadEsad").read[HeaderEadEsadModel]
     transportMode <- (__ \ "transportMode").read[TransportModeModel]
     movementGuarantee <- (__ \ "movementGuarantee").read[MovementGuaranteeModel]
+    items <- (__ \ "items").read[Seq[MovementItem]]
     transportDetails <- (__ \ "transportDetails").read[Seq[TransportDetailsModel]]
   } yield {
     GetMovementResponse(
@@ -102,6 +104,7 @@ object GetMovementResponse {
       headerEadEsad = headerEadEsad,
       transportMode = transportMode,
       movementGuarantee = movementGuarantee,
+      items = items,
       transportDetails = transportDetails
     )
   }

@@ -18,7 +18,8 @@ package controllers.sections.movement
 
 import controllers.BaseController
 import controllers.actions._
-import pages.sections.movement.MovementSection
+import models.sections.ReviewAnswer.KeepAnswers
+import pages.sections.movement.{MovementReviewPage, MovementSection}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 
 import javax.inject.Inject
@@ -34,7 +35,7 @@ class MovementIndexController @Inject()(
 
   def onPageLoad(ern: String, arc: String): Action[AnyContent] =
     authorisedDataRequestWithCachedMovement(ern, arc) { implicit request =>
-      if (MovementSection.needsReview) {
+      if (MovementSection.needsReview || MovementReviewPage.value.contains(KeepAnswers)) {
         Redirect(controllers.sections.movement.routes.MovementReviewAnswersController.onPageLoad(ern, arc))
       } else {
         Redirect(controllers.sections.movement.routes.MovementCheckAnswersController.onPageLoad(ern, arc))
