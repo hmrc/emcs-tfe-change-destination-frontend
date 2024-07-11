@@ -19,7 +19,7 @@ package pages.sections.destination
 import models.Enumerable
 import models.requests.DataRequest
 import models.sections.info.movementScenario.MovementScenario
-import models.sections.info.movementScenario.MovementScenario.{CertifiedConsignee, DirectDelivery, EuTaxWarehouse, ExemptedOrganisation, RegisteredConsignee, TemporaryCertifiedConsignee, TemporaryRegisteredConsignee, UkTaxWarehouse}
+import models.sections.info.movementScenario.MovementScenario._
 import pages.sections.Section
 import pages.sections.info.DestinationTypePage
 import play.api.libs.json.{JsObject, JsPath}
