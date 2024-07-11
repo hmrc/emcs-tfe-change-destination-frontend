@@ -17,6 +17,7 @@
 package fixtures.messages.sections.transportUnit
 
 import fixtures.messages.{BaseEnglish, BaseMessages, i18n}
+import models.Index
 import models.sections.transportUnit.TransportUnitType
 
 object TransportUnitTypeMessages {
@@ -31,7 +32,7 @@ object TransportUnitTypeMessages {
     val vehicleRadioOption = "Vehicle"
     val addToListLabel = "Transport type"
     val cyaLabel = "Type of transport"
-    val addToListChangeHidden: String = "transport type"
+    def addToListChangeHidden(idx: Index): String = s"transport type for transport unit ${idx.displayIndex}"
     val addToListValue: TransportUnitType => String = {
       case TransportUnitType.Tractor        => tractorRadioOption
       case TransportUnitType.Trailer        => trailerRadioOption

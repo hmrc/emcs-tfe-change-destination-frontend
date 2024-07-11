@@ -104,7 +104,7 @@ class TransportUnitTypeSummarySpec extends SpecBase with Matchers {
                             content = messagesForLanguage.change,
                             href = controllers.sections.transportUnit.routes.TransportUnitTypeController.onPageLoad(testErn, testArc, testIndex1, CheckMode).url,
                             id = "changeTransportUnitType1"
-                          ).withVisuallyHiddenText(messagesForLanguage.addToListChangeHidden)
+                          ).withVisuallyHiddenText(messagesForLanguage.addToListChangeHidden(testIndex1))
                         )
                       )
                     )
