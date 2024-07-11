@@ -53,20 +53,13 @@ class HowMovementTransportedController @Inject()(
                                                   val betaAllowList: BetaAllowListAction
                                                 ) extends BaseNavigationController with AuthActionHelper {
 
-  //IF UKtoEU, destinationType has not changed and there's no Guarantor on the IE801 - then only option is FixedTransportInstallations
-  private def guarantorNotRequiredEuGuard[T](onEuNotRequired: => T, default: => T)(implicit request: DataRequest[_]): T =
-    (request.userAnswers.get(DestinationTypePage), request.movementDetails.movementGuarantee.guarantorTrader.isEmpty) match {
-      case (Some(scenario), true)
-        if scenario.movementType == MovementType.UkToEu && scenario.destinationType == request.movementDetails.destinationType => onEuNotRequired
-      case _ => default
-    }
-
   def onPageLoad(ern: String, arc: String, mode: Mode): Action[AnyContent] =
     authorisedDataRequestWithUpToDateMovement(ern, arc) { implicit request =>
-      guarantorNotRequiredEuGuard(
-        onEuNotRequired = Ok(onlyFixedView(mode)),
-        default = Ok(view(fillForm(HowMovementTransportedPage, formProvider()), mode))
-      )
+      if(JourneyTypeSection.mustBeFixedTransport) {
+        Ok(onlyFixedView(mode))
+      } else {
+        Ok(view(fillForm(HowMovementTransportedPage, formProvider()), mode))
+      }
     }
 
   private def redirect(answer: HowMovementTransported, mode: Mode)(implicit request: DataRequest[_]): Future[Result] =
@@ -85,14 +78,14 @@ class HowMovementTransportedController @Inject()(
 
   def onSubmit(ern: String, arc: String, mode: Mode): Action[AnyContent] =
     authorisedDataRequestWithUpToDateMovementAsync(ern, arc) { implicit request =>
-      guarantorNotRequiredEuGuard(
-        onEuNotRequired = redirect(HowMovementTransported.FixedTransportInstallations, mode),
-        default = formProvider().bindFromRequest().fold(
-          formWithErrors =>
-            Future.successful(BadRequest(view(formWithErrors, mode))),
-          answer => redirect(answer, mode)
+      if(JourneyTypeSection.mustBeFixedTransport) {
+        redirect(HowMovementTransported.FixedTransportInstallations, mode)
+      } else {
+        formProvider().bindFromRequest().fold(
+          formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode))),
+          redirect(_, mode)
         )
-      )
+      }
     }
 
   private def cleanseAnswers(answer: HowMovementTransported): PartialFunction[UserAnswers, UserAnswers] = {

@@ -17,7 +17,6 @@
 package pages.sections.guarantor
 
 import base.SpecBase
-import models.response.emcsTfe.GuarantorType.{GuarantorNotRequired, NoGuarantor}
 import models.response.emcsTfe.{GuarantorType, MovementGuaranteeModel}
 import play.api.test.FakeRequest
 

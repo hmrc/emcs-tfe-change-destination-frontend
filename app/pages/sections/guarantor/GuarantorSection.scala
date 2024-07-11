@@ -30,6 +30,9 @@ import viewmodels.taskList.{Completed, InProgress, NotStarted, TaskListStatus}
 case object GuarantorSection extends Section[JsObject] with Enumerable.Implicits {
   override val path: JsPath = JsPath \ "guarantor"
 
+  def doNotRetrieveValuesFromIE801(implicit request: DataRequest[_]): Boolean =
+    requiresNewGuarantorDetails || request.userAnswers.getFromUserAnswersOnly(GuarantorRequiredPage).contains(true)
+
   def requiresNewGuarantorDetails(implicit request: DataRequest[_]): Boolean =
     request.movementDetails.movementGuarantee.guarantorTypeCode == GuarantorType.Consignee && DestinationTypePage.isExport
 
@@ -55,19 +58,23 @@ case object GuarantorSection extends Section[JsObject] with Enumerable.Implicits
 
   override def status(implicit request: DataRequest[_]): TaskListStatus =
     reviewGuard {
-      request.userAnswers.get(GuarantorArrangerPage) match {
-        case Some(Consignee) | Some(Consignor) => Completed
-        case Some(_) =>
-          if (
-            request.userAnswers.get(GuarantorNamePage).nonEmpty &&
-              request.userAnswers.get(GuarantorVatPage).nonEmpty &&
-              request.userAnswers.get(GuarantorAddressPage).nonEmpty) {
-            Completed
-          } else {
-            InProgress
-          }
-        case None =>
-          NotStarted
+      if(request.userAnswers.getFromUserAnswersOnly(GuarantorRequiredPage).contains(false)) {
+        Completed
+      } else {
+        request.userAnswers.get(GuarantorArrangerPage) match {
+          case Some(Consignee) | Some(Consignor) => Completed
+          case Some(_) =>
+            if (
+              request.userAnswers.get(GuarantorNamePage).nonEmpty &&
+                request.userAnswers.get(GuarantorVatPage).nonEmpty &&
+                request.userAnswers.get(GuarantorAddressPage).nonEmpty) {
+              Completed
+            } else {
+              InProgress
+            }
+          case None =>
+            NotStarted
+        }
       }
     }
 

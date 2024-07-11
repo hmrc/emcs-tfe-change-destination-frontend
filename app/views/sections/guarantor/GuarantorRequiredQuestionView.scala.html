@@ -72,7 +72,7 @@
         @govukRadios(
             RadiosViewModel.yesNo(
                 field = form("value"),
-                legend = LegendViewModel(Text(messages("guarantorRequired.export.notRequired.h2.2")))
+                legend = LegendViewModel(Text(messages("guarantorRequired.export.notRequired.h2.2"))).hidden
             )
         )
 

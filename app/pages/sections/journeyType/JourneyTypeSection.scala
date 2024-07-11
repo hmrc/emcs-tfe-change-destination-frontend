@@ -18,13 +18,18 @@ package pages.sections.journeyType
 
 import models.Enumerable
 import models.requests.DataRequest
-import models.sections.journeyType.HowMovementTransported.Other
+import models.sections.journeyType.HowMovementTransported.{FixedTransportInstallations, Other}
 import pages.sections.Section
+import pages.sections.guarantor.GuarantorRequiredPage
+import pages.sections.info.DestinationTypePage
 import play.api.libs.json.{JsObject, JsPath}
 import viewmodels.taskList.{Completed, InProgress, NotStarted, TaskListStatus}
 
 case object JourneyTypeSection extends Section[JsObject] with Enumerable.Implicits {
   override val path: JsPath = JsPath \ "journeyType"
+
+  def mustBeFixedTransport(implicit request: DataRequest[_]) =
+    request.userAnswers.get(DestinationTypePage).exists(_.isNItoEU) && GuarantorRequiredPage.value.contains(false)
 
   override def status(implicit request: DataRequest[_]): TaskListStatus = {
     val pageAnswersExist = List(

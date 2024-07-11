@@ -20,7 +20,6 @@ import base.SpecBase
 import fixtures.messages.sections.guarantor.GuarantorArrangerMessages.English
 import models.requests.DataRequest
 import models.response.emcsTfe.GuarantorType._
-import models.response.emcsTfe.MovementGuaranteeModel
 import models.sections.guarantor.GuarantorArranger
 import models.sections.guarantor.GuarantorArranger.{GoodsOwner, Transporter}
 import models.sections.info.movementScenario.MovementScenario.ExportWithCustomsDeclarationLodgedInTheUk

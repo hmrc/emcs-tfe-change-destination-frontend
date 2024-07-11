@@ -21,7 +21,7 @@ import forms.sections.guarantor.GuarantorRequiredFormProvider
 import models.requests.DataRequest
 import models.{Mode, NormalMode}
 import navigation.GuarantorNavigator
-import pages.sections.guarantor.{GuarantorRequiredPage, GuarantorSection}
+import pages.sections.guarantor._
 import play.api.data.Form
 import play.api.i18n.MessagesApi
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
@@ -59,7 +59,15 @@ class GuarantorRequiredController @Inject()(
           Future(Redirect(navigator.nextPage(GuarantorRequiredPage, mode, request.userAnswers)))
         } else {
 
-          val updatedUserAnswers = cleanseUserAnswersIfValueHasChanged(GuarantorRequiredPage, value, request.userAnswers.remove(GuarantorSection))
+          val updatedUserAnswers = cleanseUserAnswersIfValueHasChanged(
+            GuarantorRequiredPage,
+            value,
+            request.userAnswers
+              .remove(GuarantorArrangerPage)
+              .remove(GuarantorNamePage)
+              .remove(GuarantorVatPage)
+              .remove(GuarantorAddressPage)
+          )
 
           saveAndRedirect(
             page = GuarantorRequiredPage,

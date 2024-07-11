@@ -46,18 +46,7 @@ class GuarantorNavigatorSpec extends SpecBase {
 
       "for GuarantorReviewPage" - {
 
-        "when the GuarantorRequiredPage is false and the GuarantorReviewPage is ChangeAnswers" - {
-          "must goto CAM-G01 (Guarantor Arranger)" in {
-            val userAnswers = emptyUserAnswers
-              .set(GuarantorRequiredPage, false)
-              .set(GuarantorReviewPage, ChangeAnswers)
-
-            navigator.nextPage(GuarantorReviewPage, NormalMode, userAnswers) mustBe
-              routes.GuarantorArrangerController.onPageLoad(testErn, testArc, NormalMode)
-          }
-        }
-
-        "when the GuarantorRequiredPage is false and the GuarantorReviewPage is KeepAnswers" - {
+        "when the GuarantorReviewPage is KeepAnswers" - {
           "must goto Task List" in {
             val userAnswers = emptyUserAnswers
               .set(GuarantorRequiredPage, false)
@@ -68,25 +57,14 @@ class GuarantorNavigatorSpec extends SpecBase {
           }
         }
 
-        "when the GuarantorRequiredPage is true and the GuarantorReviewPage is ChangeAnswers" - {
-          "must goto CAM-G06 (Check Answers)" in {
+        "when the GuarantorReviewPage is ChangeAnswers" - {
+          "must goto GuarantorIndex Controller" in {
             val userAnswers = emptyUserAnswers
               .set(GuarantorRequiredPage, true)
               .set(GuarantorReviewPage, ChangeAnswers)
 
             navigator.nextPage(GuarantorReviewPage, NormalMode, userAnswers) mustBe
-              routes.GuarantorCheckAnswersController.onPageLoad(testErn, testArc)
-          }
-        }
-
-        "when the GuarantorRequiredPage is true and the GuarantorReviewPage is KeepAnswers" - {
-          "must goto Task List" in {
-            val userAnswers = emptyUserAnswers
-              .set(GuarantorRequiredPage, true)
-              .set(GuarantorReviewPage, KeepAnswers)
-
-            navigator.nextPage(GuarantorReviewPage, NormalMode, userAnswers) mustBe
-              controllers.routes.TaskListController.onPageLoad(testErn, testArc)
+              routes.GuarantorIndexController.onPageLoad(testErn, testArc)
           }
         }
       }

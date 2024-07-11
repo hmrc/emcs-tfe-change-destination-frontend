@@ -18,7 +18,7 @@ package models.sections.info.movementScenario
 
 import models.requests.DataRequest
 import models.response.InvalidUserTypeException
-import models.sections.info.movementScenario.MovementScenario.{CertifiedConsignee, DirectDelivery, EuTaxWarehouse, ExemptedOrganisation, ExportWithCustomsDeclarationLodgedInTheEu, ExportWithCustomsDeclarationLodgedInTheUk, RegisteredConsignee, TemporaryCertifiedConsignee, TemporaryRegisteredConsignee, UkTaxWarehouse, logger, values, valuesEu}
+import models.sections.info.movementScenario.MovementScenario.{CertifiedConsignee, DirectDelivery, EuTaxWarehouse, ExemptedOrganisation, ExportWithCustomsDeclarationLodgedInTheEu, ExportWithCustomsDeclarationLodgedInTheUk, RegisteredConsignee, TemporaryCertifiedConsignee, TemporaryRegisteredConsignee, logger}
 import models.{Enumerable, UserType, WithName}
 import utils.Logging
 
