@@ -33,7 +33,7 @@ class GuarantorArrangerSpec extends AnyFlatSpec with Matchers {
     UkTaxWarehouse.toList ++ Seq(CertifiedConsignee, TemporaryCertifiedConsignee)
 
   "GuarantorArranger" should "have correct values" in {
-    GuarantorArranger.values should contain allOf(
+    GuarantorArranger.values shouldBe Seq(
       GuarantorArranger.Consignor,
       GuarantorArranger.Consignee,
       GuarantorArranger.GoodsOwner,

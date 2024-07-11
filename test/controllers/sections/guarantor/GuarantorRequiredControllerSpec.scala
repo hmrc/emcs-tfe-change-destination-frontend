@@ -19,8 +19,11 @@ package controllers.sections.guarantor
 import base.SpecBase
 import controllers.actions.{FakeDataRetrievalAction, FakeMovementAction}
 import mocks.services.MockUserAnswersService
+import models.requests.DataRequest
 import models.{NormalMode, UserAnswers}
 import navigation.FakeNavigators.FakeGuarantorNavigator
+import play.api.i18n.Messages
+import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import views.html.sections.guarantor.GuarantorRequiredView
@@ -32,9 +35,9 @@ class GuarantorRequiredControllerSpec extends SpecBase with MockUserAnswersServi
 
   class Fixture(optUserAnswers: Option[UserAnswers] = Some(emptyUserAnswers)) {
 
-    val request = FakeRequest(GET, guarantorRequiredRoute)
-    implicit val dr = dataRequest(request)
-    implicit val msgs = messages(request)
+    val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest(GET, guarantorRequiredRoute)
+    implicit val dr: DataRequest[_] = dataRequest(request)
+    implicit val msgs: Messages = messages(request)
 
     lazy val testController = new GuarantorRequiredController(
       messagesApi,

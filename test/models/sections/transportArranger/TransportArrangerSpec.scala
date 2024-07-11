@@ -28,7 +28,7 @@ import uk.gov.hmrc.govukfrontend.views.viewmodels.radios.RadioItem
 class TransportArrangerSpec extends AnyFlatSpec with Matchers {
 
   "TransportArranger" should "have correct values" in {
-    TransportArranger.values should contain allOf(
+    TransportArranger.values shouldBe Seq(
       TransportArranger.Consignor,
       TransportArranger.Consignee,
       TransportArranger.GoodsOwner,

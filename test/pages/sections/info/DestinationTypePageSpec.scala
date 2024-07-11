@@ -20,7 +20,6 @@ import base.SpecBase
 import models.requests.DataRequest
 import models.sections.info.movementScenario.MovementScenario
 import models.sections.info.movementScenario.MovementScenario.{ExportWithCustomsDeclarationLodgedInTheEu, ExportWithCustomsDeclarationLodgedInTheUk}
-import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 
 class DestinationTypePageSpec extends SpecBase {

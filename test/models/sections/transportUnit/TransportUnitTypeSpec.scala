@@ -14,9 +14,8 @@
  * limitations under the License.
  */
 
-package models.sections.TransportUnit
+package models.sections.transportUnit
 
-import models.sections.transportUnit.TransportUnitType
 import org.mockito.ArgumentMatchers.{any, anyString}
 import org.mockito.Mockito.when
 import org.scalatest.flatspec.AnyFlatSpec
@@ -29,12 +28,12 @@ import uk.gov.hmrc.govukfrontend.views.viewmodels.radios.RadioItem
 class TransportUnitTypeSpec extends AnyFlatSpec with Matchers {
 
   "TransportUnitType" should "have correct values" in {
-    TransportUnitType.values should contain allOf(
+    TransportUnitType.values shouldBe Seq(
       TransportUnitType.Container,
-      TransportUnitType.Vehicle,
-      TransportUnitType.Trailer,
+      TransportUnitType.FixedTransport,
       TransportUnitType.Tractor,
-      TransportUnitType.FixedTransport
+      TransportUnitType.Trailer,
+      TransportUnitType.Vehicle
     )
   }
 

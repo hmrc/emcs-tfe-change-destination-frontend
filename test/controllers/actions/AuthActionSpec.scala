@@ -53,6 +53,8 @@ class AuthActionSpec extends SpecBase with BaseFixtures with BeforeAndAfterAll {
 
   trait Harness {
 
+    val ern: String = testErn
+
     lazy val bodyParsers = app.injector.instanceOf[BodyParsers.Default]
     lazy val appConfig = app.injector.instanceOf[AppConfig]
     implicit lazy val ec: ExecutionContext = app.injector.instanceOf[ExecutionContext]
@@ -61,13 +63,13 @@ class AuthActionSpec extends SpecBase with BaseFixtures with BeforeAndAfterAll {
     val authConnector: AuthConnector
     lazy val authAction = new AuthActionImpl(authConnector, appConfig, bodyParsers)
 
-    def onPageLoad(): Action[AnyContent] = authAction(testErn, testArc) { _ => Results.Ok }
+    def onPageLoad(): Action[AnyContent] = authAction(ern, testArc) { _ => Results.Ok }
 
     lazy val result = onPageLoad()(fakeRequest)
 
     def testRequest(isOk: UserRequest[_] => Boolean): Boolean =
       Await.result(
-        authAction(testErn, testArc) { req =>
+        authAction(ern, testArc) { req =>
           if (isOk(req)) Results.Ok else Results.BadRequest
         }(fakeRequest).map(_.header.status == OK),
         Duration.Inf
@@ -206,6 +208,28 @@ class AuthActionSpec extends SpecBase with BaseFixtures with BeforeAndAfterAll {
                 }
 
                 s"the ${EnrolmentKeys.ERN} identifier is present" - {
+
+                  "the user is invalid" - {
+                    Seq("GB00", "XI00", "ABCD").foreach {
+                      ernPrefix =>
+                        val badErn = s"${ernPrefix}1234"
+                        s"redirect to unauthorised for ern $badErn" in new Harness {
+                          override val ern: String = badErn
+                          private val singleEnrolment = Enrolments(Set(
+                            Enrolment(
+                              key = EnrolmentKeys.EMCS_ENROLMENT,
+                              identifiers = Seq(EnrolmentIdentifier(EnrolmentKeys.ERN, ern)),
+                              state = EnrolmentKeys.ACTIVATED
+                            )
+                          ))
+                          override val authConnector = new FakeSuccessAuthConnector(authResponse(enrolments = singleEnrolment))
+
+                          status(result) mustBe SEE_OTHER
+                          redirectLocation(result) mustBe Some(controllers.error.routes.ErrorController.unauthorised().url)
+                        }
+                    }
+                  }
+
                   val singleEnrolement = Enrolments(Set(
                     Enrolment(
                       key = EnrolmentKeys.EMCS_ENROLMENT,
