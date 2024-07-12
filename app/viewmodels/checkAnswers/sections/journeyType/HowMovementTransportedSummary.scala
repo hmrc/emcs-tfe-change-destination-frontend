@@ -18,9 +18,6 @@ package viewmodels.checkAnswers.sections.journeyType
 
 import models.CheckMode
 import models.requests.DataRequest
-import models.sections.journeyType.HowMovementTransported.FixedTransportInstallations
-import pages.sections.guarantor.GuarantorRequiredPage
-import pages.sections.info.DestinationTypePage
 import pages.sections.journeyType.{HowMovementTransportedPage, JourneyTypeSection}
 import play.api.i18n.Messages
 import play.twirl.api.HtmlFormat
