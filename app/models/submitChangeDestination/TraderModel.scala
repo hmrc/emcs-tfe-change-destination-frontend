@@ -72,14 +72,12 @@ object TraderModel extends ModelConstructorHelpers {
       TraderModel(
         traderExciseNumber = pod.traderExciseNumber,
         traderName = pod.traderName,
-        address = Some(
-          AddressModel(
-            streetNumber = pod.address.flatMap(_.streetNumber),
-            street = pod.address.flatMap(_.street),
-            postcode = pod.address.flatMap(_.postcode),
-            city = pod.address.flatMap(_.city)
-          )
-        ),
+        address = Some(AddressModel(
+          streetNumber = pod.address.flatMap(_.streetNumber),
+          street = pod.address.flatMap(_.street),
+          postcode = pod.address.flatMap(_.postcode),
+          city = pod.address.flatMap(_.city)
+        )),
         vatNumber = None,
         eoriNumber = None
       )
