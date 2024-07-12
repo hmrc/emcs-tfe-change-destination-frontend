@@ -20,12 +20,14 @@ import models.UserAddress
 import models.requests.DataRequest
 import models.sections.guarantor.GuarantorArranger
 import models.sections.info.movementScenario.MovementScenario
+import models.sections.info.movementScenario.MovementScenario.ReturnToThePlaceOfDispatch
 import models.sections.transportArranger.TransportArranger
 import pages.sections.consignee._
 import pages.sections.consignor._
 import pages.sections.destination._
 import pages.sections.firstTransporter._
 import pages.sections.guarantor._
+import pages.sections.info.DestinationTypePage
 import pages.sections.transportArranger._
 import play.api.libs.json.{Format, Json}
 import utils.ModelConstructorHelpers
@@ -38,7 +40,15 @@ case class TraderModel(traderExciseNumber: Option[String],
 
 object TraderModel extends ModelConstructorHelpers {
 
-  def applyConsignee(implicit request: DataRequest[_]): TraderModel =
+  def applyConsigneeDecision(implicit request: DataRequest[_]): Option[TraderModel] = {
+    request.userAnswers.get(DestinationTypePage) match {
+      case Some(ReturnToThePlaceOfDispatch) => applyPlaceOfDispatchFromMovement
+      case _ if ConsigneeSection.hasChanged => Some(applyConsignee)
+      case _ => None
+    }
+  }
+
+  def applyConsignee(implicit request: DataRequest[_]): TraderModel = {
     TraderModel(
       // Consignee section has multiple entry points.
       // If the ConsigneeExcisePage is defined, use that, otherwise use the VAT number entered on the ConsigneeExportInformationPage.
@@ -55,6 +65,7 @@ object TraderModel extends ModelConstructorHelpers {
       vatNumber = None,
       eoriNumber = request.userAnswers.get(ConsigneeExportEoriPage)
     )
+  }
 
   def applyConsignor(implicit request: DataRequest[_]): TraderModel = {
     val consignorAddress: UserAddress = mandatoryPage(ConsignorAddressPage)
@@ -86,9 +97,7 @@ object TraderModel extends ModelConstructorHelpers {
 
   //noinspection ScalaStyle
   def applyDeliveryPlace(movementScenario: MovementScenario)(implicit request: DataRequest[_]): Option[TraderModel] = {
-    if (movementScenario == MovementScenario.ReturnToThePlaceOfDispatch) {
-      applyPlaceOfDispatchFromMovement
-    } else if (DestinationSection.canBeCompletedForTraderAndDestinationType) {
+     if (DestinationSection.canBeCompletedForTraderAndDestinationType) {
       if (DestinationSection.shouldStartFlowAtDestinationWarehouseExcise(movementScenario)) {
         val exciseId: String = mandatoryPage(DestinationWarehouseExcisePage)
         val useConsigneeDetails: Boolean = mandatoryPage(DestinationConsigneeDetailsPage)
