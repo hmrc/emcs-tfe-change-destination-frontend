@@ -79,6 +79,14 @@ trait Constraints {
         Invalid(errorKey, regex)
     }
 
+  protected def regexpToNotMatch(regex: String, errorKey: String): Constraint[String] =
+    Constraint {
+      case str if str.matches(regex) =>
+        Invalid(errorKey, regex)
+      case _ =>
+        Valid
+    }
+
   protected def regexpUnlessEmpty(regex: String, errorKey: String): Constraint[String] =
     Constraint {
       case str if str.isEmpty =>

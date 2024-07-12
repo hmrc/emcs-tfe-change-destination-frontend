@@ -21,4 +21,7 @@ package object forms {
   private[forms] val ONLY_ALPHANUMERIC_REGEX = "^[A-Za-z0-9]*$"
   private[forms] val CUSTOMS_OFFICE_CODE_REGEX = "^[A-Z]{2}[a-zA-Z0-9]{6}$"
   private[forms] val EORI_NUMBER_REGEX = "[A-Z]{2}[A-Za-z0-9]{0,15}"
+  private[forms] val GB_00_EXCISE_NUMBER_REGEX = "(GB00)[a-zA-Z0-9]{9}"
+  private[forms] val XI_00_EXCISE_NUMBER_REGEX = "(XI00)[a-zA-Z0-9]{9}"
+  private[forms] val XI_OR_GB_00_EXCISE_NUMBER_REGEX = "(GB00|XI00)[a-zA-Z0-9]{9}"
 }

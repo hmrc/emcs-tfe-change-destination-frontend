@@ -97,6 +97,19 @@ class ConstraintsSpec extends AnyFreeSpec with Matchers with Constraints {
     }
   }
 
+  "regexpToNotMatch" - {
+
+    "must return Invalid for an input that matches the expression" in {
+      val result = regexpToNotMatch("""^\w+$""", "error.invalid")("foo")
+      result mustEqual Invalid("error.invalid", """^\w+$""")
+    }
+
+    "must return Valid for an input that does not match the expression" in {
+      val result = regexpToNotMatch("""^\d+$""", "error.invalid")("foo")
+      result mustEqual Valid
+    }
+  }
+
   "regexpUnlessEmpty" - {
 
     "must return Valid for an input that matches the expression" in {
