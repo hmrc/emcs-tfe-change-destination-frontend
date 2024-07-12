@@ -81,7 +81,7 @@ object TraderModel extends ModelConstructorHelpers {
   def applyPlaceOfDispatchFromMovement(implicit request: DataRequest[_]): Option[TraderModel] = {
     request.movementDetails.placeOfDispatchTrader.map { pod =>
       TraderModel(
-        traderExciseNumber = pod.traderExciseNumber,
+        traderExciseNumber = Some(request.ern),
         traderName = pod.traderName,
         address = Some(AddressModel(
           streetNumber = pod.address.flatMap(_.streetNumber),
