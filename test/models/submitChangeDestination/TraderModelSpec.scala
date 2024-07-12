@@ -229,7 +229,20 @@ class TraderModelSpec extends SpecBase {
             )
         )
 
-        TraderModel.applyConsigneeDecision mustBe Some(placeOfDispatchTrader)
+        TraderModel.applyConsigneeDecision mustBe Some(
+          TraderModel(
+            traderExciseNumber = Some(testErn),
+            traderName = placeOfDispatchTrader.traderName,
+            address = Some(AddressModel(
+              streetNumber = placeOfDispatchTrader.address.flatMap(_.streetNumber),
+              street = placeOfDispatchTrader.address.flatMap(_.street),
+              postcode = placeOfDispatchTrader.address.flatMap(_.postcode),
+              city = placeOfDispatchTrader.address.flatMap(_.city)
+            )),
+            vatNumber = placeOfDispatchTrader.vatNumber,
+            eoriNumber = placeOfDispatchTrader.eoriNumber
+          )
+        )
       }
     }
   }
