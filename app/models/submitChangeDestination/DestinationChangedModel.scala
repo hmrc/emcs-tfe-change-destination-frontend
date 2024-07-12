@@ -20,9 +20,7 @@ import models.audit.Auditable
 import models.requests.DataRequest
 import models.sections.ReviewAnswer.KeepAnswers
 import models.sections.info.movementScenario.DestinationType
-import pages.sections.consignee.ConsigneeSection
 import pages.sections.guarantor.{GuarantorReviewPage, GuarantorSection}
-import pages.sections.guarantor.GuarantorSection
 import pages.sections.info.DestinationTypePage
 import play.api.libs.functional.syntax.{toFunctionalBuilderOps, unlift}
 import play.api.libs.json.{Json, OFormat, OWrites, __}
