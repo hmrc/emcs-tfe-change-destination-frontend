@@ -222,6 +222,25 @@ class MovementScenarioSpec extends SpecBase {
         }
       }
     }
+    ".isExport" - {
+      "must return true" in {
+        ExportWithCustomsDeclarationLodgedInTheUk.isExport mustBe true
+      }
+    }
+    ".isNItoEU" - {
+      "when NI ern" - {
+        "must return false" in {
+          implicit val dr = dataRequest(FakeRequest(), ern = testNorthernIrelandErn)
+          ExportWithCustomsDeclarationLodgedInTheUk.isNItoEU mustBe false
+        }
+      }
+      "when not NI ern" - {
+        "must return false" in {
+          implicit val dr = dataRequest(FakeRequest(), ern = testGreatBritainErn)
+          ExportWithCustomsDeclarationLodgedInTheUk.isNItoEU mustBe false
+        }
+      }
+    }
   }
 
   "UkTaxWarehouse.GB" - {
@@ -261,6 +280,25 @@ class MovementScenarioSpec extends SpecBase {
       "when user is not a warehouse keeper or a registered consignor" - {
         "must return an error" in {
           intercept[InvalidUserTypeException](UkTaxWarehouse.GB.movementType(nonWKRCDataRequest))
+        }
+      }
+    }
+    ".isExport" - {
+      "must return false" in {
+        UkTaxWarehouse.GB.isExport mustBe false
+      }
+    }
+    ".isNItoEU" - {
+      "when NI ern" - {
+        "must return false" in {
+          implicit val dr = dataRequest(FakeRequest(), ern = testNorthernIrelandErn)
+          UkTaxWarehouse.GB.isNItoEU mustBe false
+        }
+      }
+      "when not NI ern" - {
+        "must return false" in {
+          implicit val dr = dataRequest(FakeRequest(), ern = testGreatBritainErn)
+          UkTaxWarehouse.GB.isNItoEU mustBe false
         }
       }
     }
@@ -306,6 +344,25 @@ class MovementScenarioSpec extends SpecBase {
         }
       }
     }
+    ".isExport" - {
+      "must return false" in {
+        UkTaxWarehouse.NI.isExport mustBe false
+      }
+    }
+    ".isNItoEU" - {
+      "when NI ern" - {
+        "must return false" in {
+          implicit val dr = dataRequest(FakeRequest(), ern = testNorthernIrelandErn)
+          UkTaxWarehouse.NI.isNItoEU mustBe false
+        }
+      }
+      "when not NI ern" - {
+        "must return false" in {
+          implicit val dr = dataRequest(FakeRequest(), ern = testGreatBritainErn)
+          UkTaxWarehouse.NI.isNItoEU mustBe false
+        }
+      }
+    }
   }
 
   "DirectDelivery" - {
@@ -345,6 +402,25 @@ class MovementScenarioSpec extends SpecBase {
       "when user is not a warehouse keeper or a registered consignor" - {
         "must return an error" in {
           intercept[InvalidUserTypeException](DirectDelivery.movementType(nonWKRCDataRequest))
+        }
+      }
+    }
+    ".isExport" - {
+      "must return false" in {
+        DirectDelivery.isExport mustBe false
+      }
+    }
+    ".isNItoEU" - {
+      "when NI ern" - {
+        "must return true" in {
+          implicit val dr = dataRequest(FakeRequest(), ern = testNorthernIrelandErn)
+          DirectDelivery.isNItoEU mustBe true
+        }
+      }
+      "when not NI ern" - {
+        "must return false" in {
+          implicit val dr = dataRequest(FakeRequest(), ern = testGreatBritainErn)
+          DirectDelivery.isNItoEU mustBe false
         }
       }
     }
@@ -390,6 +466,25 @@ class MovementScenarioSpec extends SpecBase {
         }
       }
     }
+    ".isExport" - {
+      "must return false" in {
+        EuTaxWarehouse.isExport mustBe false
+      }
+    }
+    ".isNItoEU" - {
+      "when NI ern" - {
+        "must return true" in {
+          implicit val dr = dataRequest(FakeRequest(), ern = testNorthernIrelandErn)
+          EuTaxWarehouse.isNItoEU mustBe true
+        }
+      }
+      "when not NI ern" - {
+        "must return false" in {
+          implicit val dr = dataRequest(FakeRequest(), ern = testGreatBritainErn)
+          EuTaxWarehouse.isNItoEU mustBe false
+        }
+      }
+    }
   }
 
   "ExemptedOrganisation" - {
@@ -429,6 +524,25 @@ class MovementScenarioSpec extends SpecBase {
       "when user is not a warehouse keeper or a registered consignor" - {
         "must return an error" in {
           intercept[InvalidUserTypeException](ExemptedOrganisation.movementType(nonWKRCDataRequest))
+        }
+      }
+    }
+    ".isExport" - {
+      "must return false" in {
+        ExemptedOrganisation.isExport mustBe false
+      }
+    }
+    ".isNItoEU" - {
+      "when NI ern" - {
+        "must return true" in {
+          implicit val dr = dataRequest(FakeRequest(), ern = testNorthernIrelandErn)
+          ExemptedOrganisation.isNItoEU mustBe true
+        }
+      }
+      "when not NI ern" - {
+        "must return false" in {
+          implicit val dr = dataRequest(FakeRequest(), ern = testGreatBritainErn)
+          ExemptedOrganisation.isNItoEU mustBe false
         }
       }
     }
@@ -474,6 +588,25 @@ class MovementScenarioSpec extends SpecBase {
         }
       }
     }
+    ".isExport" - {
+      "must return false" in {
+        ExemptedOrganisation.isExport mustBe false
+      }
+    }
+    ".isNItoEU" - {
+      "when NI ern" - {
+        "must return true" in {
+          implicit val dr = dataRequest(FakeRequest(), ern = testNorthernIrelandErn)
+          ExemptedOrganisation.isNItoEU mustBe true
+        }
+      }
+      "when not NI ern" - {
+        "must return false" in {
+          implicit val dr = dataRequest(FakeRequest(), ern = testGreatBritainErn)
+          ExemptedOrganisation.isNItoEU mustBe false
+        }
+      }
+    }
   }
 
   "RegisteredConsignee" - {
@@ -513,6 +646,25 @@ class MovementScenarioSpec extends SpecBase {
       "when user is not a warehouse keeper or a registered consignor" - {
         "must return an error" in {
           intercept[InvalidUserTypeException](RegisteredConsignee.movementType(nonWKRCDataRequest))
+        }
+      }
+    }
+    ".isExport" - {
+      "must return false" in {
+        RegisteredConsignee.isExport mustBe false
+      }
+    }
+    ".isNItoEU" - {
+      "when NI ern" - {
+        "must return true" in {
+          implicit val dr = dataRequest(FakeRequest(), ern = testNorthernIrelandErn)
+          RegisteredConsignee.isNItoEU mustBe true
+        }
+      }
+      "when not NI ern" - {
+        "must return false" in {
+          implicit val dr = dataRequest(FakeRequest(), ern = testGreatBritainErn)
+          RegisteredConsignee.isNItoEU mustBe false
         }
       }
     }
@@ -558,6 +710,25 @@ class MovementScenarioSpec extends SpecBase {
         }
       }
     }
+    ".isExport" - {
+      "must return false" in {
+        TemporaryRegisteredConsignee.isExport mustBe false
+      }
+    }
+    ".isNItoEU" - {
+      "when NI ern" - {
+        "must return true" in {
+          implicit val dr = dataRequest(FakeRequest(), ern = testNorthernIrelandErn)
+          TemporaryRegisteredConsignee.isNItoEU mustBe true
+        }
+      }
+      "when not NI ern" - {
+        "must return false" in {
+          implicit val dr = dataRequest(FakeRequest(), ern = testGreatBritainErn)
+          TemporaryRegisteredConsignee.isNItoEU mustBe false
+        }
+      }
+    }
   }
 
   "UnknownDestination" - {
@@ -600,6 +771,25 @@ class MovementScenarioSpec extends SpecBase {
         }
       }
     }
+    ".isExport" - {
+      "must return false" in {
+        UnknownDestination.isExport mustBe false
+      }
+    }
+    ".isNItoEU" - {
+      "when NI ern" - {
+        "must return false" in {
+          implicit val dr = dataRequest(FakeRequest(), ern = testNorthernIrelandErn)
+          UnknownDestination.isNItoEU mustBe false
+        }
+      }
+      "when not NI ern" - {
+        "must return false" in {
+          implicit val dr = dataRequest(FakeRequest(), ern = testGreatBritainErn)
+          UnknownDestination.isNItoEU mustBe false
+        }
+      }
+    }
   }
 
   "CertifiedConsignee" - {
@@ -622,6 +812,25 @@ class MovementScenarioSpec extends SpecBase {
       "when user is not Duty Paid" - {
         "must return an error" in {
           intercept[InvalidUserTypeException](CertifiedConsignee.movementType(nonWKRCDataRequest))
+        }
+      }
+    }
+    ".isExport" - {
+      "must return false" in {
+        CertifiedConsignee.isExport mustBe false
+      }
+    }
+    ".isNItoEU" - {
+      "when NI ern" - {
+        "must return true" in {
+          implicit val dr = dataRequest(FakeRequest(), ern = testNorthernIrelandErn)
+          CertifiedConsignee.isNItoEU mustBe true
+        }
+      }
+      "when not NI ern" - {
+        "must return false" in {
+          implicit val dr = dataRequest(FakeRequest(), ern = testGreatBritainErn)
+          CertifiedConsignee.isNItoEU mustBe false
         }
       }
     }
@@ -650,6 +859,25 @@ class MovementScenarioSpec extends SpecBase {
         }
       }
     }
+    ".isExport" - {
+      "must return false" in {
+        TemporaryCertifiedConsignee.isExport mustBe false
+      }
+    }
+    ".isNItoEU" - {
+      "when NI ern" - {
+        "must return true" in {
+          implicit val dr = dataRequest(FakeRequest(), ern = testNorthernIrelandErn)
+          TemporaryCertifiedConsignee.isNItoEU mustBe true
+        }
+      }
+      "when not NI ern" - {
+        "must return false" in {
+          implicit val dr = dataRequest(FakeRequest(), ern = testGreatBritainErn)
+          TemporaryCertifiedConsignee.isNItoEU mustBe false
+        }
+      }
+    }
   }
 
   "ReturnToThePlaceOfDispatch" - {
@@ -675,28 +903,24 @@ class MovementScenarioSpec extends SpecBase {
         }
       }
     }
-  }
-
-  "isExport" - {
-
-    val exportValues = Seq(ExportWithCustomsDeclarationLodgedInTheUk, ExportWithCustomsDeclarationLodgedInTheEu)
-
-    "must return true" - {
-      exportValues.map(scenario =>
-        s"when MovementScenario is $scenario" in {
-          scenario.isExport mustBe true
+    ".isExport" - {
+      "must return false" in {
+        ReturnToThePlaceOfDispatch.isExport mustBe false
+      }
+    }
+    ".isNItoEU" - {
+      "when NI ern" - {
+        "must return false" in {
+          implicit val dr = dataRequest(FakeRequest(), ern = testNorthernIrelandErn)
+          ReturnToThePlaceOfDispatch.isNItoEU mustBe false
         }
-      )
-    }
-
-    "must return false" - {
-      MovementScenario.values.filterNot(exportValues.contains)
-        .map(scenario =>
-          s"when MovementScenario is $scenario" in {
-            scenario.isExport mustBe false
-          }
-        )
+      }
+      "when not NI ern" - {
+        "must return false" in {
+          implicit val dr = dataRequest(FakeRequest(), ern = testGreatBritainErn)
+          ReturnToThePlaceOfDispatch.isNItoEU mustBe false
+        }
+      }
     }
   }
-
 }

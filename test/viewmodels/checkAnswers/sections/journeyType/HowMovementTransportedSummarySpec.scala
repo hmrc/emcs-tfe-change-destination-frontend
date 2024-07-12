@@ -19,10 +19,11 @@ package viewmodels.checkAnswers.sections.journeyType
 import base.SpecBase
 import fixtures.messages.sections.journeyType.HowMovementTransportedMessages
 import models.CheckMode
-import models.response.emcsTfe.TransportModeModel
+import models.response.emcsTfe.{GuarantorType, TransportModeModel}
 import models.sections.info.movementScenario.MovementScenario.DirectDelivery
 import models.sections.journeyType.HowMovementTransported.{AirTransport, FixedTransportInstallations}
 import org.scalatest.matchers.must.Matchers
+import pages.sections.guarantor.GuarantorRequiredPage
 import pages.sections.info.DestinationTypePage
 import pages.sections.journeyType.HowMovementTransportedPage
 import play.api.i18n.Messages
@@ -91,15 +92,41 @@ class HowMovementTransportedSummarySpec extends SpecBase with Matchers {
             }
           }
 
-          "when the movement is UkToEu, there is no guarantor in 801 and the journey type is FixedTransportInstallations" - {
+          "when the movement is NiToEu, GuarantorRequired is false, and the journey type is FixedTransportInstallations" - {
 
-            "must output the expected row" in {
+            "must output the expected row (without the change link)" in {
 
-              implicit lazy val request = dataRequest(FakeRequest(),
-                emptyUserAnswers.set(DestinationTypePage, DirectDelivery),
+              implicit lazy val request = dataRequest(
+                request = FakeRequest(),
+                answers = emptyUserAnswers
+                  .set(DestinationTypePage, DirectDelivery)
+                  .set(GuarantorRequiredPage, false),
                 ern = testNorthernIrelandErn,
                 movementDetails = maxGetMovementResponse.copy(
-                  movementGuarantee = maxGetMovementResponse.movementGuarantee.copy(guarantorTrader = None),
+                  transportMode = TransportModeModel(FixedTransportInstallations.toString, None)
+                )
+              )
+
+              HowMovementTransportedSummary.row(onReviewPage = false) mustBe Some(
+                SummaryListRowViewModel(
+                  key = messagesForLanguage.cyaLabel,
+                  value = Value(HtmlContent(messagesForLanguage.radioOption2)),
+                  actions = Seq()
+                )
+              )
+            }
+          }
+
+          "when the movement is NiToEu, NoGuarantor from ie801, and the journey type is FixedTransportInstallations" - {
+
+            "must output the expected row (without the change link)" in {
+
+              implicit lazy val request = dataRequest(
+                request = FakeRequest(),
+                answers = emptyUserAnswers.set(DestinationTypePage, DirectDelivery),
+                ern = testNorthernIrelandErn,
+                movementDetails = maxGetMovementResponse.copy(
+                  movementGuarantee = maxGetMovementResponse.movementGuarantee.copy(guarantorTypeCode = GuarantorType.NoGuarantor),
                   transportMode = TransportModeModel(FixedTransportInstallations.toString, None)
                 )
               )

@@ -20,12 +20,15 @@ import base.SpecBase
 import controllers.actions.{FakeDataRetrievalAction, FakeMovementAction}
 import mocks.services.MockUserAnswersService
 import models.UserAnswers
-import models.sections.ReviewAnswer.KeepAnswers
-import pages.sections.movement.MovementReviewPage
+import models.sections.ReviewAnswer.{ChangeAnswers, KeepAnswers}
+import models.sections.info.InvoiceDetailsModel
+import pages.sections.movement.{InvoiceDetailsPage, MovementReviewPage}
 import play.api.http.Status.SEE_OTHER
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.Helpers._
 import play.api.test.{FakeRequest, Helpers}
+
+import java.time.LocalDate
 
 class MovementIndexControllerSpec extends SpecBase with MockUserAnswersService {
 
@@ -51,13 +54,24 @@ class MovementIndexControllerSpec extends SpecBase with MockUserAnswersService {
       redirectLocation(result).value mustEqual controllers.sections.movement.routes.MovementReviewAnswersController.onPageLoad(testErn, testArc).url
     }
 
-    "must redirect to the Movement Check Answers page when the movement section has been reviewed" in new Test(Some(
-      emptyUserAnswers.set(MovementReviewPage, KeepAnswers)
+    "must redirect to the Movement Check Answers page when the movement section has been reviewed and is complete" in new Test(Some(
+      emptyUserAnswers
+        .set(MovementReviewPage, ChangeAnswers)
+        .set(InvoiceDetailsPage, InvoiceDetailsModel("123", LocalDate.parse("2023-01-01")))
     )) {
       val result = controller.onPageLoad(testErn, testArc)(request)
 
       status(result) mustEqual SEE_OTHER
       redirectLocation(result).value mustEqual controllers.sections.movement.routes.MovementCheckAnswersController.onPageLoad(testErn, testArc).url
+    }
+
+    "must redirect to the Review page when answer is KeepAnswers" in new Test(Some(
+      emptyUserAnswers.set(MovementReviewPage, KeepAnswers)
+    )) {
+      val result = controller.onPageLoad(testErn, testArc)(request)
+
+      status(result) mustEqual SEE_OTHER
+      redirectLocation(result).value mustEqual controllers.sections.movement.routes.MovementReviewAnswersController.onPageLoad(testErn, testArc).url
     }
 
     "must redirect to Journey Recovery for a GET if no existing data is found" in new Test(None) {

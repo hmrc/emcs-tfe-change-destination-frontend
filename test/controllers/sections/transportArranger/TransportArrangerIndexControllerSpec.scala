@@ -55,7 +55,7 @@ class TransportArrangerIndexControllerSpec extends SpecBase with MockUserAnswers
         emptyUserAnswers
           .set(TransportArrangerPage, Consignor)
           .set(ConsignorAddressPage, UserAddress(None, "", "", ""))
-          .set(TransportArrangerReviewPage, KeepAnswers)
+          .set(TransportArrangerReviewPage, ChangeAnswers)
       )) {
         val result = controller.onPageLoad(testErn, testArc)(request)
 
@@ -71,6 +71,19 @@ class TransportArrangerIndexControllerSpec extends SpecBase with MockUserAnswers
         emptyUserAnswers
           .set(TransportArrangerPage, Consignor)
           .set(ConsignorAddressPage, UserAddress(None, "", "", ""))
+      )) {
+        val result = controller.onPageLoad(testErn, testArc)(request)
+
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustBe
+          controllers.sections.transportArranger.routes.TransportArrangerReviewController.onPageLoad(testErn, testArc).url
+      }
+    }
+
+    "when TransportArrangerSection has been reviewed and set to KeepAnswers" - {
+
+      "must redirect to TransportArrangerReviewAnswerPage" in new Test(Some(
+        emptyUserAnswers.set(TransportArrangerReviewPage, KeepAnswers)
       )) {
         val result = controller.onPageLoad(testErn, testArc)(request)
 

@@ -17,6 +17,7 @@
 package viewmodels.checkAnswers.sections.guarantor
 
 import models.requests.DataRequest
+import pages.sections.guarantor.GuarantorRequiredPage
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryList
 import viewmodels.govuk.summarylist._
@@ -25,13 +26,14 @@ import javax.inject.Inject
 
 class GuarantorCheckAnswersHelper @Inject()() {
 
-  def summaryList()(implicit request: DataRequest[_], messages: Messages): SummaryList = {
+  def summaryList(onReviewPage: Boolean = false)(implicit request: DataRequest[_], messages: Messages): SummaryList = {
     SummaryListViewModel(
-      rows = Seq(
-        Some(GuarantorArrangerSummary.row),
-        GuarantorNameSummary.row,
-        GuarantorVatSummary.row,
-        GuarantorAddressSummary.row
+      rows = if(GuarantorRequiredPage.value.contains(false)) Seq(GuarantorRequiredSummary.row(onReviewPage)) else Seq(
+        Some(GuarantorRequiredSummary.row(onReviewPage)),
+        Some(GuarantorArrangerSummary.row(onReviewPage)),
+        GuarantorNameSummary.row(onReviewPage),
+        GuarantorVatSummary.row(onReviewPage),
+        GuarantorAddressSummary.row(onReviewPage)
       ).flatten
     ).withCssClass("govuk-!-margin-bottom-9")
   }

@@ -17,7 +17,7 @@
 package pages.sections.info
 
 import models.requests.DataRequest
-import models.sections.info.movementScenario.MovementScenario
+import models.sections.info.movementScenario.{MovementScenario, MovementType}
 import pages.QuestionPage
 import play.api.libs.json.JsPath
 
@@ -30,4 +30,10 @@ case object DestinationTypePage extends QuestionPage[MovementScenario] {
 
   def isExport(implicit request: DataRequest[_]): Boolean =
     request.userAnswers.get(this).exists(_.isExport)
+
+  def isUktoUkMovement(implicit request: DataRequest[_]): Boolean =
+    request.userAnswers.get(this).exists(_.movementType == MovementType.UkToUk)
+
+  def isNItoEuMovement(implicit request: DataRequest[_]): Boolean =
+    request.userAnswers.get(this).exists(_.isNItoEU)
 }

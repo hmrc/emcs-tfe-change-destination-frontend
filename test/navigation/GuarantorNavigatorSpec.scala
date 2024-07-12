@@ -17,8 +17,9 @@
 package navigation
 
 import base.SpecBase
-import controllers.routes
+import controllers.sections.guarantor.routes
 import models.requests.DataRequest
+import models.sections.ReviewAnswer.{ChangeAnswers, KeepAnswers}
 import models.sections.guarantor.GuarantorArranger
 import models.sections.guarantor.GuarantorArranger._
 import models.{CheckMode, NormalMode, ReviewMode}
@@ -40,7 +41,57 @@ class GuarantorNavigatorSpec extends SpecBase {
       "must go from a page that doesn't exist in the route map to Guarantor CYA" in {
         case object UnknownPage extends Page
         navigator.nextPage(UnknownPage, NormalMode, emptyUserAnswers) mustBe
-          controllers.sections.guarantor.routes.GuarantorCheckAnswersController.onPageLoad(testErn, testArc)
+          routes.GuarantorCheckAnswersController.onPageLoad(testErn, testArc)
+      }
+
+      "for GuarantorReviewPage" - {
+
+        "when the GuarantorReviewPage is KeepAnswers" - {
+          "must goto Task List" in {
+            val userAnswers = emptyUserAnswers
+              .set(GuarantorRequiredPage, false)
+              .set(GuarantorReviewPage, KeepAnswers)
+
+            navigator.nextPage(GuarantorReviewPage, NormalMode, userAnswers) mustBe
+              controllers.routes.TaskListController.onPageLoad(testErn, testArc)
+          }
+        }
+
+        "when the GuarantorReviewPage is ChangeAnswers" - {
+          "must goto GuarantorIndex Controller" in {
+            val userAnswers = emptyUserAnswers
+              .set(GuarantorRequiredPage, true)
+              .set(GuarantorReviewPage, ChangeAnswers)
+
+            navigator.nextPage(GuarantorReviewPage, NormalMode, userAnswers) mustBe
+              routes.GuarantorIndexController.onPageLoad(testErn, testArc)
+          }
+        }
+      }
+
+      "for GuarantorRequiredPage" - {
+
+        "must go to Guarantor CYA when 'No' Guarantor is required" in {
+
+          val userAnswers = emptyUserAnswers.set(GuarantorRequiredPage, false)
+
+          navigator.nextPage(GuarantorRequiredPage, NormalMode, userAnswers) mustBe
+            routes.GuarantorCheckAnswersController.onPageLoad(testErn, testArc)
+        }
+
+        "must go to Guarantor Arranger when 'Yes' a Guarantor is required" in {
+
+          val userAnswers = emptyUserAnswers.set(GuarantorRequiredPage, true)
+
+          navigator.nextPage(GuarantorRequiredPage, NormalMode, userAnswers) mustBe
+            routes.GuarantorArrangerController.onPageLoad(testErn, testArc, NormalMode)
+        }
+
+        "must go to Guarantor Arranger when an answer doesn't exist (we know it's required)" in {
+
+          navigator.nextPage(GuarantorRequiredPage, NormalMode, emptyUserAnswers) mustBe
+            routes.GuarantorArrangerController.onPageLoad(testErn, testArc, NormalMode)
+        }
       }
 
       "for GuarantorArrangerPage" - {
@@ -52,7 +103,7 @@ class GuarantorNavigatorSpec extends SpecBase {
                 val userAnswers = emptyUserAnswers.set(GuarantorArrangerPage, value)
 
                 navigator.nextPage(GuarantorArrangerPage, NormalMode, userAnswers) mustBe
-                  controllers.sections.guarantor.routes.GuarantorNameController.onPageLoad(testErn, testArc, NormalMode)
+                  routes.GuarantorNameController.onPageLoad(testErn, testArc, NormalMode)
               }
             }
           case value =>
@@ -61,7 +112,7 @@ class GuarantorNavigatorSpec extends SpecBase {
                 val userAnswers = emptyUserAnswers.set(GuarantorArrangerPage, value)
 
                 navigator.nextPage(GuarantorArrangerPage, NormalMode, userAnswers) mustBe
-                  controllers.sections.guarantor.routes.GuarantorCheckAnswersController.onPageLoad(testErn, testArc)
+                  routes.GuarantorCheckAnswersController.onPageLoad(testErn, testArc)
               }
             }
         }
@@ -70,28 +121,28 @@ class GuarantorNavigatorSpec extends SpecBase {
       "for GuarantorNamePage" - {
         "must goto CAM-G04" in {
           navigator.nextPage(GuarantorNamePage, NormalMode, emptyUserAnswers) mustBe
-            controllers.sections.guarantor.routes.GuarantorVatController.onPageLoad(testErn, testArc, NormalMode)
+            routes.GuarantorVatController.onPageLoad(testErn, testArc, NormalMode)
         }
       }
 
       "for GuarantorVATPage" - {
         "must goto CAM-G05" in {
           navigator.nextPage(GuarantorVatPage, NormalMode, emptyUserAnswers) mustBe
-            controllers.sections.guarantor.routes.GuarantorAddressController.onPageLoad(testErn, testArc, NormalMode)
+            routes.GuarantorAddressController.onPageLoad(testErn, testArc, NormalMode)
         }
       }
 
       "for GuarantorAddressPage" - {
         "must goto CAM-G06" in {
           navigator.nextPage(GuarantorAddressPage, NormalMode, emptyUserAnswers) mustBe
-            controllers.sections.guarantor.routes.GuarantorCheckAnswersController.onPageLoad(testErn, testArc)
+            routes.GuarantorCheckAnswersController.onPageLoad(testErn, testArc)
         }
       }
 
       "for GuarantorCheckAnswersPage" - {
         "must goto the tasklist page" in {
           navigator.nextPage(GuarantorCheckAnswersPage, NormalMode, emptyUserAnswers) mustBe
-            routes.TaskListController.onPageLoad(testErn, testArc)
+            controllers.routes.TaskListController.onPageLoad(testErn, testArc)
         }
       }
     }
@@ -100,7 +151,7 @@ class GuarantorNavigatorSpec extends SpecBase {
       "must go to Guarantor CYA" in {
         case object UnknownPage extends Page
         navigator.nextPage(UnknownPage, CheckMode, emptyUserAnswers) mustBe
-          controllers.sections.guarantor.routes.GuarantorCheckAnswersController.onPageLoad(testErn, testArc)
+          routes.GuarantorCheckAnswersController.onPageLoad(testErn, testArc)
       }
     }
 
@@ -108,7 +159,7 @@ class GuarantorNavigatorSpec extends SpecBase {
       "must go to CheckYourAnswers" in {
         case object UnknownPage extends Page
         navigator.nextPage(UnknownPage, ReviewMode, emptyUserAnswers) mustBe
-          routes.CheckYourAnswersController.onPageLoad(testErn, testArc)
+          controllers.routes.CheckYourAnswersController.onPageLoad(testErn, testArc)
       }
     }
   }

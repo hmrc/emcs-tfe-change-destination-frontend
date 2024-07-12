@@ -51,7 +51,7 @@ class FirstTransporterReviewController @Inject()(
 
   def onPageLoad(ern: String, arc: String): Action[AnyContent] =
     authorisedDataRequestWithUpToDateMovementAsync(ern, arc) { implicit request =>
-      renderView(Ok, fillForm(FirstTransporterReviewPage, formProvider()))
+      renderView(Ok, formProvider())
     }
 
   def onSubmit(ern: String, arc: String): Action[AnyContent] =

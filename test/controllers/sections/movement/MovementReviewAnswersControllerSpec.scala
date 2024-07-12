@@ -23,9 +23,7 @@ import mocks.services.MockUserAnswersService
 import mocks.viewmodels.MockMovementCheckAnswersHelper
 import models.UserAnswers
 import models.sections.ReviewAnswer
-import models.sections.ReviewAnswer.KeepAnswers
 import navigation.FakeNavigators.FakeMovementNavigator
-import pages.sections.movement.MovementReviewPage
 import play.api.data.Form
 import play.api.mvc.{AnyContentAsEmpty, Call}
 import play.api.test.Helpers._
@@ -78,18 +76,6 @@ class MovementReviewAnswersControllerSpec extends SpecBase with MockUserAnswersS
 
       status(result) mustEqual OK
       contentAsString(result) mustEqual view(form, list, onSubmitCall)(dataRequest(request, userAnswers.get), messages(request)).toString
-    }
-
-    "must populate the view correctly on a GET when the question has previously been answered" in new Test(Some(
-      emptyUserAnswers.set(MovementReviewPage, KeepAnswers)
-    )) {
-
-      MockMovementCheckAnswersHelper.summaryList().returns(list)
-
-      val result = controller.onPageLoad(testErn, testArc)(request)
-
-      status(result) mustEqual OK
-      contentAsString(result) mustEqual view(form.fill(KeepAnswers), list, onSubmitCall)(dataRequest(request, userAnswers.get), messages(request)).toString
     }
 
     "must redirect to the next page when valid data is submitted" in new Test(Some(emptyUserAnswers)) {

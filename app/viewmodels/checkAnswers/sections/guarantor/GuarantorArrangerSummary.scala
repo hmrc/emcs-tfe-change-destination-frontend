@@ -26,7 +26,7 @@ import viewmodels.implicits._
 
 object GuarantorArrangerSummary {
 
-  def row()(implicit request: DataRequest[_], messages: Messages): SummaryListRow = {
+  def row(onReviewPage: Boolean = false)(implicit request: DataRequest[_], messages: Messages): SummaryListRow = {
 
     val value: String = request.userAnswers.get(GuarantorArrangerPage) match {
       case Some(answer) => messages(s"guarantorArranger.$answer")
@@ -36,7 +36,7 @@ object GuarantorArrangerSummary {
     SummaryListRowViewModel(
       key = "guarantorArranger.checkYourAnswersLabel",
       value = ValueViewModel(value),
-      actions = Seq(
+      actions = if(onReviewPage) Seq() else Seq(
         ActionItemViewModel(
           "site.change",
           controllers.sections.guarantor.routes.GuarantorArrangerController.onPageLoad(

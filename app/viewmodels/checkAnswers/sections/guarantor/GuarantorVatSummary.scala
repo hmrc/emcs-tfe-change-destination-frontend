@@ -28,7 +28,7 @@ import viewmodels.implicits._
 
 object GuarantorVatSummary {
 
-  def row()(implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] =
+  def row(onReviewPage: Boolean = false)(implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] =
     request.userAnswers.get(GuarantorArrangerPage)
       .filter(arranger => arranger == GoodsOwner || arranger == Transporter)
       .map { _ =>
@@ -41,7 +41,7 @@ object GuarantorVatSummary {
         SummaryListRowViewModel(
           key = "guarantorVat.checkYourAnswersLabel",
           value = ValueViewModel(value),
-          actions = Seq(
+          actions = if(onReviewPage) Seq() else Seq(
             ActionItemViewModel(
               "site.change",
               controllers.sections.guarantor.routes.GuarantorVatController.onPageLoad(request.ern, request.arc, CheckMode).url,

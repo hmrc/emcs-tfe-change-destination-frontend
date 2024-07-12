@@ -16,7 +16,6 @@
 
 @import models.requests.DataRequest
 @import uk.gov.hmrc.govukfrontend.views.html.components._
-@import viewmodels.LegendSize
 @import config.AppConfig
 
 
@@ -32,19 +31,21 @@
         p: components.p,
         link: components.link,
         continueOrExit: components.continueOrExit,
+        insetText: components.insetText,
         bullets: components.bullets,
         appConfig: AppConfig
 )
 
-@(onwardRoute: Call)(implicit request: DataRequest[_], messages: Messages)
+@(onwardRoute: Call, newGuarantorIsRequired: Boolean)(implicit request: DataRequest[_], messages: Messages)
 
-@layout(pageTitle = titleNoForm(messages("guarantorRequired.export.title")), maybeShowActiveTrader = maybeShowActiveTrader(request)) {
 
-    @h1("guarantorRequired.export.heading", Some(messages("guarantor.subHeading")), "govuk-heading-l", hiddenContent = Some(messages("subHeading.hidden")))
+@layout(pageTitle = titleNoForm(messages(s"guarantorRequired.export.isRequired.$messageKey.title")), maybeShowActiveTrader = maybeShowActiveTrader(request)) {
 
-    @p()(Html(messages("guarantorRequired.export.p1")))
+    @h1(s"guarantorRequired.export.isRequired.$messageKey.heading", Some(messages("guarantor.subHeading")), "govuk-heading-l", hiddenContent = Some(messages("subHeading.hidden")))
 
-    @p()(Html(messages("guarantorRequired.export.p2")))
+    @p()(Html(messages(s"guarantorRequired.export.isRequired.$messageKey.p1")))
+
+    @p()(Html(messages("guarantorRequired.export.isRequired.p2")))
 
     @p() {
         @link(
@@ -56,12 +57,22 @@
         )
     }
 
+    @if(!newGuarantorIsRequired) {
+        @insetText(){
+            @p()(Html(messages("guarantorRequired.inset")))
+        }
+    }
+
     @link(
         link = onwardRoute.url,
         messageKey = "guarantorRequired.enterDetails",
         button = true,
         id = Some("enter-details")
     )
+}
+
+@messageKey = @{
+    if(newGuarantorIsRequired) "new" else "niToEu"
 }
 
 @{

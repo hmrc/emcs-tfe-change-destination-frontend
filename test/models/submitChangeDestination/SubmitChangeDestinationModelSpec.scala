@@ -20,13 +20,14 @@ import base.SpecBase
 import config.AppConfig
 import fixtures.SubmitChangeDestinationFixtures
 import models.requests.DataRequest
-import models.response.emcsTfe.GuarantorType.NoGuarantor
+import models.response.emcsTfe.GuarantorType
 import models.sections.ReviewAnswer.KeepAnswers
 import models.sections.consignee.ConsigneeExportInformation.EoriNumber
 import models.sections.info.ChangeType.Destination
 import pages.sections.consignee.{ConsigneeAddressPage, ConsigneeBusinessNamePage, ConsigneeExcisePage, ConsigneeExportInformationPage}
 import pages.sections.destination.{DestinationAddressPage, DestinationBusinessNamePage, DestinationConsigneeDetailsPage, DestinationWarehouseExcisePage}
 import pages.sections.firstTransporter.FirstTransporterReviewPage
+import pages.sections.guarantor.GuarantorReviewPage
 import pages.sections.info.ChangeTypePage
 import pages.sections.journeyType.JourneyTypeReviewPage
 import pages.sections.movement.MovementReviewAnswersPage
@@ -44,24 +45,25 @@ class SubmitChangeDestinationModelSpec extends SpecBase with SubmitChangeDestina
 
     "must return a model" - {
 
-      "when all sections have changed and now requires a guarantor (max scenario)" in {
+      "when all sections have changed and now requires a new guarantor (max scenario)" in {
 
         implicit val dr: DataRequest[_] = dataRequest(
           request = fakeRequest,
-          answers = baseFullUserAnswers,
-          ern = testGreatBritainErn,
-          movementDetails = maxGetMovementResponse.copy(movementGuarantee = models.response.emcsTfe.MovementGuaranteeModel(NoGuarantor, None))
+          answers = baseFullUserAnswers.remove(GuarantorReviewPage),
+          ern = testGreatBritainWarehouseErn,
+          movementDetails = maxGetMovementResponse.copy(movementGuarantee = models.response.emcsTfe.MovementGuaranteeModel(GuarantorType.Consignee, None))
         )
 
         SubmitChangeDestinationModel.apply mustBe maxSubmitChangeDestination
       }
 
-      "when all sections have changed and no new guarantor required" in {
+      "when all sections have changed and no new guarantor required (keeping existing Guarantor)" in {
 
         implicit val dr: DataRequest[_] = dataRequest(
           request = fakeRequest,
-          answers = baseFullUserAnswers,
-          ern = testGreatBritainErn
+          answers = baseFullUserAnswers.set(GuarantorReviewPage, KeepAnswers),
+          ern = testGreatBritainWarehouseErn,
+          movementDetails = maxGetMovementResponse.copy(movementGuarantee = models.response.emcsTfe.MovementGuaranteeModel(GuarantorType.NoGuarantor, None))
         )
 
         SubmitChangeDestinationModel.apply mustBe maxSubmitChangeDestination.copy(
@@ -75,8 +77,10 @@ class SubmitChangeDestinationModelSpec extends SpecBase with SubmitChangeDestina
 
         implicit val dr: DataRequest[_] = dataRequest(
           request = fakeRequest,
-          answers = baseFullUserAnswers.set(TransportUnitsReviewPage, KeepAnswers),
-          ern = testGreatBritainErn
+          answers = baseFullUserAnswers
+            .set(GuarantorReviewPage, KeepAnswers)
+            .set(TransportUnitsReviewPage, KeepAnswers),
+          ern = testGreatBritainWarehouseErn
         )
 
         SubmitChangeDestinationModel.apply mustBe maxSubmitChangeDestination.copy(
@@ -91,8 +95,10 @@ class SubmitChangeDestinationModelSpec extends SpecBase with SubmitChangeDestina
 
         implicit val dr: DataRequest[_] = dataRequest(
           request = fakeRequest,
-          answers = baseFullUserAnswers.set(TransportArrangerReviewPage, KeepAnswers),
-          ern = testGreatBritainErn
+          answers = baseFullUserAnswers
+            .set(GuarantorReviewPage, KeepAnswers)
+            .set(TransportArrangerReviewPage, KeepAnswers),
+          ern = testGreatBritainWarehouseErn
         )
 
         SubmitChangeDestinationModel.apply mustBe maxSubmitChangeDestination.copy(
@@ -110,8 +116,10 @@ class SubmitChangeDestinationModelSpec extends SpecBase with SubmitChangeDestina
 
         implicit val dr: DataRequest[_] = dataRequest(
           request = fakeRequest,
-          answers = baseFullUserAnswers.set(FirstTransporterReviewPage, KeepAnswers),
-          ern = testGreatBritainErn
+          answers = baseFullUserAnswers
+            .set(GuarantorReviewPage, KeepAnswers)
+            .set(FirstTransporterReviewPage, KeepAnswers),
+          ern = testGreatBritainWarehouseErn
         )
 
         SubmitChangeDestinationModel.apply mustBe maxSubmitChangeDestination.copy(
@@ -125,8 +133,10 @@ class SubmitChangeDestinationModelSpec extends SpecBase with SubmitChangeDestina
 
         implicit val dr: DataRequest[_] = dataRequest(
           request = fakeRequest,
-          answers = baseFullUserAnswers.set(JourneyTypeReviewPage, KeepAnswers),
-          ern = testGreatBritainErn
+          answers = baseFullUserAnswers
+            .set(GuarantorReviewPage, KeepAnswers)
+            .set(JourneyTypeReviewPage, KeepAnswers),
+          ern = testGreatBritainWarehouseErn
         )
 
         SubmitChangeDestinationModel.apply mustBe maxSubmitChangeDestination.copy(
@@ -145,8 +155,10 @@ class SubmitChangeDestinationModelSpec extends SpecBase with SubmitChangeDestina
 
         implicit val dr: DataRequest[_] = dataRequest(
           request = fakeRequest,
-          answers = baseFullUserAnswers.set(MovementReviewAnswersPage, KeepAnswers),
-          ern = testGreatBritainErn
+          answers = baseFullUserAnswers
+            .set(GuarantorReviewPage, KeepAnswers)
+            .set(MovementReviewAnswersPage, KeepAnswers),
+          ern = testGreatBritainWarehouseErn
         )
 
         SubmitChangeDestinationModel.apply mustBe maxSubmitChangeDestination.copy(
@@ -171,6 +183,7 @@ class SubmitChangeDestinationModelSpec extends SpecBase with SubmitChangeDestina
           .set(FirstTransporterReviewPage, KeepAnswers)
           .set(TransportUnitsReviewPage, KeepAnswers)
           .set(TransportArrangerReviewPage, KeepAnswers)
+          .set(GuarantorReviewPage, KeepAnswers)
           // consignee
           .set(ConsigneeBusinessNamePage, "consignee name")
           .set(ConsigneeExcisePage, "consignee ern")
@@ -185,7 +198,7 @@ class SubmitChangeDestinationModelSpec extends SpecBase with SubmitChangeDestina
         implicit val dr: DataRequest[_] = dataRequest(
           request = fakeRequest,
           answers = userAnswers,
-          ern = testGreatBritainErn
+          ern = testGreatBritainWarehouseErn
         )
 
         SubmitChangeDestinationModel.apply mustBe minimumSubmitChangeDestinationModel

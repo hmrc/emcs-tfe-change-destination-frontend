@@ -632,6 +632,7 @@ guarantorVat.change.hidden = VAT registration number
 
 guarantorCheckAnswers.title = Check your answers
 guarantorCheckAnswers.heading = Check your answers
+guarantorCheckAnswers.inset = This movement requires a guarantee. Only the details of the guarantor can be changed.
 
 destinationBusinessName.title = What is the business name of the place of destination?
 destinationBusinessName.directDelivery.title = What is the business name of the place of destination (optional)?
@@ -1428,6 +1429,11 @@ movementReviewAnswers.row.invoiceDate = Invoice date of issue
 movementReviewAnswers.question = Do you need to change any details in this section?
 movementReviewAnswers.error.required = Select yes if you need to change any of these details
 
+guarantorReview.title = Section summary - Guarantor
+guarantorReview.heading = Section summary
+guarantorReview.legend = Do you need to change any details in this section?
+guarantorReview.error.required = Select yes if you need to change any of these details
+
 movementCheckAnswers.title = Check your answers
 movementCheckAnswers.heading = Check your answers
 
@@ -1508,9 +1514,24 @@ errors.validation.notificationBanner.8607.content = The consignee delivery place
 errors.validation.notificationBanner.8608.content = If the country code in the Administrative Reference Code is GB then the delivery place customs office must also start with GB.
 errors.validation.notificationBanner.8609.content = If the country code in the Administrative Reference Code is XI then the delivery place customs office must not start with GB.
 
-guarantorRequired.export.title = Your movement requires a new guarantor
-guarantorRequired.export.heading = Your movement requires a new guarantor
-guarantorRequired.export.p1 = This movement is now an export. The original consignee can no longer be the guarantor for this movement. You must give the details of a new guarantor.
-guarantorRequired.export.p2 = It is the consignor’s responsibility to make sure that a valid movement guarantee is in place. Movement guarantees are valid if lodged with HMRC and one of the businesses named on the guarantee has a suitable connection to that movement. For example, they are the consignor or the owner of the goods.
+guarantorRequired.export.isRequired.new.title = Your movement requires a new guarantor
+guarantorRequired.export.isRequired.niToEu.title = Your movement requires a guarantee
+guarantorRequired.export.notRequired.title = Movement guarantee
+guarantorRequired.export.isRequired.new.heading = Your movement requires a new guarantor
+guarantorRequired.export.isRequired.niToEu.heading = Your movement requires a guarantee
+guarantorRequired.export.notRequired.heading = Movement guarantee
+guarantorRequired.export.isRequired.new.p1 = This movement is now an export. The original consignee can no longer be the guarantor for this movement. You must give the details of a new guarantor.
+guarantorRequired.export.isRequired.niToEu.p1 = This movement must be covered by financial security in the form of a movement guarantee. The only type of movement that is allowed to take place without a guarantee from Northern Ireland to the EU is the movement of energy products using fixed transport installations.
+guarantorRequired.export.notRequired.p1 = Generally, excise goods moving within the UK (between UK warehouses or before export), or from Northern Ireland to the EU, must be covered by financial security in the form of a movement guarantee.
+guarantorRequired.export.isRequired.p2 = It is the consignor’s responsibility to make sure that a valid movement guarantee is in place. Movement guarantees are valid if lodged with HMRC and one of the businesses named on the guarantee has a suitable connection to that movement. For example, they are the consignor or the owner of the goods.
 guarantorRequired.findOutMore.link = Read more about financial security for movements of excise goods here
+guarantorRequired.inset = The guarantor is liable for the whole of the movement until the movement has correctly ended. This means the goods reaching their stated destination or, for exports, leaving the UK.
+guarantorRequired.export.notRequired.h2.1 = Movements that do not require a guarantee
+guarantorRequired.export.notRequired.p3 = The following movement types do not usually require a guarantee:
+guarantorRequired.export.notRequired.bullet.1 = movements of energy products from Northern Ireland to the EU using fixed transport installations
+guarantorRequired.export.notRequired.bullet.2 = duty-suspended movements of goods with Excise Product Codes B000, W200 or W300, from UK alcohol production premises to other UK tax or excise warehouses. However, if a change of destination is submitted and the new destination is outside of the UK, a guarantor is required
+guarantorRequired.export.notRequired.h2.2 = Is a guarantee required for this movement?
 guarantorRequired.enterDetails = Enter guarantor details
+guarantorRequired.error.required = Select yes if a guarantor is required for this movement
+guarantorRequired.checkYourAnswersLabel = Guarantor required
+guarantorRequired.change.hidden = if a guarantor is required for this movement

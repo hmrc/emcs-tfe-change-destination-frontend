@@ -18,6 +18,7 @@ package pages.sections.guarantor
 
 import base.SpecBase
 import models.response.emcsTfe.TraderModel
+import models.sections.info.movementScenario.DestinationType.TaxWarehouse
 import play.api.test.FakeRequest
 
 class GuarantorVatPageSpec extends SpecBase {
@@ -27,7 +28,11 @@ class GuarantorVatPageSpec extends SpecBase {
   "getValueFromIE801" - {
     "must return Some(_)" - {
       "when guarantor trader is defined and has a VAT number (getting the first guarantor)" in {
-        GuarantorVatPage.getValueFromIE801(dataRequest(FakeRequest())) mustBe guarantorTraders.headOption.flatMap(_.vatNumber)
+        GuarantorVatPage.getValueFromIE801(dataRequest(
+          FakeRequest(),
+          ern = testGreatBritainWarehouseErn,
+          movementDetails = maxGetMovementResponse.copy(destinationType = TaxWarehouse)
+        )) mustBe guarantorTraders.headOption.flatMap(_.vatNumber)
       }
     }
     "must return None" - {

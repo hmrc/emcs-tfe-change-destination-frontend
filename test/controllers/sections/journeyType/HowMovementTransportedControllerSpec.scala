@@ -28,6 +28,7 @@ import models.sections.journeyType.HowMovementTransported
 import models.sections.transportUnit.TransportUnitType.{Container, Tractor}
 import models.{NormalMode, UserAnswers}
 import navigation.FakeNavigators.FakeJourneyTypeNavigator
+import pages.sections.guarantor.GuarantorRequiredPage
 import pages.sections.info.DestinationTypePage
 import pages.sections.journeyType.{GiveInformationOtherTransportPage, HowMovementTransportedPage, JourneyTimeDaysPage, JourneyTypeReviewPage}
 import pages.sections.transportUnit.{TransportUnitIdentityPage, TransportUnitTypePage, TransportUnitsSection}
@@ -85,22 +86,21 @@ class HowMovementTransportedControllerSpec extends SpecBase with MockUserAnswers
     }
 
     Seq(
+      MovementScenario.DirectDelivery,
+      MovementScenario.ExemptedOrganisation,
+      MovementScenario.RegisteredConsignee,
       MovementScenario.EuTaxWarehouse,
       MovementScenario.TemporaryRegisteredConsignee,
-      MovementScenario.RegisteredConsignee,
-      MovementScenario.DirectDelivery,
-      MovementScenario.UnknownDestination,
-      MovementScenario.ExemptedOrganisation
+      MovementScenario.CertifiedConsignee,
+      MovementScenario.TemporaryCertifiedConsignee
     ).foreach { scenario =>
-      s"must return OK and the onlyFixedView when destination type is $scenario and destination type has not changed, and no guarantor exists" in new Test(
+      s"must return OK and the onlyFixedView when destination type is $scenario, and no guarantor exists" in new Test(
         userAnswers = Some(
           emptyUserAnswers.copy(ern = testNorthernIrelandErn)
             .set(DestinationTypePage, scenario)
+            .set(GuarantorRequiredPage, false)
         ),
-        movementResponse = maxGetMovementResponse.copy(
-          movementGuarantee = maxGetMovementResponse.movementGuarantee.copy(guarantorTrader = None),
-          destinationType = scenario.destinationType
-        )
+        movementResponse = maxGetMovementResponse
       ) {
         val result = controller.onPageLoad(testNorthernIrelandErn, testArc, NormalMode)(request)
 

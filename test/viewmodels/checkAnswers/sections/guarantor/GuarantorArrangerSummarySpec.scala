@@ -20,8 +20,7 @@ import base.SpecBase
 import fixtures.messages.sections.guarantor.GuarantorArrangerMessages
 import fixtures.messages.sections.guarantor.GuarantorArrangerMessages.ViewMessages
 import models.CheckMode
-import models.response.emcsTfe.GuarantorType.NoGuarantor
-import models.response.emcsTfe.MovementGuaranteeModel
+import models.response.emcsTfe.{GuarantorType, MovementGuaranteeModel}
 import models.sections.guarantor.GuarantorArranger.{Consignee, Consignor, GoodsOwner, Transporter}
 import models.sections.info.movementScenario.MovementScenario.ExportWithCustomsDeclarationLodgedInTheUk
 import pages.sections.guarantor.GuarantorArrangerPage
@@ -34,13 +33,13 @@ import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import viewmodels.govuk.summarylist._
 
 class GuarantorArrangerSummarySpec extends SpecBase {
-  private def expectedRow(value: String)(implicit messagesForLanguage: ViewMessages): SummaryListRow =
+  private def expectedRow(value: String, ern: String = testErn)(implicit messagesForLanguage: ViewMessages): SummaryListRow =
     SummaryListRowViewModel(
       key = Key(Text(messagesForLanguage.cyaLabel)),
       value = Value(Text(value)),
       actions = Seq(ActionItemViewModel(
         content = Text(messagesForLanguage.change),
-        href = controllers.sections.guarantor.routes.GuarantorArrangerController.onPageLoad(testErn, testArc, CheckMode).url,
+        href = controllers.sections.guarantor.routes.GuarantorArrangerController.onPageLoad(ern, testArc, CheckMode).url,
         id = "changeGuarantorArranger"
       ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHidden))
     )
@@ -50,15 +49,15 @@ class GuarantorArrangerSummarySpec extends SpecBase {
 
       implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
 
-      "and there is no answer for the GuarantorArrangerPage" in {
+      "and there is no answer for the GuarantorArrangerPage (requires new guarantor details)" in {
         implicit lazy val request = dataRequest(
           request = FakeRequest(),
-          answers = emptyUserAnswers
-            .set(DestinationTypePage, ExportWithCustomsDeclarationLodgedInTheUk),
-          movementDetails = maxGetMovementResponse.copy(movementGuarantee = MovementGuaranteeModel(NoGuarantor, None))
+          answers = emptyUserAnswers.set(DestinationTypePage, ExportWithCustomsDeclarationLodgedInTheUk),
+          ern = testGreatBritainWarehouseErn,
+          movementDetails = maxGetMovementResponse.copy(movementGuarantee = MovementGuaranteeModel(GuarantorType.Consignee, None))
         )
 
-        GuarantorArrangerSummary.row mustBe expectedRow(messagesForLanguage.notProvided)
+        GuarantorArrangerSummary.row() mustBe expectedRow(messagesForLanguage.notProvided, testGreatBritainWarehouseErn)
       }
 
       Seq(
@@ -76,7 +75,7 @@ class GuarantorArrangerSummarySpec extends SpecBase {
                 .set(GuarantorArrangerPage, arranger)
             )
 
-            GuarantorArrangerSummary.row mustBe expectedRow(expectedMessage)
+            GuarantorArrangerSummary.row() mustBe expectedRow(expectedMessage)
           }
       }
 

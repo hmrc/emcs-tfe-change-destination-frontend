@@ -19,8 +19,7 @@ package viewmodels.checkAnswers.sections.guarantor
 import base.SpecBase
 import fixtures.messages.sections.guarantor.GuarantorArrangerMessages.English
 import models.requests.DataRequest
-import models.response.emcsTfe.GuarantorType.NoGuarantor
-import models.response.emcsTfe.MovementGuaranteeModel
+import models.response.emcsTfe.GuarantorType._
 import models.sections.guarantor.GuarantorArranger
 import models.sections.guarantor.GuarantorArranger.{GoodsOwner, Transporter}
 import models.sections.info.movementScenario.MovementScenario.ExportWithCustomsDeclarationLodgedInTheUk
@@ -51,9 +50,9 @@ class GuarantorCheckAnswersHelperSpec extends SpecBase with MockFactory {
                 .set(GuarantorNamePage, "guarantor name")
                 .set(GuarantorVatPage, "gurantor123")
                 .set(GuarantorAddressPage, testUserAddress),
-              movementDetails = maxGetMovementResponse.copy(movementGuarantee = MovementGuaranteeModel(NoGuarantor, None))
+              movementDetails = maxGetMovementResponse
             )
-            helper.summaryList()(request, msgs).rows.length mustBe 4
+            helper.summaryList()(request, msgs).rows.length mustBe 5
           }
         }
       case value =>
@@ -66,20 +65,22 @@ class GuarantorCheckAnswersHelperSpec extends SpecBase with MockFactory {
                 .set(GuarantorArrangerPage, value)
                 .set(ConsigneeBusinessNamePage, s"$value name")
                 .set(ConsigneeAddressPage, testUserAddress),
-              movementDetails = maxGetMovementResponse.copy(movementGuarantee = MovementGuaranteeModel(NoGuarantor, None))
+              movementDetails = maxGetMovementResponse
             )
-            helper.summaryList()(request, msgs).rows.length mustBe 3
+            helper.summaryList()(request, msgs).rows.length mustBe 4
           }
         }
     }
 
     "must render one row" - {
-      "when no answers for the guarantor section" in new Test {
+      "when GuarantorRequiredPage is `No`" in new Test {
         implicit val request: DataRequest[_] = dataRequest(
           FakeRequest(),
           emptyUserAnswers
+            .set(GuarantorRequiredPage, false)
             .set(DestinationTypePage, ExportWithCustomsDeclarationLodgedInTheUk),
-          movementDetails = maxGetMovementResponse.copy(movementGuarantee = MovementGuaranteeModel(NoGuarantor, None))
+          testGreatBritainWarehouseErn,
+          movementDetails = maxGetMovementResponse
         )
         helper.summaryList()(request, msgs).rows.length mustBe 1
       }

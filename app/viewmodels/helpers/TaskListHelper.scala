@@ -135,21 +135,19 @@ class TaskListHelper @Inject()(list: list, p: p) extends Logging {
 
 
 
-  private[helpers] def guarantorSection(implicit request: DataRequest[_], messages: Messages): Option[TaskListSection] =
-    Option.when(GuarantorSection.requiresGuarantorToBeProvided) {
-      TaskListSection(
-        sectionHeading = messages("taskList.section.guarantor"),
-        rows = Seq(
-          Some(TaskListSectionRow(
-            taskName = messages("taskList.section.guarantor.guarantor"),
-            id = "guarantor",
-            link = Some(controllers.sections.guarantor.routes.GuarantorIndexController.onPageLoad(request.ern, request.arc).url),
-            section = Some(GuarantorSection),
-            status = Some(GuarantorSection.status)
-          ))
-        ).flatten
-      )
-    }
+  private[helpers] def guarantorSection(implicit request: DataRequest[_], messages: Messages): TaskListSection =
+    TaskListSection(
+      sectionHeading = messages("taskList.section.guarantor"),
+      rows = Seq(
+        Some(TaskListSectionRow(
+          taskName = messages("taskList.section.guarantor.guarantor"),
+          id = "guarantor",
+          link = Some(controllers.sections.guarantor.routes.GuarantorIndexController.onPageLoad(request.ern, request.arc).url),
+          section = Some(GuarantorSection),
+          status = Some(GuarantorSection.status)
+        ))
+      ).flatten
+    )
 
   private[helpers] def transportSection(implicit request: DataRequest[_], messages: Messages): TaskListSection = {
     TaskListSection(
@@ -190,12 +188,12 @@ class TaskListHelper @Inject()(list: list, p: p) extends Logging {
   private def sectionsExceptSubmit(implicit request: DataRequest[_], messages: Messages): Seq[TaskListSection] = Seq(
     Some(movementSection),
     deliverySection,
-    guarantorSection,
+    Some(guarantorSection),
     Some(transportSection)
   ).flatten
 
   private[helpers] def submitSection(sectionsExceptSubmit: Seq[TaskListSection])
-                                          (implicit request: DataRequest[_], messages: Messages): TaskListSection = {
+                                    (implicit request: DataRequest[_], messages: Messages): TaskListSection = {
 
     val rows: Seq[TaskListSectionRow] = sectionsExceptSubmit.flatMap(_.rows).filter(_.section.exists(_.canBeCompletedForTraderAndDestinationType))
 

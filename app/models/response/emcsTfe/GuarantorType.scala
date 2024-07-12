@@ -40,6 +40,8 @@ object GuarantorType extends Enumerable.Implicits {
   case object Consignee extends WithName("4") with GuarantorType
   case object NoGuarantor extends WithName("5") with GuarantorType
 
+  val noGuarantorValues: Seq[GuarantorType] = Seq(NoGuarantor, GuarantorNotRequired)
+
   val values: Seq[GuarantorType] = Seq(
     GuarantorNotRequired,
     Consignor,
