@@ -67,9 +67,28 @@ object TraderModel extends ModelConstructorHelpers {
     )
   }
 
+  def applyPlaceOfDispatchFromMovement(implicit request: DataRequest[_]): Option[TraderModel] = {
+    request.movementDetails.placeOfDispatchTrader.map { pod =>
+      TraderModel(
+        traderExciseNumber = pod.traderExciseNumber,
+        traderName = pod.traderName,
+        address = Some(AddressModel(
+          streetNumber = pod.address.flatMap(_.streetNumber),
+          street = pod.address.flatMap(_.street),
+          postcode = pod.address.flatMap(_.postcode),
+          city = pod.address.flatMap(_.city)
+        )),
+        vatNumber = None,
+        eoriNumber = None
+      )
+    }
+  }
+
   //noinspection ScalaStyle
   def applyDeliveryPlace(movementScenario: MovementScenario)(implicit request: DataRequest[_]): Option[TraderModel] = {
-    if (DestinationSection.canBeCompletedForTraderAndDestinationType) {
+    if (movementScenario == MovementScenario.ReturnToThePlaceOfDispatch) {
+      applyPlaceOfDispatchFromMovement
+    } else if (DestinationSection.canBeCompletedForTraderAndDestinationType) {
       if (DestinationSection.shouldStartFlowAtDestinationWarehouseExcise(movementScenario)) {
         val exciseId: String = mandatoryPage(DestinationWarehouseExcisePage)
         val useConsigneeDetails: Boolean = mandatoryPage(DestinationConsigneeDetailsPage)

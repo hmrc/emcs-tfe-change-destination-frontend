@@ -18,6 +18,7 @@ package models.submitChangeDestination
 
 import base.SpecBase
 import models.requests.DataRequest
+import models.response.emcsTfe
 import models.sections.consignee.ConsigneeExportInformation.{EoriNumber, VatNumber}
 import models.sections.guarantor.GuarantorArranger
 import models.sections.info.movementScenario.MovementScenario
@@ -257,6 +258,29 @@ class TraderModelSpec extends SpecBase {
               TraderModel.applyDeliveryPlace(movementScenario) mustBe Some(deliveryPlaceTrader)
           }
         }
+        "when a ReturnToThePlaceOfDispatch scenario" in {
+          implicit val dr: DataRequest[_] = dataRequest(
+            fakeRequest,
+            emptyUserAnswers.set(DestinationTypePage, ReturnToThePlaceOfDispatch),
+            movementDetails = maxGetMovementResponse
+              .copy(
+                placeOfDispatchTrader = Some(emcsTfe.TraderModel(
+                  traderExciseNumber = placeOfDispatchTrader.traderExciseNumber,
+                  traderName = placeOfDispatchTrader.traderName,
+                  address = Some(emcsTfe.AddressModel(
+                    streetNumber = placeOfDispatchTrader.address.flatMap(_.streetNumber),
+                    street = placeOfDispatchTrader.address.flatMap(_.street),
+                    postcode = placeOfDispatchTrader.address.flatMap(_.postcode),
+                    city = placeOfDispatchTrader.address.flatMap(_.city)
+                  )),
+                  vatNumber = placeOfDispatchTrader.vatNumber,
+                  eoriNumber = placeOfDispatchTrader.eoriNumber
+                ))
+              )
+          )
+
+          TraderModel.applyDeliveryPlace(ReturnToThePlaceOfDispatch) mustBe Some(placeOfDispatchTrader)
+        }
       }
       "when DestinationTypePage means shouldStartFlowAtDestinationWarehouseVat" - {
         "when giveAddressAndBusinessName = true" in {
@@ -327,7 +351,7 @@ class TraderModelSpec extends SpecBase {
       "DestinationType is invalid" in {
         MovementScenario
           .values
-          .filterNot(Seq(UkTaxWarehouse.GB, UkTaxWarehouse.NI, EuTaxWarehouse, RegisteredConsignee, TemporaryRegisteredConsignee, CertifiedConsignee, TemporaryCertifiedConsignee, ExemptedOrganisation, DirectDelivery).contains)
+          .filterNot(Seq(UkTaxWarehouse.GB, UkTaxWarehouse.NI, EuTaxWarehouse, RegisteredConsignee, TemporaryRegisteredConsignee, CertifiedConsignee, TemporaryCertifiedConsignee, ExemptedOrganisation, DirectDelivery, ReturnToThePlaceOfDispatch).contains)
           .foreach {
             movementScenario =>
               implicit val dr: DataRequest[_] = dataRequest(
