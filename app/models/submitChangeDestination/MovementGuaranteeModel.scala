@@ -35,7 +35,7 @@ object MovementGuaranteeModel extends ModelConstructorHelpers {
     val guarantorArranger: GuarantorArranger = mandatoryPage(GuarantorArrangerPage)
     MovementGuaranteeModel(
       guarantorTypeCode = guarantorArranger,
-      guarantorTrader = Some(Seq(TraderModel.applyGuarantor(guarantorArranger)))
+      guarantorTrader = TraderModel.applyGuarantor(guarantorArranger).map(Seq(_))
     )
   }
 
