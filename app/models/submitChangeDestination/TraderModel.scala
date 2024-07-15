@@ -171,27 +171,17 @@ object TraderModel extends ModelConstructorHelpers {
       eoriNumber = None
     )
 
-  def applyGuarantor(guarantorArranger: GuarantorArranger)(implicit request: DataRequest[_]): TraderModel = {
+  def applyGuarantor(guarantorArranger: GuarantorArranger)(implicit request: DataRequest[_]): Option[TraderModel] =
     guarantorArranger match {
-      case GuarantorArranger.Consignor => applyConsignor.copy(traderExciseNumber = None)
-      case GuarantorArranger.Consignee =>
-        val consigneeTrader = applyConsignee
-        TraderModel(
-          traderExciseNumber = None,
-          traderName = consigneeTrader.traderName,
-          address = consigneeTrader.address,
-          vatNumber = request.userAnswers.get(ConsigneeExportVatPage),
-          eoriNumber = None
-        )
-      case _ => TraderModel(
+      case GuarantorArranger.Consignor | GuarantorArranger.Consignee => None
+      case _ => Some(TraderModel(
         traderExciseNumber = None,
         traderName = Some(mandatoryPage(GuarantorNamePage)),
         address = Some(AddressModel.fromUserAddress(mandatoryPage(GuarantorAddressPage))),
         vatNumber = Some(mandatoryPage(GuarantorVatPage)),
         eoriNumber = None
-      )
+      ))
     }
-  }
 
   implicit val fmt: Format[TraderModel] = Json.format
 }

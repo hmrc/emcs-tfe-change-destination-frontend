@@ -431,7 +431,7 @@ class TraderModelSpec extends SpecBase {
   }
 
   "applyGuarantor" - {
-    "must return a TraderModel" - {
+    "must return a None" - {
       "when GoodsType is Consignor" in {
         implicit val dr: DataRequest[_] = dataRequest(
           fakeRequest,
@@ -439,7 +439,7 @@ class TraderModelSpec extends SpecBase {
             .set(ConsignorAddressPage, testUserAddress.copy(street = "consignor street"))
         )
 
-        TraderModel.applyGuarantor(GuarantorArranger.Consignor) mustBe consignorTrader.copy(traderExciseNumber = None)
+        TraderModel.applyGuarantor(GuarantorArranger.Consignor) mustBe None
       }
       "when GoodsType is Consignee" in {
         implicit val dr: DataRequest[_] = dataRequest(
@@ -454,10 +454,13 @@ class TraderModelSpec extends SpecBase {
             .set(ConsigneeAddressPage, testUserAddress.copy(street = "consignee street"))
         )
 
-        TraderModel.applyGuarantor(GuarantorArranger.Consignee) mustBe guarantorTraderWithConsigneeInfo
+        TraderModel.applyGuarantor(GuarantorArranger.Consignee) mustBe None
       }
-      Seq(GuarantorArranger.GoodsOwner, GuarantorArranger.Transporter).foreach(
-        guarantorArranger =>
+    }
+
+    Seq(GuarantorArranger.GoodsOwner, GuarantorArranger.Transporter).foreach(
+      guarantorArranger =>
+        "return Some(TraderModel)" - {
           s"when Guarantor Arranger is $guarantorArranger" in {
             implicit val dr: DataRequest[_] = dataRequest(
               fakeRequest,
@@ -467,9 +470,9 @@ class TraderModelSpec extends SpecBase {
                 .set(GuarantorVatPage, "guarantor vat")
             )
 
-            TraderModel.applyGuarantor(guarantorArranger) mustBe guarantorTrader
+            TraderModel.applyGuarantor(guarantorArranger) mustBe Some(guarantorTrader)
           }
-      )
-    }
+        }
+    )
   }
 }
