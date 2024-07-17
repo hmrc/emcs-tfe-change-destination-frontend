@@ -18,7 +18,7 @@ package pages.sections.journeyType
 
 import models.Enumerable
 import models.requests.DataRequest
-import models.sections.journeyType.HowMovementTransported.{FixedTransportInstallations, Other}
+import models.sections.journeyType.HowMovementTransported.Other
 import pages.sections.Section
 import pages.sections.guarantor.GuarantorRequiredPage
 import pages.sections.info.DestinationTypePage

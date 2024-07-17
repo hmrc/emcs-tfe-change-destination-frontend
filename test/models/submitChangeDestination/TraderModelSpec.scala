@@ -207,6 +207,43 @@ class TraderModelSpec extends SpecBase {
             TraderModel.applyConsignee mustBe consigneeTraderWithNeitherErnNorVatNo
         }
       }
+
+      "when a ReturnToThePlaceOfDispatch scenario" in {
+        implicit val dr: DataRequest[_] = dataRequest(
+          fakeRequest,
+          emptyUserAnswers.set(DestinationTypePage, ReturnToThePlaceOfDispatch),
+          movementDetails = maxGetMovementResponse
+            .copy(
+              placeOfDispatchTrader = Some(emcsTfe.TraderModel(
+                traderExciseNumber = placeOfDispatchTrader.traderExciseNumber,
+                traderName = placeOfDispatchTrader.traderName,
+                address = Some(emcsTfe.AddressModel(
+                  streetNumber = placeOfDispatchTrader.address.flatMap(_.streetNumber),
+                  street = placeOfDispatchTrader.address.flatMap(_.street),
+                  postcode = placeOfDispatchTrader.address.flatMap(_.postcode),
+                  city = placeOfDispatchTrader.address.flatMap(_.city)
+                )),
+                vatNumber = placeOfDispatchTrader.vatNumber,
+                eoriNumber = placeOfDispatchTrader.eoriNumber
+              ))
+            )
+        )
+
+        TraderModel.applyConsigneeDecision mustBe Some(
+          TraderModel(
+            traderExciseNumber = Some(testErn),
+            traderName = placeOfDispatchTrader.traderName,
+            address = Some(AddressModel(
+              streetNumber = placeOfDispatchTrader.address.flatMap(_.streetNumber),
+              street = placeOfDispatchTrader.address.flatMap(_.street),
+              postcode = placeOfDispatchTrader.address.flatMap(_.postcode),
+              city = placeOfDispatchTrader.address.flatMap(_.city)
+            )),
+            vatNumber = placeOfDispatchTrader.vatNumber,
+            eoriNumber = placeOfDispatchTrader.eoriNumber
+          )
+        )
+      }
     }
   }
 
@@ -257,29 +294,6 @@ class TraderModelSpec extends SpecBase {
 
               TraderModel.applyDeliveryPlace(movementScenario) mustBe Some(deliveryPlaceTrader)
           }
-        }
-        "when a ReturnToThePlaceOfDispatch scenario" in {
-          implicit val dr: DataRequest[_] = dataRequest(
-            fakeRequest,
-            emptyUserAnswers.set(DestinationTypePage, ReturnToThePlaceOfDispatch),
-            movementDetails = maxGetMovementResponse
-              .copy(
-                placeOfDispatchTrader = Some(emcsTfe.TraderModel(
-                  traderExciseNumber = placeOfDispatchTrader.traderExciseNumber,
-                  traderName = placeOfDispatchTrader.traderName,
-                  address = Some(emcsTfe.AddressModel(
-                    streetNumber = placeOfDispatchTrader.address.flatMap(_.streetNumber),
-                    street = placeOfDispatchTrader.address.flatMap(_.street),
-                    postcode = placeOfDispatchTrader.address.flatMap(_.postcode),
-                    city = placeOfDispatchTrader.address.flatMap(_.city)
-                  )),
-                  vatNumber = placeOfDispatchTrader.vatNumber,
-                  eoriNumber = placeOfDispatchTrader.eoriNumber
-                ))
-              )
-          )
-
-          TraderModel.applyDeliveryPlace(ReturnToThePlaceOfDispatch) mustBe Some(placeOfDispatchTrader)
         }
       }
       "when DestinationTypePage means shouldStartFlowAtDestinationWarehouseVat" - {

@@ -20,7 +20,6 @@ import models.audit.Auditable
 import models.requests.DataRequest
 import models.sections.ReviewAnswer.KeepAnswers
 import models.sections.info.movementScenario.DestinationType
-import pages.sections.consignee.ConsigneeSection
 import pages.sections.guarantor.{GuarantorReviewPage, GuarantorSection}
 import pages.sections.info.DestinationTypePage
 import play.api.libs.functional.syntax.{toFunctionalBuilderOps, unlift}
@@ -43,7 +42,7 @@ object DestinationChangedModel extends ModelConstructorHelpers {
   def apply(implicit request: DataRequest[_]): DestinationChangedModel =
     DestinationChangedModel(
       destinationTypeCode = mandatoryPage(DestinationTypePage).destinationType,
-      newConsigneeTrader = Option.when(ConsigneeSection.hasChanged)(TraderModel.applyConsignee),
+      newConsigneeTrader = TraderModel.applyConsigneeDecision(request),
       deliveryPlaceTrader = TraderModel.applyDeliveryPlace(mandatoryPage(DestinationTypePage)),
       deliveryPlaceCustomsOffice = DeliveryPlaceCustomsOfficeModel.apply,
       movementGuarantee = Option.when(GuarantorSection.requiresGuarantorToBeProvided && !GuarantorReviewPage.value.contains(KeepAnswers))(MovementGuaranteeModel.apply)

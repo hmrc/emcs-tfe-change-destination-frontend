@@ -21,13 +21,11 @@ import controllers.actions._
 import forms.sections.journeyType.HowMovementTransportedFormProvider
 import models.requests.DataRequest
 import models.sections.ReviewAnswer
-import models.sections.info.movementScenario.MovementType
 import models.sections.journeyType.HowMovementTransported
 import models.sections.journeyType.HowMovementTransported.FixedTransportInstallations
 import models.sections.transportUnit.TransportUnitType.FixedTransport
 import models.{Index, Mode, NormalMode, UserAnswers}
 import navigation.JourneyTypeNavigator
-import pages.sections.info.DestinationTypePage
 import pages.sections.journeyType.{HowMovementTransportedPage, JourneyTypeReviewPage, JourneyTypeSection}
 import pages.sections.transportUnit.{TransportUnitTypePage, TransportUnitsSection}
 import play.api.i18n.MessagesApi
