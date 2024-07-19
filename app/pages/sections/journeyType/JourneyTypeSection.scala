@@ -29,7 +29,7 @@ case object JourneyTypeSection extends Section[JsObject] with Enumerable.Implici
   override val path: JsPath = JsPath \ "journeyType"
 
   def mustBeFixedTransport(implicit request: DataRequest[_]) =
-    request.userAnswers.get(DestinationTypePage).exists(_.isNItoEU) && GuarantorRequiredPage.value.contains(false)
+    DestinationTypePage.isNItoEuMovement && GuarantorRequiredPage.value.contains(false)
 
   override def status(implicit request: DataRequest[_]): TaskListStatus = {
     val pageAnswersExist = List(

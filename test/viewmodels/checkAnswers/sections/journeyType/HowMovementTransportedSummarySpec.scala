@@ -101,7 +101,7 @@ class HowMovementTransportedSummarySpec extends SpecBase with Matchers {
                 answers = emptyUserAnswers
                   .set(DestinationTypePage, DirectDelivery)
                   .set(GuarantorRequiredPage, false),
-                ern = testNorthernIrelandErn,
+                ern = testNorthernIrelandWarehouseKeeperErn,
                 movementDetails = maxGetMovementResponse.copy(
                   transportMode = TransportModeModel(FixedTransportInstallations.toString, None)
                 )
@@ -124,7 +124,7 @@ class HowMovementTransportedSummarySpec extends SpecBase with Matchers {
               implicit lazy val request = dataRequest(
                 request = FakeRequest(),
                 answers = emptyUserAnswers.set(DestinationTypePage, DirectDelivery),
-                ern = testNorthernIrelandErn,
+                ern = testNorthernIrelandWarehouseKeeperErn,
                 movementDetails = maxGetMovementResponse.copy(
                   movementGuarantee = maxGetMovementResponse.movementGuarantee.copy(guarantorTypeCode = GuarantorType.NoGuarantor),
                   transportMode = TransportModeModel(FixedTransportInstallations.toString, None)

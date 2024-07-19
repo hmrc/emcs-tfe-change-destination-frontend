@@ -96,16 +96,16 @@ class HowMovementTransportedControllerSpec extends SpecBase with MockUserAnswers
     ).foreach { scenario =>
       s"must return OK and the onlyFixedView when destination type is $scenario, and no guarantor exists" in new Test(
         userAnswers = Some(
-          emptyUserAnswers.copy(ern = testNorthernIrelandErn)
+          emptyUserAnswers.copy(ern = testNorthernIrelandWarehouseKeeperErn)
             .set(DestinationTypePage, scenario)
             .set(GuarantorRequiredPage, false)
         ),
         movementResponse = maxGetMovementResponse
       ) {
-        val result = controller.onPageLoad(testNorthernIrelandErn, testArc, NormalMode)(request)
+        val result = controller.onPageLoad(testNorthernIrelandWarehouseKeeperErn, testArc, NormalMode)(request)
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual onlyFixedView(NormalMode)(dataRequest(request, ern = testNorthernIrelandErn), messages(request)).toString
+        contentAsString(result) mustEqual onlyFixedView(NormalMode)(dataRequest(request, ern = testNorthernIrelandWarehouseKeeperErn), messages(request)).toString
       }
     }
 

@@ -17,13 +17,17 @@
 package pages.sections.guarantor
 
 import models.Enumerable
+import models.UserType.{NorthernIrelandCertifiedConsignor, NorthernIrelandRegisteredConsignor, NorthernIrelandWarehouseKeeper}
 import models.requests.DataRequest
 import models.response.emcsTfe.GuarantorType
 import models.sections.guarantor.GuarantorArranger.{Consignee, Consignor}
+import models.sections.info.movementScenario.MovementScenario.{ExemptedOrganisation, UnknownDestination}
 import models.sections.journeyType.HowMovementTransported.FixedTransportInstallations
+import models.sections.transportUnit.TransportUnitType.FixedTransport
 import pages.sections.Section
 import pages.sections.info.DestinationTypePage
 import pages.sections.journeyType.HowMovementTransportedPage
+import pages.sections.transportUnit.TransportUnitsSectionUnits
 import play.api.libs.json.{JsObject, JsPath}
 import viewmodels.taskList.{Completed, InProgress, NotStarted, TaskListStatus}
 
@@ -39,14 +43,19 @@ case object GuarantorSection extends Section[JsObject] with Enumerable.Implicits
   def requiresGuarantorToBeProvided(implicit request: DataRequest[_]): Boolean =
     requiresNewGuarantorDetails || !(ukNoGuarantorRequired || euNoGuarantorRequired)
 
-  def euNoGuarantorRequired(implicit request: DataRequest[_]): Boolean =
-    request.isNorthernIrelandErn &&
-      DestinationTypePage.isNItoEuMovement &&
-      request.userAnswers.get(HowMovementTransportedPage).contains(FixedTransportInstallations) &&
-      request.movementDetails.items.forall(_.isEnergy)
-
   def ukNoGuarantorRequired(implicit request: DataRequest[_]): Boolean =
     DestinationTypePage.isUktoUkMovement && request.movementDetails.items.forall(_.isBeerOrWine)
+
+  def euNoGuarantorRequired(implicit request: DataRequest[_]): Boolean =
+    DestinationTypePage.isNItoEuMovement && destinationTypeIsNotUnknownOrExempted && onlyFixedTransport &&
+      Seq(NorthernIrelandRegisteredConsignor, NorthernIrelandCertifiedConsignor, NorthernIrelandWarehouseKeeper).contains(request.userTypeFromErn) &&
+      request.movementDetails.items.forall(_.isEnergy)
+
+  private def destinationTypeIsNotUnknownOrExempted(implicit request: DataRequest[_]): Boolean =
+    !Seq(UnknownDestination, ExemptedOrganisation).exists(DestinationTypePage.is)
+
+  private def onlyFixedTransport(implicit request: DataRequest[_]): Boolean =
+    HowMovementTransportedPage.is(FixedTransportInstallations) && TransportUnitsSectionUnits.onlyContainsOrIsEmpty(FixedTransport)
 
   //If this movement now requires a guarantor, and the original movement doesn't have one, then it's not possible to have a Review status.
   private def reviewGuard(f: => TaskListStatus)(implicit request: DataRequest[_]): TaskListStatus =

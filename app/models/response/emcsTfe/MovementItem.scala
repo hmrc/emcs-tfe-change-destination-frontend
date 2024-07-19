@@ -16,6 +16,8 @@
 
 package models.response.emcsTfe
 
+import models.GoodsType
+import models.GoodsType.{Beer, Energy, Wine}
 import play.api.libs.json.{Json, OFormat}
 
 case class MovementItem(itemUniqueReference: Int,
@@ -35,8 +37,8 @@ case class MovementItem(itemUniqueReference: Int,
                         brandNameOfProduct: Option[String],
                         maturationAge: Option[String]) {
 
-  val isBeerOrWine: Boolean = productCode.startsWith("B") || productCode.startsWith("W")
-  val isEnergy: Boolean = productCode.startsWith("E")
+  val isBeerOrWine: Boolean = Seq(Beer, Wine).contains(GoodsType(productCode))
+  val isEnergy: Boolean = GoodsType(productCode) == Energy
 }
 
 object MovementItem {

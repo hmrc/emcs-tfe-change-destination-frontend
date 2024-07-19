@@ -230,7 +230,7 @@ class MovementScenarioSpec extends SpecBase {
     ".isNItoEU" - {
       "when NI ern" - {
         "must return false" in {
-          implicit val dr = dataRequest(FakeRequest(), ern = testNorthernIrelandErn)
+          implicit val dr = dataRequest(FakeRequest(), ern = testNorthernIrelandWarehouseKeeperErn)
           ExportWithCustomsDeclarationLodgedInTheUk.isNItoEU mustBe false
         }
       }
@@ -291,7 +291,7 @@ class MovementScenarioSpec extends SpecBase {
     ".isNItoEU" - {
       "when NI ern" - {
         "must return false" in {
-          implicit val dr = dataRequest(FakeRequest(), ern = testNorthernIrelandErn)
+          implicit val dr = dataRequest(FakeRequest(), ern = testNorthernIrelandWarehouseKeeperErn)
           UkTaxWarehouse.GB.isNItoEU mustBe false
         }
       }
@@ -352,7 +352,7 @@ class MovementScenarioSpec extends SpecBase {
     ".isNItoEU" - {
       "when NI ern" - {
         "must return false" in {
-          implicit val dr = dataRequest(FakeRequest(), ern = testNorthernIrelandErn)
+          implicit val dr = dataRequest(FakeRequest(), ern = testNorthernIrelandWarehouseKeeperErn)
           UkTaxWarehouse.NI.isNItoEU mustBe false
         }
       }
@@ -413,7 +413,7 @@ class MovementScenarioSpec extends SpecBase {
     ".isNItoEU" - {
       "when NI ern" - {
         "must return true" in {
-          implicit val dr = dataRequest(FakeRequest(), ern = testNorthernIrelandErn)
+          implicit val dr = dataRequest(FakeRequest(), ern = testNorthernIrelandWarehouseKeeperErn)
           DirectDelivery.isNItoEU mustBe true
         }
       }
@@ -474,7 +474,7 @@ class MovementScenarioSpec extends SpecBase {
     ".isNItoEU" - {
       "when NI ern" - {
         "must return true" in {
-          implicit val dr = dataRequest(FakeRequest(), ern = testNorthernIrelandErn)
+          implicit val dr = dataRequest(FakeRequest(), ern = testNorthernIrelandWarehouseKeeperErn)
           EuTaxWarehouse.isNItoEU mustBe true
         }
       }
@@ -535,7 +535,7 @@ class MovementScenarioSpec extends SpecBase {
     ".isNItoEU" - {
       "when NI ern" - {
         "must return true" in {
-          implicit val dr = dataRequest(FakeRequest(), ern = testNorthernIrelandErn)
+          implicit val dr = dataRequest(FakeRequest(), ern = testNorthernIrelandWarehouseKeeperErn)
           ExemptedOrganisation.isNItoEU mustBe true
         }
       }
@@ -596,7 +596,7 @@ class MovementScenarioSpec extends SpecBase {
     ".isNItoEU" - {
       "when NI ern" - {
         "must return true" in {
-          implicit val dr = dataRequest(FakeRequest(), ern = testNorthernIrelandErn)
+          implicit val dr = dataRequest(FakeRequest(), ern = testNorthernIrelandWarehouseKeeperErn)
           ExemptedOrganisation.isNItoEU mustBe true
         }
       }
@@ -657,7 +657,7 @@ class MovementScenarioSpec extends SpecBase {
     ".isNItoEU" - {
       "when NI ern" - {
         "must return true" in {
-          implicit val dr = dataRequest(FakeRequest(), ern = testNorthernIrelandErn)
+          implicit val dr = dataRequest(FakeRequest(), ern = testNorthernIrelandWarehouseKeeperErn)
           RegisteredConsignee.isNItoEU mustBe true
         }
       }
@@ -718,7 +718,7 @@ class MovementScenarioSpec extends SpecBase {
     ".isNItoEU" - {
       "when NI ern" - {
         "must return true" in {
-          implicit val dr = dataRequest(FakeRequest(), ern = testNorthernIrelandErn)
+          implicit val dr = dataRequest(FakeRequest(), ern = testNorthernIrelandWarehouseKeeperErn)
           TemporaryRegisteredConsignee.isNItoEU mustBe true
         }
       }
@@ -779,7 +779,7 @@ class MovementScenarioSpec extends SpecBase {
     ".isNItoEU" - {
       "when NI ern" - {
         "must return false" in {
-          implicit val dr = dataRequest(FakeRequest(), ern = testNorthernIrelandErn)
+          implicit val dr = dataRequest(FakeRequest(), ern = testNorthernIrelandWarehouseKeeperErn)
           UnknownDestination.isNItoEU mustBe false
         }
       }
@@ -823,7 +823,7 @@ class MovementScenarioSpec extends SpecBase {
     ".isNItoEU" - {
       "when NI ern" - {
         "must return true" in {
-          implicit val dr = dataRequest(FakeRequest(), ern = testNorthernIrelandErn)
+          implicit val dr = dataRequest(FakeRequest(), ern = testNorthernIrelandWarehouseKeeperErn)
           CertifiedConsignee.isNItoEU mustBe true
         }
       }
@@ -867,7 +867,7 @@ class MovementScenarioSpec extends SpecBase {
     ".isNItoEU" - {
       "when NI ern" - {
         "must return true" in {
-          implicit val dr = dataRequest(FakeRequest(), ern = testNorthernIrelandErn)
+          implicit val dr = dataRequest(FakeRequest(), ern = testNorthernIrelandWarehouseKeeperErn)
           TemporaryCertifiedConsignee.isNItoEU mustBe true
         }
       }
@@ -911,7 +911,7 @@ class MovementScenarioSpec extends SpecBase {
     ".isNItoEU" - {
       "when NI ern" - {
         "must return false" in {
-          implicit val dr = dataRequest(FakeRequest(), ern = testNorthernIrelandErn)
+          implicit val dr = dataRequest(FakeRequest(), ern = testNorthernIrelandWarehouseKeeperErn)
           ReturnToThePlaceOfDispatch.isNItoEU mustBe false
         }
       }

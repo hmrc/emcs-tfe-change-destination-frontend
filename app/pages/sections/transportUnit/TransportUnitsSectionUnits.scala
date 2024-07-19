@@ -18,6 +18,7 @@ package pages.sections.transportUnit
 
 import models.Index
 import models.requests.DataRequest
+import models.sections.transportUnit.TransportUnitType
 import pages.sections.Section
 import play.api.libs.json.{JsArray, JsPath}
 import queries.TransportUnitsCount
@@ -41,4 +42,9 @@ case object TransportUnitsSectionUnits extends Section[JsArray] {
 
   override def canBeCompletedForTraderAndDestinationType(implicit request: DataRequest[_]): Boolean =
     TransportUnitsSection.canBeCompletedForTraderAndDestinationType
+
+  def onlyContainsOrIsEmpty(transportUnitType: TransportUnitType*)(implicit request: DataRequest[_]): Boolean =
+    (0 until request.userAnswers.get(TransportUnitsCount).getOrElse(0)).forall { idx =>
+      TransportUnitTypePage(idx).value.exists(transportUnitType.contains)
+    }
 }

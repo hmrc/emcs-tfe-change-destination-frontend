@@ -32,4 +32,5 @@ trait QuestionPage[+A] extends Page with Gettable[A] with Settable[A] {
     }
 
   def value[T >: A](implicit request: DataRequest[_], reads: Reads[T]): Option[T] = request.userAnswers.get[T](this)
+  def is[T >: A](t: T)(implicit request: DataRequest[_], reads: Reads[T]): Boolean = value[T].contains(t)
 }

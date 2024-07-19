@@ -30,7 +30,7 @@ trait BaseFixtures {
   val testCredId: String = "credId"
   val testInternalId: String = "internalId"
   val testErn: String = "XIRC123456789"
-  val testNorthernIrelandErn = "XIWK123456789"
+  val testNorthernIrelandWarehouseKeeperErn = "XIWK123456789"
   val testNorthernIrelandDutyPaidErn = "XIPA123456789"
   val testGreatBritainErn = "GBRC123456789"
   val testGreatBritainWarehouseErn = "GBWK123456789"

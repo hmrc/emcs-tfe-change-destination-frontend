@@ -66,7 +66,7 @@ object GoodsType {
     if(cnCode.exists(fermentedBeverages.contains)) {
       Fermented(epc = epc)
     } else {
-      epc.take(1) match {
+      epc.toUpperCase.take(1) match {
         case Beer.code => Beer
         case Wine.code => Wine
         case Energy.code => Energy

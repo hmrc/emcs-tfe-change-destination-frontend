@@ -108,17 +108,17 @@ class CheckYourAnswersConsigneeViewSpec extends SpecBase with ViewBehaviours {
         implicit val request: DataRequest[AnyContentAsEmpty.type] =
           dataRequest(
             request = FakeRequest(),
-            answers = emptyUserAnswers.copy(ern = testNorthernIrelandErn)
+            answers = emptyUserAnswers.copy(ern = testNorthernIrelandWarehouseKeeperErn)
             .set(ConsigneeAddressPage, testUserAddress)
             .set(ConsigneeBusinessNamePage, testBusinessName)
             .set(ConsigneeExcisePage, "TMPREGCON")
             .set(DestinationTypePage, TemporaryRegisteredConsignee),
-            ern = testNorthernIrelandErn
+            ern = testNorthernIrelandWarehouseKeeperErn
           )
 
         implicit val doc: Document = Jsoup.parse(view(
-          controllers.sections.consignee.routes.CheckYourAnswersConsigneeController.onSubmit(testNorthernIrelandErn, testArc),
-          testNorthernIrelandErn,
+          controllers.sections.consignee.routes.CheckYourAnswersConsigneeController.onSubmit(testNorthernIrelandWarehouseKeeperErn, testArc),
+          testNorthernIrelandWarehouseKeeperErn,
           testArc,
           SummaryList(Seq(
             ConsigneeBusinessNameSummary.row,
@@ -139,17 +139,17 @@ class CheckYourAnswersConsigneeViewSpec extends SpecBase with ViewBehaviours {
 
         "have a link to change business name" in {
           doc.getElementById("changeConsigneeBusinessName").attr("href") mustBe
-            controllers.sections.consignee.routes.ConsigneeBusinessNameController.onPageLoad(testNorthernIrelandErn, testArc, CheckMode).url
+            controllers.sections.consignee.routes.ConsigneeBusinessNameController.onPageLoad(testNorthernIrelandWarehouseKeeperErn, testArc, CheckMode).url
         }
 
         "have a link to change identification for temporary registered consignee" in {
           doc.getElementById("changeConsigneeExcise").attr("href") mustBe
-            controllers.sections.consignee.routes.ConsigneeExciseController.onPageLoad(testNorthernIrelandErn, testArc, CheckMode).url
+            controllers.sections.consignee.routes.ConsigneeExciseController.onPageLoad(testNorthernIrelandWarehouseKeeperErn, testArc, CheckMode).url
         }
 
         "have a link to change Address" in {
           doc.getElementById("changeConsigneeAddress").attr("href") mustBe
-            controllers.sections.consignee.routes.ConsigneeAddressController.onPageLoad(testNorthernIrelandErn, testArc, CheckMode).url
+            controllers.sections.consignee.routes.ConsigneeAddressController.onPageLoad(testNorthernIrelandWarehouseKeeperErn, testArc, CheckMode).url
         }
       }
 
@@ -159,17 +159,17 @@ class CheckYourAnswersConsigneeViewSpec extends SpecBase with ViewBehaviours {
         implicit val request: DataRequest[AnyContentAsEmpty.type] =
           dataRequest(
             request = FakeRequest(),
-            answers = emptyUserAnswers.copy(ern = testNorthernIrelandErn)
+            answers = emptyUserAnswers.copy(ern = testNorthernIrelandWarehouseKeeperErn)
               .set(ConsigneeAddressPage, testUserAddress)
               .set(ConsigneeBusinessNamePage, testBusinessName)
               .set(ConsigneeExcisePage, "TMPREGCON")
               .set(DestinationTypePage, TemporaryCertifiedConsignee),
-            ern = testNorthernIrelandErn
+            ern = testNorthernIrelandWarehouseKeeperErn
           )
 
         implicit val doc: Document = Jsoup.parse(view(
-          controllers.sections.consignee.routes.CheckYourAnswersConsigneeController.onSubmit(testNorthernIrelandErn, testArc),
-          testNorthernIrelandErn,
+          controllers.sections.consignee.routes.CheckYourAnswersConsigneeController.onSubmit(testNorthernIrelandWarehouseKeeperErn, testArc),
+          testNorthernIrelandWarehouseKeeperErn,
           testArc,
           SummaryList(Seq(
             ConsigneeBusinessNameSummary.row,
@@ -190,17 +190,17 @@ class CheckYourAnswersConsigneeViewSpec extends SpecBase with ViewBehaviours {
 
         "have a link to change business name" in {
           doc.getElementById("changeConsigneeBusinessName").attr("href") mustBe
-            controllers.sections.consignee.routes.ConsigneeBusinessNameController.onPageLoad(testNorthernIrelandErn, testArc, CheckMode).url
+            controllers.sections.consignee.routes.ConsigneeBusinessNameController.onPageLoad(testNorthernIrelandWarehouseKeeperErn, testArc, CheckMode).url
         }
 
         "have a link to change identification for temporary certified consignee" in {
           doc.getElementById("changeConsigneeExcise").attr("href") mustBe
-            controllers.sections.consignee.routes.ConsigneeExciseController.onPageLoad(testNorthernIrelandErn, testArc, CheckMode).url
+            controllers.sections.consignee.routes.ConsigneeExciseController.onPageLoad(testNorthernIrelandWarehouseKeeperErn, testArc, CheckMode).url
         }
 
         "have a link to change Address" in {
           doc.getElementById("changeConsigneeAddress").attr("href") mustBe
-            controllers.sections.consignee.routes.ConsigneeAddressController.onPageLoad(testNorthernIrelandErn, testArc, CheckMode).url
+            controllers.sections.consignee.routes.ConsigneeAddressController.onPageLoad(testNorthernIrelandWarehouseKeeperErn, testArc, CheckMode).url
         }
       }
 
