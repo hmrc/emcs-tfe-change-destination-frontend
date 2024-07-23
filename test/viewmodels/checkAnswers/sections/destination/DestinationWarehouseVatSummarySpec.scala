@@ -20,7 +20,7 @@ import base.SpecBase
 import fixtures.messages.sections.destination.DestinationWarehouseVatMessages
 import models.CheckMode
 import models.sections.info.movementScenario.DestinationType.UnknownDestination
-import models.sections.info.movementScenario.MovementScenario.{ExemptedOrganisation, RegisteredConsignee, TemporaryRegisteredConsignee}
+import models.sections.info.movementScenario.MovementScenario.{CertifiedConsignee, ExemptedOrganisation, RegisteredConsignee, TemporaryCertifiedConsignee, TemporaryRegisteredConsignee}
 import org.scalatest.matchers.must.Matchers
 import pages.sections.destination.DestinationWarehouseVatPage
 import pages.sections.info.DestinationTypePage
@@ -44,11 +44,17 @@ class DestinationWarehouseVatSummarySpec extends SpecBase with Matchers with Jso
 
         "when there's no answer" - {
 
-          Seq(RegisteredConsignee, TemporaryRegisteredConsignee, ExemptedOrganisation) foreach { destinationType =>
+          Seq(
+            RegisteredConsignee,
+            TemporaryRegisteredConsignee,
+            CertifiedConsignee,
+            TemporaryCertifiedConsignee,
+            ExemptedOrganisation
+          ) foreach { destinationType =>
 
             s"when the destination type is ${destinationType.toString}" - {
 
-              "must output the expected row when user answers yes" in {
+              "must output the expected `not provided` row" in {
 
                 implicit lazy val request = dataRequest(FakeRequest(),
                   emptyUserAnswers.set(DestinationTypePage, destinationType)

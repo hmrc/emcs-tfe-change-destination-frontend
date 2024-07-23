@@ -19,6 +19,7 @@ package viewmodels.checkAnswers.sections.destination
 import models.CheckMode
 import models.requests.DataRequest
 import models.sections.info.movementScenario.MovementScenario._
+import pages.sections.destination.DestinationSection.shouldStartFlowAtDestinationWarehouseVat
 import pages.sections.destination.DestinationWarehouseVatPage
 import pages.sections.info.DestinationTypePage
 import play.api.i18n.Messages
@@ -31,15 +32,13 @@ object DestinationWarehouseVatSummary {
 
   def row()(implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] = {
 
-    val wasShownVatPage: Option[Boolean] = request.userAnswers.get(DestinationTypePage).map(
-      Seq(RegisteredConsignee, TemporaryRegisteredConsignee, ExemptedOrganisation).contains(_)
-    )
+    val wasShownVatPage: Boolean = request.userAnswers.get(DestinationTypePage).fold(false)(shouldStartFlowAtDestinationWarehouseVat(_))
 
     val vatPageAnswer: Option[String] = request.userAnswers.get(DestinationWarehouseVatPage)
 
     val answer = (wasShownVatPage, vatPageAnswer) match {
       case (_, Some(answer)) => Some(answer)
-      case (Some(true), _) => Some("site.notProvided")
+      case (true, _) => Some("site.notProvided")
       case _ => None
     }
 
