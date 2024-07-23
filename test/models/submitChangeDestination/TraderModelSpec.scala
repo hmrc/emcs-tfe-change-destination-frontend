@@ -19,6 +19,7 @@ package models.submitChangeDestination
 import base.SpecBase
 import models.requests.DataRequest
 import models.response.emcsTfe
+import models.response.emcsTfe.GetMovementResponse
 import models.sections.consignee.ConsigneeExportInformation.{EoriNumber, VatNumber}
 import models.sections.guarantor.GuarantorArranger
 import models.sections.info.movementScenario.MovementScenario
@@ -122,6 +123,23 @@ class TraderModelSpec extends SpecBase {
     vatNumber = Some(testVatNumber),
     eoriNumber = None
   )
+
+  private def consigneeTraderFromMovement(movement: GetMovementResponse): Option[TraderModel] = {
+    movement.consigneeTrader.map( consigneeTrader => {
+      TraderModel(
+        traderExciseNumber = consigneeTrader.traderExciseNumber,
+        traderName = consigneeTrader.traderName,
+        address = Some(AddressModel(
+          streetNumber = consigneeTrader.address.flatMap(_.streetNumber),
+          street = consigneeTrader.address.flatMap(_.street),
+          postcode = consigneeTrader.address.flatMap(_.postcode),
+          city = consigneeTrader.address.flatMap(_.city)
+        )),
+        vatNumber = consigneeTrader.vatNumber,
+        eoriNumber = consigneeTrader.eoriNumber
+      )
+    })
+  }
 
   "applyConsignee" - {
     "must return a TraderModel" - {
@@ -297,6 +315,23 @@ class TraderModelSpec extends SpecBase {
         }
       }
       "when DestinationTypePage means shouldStartFlowAtDestinationWarehouseVat" - {
+        "when useConsigneeDetails = true" in {
+          Seq(RegisteredConsignee, TemporaryRegisteredConsignee, CertifiedConsignee, TemporaryCertifiedConsignee, ExemptedOrganisation).foreach {
+            movementScenario =>
+              implicit val dr: DataRequest[_] = dataRequest(
+                fakeRequest,
+                emptyUserAnswers
+                  .set(DestinationTypePage, movementScenario)
+                  .set(DestinationWarehouseVatPage, "VAT123456")
+                  .set(DestinationConsigneeDetailsPage, true),
+                movementDetails = maxGetMovementResponse
+              )
+
+              TraderModel.applyDeliveryPlace(movementScenario) mustBe
+                consigneeTraderFromMovement(maxGetMovementResponse)
+                  .map(_.copy(traderExciseNumber = Some("VAT123456")))
+          }
+        }
         "when giveAddressAndBusinessName = true" in {
           Seq(RegisteredConsignee, TemporaryRegisteredConsignee, ExemptedOrganisation).foreach {
             movementScenario =>
@@ -313,7 +348,7 @@ class TraderModelSpec extends SpecBase {
               TraderModel.applyDeliveryPlace(movementScenario) mustBe Some(deliveryPlaceTrader)
           }
         }
-        "when giveAddressAndBusinessName = false" in {
+        "when useConsigneeDetails and giveAddressAndBusinessName = false" in {
           Seq(RegisteredConsignee, TemporaryRegisteredConsignee, ExemptedOrganisation).foreach {
             movementScenario =>
               implicit val dr: DataRequest[_] = dataRequest(

@@ -122,12 +122,22 @@ object TraderModel extends ModelConstructorHelpers {
         }
       } else if (DestinationSection.shouldStartFlowAtDestinationWarehouseVat(movementScenario)) {
         val exciseId: Option[String] = request.userAnswers.get(DestinationWarehouseVatPage)
+        val useConsigneeDetails: Boolean = DestinationConsigneeDetailsPage.value.fold(false)(identity)
 
         val giveAddressAndBusinessName: Boolean =
           if (DestinationSection.shouldSkipDestinationDetailsChoice(movementScenario)) true
-          else mandatoryPage(DestinationDetailsChoicePage)
+          else DestinationDetailsChoicePage.value.fold(false)(identity)
 
-        if (giveAddressAndBusinessName) {
+        if (useConsigneeDetails) {
+          val consigneeTrader = applyConsignee
+          Some(TraderModel(
+            traderExciseNumber = exciseId,
+            traderName = consigneeTrader.traderName,
+            address = consigneeTrader.address,
+            vatNumber = consigneeTrader.vatNumber,
+            eoriNumber = consigneeTrader.eoriNumber
+          ))
+        } else if (giveAddressAndBusinessName) {
           Some(TraderModel(
             traderExciseNumber = exciseId,
             traderName = request.userAnswers.get(DestinationBusinessNamePage),
