@@ -66,7 +66,7 @@ class GuarantorArrangerPageSpec extends SpecBase {
         GuarantorArrangerPage.getValueFromIE801(dataRequest(
           request = FakeRequest(),
           answers = emptyUserAnswers,
-          ern = testNorthernIrelandErn,
+          ern = testNorthernIrelandWarehouseKeeperErn,
           movementDetails = movementResponseWithGuaranteeSet(NoGuarantor))) mustBe Some(NoGuarantorRequiredUkToEu)
       }
 
@@ -74,7 +74,7 @@ class GuarantorArrangerPageSpec extends SpecBase {
         GuarantorArrangerPage.getValueFromIE801(dataRequest(
           request = FakeRequest(),
           answers = emptyUserAnswers,
-          ern = testNorthernIrelandErn,
+          ern = testNorthernIrelandWarehouseKeeperErn,
           movementDetails = movementResponseWithGuaranteeSet(GuarantorNotRequired))) mustBe Some(NoGuarantorRequiredUkToEu)
       }
     }

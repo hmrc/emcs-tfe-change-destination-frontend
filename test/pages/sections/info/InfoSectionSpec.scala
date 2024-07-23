@@ -32,7 +32,7 @@ class InfoSectionSpec extends SpecBase {
             .set(DestinationTypePage, UkTaxWarehouse.GB)
             .set(DispatchDetailsPage(), dispatchDetailsModel)
             .set(DispatchPlacePage, NorthernIreland),
-          ern = testNorthernIrelandErn
+          ern = testNorthernIrelandWarehouseKeeperErn
         )
         InfoSection.isCompleted mustBe true
       }

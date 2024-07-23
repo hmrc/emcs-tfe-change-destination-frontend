@@ -23,10 +23,12 @@ import models.response.emcsTfe.GuarantorType.NoGuarantor
 import models.response.emcsTfe.{GuarantorType, MovementGuaranteeModel}
 import models.sections.ReviewAnswer.{ChangeAnswers, KeepAnswers}
 import models.sections.guarantor.GuarantorArranger.{Consignee, Consignor, GoodsOwner, Transporter}
-import models.sections.info.movementScenario.MovementScenario.{ExportWithCustomsDeclarationLodgedInTheUk, UkTaxWarehouse}
+import models.sections.info.movementScenario.MovementScenario._
 import models.sections.journeyType.HowMovementTransported.FixedTransportInstallations
+import models.sections.transportUnit.TransportUnitType.{FixedTransport, Tractor}
 import pages.sections.info.DestinationTypePage
 import pages.sections.journeyType.HowMovementTransportedPage
+import pages.sections.transportUnit.TransportUnitTypePage
 import play.api.test.FakeRequest
 
 class GuarantorSectionSpec extends SpecBase {
@@ -390,26 +392,138 @@ class GuarantorSectionSpec extends SpecBase {
 
   ".euNoGuarantorRequired" - {
 
-    "when the movement is from Northern Ireland to the EU, the movement is by Fixed Transport Installations and all items are energy" - {
+    Seq(
+      DirectDelivery,
+      RegisteredConsignee,
+      EuTaxWarehouse,
+      TemporaryRegisteredConsignee,
+      CertifiedConsignee,
+      TemporaryCertifiedConsignee
+    ).foreach { movementScenario =>
 
-      "must return true" in {
+      s"movement scenario is $movementScenario" - {
 
-        implicit val dr: DataRequest[_] = dataRequest(
-          request = FakeRequest(),
-          answers = emptyUserAnswers
-            .set(HowMovementTransportedPage, FixedTransportInstallations),
-          ern = testNorthernIrelandErn,
-          movementDetails = maxGetMovementResponse.copy(items = maxGetMovementResponse.items.map(_.copy(productCode = "E430")))
-        )
-        GuarantorSection.euNoGuarantorRequired mustBe true
+        "when the movement is from Northern Ireland to the EU, the movement is by Fixed Transport Installations and all items are energy" - {
+
+          Seq(testNorthernIrelandWarehouseKeeperErn, testNorthernIrelandDutyPaidErn, testErn).foreach { ern =>
+
+            s"when the ern is $ern" - {
+
+              "must return true" in {
+
+                implicit val dr: DataRequest[_] = dataRequest(
+                  request = FakeRequest(),
+                  answers = emptyUserAnswers
+                    .set(DestinationTypePage, movementScenario)
+                    .set(HowMovementTransportedPage, FixedTransportInstallations),
+                  ern = ern,
+                  movementDetails = maxGetMovementResponse.copy(items = maxGetMovementResponse.items.map(_.copy(productCode = "E430")))
+                )
+                GuarantorSection.euNoGuarantorRequired mustBe true
+              }
+            }
+          }
+
+          s"when the ern is $testTemporaryRegisteredConsignee" - {
+
+            "must return false" in {
+
+              implicit val dr: DataRequest[_] = dataRequest(
+                request = FakeRequest(),
+                answers = emptyUserAnswers
+                  .set(DestinationTypePage, movementScenario)
+                  .set(HowMovementTransportedPage, FixedTransportInstallations)
+                  .set(TransportUnitTypePage(testIndex1), FixedTransport)
+                  .set(TransportUnitTypePage(testIndex2), FixedTransport),
+                ern = testTemporaryRegisteredConsignee,
+                movementDetails = maxGetMovementResponse.copy(items = maxGetMovementResponse.items.map(_.copy(productCode = "E430")))
+              )
+              GuarantorSection.euNoGuarantorRequired mustBe false
+            }
+          }
+        }
+
+        "when the movement is from Northern Ireland to the EU, the movement is NOT by all Fixed Transport and all items are energy" - {
+
+          Seq(testNorthernIrelandWarehouseKeeperErn, testNorthernIrelandDutyPaidErn, testErn).foreach { ern =>
+
+            s"when the ern is $ern" - {
+
+              "must return false" in {
+
+                implicit val dr: DataRequest[_] = dataRequest(
+                  request = FakeRequest(),
+                  answers = emptyUserAnswers
+                    .set(DestinationTypePage, movementScenario)
+                    .set(HowMovementTransportedPage, FixedTransportInstallations)
+                    .set(TransportUnitTypePage(testIndex1), FixedTransport)
+                    .set(TransportUnitTypePage(testIndex2), Tractor),
+                  ern = ern,
+                  movementDetails = maxGetMovementResponse.copy(items = maxGetMovementResponse.items.map(_.copy(productCode = "E430")))
+                )
+                GuarantorSection.euNoGuarantorRequired mustBe false
+              }
+            }
+          }
+        }
+
+        "when the movement is from Northern Ireland to the EU, the movement is by Fixed Transport but NOT all items are energy" - {
+
+          Seq(testNorthernIrelandWarehouseKeeperErn, testNorthernIrelandDutyPaidErn, testErn).foreach { ern =>
+
+            s"when the ern is $ern" - {
+
+              "must return false" in {
+
+                implicit val dr: DataRequest[_] = dataRequest(
+                  request = FakeRequest(),
+                  answers = emptyUserAnswers
+                    .set(DestinationTypePage, movementScenario)
+                    .set(HowMovementTransportedPage, FixedTransportInstallations)
+                    .set(TransportUnitTypePage(testIndex1), FixedTransport),
+                  ern = ern,
+                  movementDetails = maxGetMovementResponse.copy(
+                    items = maxGetMovementResponse.items.map(_.copy(productCode = "E430")) :+ maxGetMovementResponse.items.head.copy(productCode = "S200")
+                  )
+                )
+                GuarantorSection.euNoGuarantorRequired mustBe false
+              }
+            }
+          }
+        }
       }
     }
 
-    "when any other scenario occurs" - {
+    Seq(
+      ExemptedOrganisation,
+      UnknownDestination
+    ).foreach { movementScenario =>
 
-      "must return false" in {
-        implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), emptyUserAnswers)
-        GuarantorSection.euNoGuarantorRequired mustBe false
+      s"movement scenario is $movementScenario" - {
+
+        "when the movement is from Northern Ireland to the EU, the movement is by Fixed Transport Installations and all items are energy" - {
+
+          Seq(testNorthernIrelandWarehouseKeeperErn, testNorthernIrelandDutyPaidErn, testErn, testTemporaryRegisteredConsignee).foreach { ern =>
+
+            s"when the ern is $ern" - {
+
+              "must return false" in {
+
+                implicit val dr: DataRequest[_] = dataRequest(
+                  request = FakeRequest(),
+                  answers = emptyUserAnswers
+                    .set(DestinationTypePage, movementScenario)
+                    .set(HowMovementTransportedPage, FixedTransportInstallations)
+                    .set(TransportUnitTypePage(testIndex1), FixedTransport)
+                    .set(TransportUnitTypePage(testIndex2), FixedTransport),
+                  ern = ern,
+                  movementDetails = maxGetMovementResponse.copy(items = maxGetMovementResponse.items.map(_.copy(productCode = "E430")))
+                )
+                GuarantorSection.euNoGuarantorRequired mustBe false
+              }
+            }
+          }
+        }
       }
     }
   }
@@ -462,7 +576,7 @@ class GuarantorSectionSpec extends SpecBase {
           request = FakeRequest(),
           answers = emptyUserAnswers
             .set(HowMovementTransportedPage, FixedTransportInstallations),
-          ern = testNorthernIrelandErn,
+          ern = testNorthernIrelandWarehouseKeeperErn,
           movementDetails = maxGetMovementResponse.copy(items = maxGetMovementResponse.items.map(_.copy(productCode = "E430"))
           )
         )

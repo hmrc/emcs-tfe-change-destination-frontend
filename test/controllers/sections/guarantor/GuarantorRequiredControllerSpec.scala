@@ -84,7 +84,7 @@ class GuarantorRequiredControllerSpec extends SpecBase with MockUserAnswersServi
           movementResponse = maxGetMovementResponse.copy(
             items = maxGetMovementResponse.items.map(_.copy(productCode = "E500"))
           ),
-          ern = testNorthernIrelandErn
+          ern = testNorthernIrelandWarehouseKeeperErn
         ) {
 
           val result = testController.onPageLoad(ern, testArc, NormalMode)(request)
@@ -157,7 +157,7 @@ class GuarantorRequiredControllerSpec extends SpecBase with MockUserAnswersServi
           items = maxGetMovementResponse.items.map(_.copy(productCode = "E500")),
           movementGuarantee = MovementGuaranteeModel(GuarantorType.NoGuarantor, None)
         ),
-        ern = testNorthernIrelandErn
+        ern = testNorthernIrelandWarehouseKeeperErn
       ) {
 
         val savedAnswers = optUserAnswers.get.set(GuarantorRequiredPage, true)
@@ -183,7 +183,7 @@ class GuarantorRequiredControllerSpec extends SpecBase with MockUserAnswersServi
         movementResponse = maxGetMovementResponse.copy(
           items = maxGetMovementResponse.items.map(_.copy(productCode = "E500"))
         ),
-        ern = testNorthernIrelandErn
+        ern = testNorthernIrelandWarehouseKeeperErn
       ) {
 
         MockUserAnswersService.set().never()
@@ -205,7 +205,7 @@ class GuarantorRequiredControllerSpec extends SpecBase with MockUserAnswersServi
             .set(HowMovementTransportedPage, FixedTransportInstallations)
         ),
         movementResponse = maxGetMovementResponse.copy(items = maxGetMovementResponse.items.map(_.copy(productCode = "E500"))),
-        ern = testNorthernIrelandErn
+        ern = testNorthernIrelandWarehouseKeeperErn
       ) {
 
         val req = request.withFormUrlEncodedBody("value" -> "")
