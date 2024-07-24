@@ -18,10 +18,10 @@ package forms.sections.consignee
 
 import base.SpecBase
 import fixtures.messages.sections.consignee.ConsigneeExportEoriMesssages
+import forms.EORI_NUMBER_REGEX
 import forms.behaviours.StringFieldBehaviours
 import play.api.data.FormError
 import play.api.i18n.Messages
-import forms.EORI_NUMBER_REGEX
 
 class ConsigneeExportEoriFormProviderSpec extends SpecBase with StringFieldBehaviours {
 
@@ -87,6 +87,15 @@ class ConsigneeExportEoriFormProviderSpec extends SpecBase with StringFieldBehav
             messagesForLanguage.errorInvalid
         }
 
+        "must transform the inputted EORI removing any spaces" in {
+          val result = form.bind(Map("value" -> "GB 123 456")).get
+          result mustBe "GB123456"
+        }
+
+        "must transform the inputted EORI into uppercase" in {
+          val result = form.bind(Map("value" -> "gb123456")).get
+          result mustBe "GB123456"
+        }
       }
     }
   }
