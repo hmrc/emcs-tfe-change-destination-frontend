@@ -19,8 +19,11 @@ package models.requests
 import models.UserType
 import models.response.emcsTfe.GetMovementResponse
 import play.api.mvc.WrappedRequest
+import play.twirl.api.Html
 
-case class MovementRequest[A](request: UserRequest[A], arc: String, movementDetails: GetMovementResponse) extends WrappedRequest[A](request) {
+case class MovementRequest[A](request: UserRequest[A],
+                              arc: String,
+                              movementDetails: GetMovementResponse) extends WrappedRequest[A](request) with NavBarRequest {
 
   val internalId = request.internalId
   val ern = request.ern
@@ -31,4 +34,5 @@ case class MovementRequest[A](request: UserRequest[A], arc: String, movementDeta
   lazy val isRegisteredConsignor: Boolean = request.isRegisteredConsignor
   lazy val isCertifiedConsignor: Boolean = request.isCertifiedConsignor
 
+  override val navBar: Option[Html] = request.navBar
 }

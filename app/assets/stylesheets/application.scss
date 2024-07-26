@@ -5,6 +5,7 @@ $hmrc-assets-path: "/emcs/change-destination/assets/lib/hmrc-frontend/hmrc/asset
 @import "lib/hmrc-frontend/hmrc/all";
 
 @import "taskList.scss";
+@import "primary-navigation";
 
 .js-visible {
   display: none !important;

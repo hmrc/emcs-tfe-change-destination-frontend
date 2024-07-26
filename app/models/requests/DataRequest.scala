@@ -22,11 +22,12 @@ import models.sections.info.DispatchPlace.{GreatBritain, NorthernIreland}
 import models.{TraderKnownFacts, UserAnswers, UserType}
 import pages.sections.info.DispatchPlacePage
 import play.api.mvc.WrappedRequest
+import play.twirl.api.Html
 import utils.Logging
 
 case class DataRequest[A](request: MovementRequest[A],
                           userAnswers: UserAnswers,
-                          traderKnownFacts: TraderKnownFacts) extends WrappedRequest[A](request) with Logging {
+                          traderKnownFacts: TraderKnownFacts) extends WrappedRequest[A](request) with Logging with NavBarRequest {
 
   val internalId: String = request.internalId
   val ern: String = request.ern
@@ -52,5 +53,7 @@ case class DataRequest[A](request: MovementRequest[A],
       logger.warn(s"[dispatchPlace] Invalid value for DISPATCH_PLACE: $value")
       throw new Exception(s"Invalid value for DISPATCH_PLACE: $value")
   }
+
+  override val navBar: Option[Html] = request.navBar
 
 }

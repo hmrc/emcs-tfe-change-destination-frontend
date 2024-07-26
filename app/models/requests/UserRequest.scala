@@ -19,13 +19,15 @@ package models.requests
 import models.UserType
 import models.UserType.{GreatBritainRegisteredConsignor, GreatBritainWarehouseKeeper, NorthernIrelandCertifiedConsignor, NorthernIrelandRegisteredConsignor, NorthernIrelandTemporaryCertifiedConsignor, NorthernIrelandWarehouseKeeper}
 import play.api.mvc.{Request, WrappedRequest}
+import play.twirl.api.Html
 
 case class UserRequest[A](request: Request[A],
                           ern: String,
                           internalId: String,
                           credId: String,
                           sessionId: String,
-                          hasMultipleErns: Boolean) extends WrappedRequest[A](request) {
+                          hasMultipleErns: Boolean,
+                          override val navBar: Option[Html] = None) extends WrappedRequest[A](request) with NavBarRequest {
 
 
   lazy val userTypeFromErn: UserType = UserType(ern)

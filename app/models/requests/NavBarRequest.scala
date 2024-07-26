@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,18 +16,8 @@
 
 package models.requests
 
-import models.{TraderKnownFacts, UserAnswers}
-import play.api.mvc.WrappedRequest
 import play.twirl.api.Html
 
-case class OptionalDataRequest[A](request: MovementRequest[A],
-                                  userAnswers: Option[UserAnswers],
-                                  traderKnownFacts: Option[TraderKnownFacts]) extends WrappedRequest[A](request) with NavBarRequest {
-  val internalId = request.internalId
-  val ern = request.ern
-  val arc = request.arc
-
-  lazy val hasMultipleErns: Boolean = request.request.hasMultipleErns
-
-  override val navBar: Option[Html] = request.navBar
+trait NavBarRequest {
+  val navBar: Option[Html]
 }
