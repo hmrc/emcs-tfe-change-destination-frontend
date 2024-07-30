@@ -32,9 +32,6 @@ class FeatureSwitchProviderConfig @Inject()(configuration: Configuration, appCon
 
   lazy val selfFeatureSwitchUrl = s"$selfBaseUrl/emcs/change-destination/test-only/api/feature-switches"
 
-  lazy val emcsTfeReportAReceiptFeatureSwitchUrl =
-    s"${servicesConfig.baseUrl("emcs-tfe-report-a-receipt-frontend")}/emcs-tfe-report-receipt/test-only/api/feature-switches"
-
   lazy val emcsTfeFeatureSwitchUrl =
     s"${servicesConfig.baseUrl("emcs-tfe")}/emcs-tfe/test-only/api/feature-switches"
 
@@ -48,12 +45,6 @@ class FeatureSwitchProviderConfig @Inject()(configuration: Configuration, appCon
     id = "emcs-tfe",
     appName = "EMCS TFE Backend",
     url = emcsTfeFeatureSwitchUrl
-  )
-
-  lazy val emcsTfeReportAReceiptFeatureSwitchProvider: FeatureSwitchProvider = FeatureSwitchProvider(
-    id = "emcs-tfe-report-a-receipt-frontend",
-    appName = "EMCS TFE Report A Receipt Frontend",
-    url = emcsTfeReportAReceiptFeatureSwitchUrl
   )
 
   lazy val featureSwitchProviders: Seq[FeatureSwitchProvider] =

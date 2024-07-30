@@ -17,9 +17,10 @@
 package models.submitChangeDestination
 
 import base.SpecBase
+import config.Constants.NONGBVAT
 import models.requests.DataRequest
 import models.response.emcsTfe
-import models.response.emcsTfe.GetMovementResponse
+import models.response.emcsTfe.{GetMovementResponse, AddressModel => GetMovementAddressModel, TraderModel => GetMovementTraderModel}
 import models.sections.consignee.ConsigneeExportInformation.{EoriNumber, VatNumber}
 import models.sections.guarantor.GuarantorArranger
 import models.sections.info.movementScenario.MovementScenario
@@ -466,16 +467,64 @@ class TraderModelSpec extends SpecBase {
   }
 
   "applyFirstTransporter" - {
-    "must return a TraderModel" in {
-      implicit val dr: DataRequest[_] = dataRequest(
-        fakeRequest,
-        emptyUserAnswers
-          .set(FirstTransporterNamePage, "first name")
-          .set(FirstTransporterAddressPage, testUserAddress.copy(street = "first street"))
-          .set(FirstTransporterVatPage, "first vat")
-      )
+    "must return a TraderModel" - {
+      "when vat number is present in new answers" in {
+        implicit val dr: DataRequest[_] = dataRequest(
+          fakeRequest,
+          emptyUserAnswers
+            .set(FirstTransporterNamePage, "first name")
+            .set(FirstTransporterAddressPage, testUserAddress.copy(street = "first street"))
+            .set(FirstTransporterVatPage, "first vat")
+        )
 
-      TraderModel.applyFirstTransporter mustBe firstTransporterTrader
+        TraderModel.applyFirstTransporter mustBe firstTransporterTrader
+      }
+      "when vat number is missing in new answers but present in IE801" in {
+        implicit val dr: DataRequest[_] = dataRequest(
+          fakeRequest,
+          emptyUserAnswers
+            .set(FirstTransporterNamePage, "first name")
+            .set(FirstTransporterAddressPage, testUserAddress.copy(street = "first street")),
+          movementDetails = maxGetMovementResponse.copy(firstTransporterTrader = Some(GetMovementTraderModel(
+            traderExciseNumber = None,
+            traderName = Some("first name"),
+            address = Some(GetMovementAddressModel(testUserAddress.property, Some("first street"), Some(testUserAddress.town), Some(testUserAddress.postcode))),
+            vatNumber = Some("second vat"),
+            eoriNumber = None
+          )))
+        )
+
+        TraderModel.applyFirstTransporter mustBe TraderModel(
+          traderExciseNumber = None,
+          traderName = Some("first name"),
+          address = Some(AddressModel.fromUserAddress(testUserAddress.copy(street = "first street"))),
+          vatNumber = Some("second vat"),
+          eoriNumber = None
+        )
+      }
+      "when vat number is missing in new answers and in IE801" in {
+        implicit val dr: DataRequest[_] = dataRequest(
+          fakeRequest,
+          emptyUserAnswers
+            .set(FirstTransporterNamePage, "first name")
+            .set(FirstTransporterAddressPage, testUserAddress.copy(street = "first street")),
+          movementDetails = maxGetMovementResponse.copy(firstTransporterTrader = Some(GetMovementTraderModel(
+            traderExciseNumber = None,
+            traderName = Some("first name"),
+            address = Some(GetMovementAddressModel(testUserAddress.property, Some("first street"), Some(testUserAddress.town), Some(testUserAddress.postcode))),
+            vatNumber = None,
+            eoriNumber = None
+          )))
+        )
+
+        TraderModel.applyFirstTransporter mustBe TraderModel(
+          traderExciseNumber = None,
+          traderName = Some("first name"),
+          address = Some(AddressModel.fromUserAddress(testUserAddress.copy(street = "first street"))),
+          vatNumber = Some(NONGBVAT),
+          eoriNumber = None
+        )
+      }
     }
   }
 
