@@ -17,6 +17,7 @@
 package controllers.actions
 
 import config.{AppConfig, EnrolmentKeys}
+import connectors.emcsTfeFrontend.NavBarPartialConnector
 import models.UserType
 import models.UserType.{GreatBritainWarehouse, NorthernIrelandWarehouse, Unknown}
 import models.requests.UserRequest
@@ -39,6 +40,7 @@ trait AuthAction {
 
 @Singleton
 class AuthActionImpl @Inject()(override val authConnector: AuthConnector,
+                               navBarPartialConnector: NavBarPartialConnector,
                                config: AppConfig,
                                val bodyParser: BodyParsers.Default
                               )(implicit val ec: ExecutionContext) extends AuthAction with AuthorisedFunctions with Logging {
@@ -91,7 +93,7 @@ class AuthActionImpl @Inject()(override val authConnector: AuthConnector,
                                                 credId: String,
                                                 sessionId: Option[SessionId]
                                                )(block: UserRequest[A] => Future[Result])
-                                               (implicit request: Request[A]): Future[Result] =
+                                               (implicit request: Request[A], hc: HeaderCarrier): Future[Result] =
     enrolments.enrolments.filter(enrolment => enrolment.key == EnrolmentKeys.EMCS_ENROLMENT) match {
       case emcsEnrolments if emcsEnrolments.isEmpty =>
         logger.debug(s"[checkOrganisationEMCSEnrolment] No ${EnrolmentKeys.EMCS_ENROLMENT} enrolment found")
@@ -115,14 +117,16 @@ class AuthActionImpl @Inject()(override val authConnector: AuthConnector,
                                             sessionId: Option[SessionId],
                                             hasMultipleEnrolments: Boolean
                                            )(block: UserRequest[A] => Future[Result])
-                                           (implicit request: Request[A]): Future[Result] = {
+                                           (implicit request: Request[A], hc: HeaderCarrier): Future[Result] = {
     val userType = UserType(ernFromUrl)
 
     if (Seq(Unknown, GreatBritainWarehouse, NorthernIrelandWarehouse).contains(userType)) {
       logger.warn(s"[checkIfUserErnCanAccessCoD] User attempted to access CoD with invalid ern: '$ernFromUrl'")
       Future.successful(Redirect(controllers.error.routes.ErrorController.unauthorised()))
     } else {
-      block(UserRequest(request, ernFromUrl, internalId, credId, sessionId.get.value, hasMultipleEnrolments))
+      navBarPartialConnector.getNavBar(ernFromUrl).flatMap { navBar =>
+        block(UserRequest(request, ernFromUrl, internalId, credId, sessionId.get.value, hasMultipleEnrolments, navBar))
+      }
     }
   }
 }
