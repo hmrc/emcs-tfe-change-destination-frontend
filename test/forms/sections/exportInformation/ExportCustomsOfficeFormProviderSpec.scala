@@ -68,6 +68,20 @@ class ExportCustomsOfficeFormProviderSpec extends SpecBase with StringFieldBehav
       boundForm.errors mustBe Seq()
       boundForm.value mustBe Some("GB345678")
     }
+
+    "bind a value that contains spaces" in {
+
+      val boundForm = form.bind(Map(fieldName -> "GB 34 5 678"))
+      boundForm.errors mustBe Seq()
+      boundForm.value mustBe Some("GB345678")
+    }
+
+    "bind a value that contains lowercase values" in {
+
+      val boundForm = form.bind(Map(fieldName -> "gb345678"))
+      boundForm.errors mustBe Seq()
+      boundForm.value mustBe Some("GB345678")
+    }
   }
 
   "Error Messages" - {

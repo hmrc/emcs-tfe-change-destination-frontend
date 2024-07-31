@@ -50,6 +50,7 @@ class ConsigneeExciseFormProvider @Inject() extends Mappings {
 
     Form(
       "value" -> text(noInputErrorKey)
+        .transform[String](_.toUpperCase.replace(" ", ""), identity)
         .verifying(maxLength(maxLengthValue, tooLongErrorKey))
         .verifying(regexpUnlessEmpty(ALPHANUMERIC_REGEX, invalidCharactersErrorKey))
     )

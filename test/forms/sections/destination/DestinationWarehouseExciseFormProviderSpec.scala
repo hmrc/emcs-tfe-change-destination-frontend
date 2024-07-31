@@ -91,6 +91,21 @@ class DestinationWarehouseExciseFormProviderSpec extends SpecBase with StringFie
     }
   }
 
+  "must transform the inputted Excise ID" - {
+    "removing any spaces" in {
+      val form = new DestinationWarehouseExciseFormProvider().apply(MovementScenario.UkTaxWarehouse.GB)(dataRequest(FakeRequest()))
+      val boundForm = form.bind(Map("value" -> "GB 0 012 3456789"))
+
+      boundForm.value mustBe Some("GB00123456789")
+    }
+    "converting to uppercase" in {
+      val form = new DestinationWarehouseExciseFormProvider().apply(MovementScenario.UkTaxWarehouse.GB)(dataRequest(FakeRequest()))
+      val boundForm = form.bind(Map("value" -> "gb 0 012 3456789"))
+
+      boundForm.value mustBe Some("GB00123456789")
+    }
+  }
+
   "inputIsValidForDestinationType" - {
     "for destination tax warehouse in GB" - {
       "must return Valid when the input starts with GB00" in {

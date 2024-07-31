@@ -27,6 +27,7 @@ class ExportCustomsOfficeFormProvider @Inject() extends Mappings {
   def apply(): Form[String] =
     Form(
       "value" -> text("exportCustomsOffice.error.required")
+        .transform[String](_.toUpperCase.replace(" ", ""), identity)
         .verifying(firstError(
           fixedLength(8, "exportCustomsOffice.error.length"),
           regexp(XSS_REGEX, s"exportCustomsOffice.error.invalidCharacter"),
