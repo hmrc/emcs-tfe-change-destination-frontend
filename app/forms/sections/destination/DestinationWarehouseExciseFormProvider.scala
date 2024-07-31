@@ -18,7 +18,6 @@ package forms.sections.destination
 
 import forms.mappings.Mappings
 import forms.{GB_00_EXCISE_NUMBER_REGEX, XI_00_EXCISE_NUMBER_REGEX, XI_OR_GB_00_EXCISE_NUMBER_REGEX, XSS_REGEX}
-import models.requests.DataRequest
 import models.sections.info.movementScenario.MovementScenario
 import play.api.data.Form
 import play.api.data.validation.Constraint
