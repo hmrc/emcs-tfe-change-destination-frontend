@@ -80,6 +80,7 @@ case object DestinationSection extends Section[JsObject] with JsonOptionFormatte
     ) match {
       case (Some(_), Some(true), _, _) => Completed
       case (Some(_), Some(false), Some(_), Some(_)) => Completed
+      case (Some(_), Some(_), None, Some(_)) if isDirectDelivery => Completed
       case (Some(_), Some(false), bn, a) if bn.isEmpty || a.isEmpty => InProgress
       case (Some(_), _, _, _) => InProgress
       case _ => NotStarted
@@ -101,6 +102,7 @@ case object DestinationSection extends Section[JsObject] with JsonOptionFormatte
       case (Some(false), _, _, _) => Completed
       case (Some(true), Some(true), _, _) => Completed
       case (Some(true), Some(false), Some(_), Some(_)) => Completed
+      case (Some(true), Some(false), None, Some(_)) if isDirectDelivery => Completed
       case (Some(_), Some(false), bn, a) if bn.isEmpty || a.isEmpty => InProgress
       case (Some(_), _, _, _) if !shouldSkipDestinationDetailsChoice => InProgress
       case _ if request.userAnswers.get(DestinationWarehouseVatPage).nonEmpty => InProgress
@@ -114,8 +116,17 @@ case object DestinationSection extends Section[JsObject] with JsonOptionFormatte
       request.userAnswers.get(DestinationAddressPage)
     ) match {
       case (Some(_), Some(_)) => Completed
+      case (None, Some(_)) if isDirectDelivery => Completed
       case (bn, a) if bn.isEmpty && a.isEmpty => NotStarted
       case _ => InProgress
+    }
+
+  private def isDirectDelivery(implicit request: DataRequest[_]): Boolean =
+    DestinationTypePage.value.exists {
+      movementScenario =>
+        Seq(
+          DirectDelivery
+        ).contains(movementScenario)
     }
 
   override def canBeCompletedForTraderAndDestinationType(implicit request: DataRequest[_]): Boolean =

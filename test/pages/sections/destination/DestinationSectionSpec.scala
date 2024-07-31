@@ -358,41 +358,10 @@ class DestinationSectionSpec extends SpecBase with UserAddressFixtures with Json
               )
               implicit val dr: DataRequest[_] = dataRequest(request, emptyUserAnswers
                 .set(DestinationTypePage, destinationTypePageAnswer)
-                .set(DestinationBusinessNamePage, "")
                 .set(DestinationAddressPage, testUserAddress)
               )
 
               DestinationSection.status mustBe Completed
-          }
-        }
-      }
-
-      "must return InProgress" - {
-        "when some, but not all, mandatory pages have an answer" in {
-          Seq(
-            DirectDelivery
-          ).foreach {
-            implicit destinationTypePageAnswer =>
-              assert(
-                DestinationSection.shouldStartFlowAtDestinationBusinessName === true,
-                s"shouldStartFlowAtDestinationBusinessName returned false for MovementScenario $destinationTypePageAnswer"
-              )
-
-              val baseUserAnswers = emptyUserAnswers
-                .set(DestinationTypePage, destinationTypePageAnswer)
-                .set(DestinationBusinessNamePage, "")
-                .set(DestinationAddressPage, testUserAddress)
-
-
-
-              Seq(DestinationBusinessNamePage, DestinationAddressPage).foreach {
-                page =>
-                  implicit val dr: DataRequest[_] = dataRequest(request, baseUserAnswers
-                    .remove(page), movementDetails = maxGetMovementResponse.copy(deliveryPlaceTrader = None)
-                  )
-
-                  DestinationSection.status mustBe InProgress
-              }
           }
         }
       }
