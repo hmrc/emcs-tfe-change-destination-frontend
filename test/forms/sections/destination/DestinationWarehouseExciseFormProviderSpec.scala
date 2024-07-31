@@ -24,7 +24,6 @@ import models.sections.info.movementScenario.MovementScenario
 import play.api.data.FormError
 import play.api.data.validation.{Invalid, Valid, ValidationResult}
 import play.api.i18n.Messages
-import play.api.test.FakeRequest
 
 class DestinationWarehouseExciseFormProviderSpec extends SpecBase with StringFieldBehaviours {
 
@@ -33,7 +32,7 @@ class DestinationWarehouseExciseFormProviderSpec extends SpecBase with StringFie
   val maxLength = 16
   val invalidCharactersKey = "destinationWarehouseExcise.error.invalidCharacter"
 
-  val form = new DestinationWarehouseExciseFormProvider().apply(MovementScenario.CertifiedConsignee)(dataRequest(FakeRequest()))
+  val form = new DestinationWarehouseExciseFormProvider().apply(MovementScenario.CertifiedConsignee)
 
   implicit val msgs: Messages = messages(Seq(English.lang))
 

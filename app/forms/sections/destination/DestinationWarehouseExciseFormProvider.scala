@@ -37,7 +37,7 @@ class DestinationWarehouseExciseFormProvider @Inject() extends Mappings {
         regexpToNotMatch(XI_OR_GB_00_EXCISE_NUMBER_REGEX, "destinationWarehouseExcise.error.invalidXIOrGB").apply(answer)
     }
 
-  def apply(movementScenario: MovementScenario)(implicit dataRequest: DataRequest[_]): Form[String] =
+  def apply(movementScenario: MovementScenario): Form[String] =
     Form(
       "value" -> text("destinationWarehouseExcise.error.required")
         .transform[String](_.toUpperCase.replace(" ", ""), identity)

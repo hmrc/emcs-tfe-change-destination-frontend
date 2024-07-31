@@ -16,6 +16,7 @@
 
 package models.submitChangeDestination
 
+import config.Constants.NONGBVAT
 import models.UserAddress
 import models.requests.DataRequest
 import models.sections.guarantor.GuarantorArranger
@@ -97,7 +98,7 @@ object TraderModel extends ModelConstructorHelpers {
 
   //noinspection ScalaStyle
   def applyDeliveryPlace(movementScenario: MovementScenario)(implicit request: DataRequest[_]): Option[TraderModel] = {
-     if (DestinationSection.canBeCompletedForTraderAndDestinationType) {
+    if (DestinationSection.canBeCompletedForTraderAndDestinationType) {
       if (DestinationSection.shouldStartFlowAtDestinationWarehouseExcise(movementScenario)) {
         val exciseId: String = mandatoryPage(DestinationWarehouseExcisePage)
         val useConsigneeDetails: Boolean = mandatoryPage(DestinationConsigneeDetailsPage)
@@ -186,7 +187,7 @@ object TraderModel extends ModelConstructorHelpers {
       traderExciseNumber = None,
       traderName = Some(mandatoryPage(FirstTransporterNamePage)),
       address = Some(AddressModel.fromUserAddress(mandatoryPage(FirstTransporterAddressPage))),
-      vatNumber = Some(mandatoryPage(FirstTransporterVatPage)),
+      vatNumber = Some(request.userAnswers.get(FirstTransporterVatPage).getOrElse(NONGBVAT)),
       eoriNumber = None
     )
 

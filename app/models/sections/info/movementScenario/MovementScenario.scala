@@ -18,13 +18,13 @@ package models.sections.info.movementScenario
 
 import models.requests.DataRequest
 import models.response.InvalidUserTypeException
-import models.sections.info.movementScenario.MovementScenario.{CertifiedConsignee, DirectDelivery, EuTaxWarehouse, ExemptedOrganisation, ExportWithCustomsDeclarationLodgedInTheEu, ExportWithCustomsDeclarationLodgedInTheUk, RegisteredConsignee, TemporaryCertifiedConsignee, TemporaryRegisteredConsignee, UnknownDestination, logger}
+import models.sections.info.movementScenario.MovementScenario.{CertifiedConsignee, DirectDelivery, EuTaxWarehouse, ExemptedOrganisation, ExportWithCustomsDeclarationLodgedInTheEu, ExportWithCustomsDeclarationLodgedInTheUk, RegisteredConsignee, TemporaryCertifiedConsignee, TemporaryRegisteredConsignee}
 import models.{Enumerable, UserType, WithName}
 import utils.Logging
 
 import scala.language.postfixOps
 
-sealed trait MovementScenario {
+sealed trait MovementScenario extends Logging {
   def originType(implicit request: DataRequest[_]): OriginType =
     (request.isWarehouseKeeper, request.isRegisteredConsignor, request.isCertifiedConsignor) match {
       case (true, _, _) => OriginType.TaxWarehouse
@@ -43,17 +43,18 @@ sealed trait MovementScenario {
   val stringValue: String
 
   val isExport = Seq(ExportWithCustomsDeclarationLodgedInTheUk, ExportWithCustomsDeclarationLodgedInTheEu).contains(this)
+
   def isNItoEU(implicit request: DataRequest[_]) = {
     request.isNorthernIrelandErn &&
-    Seq(
-      DirectDelivery,
-      ExemptedOrganisation,
-      RegisteredConsignee,
-      EuTaxWarehouse,
-      TemporaryRegisteredConsignee,
-      CertifiedConsignee,
-      TemporaryCertifiedConsignee
-    ).contains(this)
+      Seq(
+        DirectDelivery,
+        ExemptedOrganisation,
+        RegisteredConsignee,
+        EuTaxWarehouse,
+        TemporaryRegisteredConsignee,
+        CertifiedConsignee,
+        TemporaryCertifiedConsignee
+      ).contains(this)
   }
 }
 
@@ -66,7 +67,7 @@ object MovementScenario extends Enumerable.Implicits with Logging {
       case DestinationType.TaxWarehouse =>
         if (movementDetails.deliveryPlaceTrader.flatMap(_.traderExciseNumber).exists(UserType(_).isGreatBritainErn)) {
           MovementScenario.UkTaxWarehouse.GB
-        } else if(movementDetails.deliveryPlaceTrader.flatMap(_.traderExciseNumber).exists(UserType(_).isNorthernIrelandErn)) {
+        } else if (movementDetails.deliveryPlaceTrader.flatMap(_.traderExciseNumber).exists(UserType(_).isNorthernIrelandErn)) {
           MovementScenario.UkTaxWarehouse.NI
         } else {
           MovementScenario.EuTaxWarehouse
@@ -114,6 +115,7 @@ object MovementScenario extends Enumerable.Implicits with Logging {
     val toList: Seq[MovementScenario] = Seq(UkTaxWarehouse.GB, UkTaxWarehouse.NI)
 
     private def _destinationType: DestinationType = DestinationType.TaxWarehouse
+
     private def _movementType(implicit request: DataRequest[_]): MovementType = (request.isWarehouseKeeper, request.isRegisteredConsignor) match {
       case (true, _) => MovementType.UkToUk
       case (_, true) => MovementType.ImportUk
