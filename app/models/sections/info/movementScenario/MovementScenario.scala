@@ -22,8 +22,6 @@ import models.sections.info.movementScenario.MovementScenario.{CertifiedConsigne
 import models.{Enumerable, UserType, WithName}
 import utils.Logging
 
-import scala.language.postfixOps
-
 sealed trait MovementScenario extends Logging {
   def originType(implicit request: DataRequest[_]): OriginType =
     (request.isWarehouseKeeper, request.isRegisteredConsignor, request.isCertifiedConsignor) match {

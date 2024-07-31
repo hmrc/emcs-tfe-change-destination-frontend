@@ -92,13 +92,13 @@ class DestinationWarehouseExciseFormProviderSpec extends SpecBase with StringFie
 
   "must transform the inputted Excise ID" - {
     "removing any spaces" in {
-      val form = new DestinationWarehouseExciseFormProvider().apply(MovementScenario.UkTaxWarehouse.GB)(dataRequest(FakeRequest()))
+      val form = new DestinationWarehouseExciseFormProvider().apply(MovementScenario.UkTaxWarehouse.GB)
       val boundForm = form.bind(Map("value" -> "GB 0 012 3456789"))
 
       boundForm.value mustBe Some("GB00123456789")
     }
     "converting to uppercase" in {
-      val form = new DestinationWarehouseExciseFormProvider().apply(MovementScenario.UkTaxWarehouse.GB)(dataRequest(FakeRequest()))
+      val form = new DestinationWarehouseExciseFormProvider().apply(MovementScenario.UkTaxWarehouse.GB)
       val boundForm = form.bind(Map("value" -> "gb 0 012 3456789"))
 
       boundForm.value mustBe Some("GB00123456789")
