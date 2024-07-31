@@ -187,10 +187,7 @@ object TraderModel extends ModelConstructorHelpers {
       traderExciseNumber = None,
       traderName = Some(mandatoryPage(FirstTransporterNamePage)),
       address = Some(AddressModel.fromUserAddress(mandatoryPage(FirstTransporterAddressPage))),
-      vatNumber = request.userAnswers.get(FirstTransporterVatPage) match {
-        case Some(value) => Some(value)
-        case None => Some(FirstTransporterVatPage.getValueFromIE801(request).getOrElse(NONGBVAT))
-      },
+      vatNumber = Some(request.userAnswers.get(FirstTransporterVatPage).getOrElse(NONGBVAT)),
       eoriNumber = None
     )
 
