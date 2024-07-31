@@ -63,5 +63,21 @@ class ConsigneeExciseFormProviderSpec extends StringFieldBehaviours with GuiceOn
         boundForm.errors.headOption mustBe Some(FormError(fieldName, "consigneeExcise.temporaryConsignee.error.invalidCharacters", Seq(ALPHANUMERIC_REGEX)))
       }
     }
+
+    "when ERN starts with lowercase" - {
+      "must return success" in {
+        val boundForm = form.bind(Map(fieldName -> "gbwk123456789"))
+        boundForm.errors.headOption mustBe None
+        boundForm.value mustBe Some("GBWK123456789")
+      }
+    }
+
+    "when ERN contains spaces" - {
+      "must return success" in {
+        val boundForm = form.bind(Map(fieldName -> "GBWK1 2 3 4 56789"))
+        boundForm.errors.headOption mustBe None
+        boundForm.value mustBe Some("GBWK123456789")
+      }
+    }
   }
 }

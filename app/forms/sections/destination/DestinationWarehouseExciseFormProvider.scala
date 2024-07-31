@@ -40,6 +40,7 @@ class DestinationWarehouseExciseFormProvider @Inject() extends Mappings {
   def apply(movementScenario: MovementScenario)(implicit dataRequest: DataRequest[_]): Form[String] =
     Form(
       "value" -> text("destinationWarehouseExcise.error.required")
+        .transform[String](_.toUpperCase.replace(" ", ""), identity)
         .verifying(regexpUnlessEmpty(XSS_REGEX, "destinationWarehouseExcise.error.invalidCharacter"))
         .verifying(maxLength(16, "destinationWarehouseExcise.error.length"))
         .verifying(inputIsValidForDestinationType(movementScenario))
