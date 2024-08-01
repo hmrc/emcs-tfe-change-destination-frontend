@@ -72,7 +72,7 @@ object TraderModel extends ModelConstructorHelpers {
     val consignorAddress: UserAddress = mandatoryPage(ConsignorAddressPage)
     TraderModel(
       traderExciseNumber = Some(request.ern),
-      traderName = Some(request.traderKnownFacts.traderName),
+      traderName = request.movementDetails.consignorTrader.traderName,
       address = Some(AddressModel.fromUserAddress(consignorAddress)),
       vatNumber = None,
       eoriNumber = None

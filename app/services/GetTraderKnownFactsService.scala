@@ -18,20 +18,22 @@ package services
 
 import connectors.referenceData.GetTraderKnownFactsConnector
 import models.TraderKnownFacts
-import models.response.TraderKnownFactsException
 import uk.gov.hmrc.http.HeaderCarrier
+import utils.Logging
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class GetTraderKnownFactsService @Inject()(connector: GetTraderKnownFactsConnector)
-                                          (implicit ec: ExecutionContext) {
+                                          (implicit ec: ExecutionContext) extends Logging {
 
 
   def getTraderKnownFacts(ern: String)(implicit hc: HeaderCarrier): Future[Option[TraderKnownFacts]] = {
     connector.getTraderKnownFacts(ern).map {
-      case Left(_) => throw TraderKnownFactsException(s"No known facts found for trader $ern")
+      case Left(e) =>
+        logger.warn(s"Error of type '${e.getClass.getSimpleName}' when trying to retrieve known facts found for trader $ern")
+        None
       case Right(value) => value
     }
   }

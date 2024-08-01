@@ -26,19 +26,13 @@ import scala.concurrent.{ExecutionContext, Future}
 
 class PreDraftDataRequiredActionImpl @Inject()(implicit val executionContext: ExecutionContext) extends PreDraftDataRequiredAction {
 
-  override protected def refine[A](request: OptionalDataRequest[A]): Future[Either[Result, DataRequest[A]]] = {
-
-    request.traderKnownFacts match {
-      case Some(traderKnownFacts) =>
-        request.userAnswers match {
-          case None =>
-            Future.successful(Left(Redirect(routes.IndexController.onPageLoad(request.ern, request.arc))))
-          case Some(data) =>
-            Future.successful(Right(DataRequest(request.request, data, traderKnownFacts)))
-        }
-      case None => Future.successful(Left(Redirect(routes.JourneyRecoveryController.onPageLoad())))
+  override protected def refine[A](request: OptionalDataRequest[A]): Future[Either[Result, DataRequest[A]]] =
+    request.userAnswers match {
+      case None =>
+        Future.successful(Left(Redirect(routes.IndexController.onPageLoad(request.ern, request.arc))))
+      case Some(data) =>
+        Future.successful(Right(DataRequest(request.request, data, request.traderKnownFacts)))
     }
-  }
 }
 
 trait PreDraftDataRequiredAction extends ActionRefiner[OptionalDataRequest, DataRequest]

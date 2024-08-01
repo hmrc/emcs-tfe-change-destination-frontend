@@ -52,7 +52,7 @@ class TransportArrangerNameSummarySpec extends SpecBase with Matchers {
                 movementDetails = maxGetMovementResponse.copy(transportArrangerTrader = None)
               )
 
-              TransportArrangerNameSummary.row(onReviewPage = false) mustBe
+              TransportArrangerNameSummary.row(onReviewPage = false) mustBe Some(
                 SummaryListRowViewModel(
                   key = messagesForLanguage.cyaLabel,
                   value = Value(Text(messagesForLanguage.sectionNotComplete("Goods owner"))),
@@ -64,6 +64,7 @@ class TransportArrangerNameSummarySpec extends SpecBase with Matchers {
                     ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHidden)
                   )
                 )
+              )
             }
           }
 
@@ -76,7 +77,7 @@ class TransportArrangerNameSummarySpec extends SpecBase with Matchers {
                 .set(TransportArrangerNamePage, "Jeff")
               )
 
-              TransportArrangerNameSummary.row(onReviewPage = false) mustBe
+              TransportArrangerNameSummary.row(onReviewPage = false) mustBe Some(
                 SummaryListRowViewModel(
                   key = messagesForLanguage.cyaLabel,
                   value = Value(Text("Jeff")),
@@ -88,6 +89,7 @@ class TransportArrangerNameSummarySpec extends SpecBase with Matchers {
                     ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHidden)
                   )
                 )
+              )
             }
 
             "and the user is on the review page" - {
@@ -98,11 +100,11 @@ class TransportArrangerNameSummarySpec extends SpecBase with Matchers {
                   .set(TransportArrangerPage, Other)
                   .set(TransportArrangerNamePage, "Jeff"))
 
-                TransportArrangerNameSummary.row(onReviewPage = true) mustBe SummaryListRowViewModel(
+                TransportArrangerNameSummary.row(onReviewPage = true) mustBe Some(SummaryListRowViewModel(
                   key = messagesForLanguage.cyaLabel,
                   value = Value(Text("Jeff")),
                   actions = Seq()
-                )
+                ))
               }
             }
           }
@@ -120,12 +122,12 @@ class TransportArrangerNameSummarySpec extends SpecBase with Matchers {
                 movementDetails = maxGetMovementResponse.copy(consigneeTrader = None)
               )
 
-              TransportArrangerNameSummary.row(onReviewPage = false) mustBe
+              TransportArrangerNameSummary.row(onReviewPage = false) mustBe Some(
                 SummaryListRowViewModel(
                   key = messagesForLanguage.cyaLabel,
                   value = Value(Text(messagesForLanguage.sectionNotComplete("Consignee"))),
                   actions = Seq()
-                )
+                ))
             }
           }
 
@@ -138,12 +140,12 @@ class TransportArrangerNameSummarySpec extends SpecBase with Matchers {
                 .set(ConsigneeBusinessNamePage, "Jeff")
               )
 
-              TransportArrangerNameSummary.row(onReviewPage = false) mustBe
+              TransportArrangerNameSummary.row(onReviewPage = false) mustBe Some(
                 SummaryListRowViewModel(
                   key = messagesForLanguage.cyaLabel,
                   value = Value(Text("Jeff")),
                   actions = Seq()
-                )
+                ))
             }
 
             "and the user is on the review page" - {
@@ -155,11 +157,11 @@ class TransportArrangerNameSummarySpec extends SpecBase with Matchers {
                   .set(ConsigneeBusinessNamePage, "Jeff")
                 )
 
-                TransportArrangerNameSummary.row(onReviewPage = true) mustBe SummaryListRowViewModel(
+                TransportArrangerNameSummary.row(onReviewPage = true) mustBe Some(SummaryListRowViewModel(
                   key = messagesForLanguage.cyaLabel,
                   value = Value(Text("Jeff")),
                   actions = Seq()
-                )
+                ))
               }
             }
           }
@@ -170,7 +172,7 @@ class TransportArrangerNameSummarySpec extends SpecBase with Matchers {
             "must return the user's trader known facts name" in {
               implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers)
 
-              TransportArrangerNameSummary.transportArrangerNameValue(Some(Consignor)) mustBe testMinTraderKnownFacts.traderName
+              TransportArrangerNameSummary.transportArrangerNameValue(Some(Consignor)) mustBe maxGetMovementResponse.consignorTrader.traderName
             }
           }
           Seq(
@@ -185,7 +187,7 @@ class TransportArrangerNameSummarySpec extends SpecBase with Matchers {
                   s"must return the $transportArranger name" in {
                     implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(page, "Jeff"))
 
-                    TransportArrangerNameSummary.transportArrangerNameValue(transportArranger) mustBe "Jeff"
+                    TransportArrangerNameSummary.transportArrangerNameValue(transportArranger) mustBe Some("Jeff")
                   }
                 }
                 s"and $page has no value" - {
@@ -196,7 +198,7 @@ class TransportArrangerNameSummarySpec extends SpecBase with Matchers {
                       movementDetails = maxGetMovementResponse.copy(transportArrangerTrader = None, consigneeTrader = None)
                     )
 
-                    TransportArrangerNameSummary.transportArrangerNameValue(transportArranger) mustBe notProvidedValue
+                    TransportArrangerNameSummary.transportArrangerNameValue(transportArranger) mustBe Some(notProvidedValue)
                   }
                 }
               }

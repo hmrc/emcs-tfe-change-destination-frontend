@@ -26,19 +26,13 @@ import scala.concurrent.{ExecutionContext, Future}
 
 class DataRequiredActionImpl @Inject()(implicit val executionContext: ExecutionContext) extends DataRequiredAction {
 
-  override protected def refine[A](request: OptionalDataRequest[A]): Future[Either[Result, DataRequest[A]]] = {
-
-    request.traderKnownFacts match {
-      case Some(traderKnownFacts) =>
-        request.userAnswers match {
-          case None =>
-            Future.successful(Left(Redirect(routes.JourneyRecoveryController.onPageLoad())))
-          case Some(data) =>
-            Future.successful(Right(DataRequest(request.request, data, traderKnownFacts)))
-        }
-      case None => Future.successful(Left(Redirect(routes.JourneyRecoveryController.onPageLoad())))
+  override protected def refine[A](request: OptionalDataRequest[A]): Future[Either[Result, DataRequest[A]]] =
+    request.userAnswers match {
+      case None =>
+        Future.successful(Left(Redirect(routes.JourneyRecoveryController.onPageLoad())))
+      case Some(data) =>
+        Future.successful(Right(DataRequest(request.request, data, request.traderKnownFacts)))
     }
-  }
 }
 
 trait DataRequiredAction extends ActionRefiner[OptionalDataRequest, DataRequest]

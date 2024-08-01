@@ -29,7 +29,7 @@ class TransportArrangerCheckAnswersHelper @Inject()() {
     SummaryListViewModel(
       rows = Seq(
         TransportArrangerSummary.row(onReviewPage),
-        Some(TransportArrangerNameSummary.row(onReviewPage)),
+        TransportArrangerNameSummary.row(onReviewPage),
         TransportArrangerVatSummary.row(onReviewPage),
         Some(TransportArrangerAddressSummary.row(onReviewPage))
       ).flatten

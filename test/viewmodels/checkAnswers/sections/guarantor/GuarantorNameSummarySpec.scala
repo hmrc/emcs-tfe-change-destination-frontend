@@ -100,7 +100,7 @@ class GuarantorNameSummarySpec extends SpecBase with Matchers {
               movementDetails = maxGetMovementResponse.copy(movementGuarantee = MovementGuaranteeModel(NoGuarantor, None))
             )
 
-            GuarantorNameSummary.row() mustBe expectedRow(testMinTraderKnownFacts.traderName, false)
+            GuarantorNameSummary.row() mustBe expectedRow(maxGetMovementResponse.consignorTrader.traderName.get, false)
           }
         }
 

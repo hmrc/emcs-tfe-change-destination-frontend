@@ -48,7 +48,7 @@ class SubmitChangeDestinationConnectorISpec extends AnyFreeSpec
         movementDetails = maxGetMovementResponse
       ),
       userAnswers = emptyUserAnswers,
-      traderKnownFacts = testMinTraderKnownFacts
+      traderKnownFacts = Some(testMinTraderKnownFacts)
     )
 
   private lazy val connector: SubmitChangeDestinationConnector = app.injector.instanceOf[SubmitChangeDestinationConnector]

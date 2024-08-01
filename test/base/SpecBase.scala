@@ -70,7 +70,7 @@ trait SpecBase extends AnyFreeSpec
                      movementDetails: GetMovementResponse = maxGetMovementResponse,
                      navBar: Option[Html] = None
                     ): DataRequest[A] =
-    DataRequest(movementRequest(request, ern, movementDetails, navBar), answers, testMinTraderKnownFacts)
+    DataRequest(movementRequest(request, ern, movementDetails, navBar), answers, Some(testMinTraderKnownFacts))
 
   def optionalDataRequest[A](request: Request[A],
                              optAnswers: Option[UserAnswers] = None,
