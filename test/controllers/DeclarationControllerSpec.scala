@@ -83,7 +83,7 @@ class DeclarationControllerSpec extends SpecBase with MockUserAnswersService wit
       "when downstream call is successful" - {
         "must save the timestamp and redirect" in new Test() {
 
-          MockSubmitChangeDestinationService.submit(maxSubmitChangeDestination).returns(Future.successful(Right(submitChangeDestinationResponseEIS)))
+          MockSubmitChangeDestinationService.submit(maxSubmitChangeDestination, testGreatBritainErn).returns(Future.successful(Right(submitChangeDestinationResponseEIS)))
           MockUserAnswersService.set().returns(Future.successful(emptyUserAnswers))
 
           val res = controller.onSubmit(testGreatBritainErn, testArc)(request)
@@ -96,7 +96,7 @@ class DeclarationControllerSpec extends SpecBase with MockUserAnswersService wit
       "when downstream call is unsuccessful" - {
         "when downstream returns a 422" - {
           "must redirect to the DraftMovementController" in new Test() {
-            MockSubmitChangeDestinationService.submit(maxSubmitChangeDestination).returns(Future.successful(Left(UnexpectedDownstreamSubmissionResponseError(UNPROCESSABLE_ENTITY))))
+            MockSubmitChangeDestinationService.submit(maxSubmitChangeDestination, testGreatBritainErn).returns(Future.successful(Left(UnexpectedDownstreamSubmissionResponseError(UNPROCESSABLE_ENTITY))))
 
             val res = controller.onSubmit(testGreatBritainErn, testArc)(request)
 
@@ -108,7 +108,7 @@ class DeclarationControllerSpec extends SpecBase with MockUserAnswersService wit
           "must return an InternalServerError" in new Test() {
             // arbitrary 5xx status codes
             Seq(INTERNAL_SERVER_ERROR, BAD_GATEWAY, SERVICE_UNAVAILABLE, GATEWAY_TIMEOUT).foreach { responseStatus =>
-              MockSubmitChangeDestinationService.submit(maxSubmitChangeDestination).returns(Future.successful(Left(UnexpectedDownstreamSubmissionResponseError(responseStatus))))
+              MockSubmitChangeDestinationService.submit(maxSubmitChangeDestination, testGreatBritainErn).returns(Future.successful(Left(UnexpectedDownstreamSubmissionResponseError(responseStatus))))
 
               val res = controller.onSubmit(testGreatBritainErn, testArc)(request)
 

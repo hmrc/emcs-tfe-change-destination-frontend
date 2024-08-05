@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,17 +14,14 @@
  * limitations under the License.
  */
 
-package utils
+package models.nrs
 
-import java.time.{Instant, LocalDateTime, ZoneId}
-import javax.inject.Inject
+import play.api.libs.json.{Format, Json}
 
-trait TimeMachine {
-  def now(): LocalDateTime
-  def instant(): Instant
-}
+case class SearchKeys(ern: String)
 
-class TimeMachineImpl @Inject()() extends TimeMachine {
-  override def now(): LocalDateTime = LocalDateTime.now(ZoneId.of("UTC"))
-  override def instant(): Instant = Instant.now()
+object SearchKeys {
+
+  implicit val format: Format[SearchKeys] = Json.format[SearchKeys]
+
 }

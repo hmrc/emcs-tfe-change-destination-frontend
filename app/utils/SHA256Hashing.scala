@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,15 +16,11 @@
 
 package utils
 
-import java.time.{Instant, LocalDateTime, ZoneId}
-import javax.inject.Inject
+import java.security.MessageDigest
 
-trait TimeMachine {
-  def now(): LocalDateTime
-  def instant(): Instant
-}
+object SHA256Hashing {
 
-class TimeMachineImpl @Inject()() extends TimeMachine {
-  override def now(): LocalDateTime = LocalDateTime.now(ZoneId.of("UTC"))
-  override def instant(): Instant = Instant.now()
+  private def sha256: MessageDigest = MessageDigest.getInstance("SHA-256")
+
+  def getHash(value: String): String = sha256.digest(value.getBytes()).map("%02x" format _).mkString
 }
