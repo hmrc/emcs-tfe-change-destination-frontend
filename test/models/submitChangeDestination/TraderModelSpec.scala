@@ -77,7 +77,7 @@ class TraderModelSpec extends SpecBase {
   )
   val consignorTrader: TraderModel = TraderModel(
     traderExciseNumber = Some(testErn),
-    traderName = Some(testMinTraderKnownFacts.traderName),
+    traderName = maxGetMovementResponse.consignorTrader.traderName,
     address = Some(AddressModel.fromUserAddress(testUserAddress.copy(street = "consignor street"))),
     vatNumber = None,
     eoriNumber = None
@@ -268,7 +268,10 @@ class TraderModelSpec extends SpecBase {
 
   "applyConsignor" - {
     "must return a TraderModel" in {
-      implicit val dr: DataRequest[_] = dataRequest(fakeRequest, emptyUserAnswers.set(ConsignorAddressPage, testUserAddress.copy(street = "consignor street")))
+      implicit val dr: DataRequest[_] = dataRequest(
+        fakeRequest,
+        emptyUserAnswers.set(ConsignorAddressPage, testUserAddress.copy(street = "consignor street")),
+      )
 
       TraderModel.applyConsignor mustBe consignorTrader
     }

@@ -30,40 +30,42 @@ import viewmodels.implicits._
 
 object TransportArrangerNameSummary {
 
-  def row(onReviewPage: Boolean)(implicit request: DataRequest[_], messages: Messages): SummaryListRow = {
+  def row(onReviewPage: Boolean)(implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] = {
 
     val transportArranger: Option[TransportArranger] = request.userAnswers.get(TransportArrangerPage)
 
     val showChangeLink: Boolean = transportArranger.contains(GoodsOwner) || transportArranger.contains(Other)
 
-    SummaryListRowViewModel(
-      key = "transportArrangerName.checkYourAnswers.label",
-      value = ValueViewModel(Text(transportArrangerNameValue(transportArranger))),
-      actions = if(!showChangeLink || onReviewPage) Seq() else Seq(
-        ActionItemViewModel(
-          content = "site.change",
-          href = controllers.sections.transportArranger.routes.TransportArrangerNameController.onPageLoad(
-            ern = request.userAnswers.ern,
-            arc = request.userAnswers.arc,
-            mode = CheckMode
-          ).url,
-          id = "changeTransportArrangerName"
+    transportArrangerNameValue(transportArranger).map { name =>
+      SummaryListRowViewModel(
+        key = "transportArrangerName.checkYourAnswers.label",
+        value = ValueViewModel(Text(name)),
+        actions = if (!showChangeLink || onReviewPage) Seq() else Seq(
+          ActionItemViewModel(
+            content = "site.change",
+            href = controllers.sections.transportArranger.routes.TransportArrangerNameController.onPageLoad(
+              ern = request.userAnswers.ern,
+              arc = request.userAnswers.arc,
+              mode = CheckMode
+            ).url,
+            id = "changeTransportArrangerName"
+          )
+            .withVisuallyHiddenText(messages("transportArrangerName.change.hidden"))
         )
-          .withVisuallyHiddenText(messages("transportArrangerName.change.hidden"))
       )
-    )
-  }
-
-  private[transportArranger] def transportArrangerNameValue(transportArranger: Option[TransportArranger])(implicit request: DataRequest[_], messages: Messages): String = {
-    transportArranger match {
-      case Some(Consignor) => request.traderKnownFacts.traderName
-      case Some(Consignee) => request.userAnswers.get(ConsigneeBusinessNamePage).getOrElse(
-        messages("transportArrangerName.checkYourAnswers.notProvided", messages(s"transportArranger.$Consignee"))
-      )
-      case Some(arranger) => request.userAnswers.get(TransportArrangerNamePage).getOrElse(
-        messages("transportArrangerName.checkYourAnswers.notProvided", messages(s"transportArranger.$arranger"))
-      )
-      case _ => request.userAnswers.get(TransportArrangerNamePage).getOrElse(messages("site.notProvided"))
     }
   }
+
+  private[transportArranger] def transportArrangerNameValue(transportArranger: Option[TransportArranger])
+                                                           (implicit request: DataRequest[_], messages: Messages): Option[String] =
+    transportArranger match {
+      case Some(Consignor) => request.movementDetails.consignorTrader.traderName
+      case Some(Consignee) => Some(request.userAnswers.get(ConsigneeBusinessNamePage).getOrElse(
+        messages("transportArrangerName.checkYourAnswers.notProvided", messages(s"transportArranger.$Consignee"))
+      ))
+      case Some(arranger) => Some(request.userAnswers.get(TransportArrangerNamePage).getOrElse(
+        messages("transportArrangerName.checkYourAnswers.notProvided", messages(s"transportArranger.$arranger"))
+      ))
+      case _ => Some(request.userAnswers.get(TransportArrangerNamePage).getOrElse(messages("site.notProvided")))
+    }
 }

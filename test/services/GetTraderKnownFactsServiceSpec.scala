@@ -18,8 +18,7 @@ package services
 
 import base.SpecBase
 import mocks.connectors.MockGetTraderKnownFactsConnector
-import models.response.{TraderKnownFactsException, UnexpectedDownstreamResponseError}
-import play.api.test.Helpers._
+import models.response.UnexpectedDownstreamResponseError
 import uk.gov.hmrc.http.HeaderCarrier
 
 import scala.concurrent.{ExecutionContext, ExecutionContextExecutor, Future}
@@ -46,14 +45,11 @@ class GetTraderKnownFactsServiceSpec extends SpecBase with MockGetTraderKnownFac
         MockGetTraderKnownFactsConnector.getTraderKnownFacts(testErn).returns(Future.successful(Right(None)))
         testService.getTraderKnownFacts(testErn).futureValue mustBe None
       }
-    }
 
-    "should throw TraderKnownFactsException" - {
       "when Connector returns failure from downstream" in {
 
         MockGetTraderKnownFactsConnector.getTraderKnownFacts(testErn).returns(Future.successful(Left(UnexpectedDownstreamResponseError)))
-        intercept[TraderKnownFactsException](await(testService.getTraderKnownFacts(testErn))).getMessage mustBe
-          s"No known facts found for trader $testErn"
+        testService.getTraderKnownFacts(testErn).futureValue mustBe None
       }
     }
   }

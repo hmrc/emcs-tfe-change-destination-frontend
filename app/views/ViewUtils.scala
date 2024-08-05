@@ -43,14 +43,11 @@ object ViewUtils {
 
   def maybeShowActiveTrader(request: DataRequest[_]): Option[TraderInfo] =
     Option.when(request.hasMultipleErns) {
-      TraderInfo(request.traderKnownFacts.traderName, request.ern)
+      TraderInfo(request.traderKnownFacts.map(_.traderName).getOrElse(""), request.ern)
     }
 
-  def maybeShowActiveTrader(request: OptionalDataRequest[_]): Option[TraderInfo] = {
+  def maybeShowActiveTrader(request: OptionalDataRequest[_]): Option[TraderInfo] =
     Option.when(request.hasMultipleErns) {
-      request.traderKnownFacts.map { traderKnownFacts =>
-        TraderInfo(traderKnownFacts.traderName, request.ern)
-      }
-    }.flatten
-  }
+      TraderInfo(request.traderKnownFacts.map(_.traderName).getOrElse(""), request.ern)
+    }
 }
