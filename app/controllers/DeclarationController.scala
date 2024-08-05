@@ -58,7 +58,7 @@ class DeclarationController @Inject()(
   def onSubmit(ern: String, arc: String): Action[AnyContent] =
     authorisedDataRequestWithCachedMovementAsync(ern, arc) { implicit request =>
       withSubmitChangeDestinationModel { submitChangeDestinationModel =>
-        service.submit(submitChangeDestinationModel).flatMap {
+        service.submit(submitChangeDestinationModel, ern).flatMap {
           case Right(response) =>
             logger.debug(s"[onSubmit] response received from downstream service ${response.downstreamService}: ${response.receipt}")
 
