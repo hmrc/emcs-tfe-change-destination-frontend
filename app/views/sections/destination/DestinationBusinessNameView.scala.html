@@ -29,7 +29,7 @@
     h1: components.h1,
     h2: components.h2,
     continueOrExit: components.continueOrExit,
-    continueOrSkipOrExit: components.continueOrSkipOrExit
+    continueOrSkip: components.continueOrSkip
 )
 
 @(form: Form[_], onSubmitCall: Call, destinationType: MovementScenario, QuestionSkipCall: Call)(implicit request: DataRequest[_], messages: Messages)
@@ -62,7 +62,7 @@ messages("destinationBusinessName.title")
         )
 
         @if(destinationType.stringValue == "direct delivery") {
-            @continueOrSkipOrExit(QuestionSkipCall.url, "site.saveAndContinue", "site.skipThisQuestion")
+            @continueOrSkip(QuestionSkipCall.url, "site.saveAndContinue", "site.skipThisQuestion")
         }else{
             @continueOrExit()
         }
