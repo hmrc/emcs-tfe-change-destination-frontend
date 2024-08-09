@@ -194,9 +194,14 @@ class MappingsSpec extends AnyFreeSpec with Matchers with OptionValues with Mapp
       result.get mustEqual 1
     }
 
-    "must bind a valid integer (with spaces)" in {
+    "must not bind a integer with spaces" in {
       val result = testForm.bind(Map("value" -> " 1        1             2  "))
-      result.get mustEqual 112
+      result.errors must contain(FormError("value", "error.nonNumeric"))
+    }
+
+    "must not bind a integer with commas" in {
+      val result = testForm.bind(Map("value" -> "1,000"))
+      result.errors must contain(FormError("value", "error.nonNumeric"))
     }
 
     "must not bind an empty value" in {
@@ -232,9 +237,14 @@ class MappingsSpec extends AnyFreeSpec with Matchers with OptionValues with Mapp
       result.get mustEqual 1
     }
 
-    "must bind a valid integer (with spaces)" in {
+    "must not bind a integer with spaces" in {
       val result = testForm.bind(Map("value" -> " 1        1             2  "))
-      result.get mustEqual 112
+      result.errors must contain(FormError("value", "error.nonNumeric"))
+    }
+
+    "must not bind a integer with commas" in {
+      val result = testForm.bind(Map("value" -> "1,000"))
+      result.errors must contain(FormError("value", "error.nonNumeric"))
     }
 
     s"must bind an integer larger than ${Int.MaxValue}" in {
