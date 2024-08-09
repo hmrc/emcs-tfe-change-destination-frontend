@@ -26,7 +26,7 @@
 
 <div class="govuk-button-group">
 
-    @govukButton(ButtonViewModel(messages(primaryKey)))
+    @govukButton(ButtonViewModel(messages(primaryKey)).preventingDoubleClick())
 
     <a class="govuk-link" id="skip-question" href="@href">@messages(secondaryKey)</a>
 

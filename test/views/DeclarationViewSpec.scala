@@ -54,6 +54,10 @@ class DeclarationViewSpec extends SpecBase with ViewBehaviours {
             Selectors.bullet(2) -> messagesForLanguage.bullet2,
             Selectors.button -> messagesForLanguage.submit
           ))
+
+          "submit button should prevent double click" in {
+            doc.select(Selectors.button).attr("data-prevent-double-click") mustBe "true"
+          }
         }
       }
     }

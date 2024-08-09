@@ -45,9 +45,7 @@
             Html(messages("declaration.bullet2"))
         ))
 
-        @govukButton(Button(
-            content = Text(messages("declaration.submit"))
-        ))
+        @govukButton(ButtonViewModel(messages("declaration.submit")).preventingDoubleClick())
     }
 }
 
