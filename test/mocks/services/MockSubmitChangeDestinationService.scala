@@ -19,7 +19,7 @@ package mocks.services
 import models.requests.DataRequest
 import models.response.{ErrorResponse, SubmitChangeDestinationResponse}
 import models.submitChangeDestination.SubmitChangeDestinationModel
-import org.scalamock.handlers.CallHandler3
+import org.scalamock.handlers.{CallHandler3, CallHandler4}
 import org.scalamock.scalatest.MockFactory
 import services.SubmitChangeDestinationService
 import uk.gov.hmrc.http.HeaderCarrier
@@ -32,7 +32,8 @@ trait MockSubmitChangeDestinationService extends MockFactory {
 
   object MockSubmitChangeDestinationService {
 
-    def submit(model: SubmitChangeDestinationModel): CallHandler3[SubmitChangeDestinationModel, DataRequest[_], HeaderCarrier, Future[Either[ErrorResponse, SubmitChangeDestinationResponse]]] =
-      (mockSubmitChangeDestinationService.submit(_: SubmitChangeDestinationModel)(_: DataRequest[_], _: HeaderCarrier)).expects(model, *, *)
+    def submit(model: SubmitChangeDestinationModel, ern: String): CallHandler4[SubmitChangeDestinationModel, String, DataRequest[_], HeaderCarrier, Future[Either[ErrorResponse, SubmitChangeDestinationResponse]]] =
+      (mockSubmitChangeDestinationService.submit(_: SubmitChangeDestinationModel, _: String)(_: DataRequest[_], _: HeaderCarrier))
+        .expects(model, ern, *, *)
   }
 }

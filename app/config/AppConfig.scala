@@ -94,6 +94,10 @@ class AppConfig @Inject()(servicesConfig: ServicesConfig, configuration: Configu
 
   def referenceDataBaseUrl: String = servicesConfig.baseUrl("emcs-tfe-reference-data") + "/emcs-tfe-reference-data"
 
+  private def nrsBrokerService: String = servicesConfig.baseUrl("nrs-broker")
+
+  def nrsBrokerBaseUrl(): String = s"$nrsBrokerService/emcs-tfe-nrs-message-broker"
+
 
   def selfUrl: String = servicesConfig.baseUrl("emcs-tfe-change-destination-frontend")
 

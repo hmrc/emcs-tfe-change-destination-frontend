@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,17 +14,17 @@
  * limitations under the License.
  */
 
-package utils
+package models.nrs
 
-import java.time.{Instant, LocalDateTime, ZoneId}
-import javax.inject.Inject
+import models.submitChangeDestination.SubmitChangeDestinationModel
+import play.api.libs.json.{JsValue, Json, Writes}
 
-trait TimeMachine {
-  def now(): LocalDateTime
-  def instant(): Instant
+case class ChangeDestinationNRSSubmission(ern: String,
+                                          submissionRequest: SubmitChangeDestinationModel) {
+  val json: JsValue =
+    Json.toJsObject(submissionRequest).deepMerge(Json.obj("exciseRegistrationNumber" -> ern))
 }
 
-class TimeMachineImpl @Inject()() extends TimeMachine {
-  override def now(): LocalDateTime = LocalDateTime.now(ZoneId.of("UTC"))
-  override def instant(): Instant = Instant.now()
+object ChangeDestinationNRSSubmission {
+  implicit val writes: Writes[ChangeDestinationNRSSubmission] = Writes(_.json)
 }

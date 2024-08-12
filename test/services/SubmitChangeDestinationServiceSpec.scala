@@ -17,62 +17,88 @@
 package services
 
 import base.SpecBase
-import fixtures.SubmitChangeDestinationFixtures
+import featureswitch.core.config.EnableNRS
+import fixtures.{NRSBrokerFixtures, SubmitChangeDestinationFixtures}
+import mocks.config.MockAppConfig
 import mocks.connectors.MockSubmitChangeDestinationConnector
-import mocks.services.MockAuditingService
+import mocks.services.{MockAuditingService, MockNRSBrokerService}
 import models.audit.SubmitChangeDestinationAudit
 import models.response.UnexpectedDownstreamResponseError
 import play.api.test.FakeRequest
 import uk.gov.hmrc.http.HeaderCarrier
 import utils.TimeMachine
 
-import java.time.LocalDateTime
+import java.time.{Instant, LocalDateTime}
 import scala.concurrent.{ExecutionContext, ExecutionContextExecutor, Future}
 
 class SubmitChangeDestinationServiceSpec
   extends SpecBase
     with MockSubmitChangeDestinationConnector
     with SubmitChangeDestinationFixtures
-    with MockAuditingService {
+    with MockAuditingService
+    with MockAppConfig
+    with MockNRSBrokerService
+    with NRSBrokerFixtures {
 
   implicit val hc: HeaderCarrier = HeaderCarrier()
   implicit val ec: ExecutionContextExecutor = ExecutionContext.global
 
-  val timeMachine: TimeMachine = () => LocalDateTime.parse(testReceiptDateTime)
+  val timeMachine: TimeMachine = new TimeMachine {
+    override def now(): LocalDateTime = LocalDateTime.parse(testReceiptDateTime)
+    override def instant(): Instant = Instant.now()
+  }
 
-  lazy val testService = new SubmitChangeDestinationService(mockSubmitChangeDestinationConnector, mockAuditingService, timeMachine)
+  lazy val testService = new SubmitChangeDestinationService(mockSubmitChangeDestinationConnector, mockNRSBrokerService, mockAuditingService, timeMachine, mockAppConfig)
+
+  class Fixture(isNRSEnabled: Boolean) {
+
+    MockAppConfig.getFeatureSwitchValue(EnableNRS).returns(isNRSEnabled)
+
+    if (isNRSEnabled) {
+      MockNRSBrokerService.submitPayload(minimumSubmitChangeDestinationModel, testErn)
+        .returns(Future.successful(Right(nrsBrokerResponseModel)))
+    } else {
+      MockNRSBrokerService.submitPayload(minimumSubmitChangeDestinationModel, testErn).never()
+    }
+  }
 
   ".submit(ern: String, submission: SubmitChangeDestinationModel)" - {
 
-    "should return a Right" - {
+    Seq(true, false).foreach { nrsEnabled =>
 
-      "when Connector returns success from downstream" in {
+      s"when NRS enabled is '$nrsEnabled'" - {
 
-        val request = dataRequest(FakeRequest())
+        "should return a Right" - {
 
-        MockSubmitChangeDestinationConnector.submit(minimumSubmitChangeDestinationModel).returns(Future.successful(Right(submitChangeDestinationResponseEIS)))
+          "when Connector returns success from downstream" in new Fixture(nrsEnabled) {
 
-        MockAuditingService
-          .audit(SubmitChangeDestinationAudit(testErn, testReceiptDateTime, minimumSubmitChangeDestinationModel, Right(submitChangeDestinationResponseEIS)))
-          .once()
+            val request = dataRequest(FakeRequest())
 
-        testService.submit(minimumSubmitChangeDestinationModel)(request, hc).futureValue mustBe Right(submitChangeDestinationResponseEIS)
-      }
-    }
+            MockSubmitChangeDestinationConnector.submit(minimumSubmitChangeDestinationModel).returns(Future.successful(Right(submitChangeDestinationResponseEIS)))
 
-    "should return a Left" - {
+            MockAuditingService
+              .audit(SubmitChangeDestinationAudit(testErn, testReceiptDateTime, minimumSubmitChangeDestinationModel, Right(submitChangeDestinationResponseEIS)))
+              .once()
 
-      "when Connector returns failure from downstream" in {
+            testService.submit(minimumSubmitChangeDestinationModel, testErn)(request, hc).futureValue mustBe Right(submitChangeDestinationResponseEIS)
+          }
+        }
 
-        val request = dataRequest(FakeRequest())
+        "should return a Left" - {
 
-        MockSubmitChangeDestinationConnector.submit(minimumSubmitChangeDestinationModel).returns(Future.successful(Left(UnexpectedDownstreamResponseError)))
+          "when Connector returns failure from downstream" in new Fixture(nrsEnabled) {
 
-        MockAuditingService
-          .audit(SubmitChangeDestinationAudit(testErn, testReceiptDateTime, minimumSubmitChangeDestinationModel, Left(UnexpectedDownstreamResponseError)))
-          .once()
+            val request = dataRequest(FakeRequest())
 
-        testService.submit(minimumSubmitChangeDestinationModel)(request, hc).futureValue mustBe Left(UnexpectedDownstreamResponseError)
+            MockSubmitChangeDestinationConnector.submit(minimumSubmitChangeDestinationModel).returns(Future.successful(Left(UnexpectedDownstreamResponseError)))
+
+            MockAuditingService
+              .audit(SubmitChangeDestinationAudit(testErn, testReceiptDateTime, minimumSubmitChangeDestinationModel, Left(UnexpectedDownstreamResponseError)))
+              .once()
+
+            testService.submit(minimumSubmitChangeDestinationModel, testErn)(request, hc).futureValue mustBe Left(UnexpectedDownstreamResponseError)
+          }
+        }
       }
     }
   }

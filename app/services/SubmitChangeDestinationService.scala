@@ -16,11 +16,14 @@
 
 package services
 
+import config.AppConfig
 import connectors.emcsTfe.SubmitChangeDestinationConnector
+import featureswitch.core.config.{EnableNRS, FeatureSwitching}
 import models.audit.SubmitChangeDestinationAudit
 import models.requests.DataRequest
 import models.response.{ErrorResponse, SubmitChangeDestinationResponse}
 import models.submitChangeDestination.SubmitChangeDestinationModel
+import services.nrs.NRSBrokerService
 import uk.gov.hmrc.http.HeaderCarrier
 import utils.{Logging, TimeMachine}
 
@@ -29,16 +32,24 @@ import scala.concurrent.{ExecutionContext, Future}
 
 class SubmitChangeDestinationService @Inject()(
                                                 connector: SubmitChangeDestinationConnector,
+                                                nrsBrokerService: NRSBrokerService,
                                                 auditingService: AuditingService,
-                                                timeMachine: TimeMachine)(implicit ec: ExecutionContext) extends Logging {
+                                                timeMachine: TimeMachine,
+                                                override val config: AppConfig)(implicit ec: ExecutionContext) extends Logging with FeatureSwitching {
 
-  def submit(submitChangeDestinationModel: SubmitChangeDestinationModel)
+  def submit(submitChangeDestinationModel: SubmitChangeDestinationModel, ern: String)
             (implicit request: DataRequest[_], hc: HeaderCarrier): Future[Either[ErrorResponse, SubmitChangeDestinationResponse]] =
+    if(isEnabled(EnableNRS)) {
+      nrsBrokerService.submitPayload(submitChangeDestinationModel, ern).flatMap(_ => handleSubmission(submitChangeDestinationModel))
+    } else {
+      handleSubmission(submitChangeDestinationModel)
+    }
 
-    connector.submit(submitChangeDestinationModel).map {
-      response =>
-        writeAudit(submitChangeDestinationModel, response)
-        response
+  def handleSubmission(submitChangeDestinationModel: SubmitChangeDestinationModel)
+                      (implicit request: DataRequest[_], hc: HeaderCarrier): Future[Either[ErrorResponse, SubmitChangeDestinationResponse]] =
+    connector.submit(submitChangeDestinationModel).map { response =>
+      writeAudit(submitChangeDestinationModel, response)
+      response
     }
 
   private def writeAudit(
