@@ -32,7 +32,7 @@ class GuarantorCheckAnswersHelper @Inject()() {
         Some(GuarantorRequiredSummary.row(onReviewPage)),
         Some(GuarantorArrangerSummary.row(onReviewPage)),
         GuarantorNameSummary.row(onReviewPage),
-        GuarantorVatSummary.row(onReviewPage),
+        GuarantorErnVatSummary.rows(onReviewPage),
         GuarantorAddressSummary.row(onReviewPage)
       ).flatten
     ).withCssClass("govuk-!-margin-bottom-9")
