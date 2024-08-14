@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,9 +23,10 @@ import models.CheckMode
 import models.requests.DataRequest
 import models.response.emcsTfe.{GuarantorType, MovementGuaranteeModel}
 import models.sections.guarantor.GuarantorArranger.{Consignee, Consignor, GoodsOwner, Transporter}
-import models.sections.info.movementScenario.MovementScenario.ExportWithCustomsDeclarationLodgedInTheUk
+import models.sections.info.movementScenario.MovementScenario.{ExportWithCustomsDeclarationLodgedInTheUk, UkTaxWarehouse}
 import org.scalatest.matchers.must.Matchers
-import pages.sections.guarantor.{GuarantorArrangerPage, GuarantorVatPage}
+import pages.sections.consignee.ConsigneeExcisePage
+import pages.sections.guarantor.{GuarantorArrangerPage, GuarantorRequiredPage, GuarantorVatPage}
 import pages.sections.info.DestinationTypePage
 import play.api.i18n.Messages
 import play.api.test.FakeRequest
@@ -34,14 +35,14 @@ import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.{Key, SummaryListRow}
 import viewmodels.govuk.summarylist._
 
-class GuarantorVatSummarySpec extends SpecBase with Matchers {
+class GuarantorEnVatSummarySpec extends SpecBase with Matchers {
 
-  "GuarantorVatSummary" - {
+  "GuarantorErnVatSummary" - {
 
-    def expectedRow(value: String, showChangeLink: Boolean)(implicit messagesForLanguage: ViewMessages): Option[SummaryListRow] = {
-      Some(
+    def expectedRow(key: String = "VAT registration number", value: String, showChangeLink: Boolean)(implicit messagesForLanguage: ViewMessages): Seq[SummaryListRow] = {
+      Seq(
         SummaryListRowViewModel(
-          key = Key(Text(messagesForLanguage.cyaLabel)),
+          key = Key(Text(key)),
           value = Value(Text(value)),
           actions = if (!showChangeLink) Seq() else Seq(ActionItemViewModel(
             content = Text(messagesForLanguage.change),
@@ -58,7 +59,7 @@ class GuarantorVatSummarySpec extends SpecBase with Matchers {
         implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
 
         "and there is a GuarantorArrangerPage answer of `Consignee`" - {
-          "then must not return a row" in {
+          "then must return not complete" in {
             implicit lazy val request: DataRequest[_] = dataRequest(
               FakeRequest(),
               emptyUserAnswers
@@ -66,12 +67,25 @@ class GuarantorVatSummarySpec extends SpecBase with Matchers {
                 .set(GuarantorArrangerPage, Consignee)
             )
 
-            GuarantorVatSummary.row() mustBe None
+            GuarantorErnVatSummary.rows() mustBe expectedRow(key = messagesForLanguage.cyaVatNumberForExports,value = messagesForLanguage.sectionNotComplete("Consignee"), showChangeLink = false)
+          }
+
+          "then must return the consignee ERN" in {
+            implicit lazy val request: DataRequest[_] = dataRequest(
+              FakeRequest(),
+              emptyUserAnswers
+                .set(DestinationTypePage, UkTaxWarehouse.GB)
+                .set(GuarantorRequiredPage, true)
+                .set(GuarantorArrangerPage, Consignee)
+                .set(ConsigneeExcisePage, "XIRC123456789"),
+            )
+
+            GuarantorErnVatSummary.rows() mustBe expectedRow(messagesForLanguage.cyaErnLabel, request.ern, false)
           }
         }
 
         "and there is a GuarantorArrangerPage answer of `Consignor`" - {
-          "then must not return a row" in {
+          "then must return a ERN row" in {
             implicit lazy val request: DataRequest[_] = dataRequest(
               FakeRequest(),
               emptyUserAnswers
@@ -79,7 +93,7 @@ class GuarantorVatSummarySpec extends SpecBase with Matchers {
                 .set(GuarantorArrangerPage, Consignor)
             )
 
-            GuarantorVatSummary.row() mustBe None
+            GuarantorErnVatSummary.rows() mustBe expectedRow(messagesForLanguage.cyaErnLabel, testErn, false)
           }
         }
 
@@ -94,7 +108,7 @@ class GuarantorVatSummarySpec extends SpecBase with Matchers {
                 movementDetails = maxGetMovementResponse.copy(movementGuarantee = MovementGuaranteeModel(GuarantorType.Owner, None))
               )
 
-              GuarantorVatSummary.row() mustBe expectedRow(messagesForLanguage.notProvided, true)
+              GuarantorErnVatSummary.rows() mustBe expectedRow(value = messagesForLanguage.notProvided, showChangeLink = true)
             }
           }
 
@@ -108,7 +122,7 @@ class GuarantorVatSummarySpec extends SpecBase with Matchers {
                   .set(GuarantorVatPage,"VAT123")
               )
 
-              GuarantorVatSummary.row() mustBe expectedRow("VAT123", true)
+              GuarantorErnVatSummary.rows() mustBe expectedRow(key = messagesForLanguage.cyaVatInputLabel, value = "VAT123", showChangeLink = true)
             }
           }
         }
@@ -125,7 +139,7 @@ class GuarantorVatSummarySpec extends SpecBase with Matchers {
 
               )
 
-              GuarantorVatSummary.row() mustBe expectedRow(messagesForLanguage.notProvided, true)
+              GuarantorErnVatSummary.rows() mustBe expectedRow(value = messagesForLanguage.notProvided, showChangeLink =  true)
             }
           }
 
@@ -139,7 +153,7 @@ class GuarantorVatSummarySpec extends SpecBase with Matchers {
                   .set(GuarantorVatPage, "TRAN123")
               )
 
-              GuarantorVatSummary.row() mustBe expectedRow("TRAN123", true)
+              GuarantorErnVatSummary.rows() mustBe expectedRow(key = messagesForLanguage.cyaVatInputLabel, value = "TRAN123", showChangeLink = true)
             }
           }
         }

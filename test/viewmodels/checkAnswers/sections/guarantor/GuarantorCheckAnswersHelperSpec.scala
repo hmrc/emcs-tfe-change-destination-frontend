@@ -40,7 +40,7 @@ class GuarantorCheckAnswersHelperSpec extends SpecBase with MockFactory {
     GuarantorArranger.displayValues.foreach {
       case value@(GoodsOwner | Transporter) =>
 
-        "must render five rows" - {
+        "must render 5 rows" - {
           s"when GuarantorArranger value is ${value.getClass.getSimpleName.stripSuffix("$")}" in new Test {
             implicit val request: DataRequest[_] = dataRequest(
               FakeRequest(),
@@ -48,7 +48,7 @@ class GuarantorCheckAnswersHelperSpec extends SpecBase with MockFactory {
                 .set(DestinationTypePage, ExportWithCustomsDeclarationLodgedInTheUk)
                 .set(GuarantorArrangerPage, value)
                 .set(GuarantorNamePage, "guarantor name")
-                .set(GuarantorVatPage, "gurantor123")
+                .set(GuarantorVatPage, "guarantor123")
                 .set(GuarantorAddressPage, testUserAddress),
               movementDetails = maxGetMovementResponse
             )
@@ -56,7 +56,7 @@ class GuarantorCheckAnswersHelperSpec extends SpecBase with MockFactory {
           }
         }
       case value =>
-        "must render four rows" - {
+        "must render five rows" - {
           s"when GuarantorArranger value is ${value.getClass.getSimpleName.stripSuffix("$")}" in new Test {
             implicit val request: DataRequest[_] = dataRequest(
               FakeRequest(),
@@ -67,7 +67,7 @@ class GuarantorCheckAnswersHelperSpec extends SpecBase with MockFactory {
                 .set(ConsigneeAddressPage, testUserAddress),
               movementDetails = maxGetMovementResponse
             )
-            helper.summaryList()(request, msgs).rows.length mustBe 4
+            helper.summaryList()(request, msgs).rows.length mustBe 5
           }
         }
     }

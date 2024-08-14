@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -36,10 +36,8 @@ object GuarantorErnVatSummary {
 
     val guarantorArrangerAnswer = GuarantorArrangerPage.value
     val guarantorRequiredAnswerIsTrue = GuarantorRequiredPage.value.contains(true)
-//    val isAlwaysRequired = GuarantorRequiredPage.isRequired()
-    val showSummaryRow = guarantorRequiredAnswerIsTrue // || isAlwaysRequired
 
-    (guarantorArrangerAnswer, showSummaryRow) match {
+    (guarantorArrangerAnswer, guarantorRequiredAnswerIsTrue) match {
       case (Some(arranger), true) => renderRows(arranger, onReviewPage)
       case _ => Seq.empty
     }
@@ -103,13 +101,10 @@ object GuarantorErnVatSummary {
         "guarantorErn.checkYourAnswers.label" -> messages("guarantorErn.checkYourAnswers.notProvided", messages(s"guarantorArranger.$Consignee"))
     }
 
-  private def getGuarantorVatSummary()(implicit request: DataRequest[_], messages: Messages): Seq[(String, String)] =
+  private def getGuarantorVatSummary()(implicit request: DataRequest[_]): Seq[(String, String)] =
     GuarantorVatPage.value match {
-      case Some("NONGBVAT") =>
-        Seq("guarantorVat.checkYourAnswers.choice.label" -> messages("site.no"))
       case Some(vatNumber) =>
         Seq(
-          "guarantorVat.checkYourAnswers.choice.label" -> messages("site.yes"),
           "guarantorVat.checkYourAnswers.label" -> HtmlFormat.escape(vatNumber).toString()
         )
       case None =>
