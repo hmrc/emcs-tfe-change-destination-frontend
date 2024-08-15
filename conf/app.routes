@@ -10,9 +10,9 @@ GET         /refresh-session                                  controllers.KeepAl
 
 GET         /there-is-a-problem                               controllers.JourneyRecoveryController.onPageLoad(continueUrl: Option[RedirectUrl] ?= None)
 
-GET         /account/signed-out                               controllers.auth.SignedOutController.signOutNotSaved()
-GET         /account/signed-out-saved                         controllers.auth.SignedOutController.signOutSaved()
-GET         /account/sign-out-survey                          controllers.auth.SignedOutController.signOutWithSurvey()
+GET         /account/signed-out                               controllers.auth.SignedOutController.signedOutNotSaved()
+GET         /account/signed-out-saved                         controllers.auth.SignedOutController.signedOutSaved()
+GET         /account/sign-out                                 controllers.auth.SignedOutController.signOut()
 
 GET         /trader/:ern/movement/:arc                        controllers.IndexController.onPageLoad(ern: String, arc: String)
 POST        /trader/:ern/movement/:arc                        controllers.IndexController.onSubmit(ern: String, arc: String)
