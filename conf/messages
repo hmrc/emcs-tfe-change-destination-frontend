@@ -617,6 +617,9 @@ guarantorName.error.length = Business name must be 182 characters or less
 guarantorName.error.invalidCharacter = Business name must not contain < and > and : and ;
 guarantorName.change.hidden = business name
 
+guarantorErn.checkYourAnswers.label = Excise registration number (ERN)
+guarantorErn.checkYourAnswers.notProvided = {0} section not complete
+
 guarantorVat.3.title = What is the goods owner’s VAT registration number?
 guarantorVat.3.heading = What is the goods owner’s VAT registration number?
 guarantorVat.2.title = What is the transporter’s VAT registration number?
@@ -628,7 +631,9 @@ guarantorVat.checkYourAnswersLabel = VAT registration number
 guarantorVat.error.required = Enter a VAT registration number
 guarantorVat.error.length = VAT registration number must be 14 characters or less
 guarantorVat.error.alphanumeric = VAT registration number must only contain letters and numbers
-guarantorVat.change.hidden = VAT registration number
+guarantorVat.checkYourAnswers.choice.label = VAT registered in the UK
+guarantorVat.checkYourAnswers.label = VAT registration number
+guarantorVat.checkYourAnswers.change.hidden = VAT registration number
 
 guarantorCheckAnswers.title = Check your answers
 guarantorCheckAnswers.heading = Check your answers
