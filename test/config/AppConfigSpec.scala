@@ -38,25 +38,9 @@ class AppConfigSpec extends SpecBase with BeforeAndAfterEach with FeatureSwitchi
     }
 
     ".signOutUrl()" - {
-
-      ".signOutUrl() must return the survey page when enabled" in {
-        implicit val fakeRequest = FakeRequest(GET, "/emcs/cam/trader/123/draft/456/some/page")
-        enable(RedirectToFeedbackSurvey)
-        config.signOutUrl()(fakeRequest) mustBe controllers.auth.routes.SignedOutController.signOutWithSurvey().url
+      "should have the correct url" in {
+        appConfig.signOutUrl mustBe "http://localhost:8308/gg/sign-out"
       }
-
-      ".signOutUrl() must return the saved sign out URL when on a page that is savable" in {
-        implicit val fakeRequest = FakeRequest(GET, "/emcs/cam/trader/123/draft/456/some/page")
-        disable(RedirectToFeedbackSurvey)
-        config.signOutUrl()(fakeRequest) mustBe controllers.auth.routes.SignedOutController.signOutSaved().url
-      }
-
-      ".signOutUrl() must return the none saved sign out URL when on a page that is not savable" in {
-        implicit val fakeRequest = FakeRequest(GET, "/emcs/cam/trader/123/info/456/some/page")
-        disable(RedirectToFeedbackSurvey)
-        config.signOutUrl()(fakeRequest) mustBe controllers.auth.routes.SignedOutController.signOutNotSaved().url
-      }
-
     }
 
     ".emcsTfeHomeUrl" - {

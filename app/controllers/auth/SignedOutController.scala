@@ -31,16 +31,22 @@ class SignedOutController @Inject()(
                                      view: SignedOutView
                                    ) extends FrontendBaseController with I18nSupport with Logging {
 
-  def signOutSaved: Action[AnyContent] = Action { implicit request =>
-    Ok(view("signedOut.guidance.saved")).withNewSession
+  def signedOutSaved: Action[AnyContent] = Action { implicit request =>
+    Ok(view("signedOut.guidance.saved"))
   }
 
-  def signOutNotSaved: Action[AnyContent] = Action { implicit request =>
-    Ok(view("signedOut.guidance.notSaved")).withNewSession
+  def signedOutNotSaved: Action[AnyContent] = Action { implicit request =>
+    Ok(view("signedOut.guidance.notSaved"))
   }
 
-  def signOutWithSurvey(): Action[AnyContent] = Action {
-    Redirect(appConfig.feedbackFrontendSurveyUrl).withNewSession
+  def signOut(): Action[AnyContent] = Action { request =>
+    val savablePage = request.uri.matches(".*/trader/.*/movement/.*")
+    val continue = (appConfig.redirectToFeedbackSurvey, savablePage) match {
+      case (true, _) => appConfig.feedbackFrontendSurveyUrl
+      case (false, true) => appConfig.host + controllers.auth.routes.SignedOutController.signedOutSaved().url
+      case (false, false) => appConfig.host + controllers.auth.routes.SignedOutController.signedOutNotSaved().url
+    }
+    Redirect(appConfig.signOutUrl, Map("continue" -> Seq(continue)))
   }
 
 }
