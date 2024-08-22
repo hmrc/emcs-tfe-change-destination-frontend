@@ -496,13 +496,15 @@ consigneeExcise.hint = An ERN contains 13 characters, starting with GB. It can b
 consigneeExcise.error.noInput = Enter the consignee’s ERN
 consigneeExcise.error.tooLong = The ERN must be 13 characters or less
 consigneeExcise.error.invalidCharacters = The ERN must only contain letters and numbers
+consigneeExcise.error.mustStartWithGBWKOrXIWK = ERN must start with GBWK or XIWK because the destination is a tax warehouse in Great Britain
+consigneeExcise.error.mustStartWithXIWK = ERN must start with XIWK because the destination is a tax warehouse in Northern Ireland
+consigneeExcise.error.mustNotStartWithGBOrXI = ERN must not start with GBWK or XIWK because the destination is not a tax warehouse in the United Kingdom
 consigneeExcise.checkYourAnswersLabel.ern = Excise registration number (ERN)
 consigneeExcise.change.hidden.ern = consignee excise registration number (ERN)
 consigneeExcise.checkYourAnswersLabel.ernForTemporaryRegisteredConsignee = Identification number for Temporary Registered Consignee
 consigneeExcise.change.hidden.ernForTemporaryRegisteredConsignee = consignee identification number for Temporary Registered Consignee
 consigneeExcise.checkYourAnswersLabel.ernForTemporaryCertifiedConsignee = Identification number for Temporary Certified Consignee
 consigneeExcise.change.hidden.ernForTemporaryCertifiedConsignee = consignee identification number for Temporary Certified Consignee
-
 
 transportUnitType.title = What will the goods be transported in?
 transportUnitType.heading = What will the goods be transported in?

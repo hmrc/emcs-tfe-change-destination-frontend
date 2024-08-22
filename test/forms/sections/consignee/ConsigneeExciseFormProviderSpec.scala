@@ -16,18 +16,23 @@
 
 package forms.sections.consignee
 
+import base.SpecBase
 import forms.ALPHANUMERIC_REGEX
 import forms.behaviours.StringFieldBehaviours
+import models.sections.info.movementScenario.MovementScenario.{EuTaxWarehouse, UkTaxWarehouse}
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
+import pages.sections.info.DestinationTypePage
 import play.api.data.FormError
+import play.api.test.FakeRequest
 
-class ConsigneeExciseFormProviderSpec extends StringFieldBehaviours with GuiceOneAppPerSuite {
+class ConsigneeExciseFormProviderSpec extends StringFieldBehaviours with SpecBase with GuiceOneAppPerSuite {
 
   val fieldName = "value"
 
   "ConsigneeExciseFormProvider" - {
-    val form = new ConsigneeExciseFormProvider().apply(isNorthernIrishTemporaryRegisteredConsignee = false)
-    val dynamicForm = new ConsigneeExciseFormProvider().apply(isNorthernIrishTemporaryRegisteredConsignee = true)
+    val dr = dataRequest(request = FakeRequest(), ern = testGreatBritainWarehouseErn)
+    val form = new ConsigneeExciseFormProvider().apply(isNorthernIrishTemporaryRegisteredConsignee = false)(dr)
+    val dynamicForm = new ConsigneeExciseFormProvider().apply(isNorthernIrishTemporaryRegisteredConsignee = true)(dr)
 
     "when a value is not provided" - {
       "must error with the expected msg key" in {
@@ -77,6 +82,93 @@ class ConsigneeExciseFormProviderSpec extends StringFieldBehaviours with GuiceOn
         val boundForm = form.bind(Map(fieldName -> "GBWK1 2 3 4 56789"))
         boundForm.errors.headOption mustBe None
         boundForm.value mustBe Some("GBWK123456789")
+      }
+    }
+
+    "when Destination is GB tax warehouse" - {
+
+      val dr = dataRequest(request = FakeRequest(), answers = emptyUserAnswers.set(DestinationTypePage, UkTaxWarehouse.GB))
+      val form = new ConsigneeExciseFormProvider().apply(isNorthernIrishTemporaryRegisteredConsignee = false)(dr)
+
+      "when ERN does not start with GBWK or XIWK" - {
+
+        "must return an error with correct message" in {
+          Seq("GBRC123456789", "XIRC123456789", "XIPA123456789", "XIPB123456789", "XIPC123456789", "XIPD123456789").foreach(ern => {
+            val boundForm = form.bind(Map(fieldName -> ern))
+            boundForm.errors.headOption mustBe Some(FormError(fieldName, "consigneeExcise.error.mustStartWithGBWKOrXIWK", Seq()))
+          })
+        }
+      }
+
+      "when ERN starts with GBWK or XIWK" - {
+
+        "must return success" in {
+          Seq("GBWK123456789", "XIWK123456789").foreach(ern => {
+            val boundForm = form.bind(Map(fieldName -> ern))
+            boundForm.errors.headOption mustBe None
+            boundForm.value mustBe Some(ern)
+          })
+        }
+      }
+
+    }
+
+    "when Destination is NI tax warehouse" - {
+
+      val dr = dataRequest(request = FakeRequest(), answers = emptyUserAnswers.set(DestinationTypePage, UkTaxWarehouse.NI))
+      val form = new ConsigneeExciseFormProvider().apply(isNorthernIrishTemporaryRegisteredConsignee = false)(dr)
+
+      "when ERN does not start with XIWK" - {
+
+        "must return an error with correct message" in {
+
+          val boundForm = form.bind(Map(fieldName -> testGreatBritainWarehouseErn))
+          boundForm.errors.headOption mustBe Some(FormError(fieldName, "consigneeExcise.error.mustStartWithXIWK", Seq()))
+        }
+      }
+
+      "when ERN starts with XIWK" - {
+
+        "must return success" in {
+
+          val boundForm = form.bind(Map(fieldName -> testNorthernIrelandWarehouseKeeperErn))
+          boundForm.errors.headOption mustBe None
+          boundForm.value mustBe Some(testNorthernIrelandWarehouseKeeperErn)
+        }
+      }
+    }
+
+    "when Destination is EU tax warehouse" - {
+
+      val dr = dataRequest(request = FakeRequest(), answers = emptyUserAnswers.set(DestinationTypePage, EuTaxWarehouse))
+      val form = new ConsigneeExciseFormProvider().apply(isNorthernIrishTemporaryRegisteredConsignee = false)(dr)
+
+      "when ERN starts with XI" - {
+
+        "must return an error with correct message" in {
+
+          val boundForm = form.bind(Map(fieldName -> testNorthernIrelandWarehouseKeeperErn))
+          boundForm.errors.headOption mustBe Some(FormError(fieldName, "consigneeExcise.error.mustNotStartWithGBOrXI", Seq()))
+        }
+      }
+
+      "when ERN starts with GB" - {
+
+        "must return an error with correct message" in {
+
+          val boundForm = form.bind(Map(fieldName -> testGreatBritainErn))
+          boundForm.errors.headOption mustBe Some(FormError(fieldName, "consigneeExcise.error.mustNotStartWithGBOrXI", Seq()))
+        }
+      }
+
+      "when ERN starts with anything else" - {
+
+        "must return success" in {
+
+          val boundForm = form.bind(Map(fieldName -> testEuErn))
+          boundForm.errors.headOption mustBe None
+          boundForm.value mustBe Some(testEuErn)
+        }
       }
     }
   }
