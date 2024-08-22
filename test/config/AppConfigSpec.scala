@@ -17,11 +17,9 @@
 package config
 
 import base.SpecBase
-import featureswitch.core.config.{FeatureSwitching, RedirectToFeedbackSurvey, ReturnToLegacy}
+import featureswitch.core.config.{FeatureSwitching, ReturnToLegacy}
 import org.scalamock.scalatest.MockFactory
 import org.scalatest.BeforeAndAfterEach
-import play.api.test.FakeRequest
-import play.api.test.Helpers.GET
 
 class AppConfigSpec extends SpecBase with BeforeAndAfterEach with FeatureSwitching with MockFactory {
 

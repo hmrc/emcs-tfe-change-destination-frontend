@@ -18,4 +18,9 @@ package config
 
 object Constants {
   val NONGBVAT = "NONGBVAT"
+  val NI_PREFIX = "XI"
+  val GB_PREFIX = "GB"
+  val GBWK_PREFIX = "GBWK"
+  val XIWK_PREFIX = "XIWK"
+
 }

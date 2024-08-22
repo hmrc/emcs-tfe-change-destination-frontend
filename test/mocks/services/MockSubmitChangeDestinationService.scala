@@ -19,7 +19,7 @@ package mocks.services
 import models.requests.DataRequest
 import models.response.{ErrorResponse, SubmitChangeDestinationResponse}
 import models.submitChangeDestination.SubmitChangeDestinationModel
-import org.scalamock.handlers.{CallHandler3, CallHandler4}
+import org.scalamock.handlers.CallHandler4
 import org.scalamock.scalatest.MockFactory
 import services.SubmitChangeDestinationService
 import uk.gov.hmrc.http.HeaderCarrier
