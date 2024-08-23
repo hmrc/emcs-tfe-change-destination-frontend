@@ -25,11 +25,7 @@ object MovementSection extends Section[JsObject] {
 
   override def status(implicit request: DataRequest[_]): TaskListStatus = {
     sectionHasBeenReviewed(MovementReviewPage) {
-      if (request.userAnswers.get(InvoiceDetailsPage).nonEmpty) {
-        Completed
-      } else {
-        InProgress
-      }
+      Completed //always complete, because invoice number always exists on EAD from IE801
     }
   }
 

@@ -124,7 +124,7 @@ trait BaseFixtures {
 
   val invoiceDetailsModel = InvoiceDetailsModel(
     reference = "somereference",
-    date = LocalDate.of(2020, 2, 2)
+    date = Some(LocalDate.of(2020, 2, 2))
   )
 
   val invoiceDetailsJson = Json.obj(

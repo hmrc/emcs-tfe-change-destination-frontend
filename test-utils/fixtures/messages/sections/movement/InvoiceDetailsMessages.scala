@@ -28,7 +28,7 @@ object InvoiceDetailsMessages {
     val referenceLabel = "Invoice reference"
     val referenceErrorRequired = "Enter a reference for an invoice, delivery note or transport document"
     val referenceErrorLength = "Reference must be 35 characters or less"
-    val dateLabel = "Invoice date of issue"
+    val dateLabel = "Invoice date of issue (optional)"
     val dateHint = (date: String) => s"For example, $date."
     val dateErrorRequiredAll = "Enter the date of issue for an invoice, delivery note or transport document"
     val dateErrorInvalid = "Date of issue must be a real date"

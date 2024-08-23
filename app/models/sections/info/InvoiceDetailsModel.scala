@@ -20,7 +20,7 @@ import play.api.libs.json.{Json, OFormat}
 
 import java.time.LocalDate
 
-case class InvoiceDetailsModel(reference: String, date: LocalDate)
+case class InvoiceDetailsModel(reference: String, date: Option[LocalDate])
 
 object InvoiceDetailsModel {
 

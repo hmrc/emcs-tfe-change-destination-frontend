@@ -49,20 +49,6 @@ class MovementSectionSpec extends SpecBase {
       }
     }
 
-    "must be InProgress" - {
-
-      "when MovementReviewPage is ChangeAnswers (the answers are not complete)" in {
-
-        implicit val dr: DataRequest[_] = dataRequest(FakeRequest(),
-          emptyUserAnswers
-            .set(MovementReviewPage, ChangeAnswers),
-          movementDetails = maxGetMovementResponse.copy(eadEsad = maxGetMovementResponse.eadEsad.copy(invoiceDate = None))
-        )
-
-        MovementSection.status mustBe InProgress
-      }
-    }
-
     "must be Review" - {
 
       "when MovementReviewPage has NOT been answered" in {
