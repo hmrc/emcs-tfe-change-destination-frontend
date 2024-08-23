@@ -86,7 +86,6 @@ class ConfirmationControllerSpec extends SpecBase with MockFactory {
           dateOfSubmission = testSubmissionDate.toLocalDate,
           hasConsigneeChanged = false,
           exciseEnquiriesLink = testExciseEnquiriesLink,
-          returnToAccountLink = testReturnToAccountLink,
           feedbackLink = s"$testFeedbackBaseUrl/feedback/$testDeskproName/beta"
         ).toString()
       }
@@ -112,7 +111,6 @@ class ConfirmationControllerSpec extends SpecBase with MockFactory {
             dateOfSubmission = testSubmissionDate.toLocalDate,
             hasConsigneeChanged = true,
             exciseEnquiriesLink = testExciseEnquiriesLink,
-            returnToAccountLink = testReturnToAccountLink,
             feedbackLink = s"$testFeedbackBaseUrl/feedback/$testDeskproName/beta"
           ).toString()
         }

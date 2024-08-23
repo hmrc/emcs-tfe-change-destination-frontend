@@ -55,11 +55,13 @@ class AppConfig @Inject()(servicesConfig: ServicesConfig, configuration: Configu
   lazy val feedbackFrontendSurveyUrl: String = s"$feedbackFrontendHost/feedback/$deskproName/beta"
 
   def emcsTfeHomeUrl: String =
-    if (isEnabled(ReturnToLegacy)) {
-      configuration.get[String]("urls.legacy.atAGlance")
-    } else {
-      configuration.get[String]("urls.emcsTfeHome")
-    }
+    configuration.get[String]("urls.emcsTfeHome")
+
+  def emcsMovementDetailsUrl(ern: String, arc: String): String =
+    configuration.get[String]("urls.emcsTfeMovementDetails").replace(":ern", ern).replace(":arc", arc)
+
+  def emcsMovementsUrl(ern: String): String =
+    configuration.get[String]("urls.emcsTfeMovementsIn").replace(":ern", ern)
 
   def returnToDraft(implicit request: DataRequest[_]): String = controllers.routes.TaskListController.onPageLoad(request.ern, request.arc).url
 
@@ -90,14 +92,7 @@ class AppConfig @Inject()(servicesConfig: ServicesConfig, configuration: Configu
 
   def nrsBrokerBaseUrl(): String = s"$nrsBrokerService/emcs-tfe-nrs-message-broker"
 
-
   def selfUrl: String = servicesConfig.baseUrl("emcs-tfe-change-destination-frontend")
-
-  lazy val accessibilityStatementUrl: String = {
-    val baseUrl = servicesConfig.getString("accessibility-statement.host")
-    val servicePath = servicesConfig.getString("accessibility-statement.service-path")
-    baseUrl + servicePath
-  }
 
   def getFeatureSwitchValue(feature: String): Boolean = configuration.get[Boolean](feature)
 

@@ -41,7 +41,8 @@ object ConfirmationMessages {
     val submissionUnsuccessfulP2 = "The message will tell you what needs to be corrected. You must correct and resubmit the movement until you get a new ARC."
     val submissionUnsuccessfulP3 = "If the error cannot be corrected, you must submit a new change of destination in order to send the goods back to the place of dispatch."
     val p4 = "Contact the HMRC excise helpline if you need more help or information about excise duties."
-    val returnToAccountLink = "Return to account"
+    val returnToMovementLink: String = "Return to movement"
+    val returnToAccountHomeLink: String = "Return to account home"
     val feedbackLink = "What did you think of this service? (opens in new tab) (takes 30 seconds)"
   }
 
