@@ -17,7 +17,7 @@
 package config
 
 import base.SpecBase
-import featureswitch.core.config.{FeatureSwitching, ReturnToLegacy}
+import featureswitch.core.config.FeatureSwitching
 import org.scalamock.scalatest.MockFactory
 import org.scalatest.BeforeAndAfterEach
 
@@ -42,19 +42,17 @@ class AppConfigSpec extends SpecBase with BeforeAndAfterEach with FeatureSwitchi
     }
 
     ".emcsTfeHomeUrl" - {
-      "should generate the correct url" - {
-        s"when the $ReturnToLegacy feature switch is enabled" in {
-          enable(ReturnToLegacy)
-
-          appConfig.emcsTfeHomeUrl mustBe "http://localhost:8080/emcs/trader"
-        }
-
-        s"when the $ReturnToLegacy feature switch is disabled" in {
-          disable(ReturnToLegacy)
-
-          appConfig.emcsTfeHomeUrl mustBe "http://localhost:8310/emcs/account"
-        }
+      "should generate the correct url" in {
+        appConfig.emcsTfeHomeUrl mustBe "http://localhost:8310/emcs/account"
       }
+    }
+
+    ".emcsMovementDetailsUrl() must return the correct URL" in {
+      config.emcsMovementDetailsUrl(testErn, testArc) mustBe s"http://localhost:8310/emcs/account/trader/$testErn/movement/$testArc/overview"
+    }
+
+    ".emcsMovementsUrl() must return the correct URL" in {
+      config.emcsMovementsUrl(testErn) mustBe s"http://localhost:8310/emcs/account/trader/$testErn/movements"
     }
   }
 

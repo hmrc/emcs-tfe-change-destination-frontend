@@ -56,7 +56,6 @@ class ConfirmationViewSpec extends SpecBase with ViewBehaviours {
             hasConsigneeChanged = false,
             "testUrl1",
             "testUrl2",
-            "testUrl3"
           ).toString())
 
           behave like pageWithExpectedElementsAndMessages(Seq(
@@ -74,8 +73,9 @@ class ConfirmationViewSpec extends SpecBase with ViewBehaviours {
             Selectors.h2(3) -> messagesForLanguage.explainDelayHeader,
             Selectors.p(5) -> messagesForLanguage.explainDelayP,
             Selectors.p(6) -> messagesForLanguage.p4,
-            Selectors.p(7) -> messagesForLanguage.returnToAccountLink,
-            Selectors.p(8) -> messagesForLanguage.feedbackLink,
+            Selectors.p(7) -> messagesForLanguage.returnToMovementLink,
+            Selectors.p(8) -> messagesForLanguage.returnToAccountHomeLink,
+            Selectors.p(9) -> messagesForLanguage.feedbackLink
           ))
 
           "have correct summary list" in {
@@ -97,7 +97,6 @@ class ConfirmationViewSpec extends SpecBase with ViewBehaviours {
             hasConsigneeChanged = true,
             "testUrl1",
             "testUrl2",
-            "testUrl3"
           ).toString())
 
           behave like pageWithExpectedElementsAndMessages(Seq(
@@ -119,8 +118,9 @@ class ConfirmationViewSpec extends SpecBase with ViewBehaviours {
             Selectors.p(7) -> messagesForLanguage.submissionUnsuccessfulP2,
             Selectors.p(8) -> messagesForLanguage.submissionUnsuccessfulP3,
             Selectors.p(9) -> messagesForLanguage.p4,
-            Selectors.p(10) -> messagesForLanguage.returnToAccountLink,
-            Selectors.p(11) -> messagesForLanguage.feedbackLink,
+            Selectors.p(10) -> messagesForLanguage.returnToMovementLink,
+            Selectors.p(11) -> messagesForLanguage.returnToAccountHomeLink,
+            Selectors.p(12) -> messagesForLanguage.feedbackLink
           ))
 
           "have correct summary list" in {

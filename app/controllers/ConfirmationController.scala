@@ -49,7 +49,6 @@ class ConfirmationController @Inject()(
             dateOfSubmission = submissionTimestamp.toLocalDate,
             hasConsigneeChanged = ConsigneeSection.hasConsigneeChanged,
             exciseEnquiriesLink = config.exciseGuidance,
-            returnToAccountLink = config.emcsTfeHomeUrl,
             feedbackLink = config.feedbackFrontendSurveyUrl
           ))
         case _ =>

@@ -1200,7 +1200,8 @@ confirmation.unsuccessfulSubmission.p1 = If there is a problem with the consigne
 confirmation.unsuccessfulSubmission.p2 = The message will tell you what needs to be corrected. You must correct and resubmit the movement until you get a new ARC.
 confirmation.unsuccessfulSubmission.p3 = If the error cannot be corrected, you must submit a new change of destination in order to send the goods back to the place of dispatch.
 confirmation.contactHMRC = Contact the HMRC excise helpline if you need more help or information about excise duties.
-confirmation.returnToAccountLink = Return to account
+confirmation.returnToAccount = Return to account home
+confirmation.returnToMovement = Return to movement
 confirmation.feedbackLink = What did you think of this service?
 confirmation.feedbackText = (takes 30 seconds)
 
