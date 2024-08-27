@@ -29,12 +29,14 @@ import play.api.libs.functional.syntax.{toFunctionalBuilderOps, unlift}
 import play.api.libs.json.{Json, OFormat, OWrites, __}
 import utils.{Logging, ModelConstructorHelpers}
 
+import java.time.LocalDate
+
 case class UpdateEadEsadModel(
                                administrativeReferenceCode: String,
                                journeyTime: Option[JourneyTime],
                                changedTransportArrangement: Option[TransportArranger],
                                sequenceNumber: Option[String],
-                               invoiceDate: Option[String],
+                               invoiceDate: Option[LocalDate],
                                invoiceNumber: Option[String],
                                transportModeCode: Option[HowMovementTransported],
                                complementaryInformation: Option[String]
@@ -57,7 +59,7 @@ object UpdateEadEsadModel extends ModelConstructorHelpers with Logging {
       journeyTime = whenSectionChanged(JourneyTypeReviewPage)(journeyTimeValue).flatten,
       changedTransportArrangement = whenSectionChanged(TransportArrangerReviewPage)(mandatoryPage(TransportArrangerPage)),
       sequenceNumber = None, // As per DDNEA rules, the sequence number should be added to the XML payload only after it has passed the RIM validation
-      invoiceDate = whenSectionChanged(MovementReviewAnswersPage)(mandatoryPage(InvoiceDetailsPage).date.toString),
+      invoiceDate = whenSectionChanged(MovementReviewAnswersPage)(InvoiceDetailsPage.value.flatMap(_.date)).flatten,
       invoiceNumber = whenSectionChanged(MovementReviewAnswersPage)(mandatoryPage(InvoiceDetailsPage).reference),
       transportModeCode = whenSectionChanged(JourneyTypeReviewPage)(mandatoryPage(HowMovementTransportedPage)),
       complementaryInformation = whenSectionChanged(JourneyTypeReviewPage){
@@ -72,7 +74,7 @@ object UpdateEadEsadModel extends ModelConstructorHelpers with Logging {
       (__ \ "journeyTime").writeNullable[JourneyTime] and
       (__ \ "changedTransportArrangement").writeNullable[TransportArranger](Auditable.writes[TransportArranger]) and
       (__ \ "sequenceNumber").writeNullable[String] and
-      (__ \ "invoiceDate").writeNullable[String] and
+      (__ \ "invoiceDate").writeNullable[LocalDate] and
       (__ \ "invoiceNumber").writeNullable[String] and
       (__ \ "transportModeCode").writeNullable[HowMovementTransported](Auditable.writes[HowMovementTransported]) and
       (__ \ "complementaryInformation").writeNullable[String]

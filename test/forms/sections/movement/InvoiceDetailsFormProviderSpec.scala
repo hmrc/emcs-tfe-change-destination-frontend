@@ -19,6 +19,7 @@ package forms.sections.movement
 import base.SpecBase
 import fixtures.messages.sections.movement.InvoiceDetailsMessages
 import forms.behaviours.StringFieldBehaviours
+import models.sections.info.InvoiceDetailsModel
 import play.api.data.FormError
 import play.api.i18n.Messages
 
@@ -33,9 +34,9 @@ class InvoiceDetailsFormProviderSpec extends SpecBase with StringFieldBehaviours
   val form = new InvoiceDetailsFormProvider(appConfig)()
 
   def formAnswersMap(reference: String = invoiceDetailsModel.reference,
-                     day: String = invoiceDetailsModel.date.getDayOfMonth.toString,
-                     month: String = invoiceDetailsModel.date.getMonthValue.toString,
-                     year: String = invoiceDetailsModel.date.getYear.toString
+                     day: String = invoiceDetailsModel.date.get.getDayOfMonth.toString,
+                     month: String = invoiceDetailsModel.date.get.getMonthValue.toString,
+                     year: String = invoiceDetailsModel.date.get.getYear.toString
                     ): Map[String, String] = {
     Map(
       referenceField -> reference,
@@ -112,17 +113,6 @@ class InvoiceDetailsFormProviderSpec extends SpecBase with StringFieldBehaviours
 
       "should give an error" - {
 
-        "when not entered" in {
-
-          val data = formAnswersMap(day = "", month = "", year = "")
-
-          val expectedResult = Seq(FormError(dateField, s"invoiceDetails.$dateField.error.required.all"))
-
-          val actualResult = form.bind(data)
-
-          actualResult.errors mustBe expectedResult
-        }
-
         "when the date is invalid" in {
 
           val data = formAnswersMap(day = "1000", month = "1000", year = "1000")
@@ -142,6 +132,19 @@ class InvoiceDetailsFormProviderSpec extends SpecBase with StringFieldBehaviours
           val actualResult = form.bind(data)
 
           actualResult.errors mustBe expectedResult
+        }
+      }
+
+      "should NOT giv an error" - {
+
+        "when no Invoice Date is entered" in {
+
+          val data = formAnswersMap(day = "", month = "", year = "")
+
+          val actualResult = form.bind(data)
+
+          actualResult.errors mustBe Seq()
+          actualResult.value mustBe Some(InvoiceDetailsModel(invoiceDetailsModel.reference, None))
         }
       }
     }

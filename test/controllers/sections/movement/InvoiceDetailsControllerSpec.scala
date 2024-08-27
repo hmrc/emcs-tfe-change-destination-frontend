@@ -76,7 +76,7 @@ class InvoiceDetailsControllerSpec extends SpecBase with MockUserAnswersService 
 
       status(result) mustEqual OK
       contentAsString(result) mustEqual view(
-        form = form.fill(InvoiceDetailsModel("EadEsadInvoiceNumber", LocalDate.parse("2023-01-01"))),
+        form = form.fill(InvoiceDetailsModel("EadEsadInvoiceNumber", Some(LocalDate.parse("2023-01-01")))),
         currentDate = testLocalDate.formatDateNumbersOnly(),
         onSubmitCall = invoiceDetailsSubmitRoute
       )(dataRequest(request), messages(request)).toString
@@ -85,7 +85,7 @@ class InvoiceDetailsControllerSpec extends SpecBase with MockUserAnswersService 
     "must redirect to the next page when valid data is submitted" in new Fixture() {
 
       val expectedAnswers: UserAnswers = emptyUserAnswers
-        .set(InvoiceDetailsPage, InvoiceDetailsModel("answer", LocalDate.of(2020, 1, 1)))
+        .set(InvoiceDetailsPage, InvoiceDetailsModel("answer", Some(LocalDate.of(2020, 1, 1))))
 
       MockUserAnswersService.set(expectedAnswers).returns(Future.successful(expectedAnswers))
 

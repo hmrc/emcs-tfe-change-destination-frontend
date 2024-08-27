@@ -54,7 +54,7 @@ class InvoiceDetailsDateSummarySpec extends SpecBase with DateTimeUtils {
                   Some(
                     SummaryListRowViewModel(
                       key = English.cyaInvoiceDateLabel,
-                      value = Value(Text(invoiceDetailsModel.date.formatDateForUIOutput())),
+                      value = Value(Text(invoiceDetailsModel.date.get.formatDateForUIOutput())),
                       actions = if (onReviewPage) Seq() else Seq(
                         ActionItemViewModel(
                           content = messagesForLanguage.change,

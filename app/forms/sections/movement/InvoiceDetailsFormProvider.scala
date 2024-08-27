@@ -20,7 +20,7 @@ import config.AppConfig
 import forms.mappings.Mappings
 import models.sections.info.InvoiceDetailsModel
 import play.api.data.Form
-import play.api.data.Forms.mapping
+import play.api.data.Forms.{mapping, optional}
 
 import javax.inject.Inject
 
@@ -32,7 +32,7 @@ class InvoiceDetailsFormProvider @Inject()(appConfig: AppConfig) extends Mapping
     Form(mapping(
       "invoice-reference" -> text("invoiceDetails.invoice-reference.error.required")
         .verifying(maxLength(35, "invoiceDetails.invoice-reference.error.length")),
-      "value" -> localDate(
+      "value" -> optional(localDate(
         invalidKey = "invoiceDetails.value.error.invalid",
         allRequiredKey = "invoiceDetails.value.error.required.all",
         twoRequiredKey = "invoiceDetails.value.error.required.two",
@@ -43,7 +43,7 @@ class InvoiceDetailsFormProvider @Inject()(appConfig: AppConfig) extends Mapping
             fourDigitYear("invoiceDetails.value.error.yearNotFourDigits"),
             minDate(earliestInvoiceDate, "invoiceDetails.value.error.earliestDate")
           )
-        )
+        ))
     )(InvoiceDetailsModel.apply)(InvoiceDetailsModel.unapply))
 
 }

@@ -20,7 +20,7 @@ import config.AppConfig
 import models.requests.DataRequest
 import models.response.{ErrorResponse, SubmitChangeDestinationResponse}
 import models.submitChangeDestination.SubmitChangeDestinationModel
-import play.api.libs.json.Reads
+import play.api.libs.json.{Json, Reads}
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
 
 import javax.inject.{Inject, Singleton}
@@ -34,7 +34,9 @@ class SubmitChangeDestinationConnector @Inject()(val http: HttpClient,
 
   lazy val baseUrl: String = config.emcsTfeBaseUrl
   def submit(submitChangeDestinationModel: SubmitChangeDestinationModel)
-            (implicit request: DataRequest[_], hc: HeaderCarrier, ec: ExecutionContext): Future[Either[ErrorResponse, SubmitChangeDestinationResponse]] =
+            (implicit request: DataRequest[_], hc: HeaderCarrier, ec: ExecutionContext): Future[Either[ErrorResponse, SubmitChangeDestinationResponse]] = {
+    logger.debug(s"[submit][${request.ern}][${request.arc}] Submitting body: ${Json.toJson(submitChangeDestinationModel)}")
     post(s"$baseUrl/change-destination/${request.ern}/${request.arc}", submitChangeDestinationModel)
+  }
 
 }

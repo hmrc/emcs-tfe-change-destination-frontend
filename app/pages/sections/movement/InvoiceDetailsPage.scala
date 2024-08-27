@@ -28,10 +28,9 @@ case object InvoiceDetailsPage extends QuestionPage[InvoiceDetailsModel] {
   override val toString: String = "invoiceDetails"
   override val path: JsPath = InfoSection.path \ toString
 
-  override def getValueFromIE801(implicit request: DataRequest[_]): Option[InvoiceDetailsModel] = {
-    request.movementDetails.eadEsad.invoiceDate.map { invoiceDateAsString =>
-      val invoiceDate = LocalDate.parse(invoiceDateAsString)
-      InvoiceDetailsModel(request.movementDetails.eadEsad.invoiceNumber, invoiceDate)
-    }
-  }
+  override def getValueFromIE801(implicit request: DataRequest[_]): Option[InvoiceDetailsModel] =
+    Some(InvoiceDetailsModel(
+      request.movementDetails.eadEsad.invoiceNumber,
+      request.movementDetails.eadEsad.invoiceDate.map(LocalDate.parse)
+    ))
 }

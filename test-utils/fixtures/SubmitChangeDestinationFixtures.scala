@@ -118,7 +118,7 @@ trait SubmitChangeDestinationFixtures extends GetMovementResponseFixtures { _: B
     journeyTime = Some(Hours("2")),
     changedTransportArrangement = Some(TransportArranger.GoodsOwner),
     sequenceNumber = None,
-    invoiceDate = Some(invoiceDetailsModel.date.toString),
+    invoiceDate = invoiceDetailsModel.date,
     invoiceNumber = Some(invoiceDetailsModel.reference),
     transportModeCode = Some(HowMovementTransported.Other),
     complementaryInformation = Some("info")

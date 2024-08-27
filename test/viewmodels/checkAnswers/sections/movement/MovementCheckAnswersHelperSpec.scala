@@ -37,12 +37,12 @@ class MovementCheckAnswersHelperSpec extends SpecBase {
           }
         }
 
-        "return no rows" - {
+        "return 1 row" - {
 
-          "when there is not an answer for InvoiceDetails" in {
+          "when there is not an answer for InvoiceDate" in {
             implicit val dr: DataRequest[_] = dataRequest(request,
               movementDetails = maxGetMovementResponse.copy(eadEsad = maxGetMovementResponse.eadEsad.copy(invoiceDate = None)))
-            helper.summaryList(onReviewPage)(dr, messages(request)).rows.length mustBe 0
+            helper.summaryList(onReviewPage)(dr, messages(request)).rows.length mustBe 1
           }
         }
       }

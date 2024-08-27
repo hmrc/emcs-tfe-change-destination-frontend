@@ -26,17 +26,14 @@ class InvoiceDetailsPageSpec extends SpecBase {
 
   "getValueFromIE801" - {
     "must return Some(_)" - {
-      "when first transporter trader is defined and has a trader name" in {
+      "when Invoice Date is defined" in {
         InvoiceDetailsPage.getValueFromIE801(dataRequest(FakeRequest(),
-          movementDetails = maxGetMovementResponse.copy(eadEsad = maxGetMovementResponse.eadEsad.copy(invoiceDate = Some("2023-01-01"))))) mustBe Some(InvoiceDetailsModel("EadEsadInvoiceNumber", LocalDate.of(2023, 1, 1)))
+          movementDetails = maxGetMovementResponse.copy(eadEsad = maxGetMovementResponse.eadEsad.copy(invoiceDate = Some("2023-01-01"))))) mustBe Some(InvoiceDetailsModel("EadEsadInvoiceNumber", Some(LocalDate.of(2023, 1, 1))))
       }
-    }
-    "must return None" - {
-      "when the invoice date is empty" in {
-        InvoiceDetailsPage.getValueFromIE801(dataRequest(
-          FakeRequest(),
-          movementDetails = maxGetMovementResponse.copy(eadEsad = maxGetMovementResponse.eadEsad.copy(invoiceDate = None)))
-        ) mustBe None
+
+      "when Invoice Date is NOT defined" in {
+        InvoiceDetailsPage.getValueFromIE801(dataRequest(FakeRequest(),
+          movementDetails = maxGetMovementResponse.copy(eadEsad = maxGetMovementResponse.eadEsad.copy(invoiceDate = None)))) mustBe Some(InvoiceDetailsModel("EadEsadInvoiceNumber", None))
       }
     }
   }

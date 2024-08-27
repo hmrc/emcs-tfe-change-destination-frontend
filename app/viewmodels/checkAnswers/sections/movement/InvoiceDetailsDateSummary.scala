@@ -28,11 +28,11 @@ object InvoiceDetailsDateSummary extends DateTimeUtils {
 
   def row(onReviewPage: Boolean)(implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] =
 
-    request.userAnswers.get(InvoiceDetailsPage).map { answer =>
+    request.userAnswers.get(InvoiceDetailsPage).flatMap(_.date.map { date =>
 
       SummaryListRowViewModel(
         key = messages(s"invoiceDetails.invoice-date.checkYourAnswersLabel"),
-        value = ValueViewModel(answer.date.formatDateForUIOutput()),
+        value = ValueViewModel(date.formatDateForUIOutput()),
         actions = if(onReviewPage) Seq() else Seq(
           ActionItemViewModel(
             "site.change",
@@ -40,5 +40,5 @@ object InvoiceDetailsDateSummary extends DateTimeUtils {
             id = "changeInvoiceDate"
           ).withVisuallyHiddenText(messages("invoiceDetails.invoice-date.change.hidden"))
       ))
-    }
+    })
 }

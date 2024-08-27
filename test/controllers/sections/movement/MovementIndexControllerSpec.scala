@@ -57,7 +57,7 @@ class MovementIndexControllerSpec extends SpecBase with MockUserAnswersService {
     "must redirect to the Movement Check Answers page when the movement section has been reviewed and is complete" in new Test(Some(
       emptyUserAnswers
         .set(MovementReviewPage, ChangeAnswers)
-        .set(InvoiceDetailsPage, InvoiceDetailsModel("123", LocalDate.parse("2023-01-01")))
+        .set(InvoiceDetailsPage, InvoiceDetailsModel("123", Some(LocalDate.parse("2023-01-01"))))
     )) {
       val result = controller.onPageLoad(testErn, testArc)(request)
 
