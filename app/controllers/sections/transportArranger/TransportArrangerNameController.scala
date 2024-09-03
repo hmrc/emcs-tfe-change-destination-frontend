@@ -42,7 +42,6 @@ class TransportArrangerNameController @Inject()(
                                                  override val getData: DataRetrievalAction,
                                                  override val requireData: DataRequiredAction,
                                                  override val withMovement: MovementAction,
-                                                 override val betaAllowList: BetaAllowListAction,
                                                  formProvider: TransportArrangerNameFormProvider,
                                                  val controllerComponents: MessagesControllerComponents,
                                                  view: TransportArrangerNameView

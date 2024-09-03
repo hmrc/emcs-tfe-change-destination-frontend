@@ -106,9 +106,5 @@ class AppConfig @Inject()(servicesConfig: ServicesConfig, configuration: Configu
   lazy val earliestDispatchDate: LocalDate = LocalDate.parse(configuration.get[String]("constants.earliestDispatchDate"))
   lazy val earliestInvoiceDate: LocalDate = LocalDate.parse(configuration.get[String]("constants.earliestInvoiceDate"))
 
-  def betaAllowListCheckingEnabled: Boolean = isEnabled(CheckBetaAllowList)
-
-  def betaCheckServiceName: String = configuration.get[String]("beta.serviceName")
-
   lazy val guarantorRequiredUrl = configuration.get[String]("urls.guarantorRequired")
 }

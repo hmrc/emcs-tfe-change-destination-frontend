@@ -55,7 +55,6 @@ class DestinationBusinessNameControllerSpec extends SpecBase with MockUserAnswer
       new FakeDataRetrievalAction(optUserAnswers, Some(testMinTraderKnownFacts)),
       dataRequiredAction,
       new FakeMovementAction(maxGetMovementResponse),
-      fakeBetaAllowListAction,
       formProvider,
       messagesControllerComponents,
       view

@@ -38,7 +38,6 @@ class ExportInformationIndexControllerSpec extends SpecBase with MockUserAnswers
       new FakeDataRetrievalAction(optUserAnswers, Some(testMinTraderKnownFacts)),
       dataRequiredAction,
       new FakeMovementAction(maxGetMovementResponse. copy(deliveryPlaceCustomsOfficeReferenceNumber = None)),
-      fakeBetaAllowListAction,
       messagesControllerComponents
     )
 

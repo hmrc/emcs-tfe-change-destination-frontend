@@ -41,7 +41,6 @@ class ConsigneeExportInformationController @Inject()(
                                               override val getData: DataRetrievalAction,
                                               override val requireData: DataRequiredAction,
                                               override val withMovement: MovementAction,
-                                              override val betaAllowList: BetaAllowListAction,
                                               formProvider: ConsigneeExportInformationFormProvider,
                                               val controllerComponents: MessagesControllerComponents,
                                               view: ConsigneeExportInformationView

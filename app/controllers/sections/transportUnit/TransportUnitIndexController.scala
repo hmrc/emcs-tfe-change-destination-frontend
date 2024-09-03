@@ -42,7 +42,6 @@ class TransportUnitIndexController @Inject()(
                                               override val getData: DataRetrievalAction,
                                               override val requireData: DataRequiredAction,
                                               override val withMovement: MovementAction,
-                                              override val betaAllowList: BetaAllowListAction,
                                               val controllerComponents: MessagesControllerComponents
                                             ) extends BaseNavigationController with AuthActionHelper {
 

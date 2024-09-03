@@ -50,7 +50,6 @@ class TransportUnitsReviewControllerSpec extends SpecBase with MockUserAnswersSe
     lazy val controller = new TransportUnitsReviewController(
       messagesApi,
       mockUserAnswersService,
-      fakeBetaAllowListAction,
       new FakeTransportUnitNavigator(testOnwardRoute),
       fakeAuthAction,
       new FakeDataRetrievalAction(userAnswers, Some(testMinTraderKnownFacts)),

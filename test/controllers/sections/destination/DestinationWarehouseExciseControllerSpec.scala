@@ -55,7 +55,6 @@ class DestinationWarehouseExciseControllerSpec extends SpecBase with MockUserAns
       new FakeDataRetrievalAction(optUserAnswers, Some(testMinTraderKnownFacts)),
       dataRequiredAction,
       new FakeMovementAction(maxGetMovementResponse.copy(deliveryPlaceTrader = None)),
-      fakeBetaAllowListAction,
       formProvider,
       messagesControllerComponents,
       view

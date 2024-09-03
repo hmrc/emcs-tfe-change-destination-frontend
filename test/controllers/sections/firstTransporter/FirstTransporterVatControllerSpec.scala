@@ -55,7 +55,6 @@ class FirstTransporterVatControllerSpec extends SpecBase with MockUserAnswersSer
       new FakeDataRetrievalAction(optUserAnswers, Some(testMinTraderKnownFacts)),
       dataRequiredAction,
       new FakeMovementAction(maxGetMovementResponse.copy(firstTransporterTrader = None)),
-      fakeBetaAllowListAction,
       formProvider,
       messagesControllerComponents,
       view

@@ -74,7 +74,6 @@ class ConsigneeExemptOrganisationControllerSpec extends SpecBase with MockUserAn
       new FakeDataRetrievalAction(optUserAnswers, Some(testMinTraderKnownFacts)),
       dataRequiredAction,
       new FakeMovementAction(maxGetMovementResponse.copy(memberStateCode = None, serialNumberOfCertificateOfExemption = None)),
-      fakeBetaAllowListAction,
       formProvider,
       messagesControllerComponents,
       view,

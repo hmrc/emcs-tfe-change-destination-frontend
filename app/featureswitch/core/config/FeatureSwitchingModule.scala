@@ -26,7 +26,6 @@ import javax.inject.Singleton
 class FeatureSwitchingModule extends Module with FeatureSwitchRegistry {
 
   val switches: Seq[FeatureSwitch] = Seq(
-    CheckBetaAllowList,
     StubGetTraderKnownFacts,
     RedirectToFeedbackSurvey,
     EnableNRS
@@ -37,11 +36,6 @@ class FeatureSwitchingModule extends Module with FeatureSwitchRegistry {
       bind[FeatureSwitchRegistry].to(this).eagerly()
     )
   }
-}
-
-case object CheckBetaAllowList extends FeatureSwitch {
-  override val configName: String = "features.checkBetaAllowList"
-  override val displayName: String = "Check beta allow list"
 }
 
 case object StubGetTraderKnownFacts extends FeatureSwitch {

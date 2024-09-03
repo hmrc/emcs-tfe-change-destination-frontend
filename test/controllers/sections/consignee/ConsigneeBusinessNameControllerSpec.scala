@@ -54,7 +54,6 @@ class ConsigneeBusinessNameControllerSpec extends SpecBase with MockUserAnswersS
       new FakeDataRetrievalAction(optUserAnswers, Some(testMinTraderKnownFacts)),
       dataRequiredAction,
       new FakeMovementAction(maxGetMovementResponse.copy(consigneeTrader = None)),
-      fakeBetaAllowListAction,
       formProvider,
       messagesControllerComponents,
       view

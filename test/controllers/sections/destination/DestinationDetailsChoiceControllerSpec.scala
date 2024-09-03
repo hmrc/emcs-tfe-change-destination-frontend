@@ -63,8 +63,7 @@ class DestinationDetailsChoiceControllerSpec extends SpecBase with MockUserAnswe
       new FakeMovementAction(maxGetMovementResponse),
       formProvider,
       messagesControllerComponents,
-      view,
-      fakeBetaAllowListAction
+      view
     )
   }
 

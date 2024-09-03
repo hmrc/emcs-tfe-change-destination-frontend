@@ -41,7 +41,6 @@ class GuarantorVatController @Inject()(
                                         override val getData: DataRetrievalAction,
                                         override val requireData: DataRequiredAction,
                                         override val withMovement: MovementAction,
-                                        override val betaAllowList: BetaAllowListAction,
                                         formProvider: GuarantorVatFormProvider,
                                         val controllerComponents: MessagesControllerComponents,
                                         view: GuarantorVatView

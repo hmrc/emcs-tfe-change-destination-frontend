@@ -46,8 +46,7 @@ class DispatchDetailsController @Inject()(
                                            formProvider: DispatchDetailsFormProvider,
                                            val userAnswersService: UserAnswersService,
                                            val controllerComponents: MessagesControllerComponents,
-                                           view: DispatchDetailsView,
-                                           val betaAllowList: BetaAllowListAction
+                                           view: DispatchDetailsView
                                          ) extends BasePreDraftNavigationController with AuthActionHelper with PreDraftAuthActionHelper {
 
   def onPreDraftPageLoad(ern: String, arc: String, mode: Mode): Action[AnyContent] =

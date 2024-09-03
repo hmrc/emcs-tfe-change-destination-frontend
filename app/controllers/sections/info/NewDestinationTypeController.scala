@@ -47,8 +47,7 @@ class NewDestinationTypeController @Inject()(
                                               val withMovement: MovementAction,
                                               formProvider: NewDestinationTypeFormProvider,
                                               val controllerComponents: MessagesControllerComponents,
-                                              view: NewDestinationTypeView,
-                                              val betaAllowList: BetaAllowListAction
+                                              view: NewDestinationTypeView
                                             ) extends BasePreDraftNavigationController with AuthActionHelper with PreDraftAuthActionHelper {
 
   def onPreDraftPageLoad(ern: String, arc: String): Action[AnyContent] =

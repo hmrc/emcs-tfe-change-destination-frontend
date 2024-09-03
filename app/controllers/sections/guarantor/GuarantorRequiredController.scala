@@ -39,7 +39,6 @@ class GuarantorRequiredController @Inject()(
                                              override val getData: DataRetrievalAction,
                                              override val requireData: DataRequiredAction,
                                              override val withMovement: MovementAction,
-                                             override val betaAllowList: BetaAllowListAction,
                                              val controllerComponents: MessagesControllerComponents,
                                              view: GuarantorRequiredView,
                                              formProvider: GuarantorRequiredFormProvider,

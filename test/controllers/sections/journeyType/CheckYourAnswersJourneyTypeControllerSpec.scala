@@ -48,7 +48,6 @@ class CheckYourAnswersJourneyTypeControllerSpec extends SpecBase with SummaryLis
       new FakeDataRetrievalAction(userAnswers, Some(testMinTraderKnownFacts)),
       dataRequiredAction,
       new FakeMovementAction(maxGetMovementResponse),
-      fakeBetaAllowListAction,
       mockCheckYourAnswersJourneyTypeHelper,
       Helpers.stubMessagesControllerComponents(),
       view
