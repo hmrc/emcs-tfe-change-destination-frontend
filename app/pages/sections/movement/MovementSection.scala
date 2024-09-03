@@ -19,7 +19,7 @@ package pages.sections.movement
 import models.requests.DataRequest
 import pages.sections.Section
 import play.api.libs.json.{JsObject, JsPath}
-import viewmodels.taskList.{Completed, InProgress, TaskListStatus}
+import viewmodels.taskList.{Completed, TaskListStatus}
 
 object MovementSection extends Section[JsObject] {
 

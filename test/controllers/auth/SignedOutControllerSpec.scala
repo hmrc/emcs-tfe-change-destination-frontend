@@ -18,7 +18,7 @@ package controllers.auth
 
 import base.SpecBase
 import config.AppConfig
-import featureswitch.core.config.{FeatureSwitching, RedirectToFeedbackSurvey}
+import featureswitch.core.config.FeatureSwitching
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import views.html.auth.SignedOutView
@@ -52,41 +52,13 @@ class SignedOutControllerSpec extends SpecBase with FeatureSwitching {
 
     ".signOut" - {
 
-      "when feedbackSurvey is disabled" - {
-        "when called from a page within the draft flow which is savable" - {
-          "must return SEE_OTHER to sign-out with a redirect to signedOutSaved" in {
+      "must return SEE_OTHER to sign-out with a redirect to feedbackSurvey" in {
 
-            disable(RedirectToFeedbackSurvey)
-            val result = testController.signOut()(FakeRequest("GET", s"/emcs/create-movement/trader/$testErn/movement/$testArc/page"))
+        val result = testController.signOut()(request)
 
-            status(result) mustEqual SEE_OTHER
-            redirectLocation(result) mustBe Some("http://localhost:8308/gg/sign-out?continue=http%3A%2F%2Flocalhost%3A8319%2Femcs%2Fchange-destination%2Faccount%2Fsigned-out-saved")
-          }
-        }
-
-        "when called from a page within the draft flow which is NOT savable" - {
-          "must return SEE_OTHER to sign-out with a redirect to signedOutNotSaved" in {
-
-            disable(RedirectToFeedbackSurvey)
-            val result = testController.signOut()(FakeRequest("GET", s"/emcs/create-movement/trader/$testErn/info"))
-
-            status(result) mustEqual SEE_OTHER
-            redirectLocation(result) mustBe Some("http://localhost:8308/gg/sign-out?continue=http%3A%2F%2Flocalhost%3A8319%2Femcs%2Fchange-destination%2Faccount%2Fsigned-out")
-          }
-        }
-      }
-
-      "when feedbackSurvey is enabled" - {
-        "must return SEE_OTHER to sign-out with a redirect to feedbackSurvey" in {
-
-          enable(RedirectToFeedbackSurvey)
-          val result = testController.signOut()(request)
-
-          status(result) mustEqual SEE_OTHER
-          redirectLocation(result) mustBe Some("http://localhost:8308/gg/sign-out?continue=http%3A%2F%2Flocalhost%3A9514%2Ffeedback%2Femcstfe%2Fbeta")
-        }
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result) mustBe Some("http://localhost:8308/gg/sign-out?continue=http%3A%2F%2Flocalhost%3A9514%2Ffeedback%2Femcstfe%2Fbeta")
       }
     }
   }
-
 }

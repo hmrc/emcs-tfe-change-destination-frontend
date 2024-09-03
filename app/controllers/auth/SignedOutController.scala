@@ -39,14 +39,8 @@ class SignedOutController @Inject()(
     Ok(view("signedOut.guidance.notSaved"))
   }
 
-  def signOut(): Action[AnyContent] = Action { request =>
-    val savablePage = request.uri.matches(".*/trader/.*/movement/.*")
-    val continue = (appConfig.redirectToFeedbackSurvey, savablePage) match {
-      case (true, _) => appConfig.feedbackFrontendSurveyUrl
-      case (false, true) => appConfig.host + controllers.auth.routes.SignedOutController.signedOutSaved().url
-      case (false, false) => appConfig.host + controllers.auth.routes.SignedOutController.signedOutNotSaved().url
-    }
-    Redirect(appConfig.signOutUrl, Map("continue" -> Seq(continue)))
+  def signOut(): Action[AnyContent] = Action {
+    Redirect(appConfig.signOutUrl, Map("continue" -> Seq(appConfig.feedbackFrontendSurveyUrl)))
   }
 
 }

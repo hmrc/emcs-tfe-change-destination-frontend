@@ -27,7 +27,6 @@ class FeatureSwitchingModule extends Module with FeatureSwitchRegistry {
 
   val switches: Seq[FeatureSwitch] = Seq(
     StubGetTraderKnownFacts,
-    RedirectToFeedbackSurvey,
     EnableNRS
   )
 
@@ -41,11 +40,6 @@ class FeatureSwitchingModule extends Module with FeatureSwitchRegistry {
 case object StubGetTraderKnownFacts extends FeatureSwitch {
   override val configName: String = "features.stub-get-trader-known-facts"
   override val displayName: String = "Use stub to get trader known facts"
-}
-
-case object RedirectToFeedbackSurvey extends FeatureSwitch {
-  override val configName: String = "features.redirectToFeedbackSurvey"
-  override val displayName: String = "Enable redirecting to feedback survey"
 }
 
 case object EnableNRS extends FeatureSwitch {

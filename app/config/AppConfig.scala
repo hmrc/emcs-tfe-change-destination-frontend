@@ -65,8 +65,6 @@ class AppConfig @Inject()(servicesConfig: ServicesConfig, configuration: Configu
 
   def returnToDraft(implicit request: DataRequest[_]): String = controllers.routes.TaskListController.onPageLoad(request.ern, request.arc).url
 
-  def redirectToFeedbackSurvey: Boolean = isEnabled(RedirectToFeedbackSurvey)
-
   lazy val timeout: Int = configuration.get[Int]("timeout-dialog.timeout")
   lazy val countdown: Int = configuration.get[Int]("timeout-dialog.countdown")
 
