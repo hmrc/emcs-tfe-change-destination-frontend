@@ -692,8 +692,8 @@ destinationWarehouseVat.error.required = Enter a VAT number or use link to skip 
 destinationWarehouseVat.error.invalidCharacters = VAT registration number must not contain < and > and : and ;
 destinationWarehouseVat.error.length = VAT registration number must be 14 characters or less
 destinationWarehouseVat.link.skip = Skip this question for now
-destinationWarehouseVat.checkYourAnswers.label = VAT number
-destinationWarehouseVat.change.hidden = VAT number
+destinationWarehouseVat.checkYourAnswers.label = Identification number
+destinationWarehouseVat.change.hidden = Identification number
 
 destinationConsigneeDetails.title = Is the place of destination the same as the consignee details?
 destinationConsigneeDetails.heading = Is the place of destination the same as the consignee details?

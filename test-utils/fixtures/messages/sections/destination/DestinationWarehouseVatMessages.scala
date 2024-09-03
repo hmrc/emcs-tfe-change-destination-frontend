@@ -23,8 +23,8 @@ object DestinationWarehouseVatMessages {
   sealed trait ViewMessages extends BaseMessages { _: i18n =>
     val title = titleHelper("What is the VAT number for the registered consignee? (optional)")
     val heading: String = "What is the VAT number for the registered consignee? (optional)"
-    val cyaLabel: String = "VAT number"
-    val cyaChangeHidden: String = "VAT number"
+    val cyaLabel: String = "Identification number"
+    val cyaChangeHidden: String = "Identification number"
     val errorRequired: String = "Enter a VAT number or use link to skip this question"
     val errorInvalidCharacters: String = "VAT registration number must not contain special characters"
     val errorLength: String = "VAT registration number must be 14 characters or less"
