@@ -27,7 +27,11 @@ class DestinationBusinessNameFormProvider @Inject() extends Mappings {
   def apply(): Form[String] =
     Form(
       "value" -> text("destinationBusinessName.error.required")
-        .verifying(maxLength(182, "destinationBusinessName.error.length"))
-        .verifying(regexpUnlessEmpty(XSS_REGEX, "destinationBusinessName.error.invalid"))
+        .verifying(
+          firstError(
+            maxLength(182, "destinationBusinessName.error.length"),
+            regexpUnlessEmpty(XSS_REGEX, "destinationBusinessName.error.invalid")
+          )
+        )
     )
 }

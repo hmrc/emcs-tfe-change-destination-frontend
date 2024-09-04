@@ -87,8 +87,7 @@ class GiveInformationOtherTransportFormProviderSpec extends StringFieldBehaviour
         val result = form.bind(data)
 
         result.errors mustBe Seq(
-          FormError("value", "giveInformationOtherTransport.error.character", Seq(ALPHANUMERIC_REGEX)),
-          FormError("value", "giveInformationOtherTransport.error.xss", Seq(XSS_REGEX))
+          FormError("value", "giveInformationOtherTransport.error.character", Seq(ALPHANUMERIC_REGEX))
         )
       }
     }

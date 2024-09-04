@@ -28,8 +28,12 @@ class TransportUnitIdentityFormProvider @Inject() extends Mappings {
   def apply(transportUnitType: TransportUnitType): Form[String] =
     Form(
       "value" -> text(s"transportUnitIdentity.error.required.${transportUnitType.toString}")
-        .verifying(maxLength(35, s"transportUnitIdentity.error.length.${transportUnitType.toString}"))
-        .verifying(regexpUnlessEmpty(XSS_REGEX, s"transportUnitIdentity.error.invalidCharacters.${transportUnitType.toString}"))
+        .verifying(
+          firstError(
+            maxLength(35, s"transportUnitIdentity.error.length.${transportUnitType.toString}"),
+            regexpUnlessEmpty(XSS_REGEX, s"transportUnitIdentity.error.invalidCharacters.${transportUnitType.toString}")
+          )
+        )
     )
 
 }

@@ -27,7 +27,11 @@ class GuarantorNameFormProvider @Inject() extends Mappings {
   def apply(): Form[String] =
     Form(
       "value" -> text("guarantorName.error.required")
-        .verifying(maxLength(182, "guarantorName.error.length"))
-        .verifying(regexpUnlessEmpty(XSS_REGEX, "guarantorName.error.invalidCharacter"))
+        .verifying(
+          firstError(
+            maxLength(182, "guarantorName.error.length"),
+            regexpUnlessEmpty(XSS_REGEX, "guarantorName.error.invalidCharacter")
+          )
+        )
     )
 }
