@@ -61,7 +61,6 @@ class GuarantorRequiredControllerSpec extends SpecBase with MockUserAnswersServi
       getData = new FakeDataRetrievalAction(optUserAnswers, Some(testMinTraderKnownFacts)),
       requireData = dataRequiredAction,
       withMovement = new FakeMovementAction(movementResponse),
-      betaAllowList = fakeBetaAllowListAction,
       controllerComponents = messagesControllerComponents,
       formProvider = formProvider,
       view = view,

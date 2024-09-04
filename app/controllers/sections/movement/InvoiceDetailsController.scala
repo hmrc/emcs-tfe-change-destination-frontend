@@ -39,7 +39,6 @@ class InvoiceDetailsController @Inject()(
                                           val auth: AuthAction,
                                           val getData: DataRetrievalAction,
                                           val requireData: DataRequiredAction,
-                                          val betaAllowList: BetaAllowListAction,
                                           val withMovement: MovementAction,
                                           formProvider: InvoiceDetailsFormProvider,
                                           val userAnswersService: UserAnswersService,

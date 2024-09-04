@@ -57,7 +57,6 @@ class ConfirmationControllerSpec extends SpecBase with MockFactory {
   def getController(userAnswers: UserAnswers) = new ConfirmationController(
     messagesApi,
     fakeAuthAction,
-    fakeBetaAllowListAction,
     new FakeDataRetrievalAction(Some(userAnswers), Some(testMinTraderKnownFacts)),
     requireData = dataRequiredAction,
     new FakeMovementAction(maxGetMovementResponse),

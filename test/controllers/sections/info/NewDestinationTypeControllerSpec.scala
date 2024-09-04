@@ -76,8 +76,7 @@ class NewDestinationTypeControllerSpec extends SpecBase with MockUserAnswersServ
       new FakeMovementAction(maxGetMovementResponse),
       formProvider,
       Helpers.stubMessagesControllerComponents(),
-      view,
-      fakeBetaAllowListAction
+      view
     )
 
     lazy val getResult: Future[Result] = controller.onPreDraftPageLoad(ern, testArc)(getRequest)

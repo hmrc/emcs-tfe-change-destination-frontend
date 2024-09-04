@@ -47,8 +47,7 @@ class HowMovementTransportedController @Inject()(
                                                   formProvider: HowMovementTransportedFormProvider,
                                                   val controllerComponents: MessagesControllerComponents,
                                                   view: HowMovementTransportedView,
-                                                  onlyFixedView: HowMovementTransportedNoOptionView,
-                                                  val betaAllowList: BetaAllowListAction
+                                                  onlyFixedView: HowMovementTransportedNoOptionView
                                                 ) extends BaseNavigationController with AuthActionHelper {
 
   def onPageLoad(ern: String, arc: String, mode: Mode): Action[AnyContent] =

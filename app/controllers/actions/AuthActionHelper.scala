@@ -27,11 +27,9 @@ trait AuthActionHelper {
   val withMovement: MovementAction
   val getData: DataRetrievalAction
   val requireData: DataRequiredAction
-  val betaAllowList: BetaAllowListAction
 
   private def authedDataRequest(ern: String, arc: String, movementRefiner: => ActionRefiner[UserRequest, MovementRequest]) =
-    auth(ern, arc) andThen betaAllowList andThen movementRefiner andThen getData andThen requireData
-
+    auth(ern, arc) andThen movementRefiner andThen getData andThen requireData
 
   private def authedDataRequestUpToDate(ern: String, arc: String) = authedDataRequest(ern, arc, withMovement.upToDate(arc))
 

@@ -41,7 +41,6 @@ class DestinationWarehouseExciseController @Inject()(
                                                       override val getData: DataRetrievalAction,
                                                       override val requireData: DataRequiredAction,
                                                       override val withMovement: MovementAction,
-                                                      override val betaAllowList: BetaAllowListAction,
                                                       formProvider: DestinationWarehouseExciseFormProvider,
                                                       val controllerComponents: MessagesControllerComponents,
                                                       view: DestinationWarehouseExciseView

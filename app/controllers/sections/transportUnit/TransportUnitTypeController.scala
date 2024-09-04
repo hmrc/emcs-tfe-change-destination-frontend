@@ -37,7 +37,6 @@ import scala.concurrent.Future
 class TransportUnitTypeController @Inject()(
                                              override val messagesApi: MessagesApi,
                                              override val userAnswersService: UserAnswersService,
-                                             override val betaAllowList: BetaAllowListAction,
                                              override val navigator: TransportUnitNavigator,
                                              override val auth: AuthAction,
                                              override val getData: DataRetrievalAction,

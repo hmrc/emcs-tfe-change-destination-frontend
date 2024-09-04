@@ -47,7 +47,6 @@ class TransportUnitRemoveUnitControllerSpec extends SpecBase with MockUserAnswer
     lazy val controller = new TransportUnitRemoveUnitController(
       messagesApi,
       mockUserAnswersService,
-      fakeBetaAllowListAction,
       app.injector.instanceOf[TransportUnitNavigator],
       fakeAuthAction,
       new FakeDataRetrievalAction(userAnswers, Some(testMinTraderKnownFacts)),

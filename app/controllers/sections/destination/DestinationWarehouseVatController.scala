@@ -40,7 +40,6 @@ class DestinationWarehouseVatController @Inject()(
                                                    override val getData: DataRetrievalAction,
                                                    override val requireData: DataRequiredAction,
                                                    override val withMovement: MovementAction,
-                                                   override val betaAllowList: BetaAllowListAction,
                                                    formProvider: DestinationWarehouseVatFormProvider,
                                                    val controllerComponents: MessagesControllerComponents,
                                                    view: DestinationWarehouseVatView

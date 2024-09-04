@@ -16,7 +16,7 @@
 
 package controllers.actions.predraft
 
-import controllers.actions.{AuthAction, BetaAllowListAction, MovementAction}
+import controllers.actions.{AuthAction, MovementAction}
 import models.requests.{DataRequest, MovementRequest, UserRequest}
 import play.api.mvc._
 
@@ -27,13 +27,12 @@ trait PreDraftAuthActionHelper {
   val auth: AuthAction
   val getPreDraftData: PreDraftDataRetrievalAction
   val requirePreDraftData: PreDraftDataRequiredAction
-  val betaAllowList: BetaAllowListAction
   val withMovement: MovementAction
 
   private def authorised(ern: String,
                          arc: String,
                          movementRefiner: => ActionRefiner[UserRequest, MovementRequest]): ActionBuilder[MovementRequest, AnyContent] =
-    auth(ern, arc) andThen betaAllowList andThen movementRefiner
+    auth(ern, arc) andThen movementRefiner
 
   private def authedUpToDate(ern: String, arc: String): ActionBuilder[MovementRequest, AnyContent] =
     authorised(ern, arc, withMovement.upToDate(arc))

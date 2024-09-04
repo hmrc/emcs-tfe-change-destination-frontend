@@ -56,7 +56,6 @@ class ConsigneeExportInformationControllerSpec extends SpecBase with MockUserAns
       new FakeDataRetrievalAction(optUserAnswers, Some(testMinTraderKnownFacts)),
       dataRequiredAction,
       new FakeMovementAction(maxGetMovementResponse.copy(consigneeTrader = None)),
-      fakeBetaAllowListAction,
       formProvider,
       messagesControllerComponents,
       view

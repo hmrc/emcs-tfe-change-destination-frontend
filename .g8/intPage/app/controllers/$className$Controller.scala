@@ -16,7 +16,6 @@ import scala.concurrent.Future
 
 class $className$Controller @Inject()(
                                        override val messagesApi: MessagesApi,
-                                       override val betaAllowList: BetaAllowListAction,
                                        override val userAnswersService: UserAnswersService,
                                        override val navigator: Navigator,
                                        override val auth: AuthAction,

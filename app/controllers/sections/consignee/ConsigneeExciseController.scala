@@ -36,7 +36,6 @@ import scala.concurrent.Future
 
 class ConsigneeExciseController @Inject()(override val messagesApi: MessagesApi,
                                           override val auth: AuthAction,
-                                          override val betaAllowList: BetaAllowListAction,
                                           override val getData: DataRetrievalAction,
                                           override val requireData: DataRequiredAction,
                                           override val withMovement: MovementAction,

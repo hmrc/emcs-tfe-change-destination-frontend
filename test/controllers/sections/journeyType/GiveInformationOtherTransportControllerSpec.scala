@@ -52,8 +52,7 @@ class GiveInformationOtherTransportControllerSpec extends SpecBase with MockUser
       new FakeMovementAction(maxGetMovementResponse.copy(transportMode = TransportModeModel("modeCode", None))),
       formProvider,
       Helpers.stubMessagesControllerComponents(),
-      view,
-      fakeBetaAllowListAction
+      view
     )
   }
 

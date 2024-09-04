@@ -41,7 +41,6 @@ class TransportUnitCheckAnswersControllerSpec extends SpecBase with MockUserAnsw
     lazy val controller = new TransportUnitCheckAnswersController(
       messagesApi,
       mockUserAnswersService,
-      fakeBetaAllowListAction,
       new FakeTransportUnitNavigator(testOnwardRoute),
       fakeAuthAction,
       new FakeDataRetrievalAction(userAnswers, Some(testMinTraderKnownFacts)),

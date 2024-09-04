@@ -36,7 +36,6 @@ class GuarantorCheckAnswersController @Inject()(
                                                  override val getData: DataRetrievalAction,
                                                  override val requireData: DataRequiredAction,
                                                  override val withMovement: MovementAction,
-                                                 override val betaAllowList: BetaAllowListAction,
                                                  val cyaHelper: GuarantorCheckAnswersHelper,
                                                  val controllerComponents: MessagesControllerComponents,
                                                  view: GuarantorCheckAnswersView

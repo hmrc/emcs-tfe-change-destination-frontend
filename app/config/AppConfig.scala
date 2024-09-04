@@ -65,8 +65,6 @@ class AppConfig @Inject()(servicesConfig: ServicesConfig, configuration: Configu
 
   def returnToDraft(implicit request: DataRequest[_]): String = controllers.routes.TaskListController.onPageLoad(request.ern, request.arc).url
 
-  def redirectToFeedbackSurvey: Boolean = isEnabled(RedirectToFeedbackSurvey)
-
   lazy val timeout: Int = configuration.get[Int]("timeout-dialog.timeout")
   lazy val countdown: Int = configuration.get[Int]("timeout-dialog.countdown")
 
@@ -105,10 +103,6 @@ class AppConfig @Inject()(servicesConfig: ServicesConfig, configuration: Configu
 
   lazy val earliestDispatchDate: LocalDate = LocalDate.parse(configuration.get[String]("constants.earliestDispatchDate"))
   lazy val earliestInvoiceDate: LocalDate = LocalDate.parse(configuration.get[String]("constants.earliestInvoiceDate"))
-
-  def betaAllowListCheckingEnabled: Boolean = isEnabled(CheckBetaAllowList)
-
-  def betaCheckServiceName: String = configuration.get[String]("beta.serviceName")
 
   lazy val guarantorRequiredUrl = configuration.get[String]("urls.guarantorRequired")
 }

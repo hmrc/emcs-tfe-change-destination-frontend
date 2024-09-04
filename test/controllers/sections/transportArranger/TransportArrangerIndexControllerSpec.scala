@@ -44,7 +44,6 @@ class TransportArrangerIndexControllerSpec extends SpecBase with MockUserAnswers
       new FakeDataRetrievalAction(userAnswers, Some(testMinTraderKnownFacts)),
       dataRequiredAction,
       new FakeMovementAction(movementResponse),
-      fakeBetaAllowListAction,
       Helpers.stubMessagesControllerComponents()
     )
   }

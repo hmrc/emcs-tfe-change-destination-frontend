@@ -41,7 +41,6 @@ class MovementCheckAnswersControllerSpec extends SpecBase with MockUserAnswersSe
     lazy val controller = new MovementCheckAnswersController(
       messagesApi,
       mockUserAnswersService,
-      fakeBetaAllowListAction,
       new FakeMovementNavigator(testOnwardRoute),
       fakeAuthAction,
       new FakeDataRetrievalAction(userAnswers, Some(testMinTraderKnownFacts)),

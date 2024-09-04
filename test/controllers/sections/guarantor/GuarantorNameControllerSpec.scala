@@ -56,7 +56,6 @@ class GuarantorNameControllerSpec extends SpecBase with MockUserAnswersService {
       new FakeDataRetrievalAction(optUserAnswers, Some(testMinTraderKnownFacts)),
       dataRequiredAction,
       new FakeMovementAction(movementResponse),
-      fakeBetaAllowListAction,
       formProvider,
       messagesControllerComponents,
       view

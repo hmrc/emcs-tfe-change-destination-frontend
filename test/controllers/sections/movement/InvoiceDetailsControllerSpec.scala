@@ -58,7 +58,6 @@ class InvoiceDetailsControllerSpec extends SpecBase with MockUserAnswersService 
       auth = fakeAuthAction,
       getData = new FakeDataRetrievalAction(userAnswers, Some(testMinTraderKnownFacts)),
       requireData = dataRequiredAction,
-      betaAllowList = fakeBetaAllowListAction,
       withMovement = new FakeMovementAction(maxGetMovementResponse.copy(eadEsad = maxGetMovementResponse.eadEsad.copy(invoiceDate = Some("2023-01-01")))),
       formProvider = formProvider,
       userAnswersService = mockUserAnswersService,

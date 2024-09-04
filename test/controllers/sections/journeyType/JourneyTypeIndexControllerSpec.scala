@@ -42,7 +42,6 @@ class JourneyTypeIndexControllerSpec extends SpecBase with MockUserAnswersServic
       new FakeDataRetrievalAction(userAnswers, Some(testMinTraderKnownFacts)),
       dataRequiredAction,
       new FakeMovementAction(maxGetMovementResponse),
-      fakeBetaAllowListAction,
       Helpers.stubMessagesControllerComponents()
     )
   }

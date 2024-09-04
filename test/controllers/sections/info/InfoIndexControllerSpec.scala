@@ -40,7 +40,6 @@ class InfoIndexControllerSpec extends SpecBase with MockUserAnswersService with 
     lazy val controller = new InfoIndexController(
       messagesApi = messagesApi,
       userAnswersService = mockUserAnswersService,
-      betaAllowList = fakeBetaAllowListAction,
       navigator = new FakeInfoNavigator(testOnwardRoute),
       auth = fakeAuthAction,
       preDraftService = mockPreDraftService,

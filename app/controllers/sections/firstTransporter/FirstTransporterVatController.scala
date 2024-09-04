@@ -41,7 +41,6 @@ class FirstTransporterVatController @Inject()(
                                                override val getData: DataRetrievalAction,
                                                override val requireData: DataRequiredAction,
                                                override val withMovement: MovementAction,
-                                               override val betaAllowList: BetaAllowListAction,
                                                formProvider: FirstTransporterVatFormProvider,
                                                val controllerComponents: MessagesControllerComponents,
                                                view: FirstTransporterVatView

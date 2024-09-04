@@ -50,7 +50,6 @@ class TransportArrangerNameControllerSpec extends SpecBase with MockUserAnswersS
       new FakeDataRetrievalAction(userAnswers, Some(testMinTraderKnownFacts)),
       dataRequiredAction,
       new FakeMovementAction(maxGetMovementResponse.copy(transportArrangerTrader = None)),
-      fakeBetaAllowListAction,
       formProvider,
       Helpers.stubMessagesControllerComponents(),
       view
