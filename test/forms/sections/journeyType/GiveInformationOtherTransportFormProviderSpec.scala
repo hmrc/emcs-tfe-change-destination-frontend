@@ -16,8 +16,8 @@
 
 package forms.sections.journeyType
 
+import forms.ALPHANUMERIC_REGEX
 import forms.behaviours.StringFieldBehaviours
-import forms.{ALPHANUMERIC_REGEX, XSS_REGEX}
 import play.api.data.FormError
 
 class GiveInformationOtherTransportFormProviderSpec extends StringFieldBehaviours {
@@ -91,7 +91,5 @@ class GiveInformationOtherTransportFormProviderSpec extends StringFieldBehaviour
         )
       }
     }
-
-
   }
 }
