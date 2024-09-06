@@ -34,7 +34,11 @@ class ConsigneeExportInformationFormProvider @Inject() extends Mappings {
           invalidKey = "consigneeExportInformation.error.invalid"
         )
       )
-        .verifying(nonEmptySet("consigneeExportInformation.error.required"))
-        .verifying(exclusiveItemInSet("consigneeExportInformation.error.exclusive", NoInformation.toString))
+        .verifying(
+          firstError(
+            nonEmptySet("consigneeExportInformation.error.required"),
+            exclusiveItemInSet("consigneeExportInformation.error.exclusive", NoInformation.toString)
+          )
+        )
     )
 }

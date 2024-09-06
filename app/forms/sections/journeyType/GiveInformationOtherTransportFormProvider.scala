@@ -36,8 +36,12 @@ class GiveInformationOtherTransportFormProvider @Inject() extends BaseTextareaFo
               .trim,
             identity
           )
-          .verifying(maxLength(TEXTAREA_MAX_LENGTH, s"giveInformationOtherTransport.error.length"))
-          .verifying(regexpUnlessEmpty(ALPHANUMERIC_REGEX, s"giveInformationOtherTransport.error.character"))
-          .verifying(regexpUnlessEmpty(XSS_REGEX, s"giveInformationOtherTransport.error.xss"))
+          .verifying(
+            firstError(
+              maxLength(TEXTAREA_MAX_LENGTH, s"giveInformationOtherTransport.error.length"),
+              regexpUnlessEmpty(ALPHANUMERIC_REGEX, s"giveInformationOtherTransport.error.character"),
+              regexpUnlessEmpty(XSS_REGEX, s"giveInformationOtherTransport.error.xss")
+            )
+          )
     )
 }

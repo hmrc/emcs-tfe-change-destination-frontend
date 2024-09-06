@@ -35,9 +35,13 @@ class TransportUnitGiveMoreInformationFormProvider @Inject() extends BaseTextare
             .trim,
           identity
         )
-        .verifying(maxLength(350, "transportUnitGiveMoreInformation.error.length"))
-        .verifying(regexpUnlessEmpty(ALPHANUMERIC_REGEX, s"transportUnitGiveMoreInformation.error.character"))
-        .verifying(regexpUnlessEmpty(XSS_REGEX, "transportUnitGiveMoreInformation.error.xss"))
+        .verifying(
+          firstError(
+            maxLength(350, "transportUnitGiveMoreInformation.error.length"),
+            regexpUnlessEmpty(ALPHANUMERIC_REGEX, s"transportUnitGiveMoreInformation.error.character"),
+            regexpUnlessEmpty(XSS_REGEX, "transportUnitGiveMoreInformation.error.xss")
+          )
+        )
       )
     )
 }

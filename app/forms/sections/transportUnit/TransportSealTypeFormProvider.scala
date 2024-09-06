@@ -29,13 +29,20 @@ class TransportSealTypeFormProvider @Inject() extends BaseTextareaFormProvider[T
   def apply(): Form[TransportSealTypeModel] = Form(
     mapping(
       "value" -> text("transportSealType.sealType.error.required")
-        .verifying(maxLength(35, "transportSealType.sealType.error.length"))
-        .verifying(regexpUnlessEmpty(XSS_REGEX, s"transportSealType.sealType.error.invalid")),
+        .verifying(
+          firstError(
+            maxLength(35, "transportSealType.sealType.error.length"),
+            regexpUnlessEmpty(XSS_REGEX, s"transportSealType.sealType.error.invalid")
+          )
+        ),
       "moreInfo" -> optional(text()
-        .verifying(maxLength(TEXTAREA_MAX_LENGTH, s"transportSealType.moreInfo.error.length"))
-        .verifying(regexp(s"$ALPHANUMERIC_REGEX", s"transportSealType.moreInfo.error.invalid"))
-        .verifying(regexp(XSS_REGEX, s"transportSealType.moreInfo.error.invalidCharacter"))
-      )
+        .verifying(
+          firstError(
+            maxLength(TEXTAREA_MAX_LENGTH, s"transportSealType.moreInfo.error.length"),
+            regexp(s"$ALPHANUMERIC_REGEX", s"transportSealType.moreInfo.error.invalid"),
+            regexp(XSS_REGEX, s"transportSealType.moreInfo.error.invalidCharacter")
+          )
+        ))
     )(TransportSealTypeModel.apply)(TransportSealTypeModel.unapply)
   )
 }

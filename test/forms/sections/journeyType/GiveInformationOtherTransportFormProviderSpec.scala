@@ -16,8 +16,8 @@
 
 package forms.sections.journeyType
 
+import forms.ALPHANUMERIC_REGEX
 import forms.behaviours.StringFieldBehaviours
-import forms.{ALPHANUMERIC_REGEX, XSS_REGEX}
 import play.api.data.FormError
 
 class GiveInformationOtherTransportFormProviderSpec extends StringFieldBehaviours {
@@ -87,12 +87,9 @@ class GiveInformationOtherTransportFormProviderSpec extends StringFieldBehaviour
         val result = form.bind(data)
 
         result.errors mustBe Seq(
-          FormError("value", "giveInformationOtherTransport.error.character", Seq(ALPHANUMERIC_REGEX)),
-          FormError("value", "giveInformationOtherTransport.error.xss", Seq(XSS_REGEX))
+          FormError("value", "giveInformationOtherTransport.error.character", Seq(ALPHANUMERIC_REGEX))
         )
       }
     }
-
-
   }
 }

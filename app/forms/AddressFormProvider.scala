@@ -33,24 +33,36 @@ class AddressFormProvider @Inject() extends Mappings {
   def apply(): Form[UserAddress] =
     Form(mapping(
       "property" -> optional(text()
-        .verifying(maxLength(propertyMax, s"address.property.error.length"))
-        .verifying(regexp(ALPHANUMERIC_REGEX, s"address.property.error.characters"))
-        .verifying(regexpUnlessEmpty(XSS_REGEX, s"address.property.error.invalid"))),
-
+        .verifying(
+          firstError(
+            maxLength(propertyMax, s"address.property.error.length"),
+            regexp(ALPHANUMERIC_REGEX, s"address.property.error.characters"),
+            regexpUnlessEmpty(XSS_REGEX, s"address.property.error.invalid")
+          )
+        )),
       "street" -> text(s"address.street.error.required")
-        .verifying(maxLength(streetMax, s"address.street.error.length"))
-        .verifying(regexp(ALPHANUMERIC_REGEX, s"address.street.error.characters"))
-        .verifying(regexpUnlessEmpty(XSS_REGEX, s"address.street.error.invalid")),
-
+        .verifying(
+          firstError(
+            maxLength(streetMax, s"address.street.error.length"),
+            regexp(ALPHANUMERIC_REGEX, s"address.street.error.characters"),
+            regexpUnlessEmpty(XSS_REGEX, s"address.street.error.invalid")
+          )
+        ),
       "town" -> text(s"address.town.error.required")
-        .verifying(maxLength(townMax, s"address.town.error.length"))
-        .verifying(regexp(ALPHANUMERIC_REGEX, s"address.town.error.characters"))
-        .verifying(regexpUnlessEmpty(XSS_REGEX, s"address.town.error.invalid")),
-
+        .verifying(
+          firstError(
+            maxLength(townMax, s"address.town.error.length"),
+            regexp(ALPHANUMERIC_REGEX, s"address.town.error.characters"),
+            regexpUnlessEmpty(XSS_REGEX, s"address.town.error.invalid")
+          )
+        ),
       "postcode" -> text(s"address.postcode.error.required")
-        .verifying(maxLength(postcodeMax, s"address.postcode.error.length"))
-        .verifying(regexp(ALPHANUMERIC_REGEX, s"address.postcode.error.characters"))
-        .verifying(regexpUnlessEmpty(XSS_REGEX, s"address.postcode.error.invalid"))
-    )(UserAddress.apply)(UserAddress.unapply)
-  )
+        .verifying(
+          firstError(
+            maxLength(postcodeMax, s"address.postcode.error.length"),
+            regexp(ALPHANUMERIC_REGEX, s"address.postcode.error.characters"),
+            regexpUnlessEmpty(XSS_REGEX, s"address.postcode.error.invalid")
+          )
+        )
+    )(UserAddress.apply)(UserAddress.unapply))
 }
