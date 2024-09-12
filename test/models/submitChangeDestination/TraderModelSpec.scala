@@ -433,7 +433,7 @@ class TraderModelSpec extends SpecBase {
             .set(ConsignorAddressPage, testUserAddress.copy(street = "consignor street"))
         )
 
-        TraderModel.applyTransportArranger mustBe consignorTrader
+        TraderModel.applyTransportArranger mustBe None
       }
       "when Transport Arranger is Consignee" in {
         implicit val dr: DataRequest[_] = dataRequest(
@@ -449,7 +449,7 @@ class TraderModelSpec extends SpecBase {
             .set(ConsigneeAddressPage, testUserAddress.copy(street = "consignee street"))
         )
 
-        TraderModel.applyTransportArranger mustBe consigneeTraderWithErn
+        TraderModel.applyTransportArranger mustBe None
       }
       Seq(TransportArranger.GoodsOwner, TransportArranger.Other).foreach(
         transportArranger =>
@@ -463,7 +463,7 @@ class TraderModelSpec extends SpecBase {
                 .set(TransportArrangerVatPage, "arranger vat")
             )
 
-            TraderModel.applyTransportArranger mustBe transportArrangerTrader
+            TraderModel.applyTransportArranger mustBe Some(transportArrangerTrader)
           }
       )
     }

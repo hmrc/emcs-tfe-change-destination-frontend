@@ -21,9 +21,10 @@ import config.AppConfig
 import fixtures.SubmitChangeDestinationFixtures
 import models.requests.DataRequest
 import models.response.emcsTfe.GuarantorType
-import models.sections.ReviewAnswer.KeepAnswers
+import models.sections.ReviewAnswer.{ChangeAnswers, KeepAnswers}
 import models.sections.consignee.ConsigneeExportInformation.EoriNumber
 import models.sections.info.ChangeType.Destination
+import models.sections.transportArranger.TransportArranger
 import pages.sections.consignee.{ConsigneeAddressPage, ConsigneeBusinessNamePage, ConsigneeExcisePage, ConsigneeExportInformationPage}
 import pages.sections.destination.{DestinationAddressPage, DestinationBusinessNamePage, DestinationConsigneeDetailsPage, DestinationWarehouseExcisePage}
 import pages.sections.firstTransporter.FirstTransporterReviewPage
@@ -31,7 +32,7 @@ import pages.sections.guarantor.GuarantorReviewPage
 import pages.sections.info.ChangeTypePage
 import pages.sections.journeyType.JourneyTypeReviewPage
 import pages.sections.movement.MovementReviewAnswersPage
-import pages.sections.transportArranger.TransportArrangerReviewPage
+import pages.sections.transportArranger.{TransportArrangerAddressPage, TransportArrangerNamePage, TransportArrangerPage, TransportArrangerReviewPage}
 import pages.sections.transportUnit.TransportUnitsReviewPage
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
@@ -110,6 +111,58 @@ class SubmitChangeDestinationModelSpec extends SpecBase with SubmitChangeDestina
           ),
           newTransportArrangerTrader = None
         )
+      }
+
+      "when all sections have changed and Transport Arranger has changed to be the consignee" - {
+
+        "newTransportArrangerTrader should be None [RIM Rule 12]" in {
+          implicit val dr: DataRequest[_] = dataRequest(
+            request = fakeRequest,
+            answers = baseFullUserAnswers
+              .set(GuarantorReviewPage, KeepAnswers)
+              .set(TransportArrangerReviewPage, ChangeAnswers)
+              .set(TransportArrangerPage, TransportArranger.Consignee)
+              .set(TransportArrangerNamePage, "Consignee arranger")
+              .set(TransportArrangerAddressPage, testUserAddress.copy(street = "Consignee arranger street")),
+            ern = testGreatBritainWarehouseErn
+          )
+
+          SubmitChangeDestinationModel.apply mustBe maxSubmitChangeDestination.copy(
+            destinationChanged = maxSubmitChangeDestination.destinationChanged.copy(
+              movementGuarantee = None
+            ),
+            updateEadEsad = maxSubmitChangeDestination.updateEadEsad.copy(
+              changedTransportArrangement = Some(TransportArranger.Consignee)
+            ),
+            newTransportArrangerTrader = None
+          )
+        }
+      }
+
+      "when all sections have changed and Transport Arranger has changed to be the consignor" - {
+
+        "newTransportArrangerTrader should be None [RIM Rule 12]" in {
+          implicit val dr: DataRequest[_] = dataRequest(
+            request = fakeRequest,
+            answers = baseFullUserAnswers
+              .set(GuarantorReviewPage, KeepAnswers)
+              .set(TransportArrangerReviewPage, ChangeAnswers)
+              .set(TransportArrangerPage, TransportArranger.Consignor)
+              .set(TransportArrangerNamePage, "Consignor arranger")
+              .set(TransportArrangerAddressPage, testUserAddress.copy(street = "Consignor arranger street")),
+            ern = testGreatBritainWarehouseErn
+          )
+
+          SubmitChangeDestinationModel.apply mustBe maxSubmitChangeDestination.copy(
+            destinationChanged = maxSubmitChangeDestination.destinationChanged.copy(
+              movementGuarantee = None
+            ),
+            updateEadEsad = maxSubmitChangeDestination.updateEadEsad.copy(
+              changedTransportArrangement = Some(TransportArranger.Consignor)
+            ),
+            newTransportArrangerTrader = None
+          )
+        }
       }
 
       "when all sections have changed apart from First Transporter (no new guarantor required)" in {

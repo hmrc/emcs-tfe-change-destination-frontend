@@ -37,7 +37,7 @@ object SubmitChangeDestinationModel extends ModelConstructorHelpers {
 
   def apply(implicit request: DataRequest[_]): SubmitChangeDestinationModel =
     SubmitChangeDestinationModel(
-      newTransportArrangerTrader = whenSectionChanged(TransportArrangerReviewPage)(TraderModel.applyTransportArranger),
+      newTransportArrangerTrader = whenSectionChanged(TransportArrangerReviewPage)(TraderModel.applyTransportArranger).flatten,
       updateEadEsad = UpdateEadEsadModel.apply,
       destinationChanged = DestinationChangedModel.apply,
       newTransporterTrader = Some(TraderModel.applyFirstTransporter),
