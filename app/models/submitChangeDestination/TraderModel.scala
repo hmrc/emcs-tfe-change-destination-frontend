@@ -169,17 +169,17 @@ object TraderModel extends ModelConstructorHelpers {
     }
   }
 
-  def applyTransportArranger(implicit request: DataRequest[_]): TraderModel =
+  def applyTransportArranger(implicit request: DataRequest[_]): Option[TraderModel] =
     mandatoryPage(TransportArrangerPage) match {
-      case TransportArranger.Consignor => TraderModel.applyConsignor
-      case TransportArranger.Consignee => TraderModel.applyConsignee
-      case _ => TraderModel(
+      case TransportArranger.Consignor => None
+      case TransportArranger.Consignee => None
+      case _ => Some(TraderModel(
         traderExciseNumber = None,
         traderName = Some(mandatoryPage(TransportArrangerNamePage)),
         address = Some(AddressModel.fromUserAddress(mandatoryPage(TransportArrangerAddressPage))),
         vatNumber = Some(mandatoryPage(TransportArrangerVatPage)),
         eoriNumber = None
-      )
+      ))
     }
 
   def applyFirstTransporter(implicit request: DataRequest[_]): TraderModel =
