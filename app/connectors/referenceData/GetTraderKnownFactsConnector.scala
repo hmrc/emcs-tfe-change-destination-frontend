@@ -37,18 +37,18 @@ trait GetTraderKnownFactsConnector {
 class GetTraderKnownFactsConnectorImpl @Inject()(val http: HttpClient,
                                               config: AppConfig) extends GetTraderKnownFactsHttpParser with GetTraderKnownFactsConnector {
 
-  def baseUrl: String = config.traderKnownFactsReferenceDataBaseUrl
+  def baseUrl: String = config.traderKnownFactsBaseUrl
 
   def getTraderKnownFacts(ern: String)
                          (implicit headerCarrier: HeaderCarrier,
                           executionContext: ExecutionContext): Future[Either[ErrorResponse, Option[TraderKnownFacts]]] =
-    get(baseUrl + "/oracle/trader-known-facts", ern)
+    get(baseUrl, ern)
       .recover {
         case JsResultException(errors) =>
-          logger.warn(s"[getTraderKnownFacts] Bad JSON response from emcs-tfe-reference-data: " + errors)
+          logger.warn(s"[getTraderKnownFacts] Bad JSON response from emcs-tfe: " + errors)
           Left(JsonValidationError)
         case error =>
-          logger.warn(s"[getTraderKnownFacts] Unexpected error from reference-data: ${error.getClass} ${error.getMessage}")
+          logger.warn(s"[getTraderKnownFacts] Unexpected error from emcs-tfe: ${error.getClass} ${error.getMessage}")
           Left(UnexpectedDownstreamResponseError)
       }
 }

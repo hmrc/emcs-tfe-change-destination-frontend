@@ -54,6 +54,10 @@ class AppConfigSpec extends SpecBase with BeforeAndAfterEach with FeatureSwitchi
     ".emcsMovementsUrl() must return the correct URL" in {
       config.emcsMovementsUrl(testErn) mustBe s"http://localhost:8310/emcs/account/trader/$testErn/movements"
     }
+
+    ".traderKnownFactsBaseUrl must return to the correct URL" in {
+      config.traderKnownFactsBaseUrl mustBe s"http://localhost:8311/emcs-tfe/trader-known-facts"
+    }
   }
 
 }

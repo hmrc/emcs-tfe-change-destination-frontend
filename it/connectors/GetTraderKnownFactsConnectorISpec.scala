@@ -27,7 +27,7 @@ class GetTraderKnownFactsConnectorISpec extends AnyFreeSpec
 
   implicit private lazy val hc: HeaderCarrier = HeaderCarrier()
 
-  def url(ern: String) = s"/emcs-tfe-reference-data/oracle/trader-known-facts?exciseRegistrationId=$ern"
+  def url(ern: String) = s"/emcs-tfe/trader-known-facts?exciseRegistrationId=$ern"
 
   val testErn = "testErn"
   val testMinTraderKnownFacts: TraderKnownFacts = TraderKnownFacts(
@@ -41,72 +41,14 @@ class GetTraderKnownFactsConnectorISpec extends AnyFreeSpec
   )
 
   ".getTraderKnownFacts" - {
-    "when the feature switch is disabled" - {
-
-      def app: Application =
-        new GuiceApplicationBuilder()
-          .configure("microservice.services.emcs-tfe-reference-data.port" -> server.port)
-          .configure("features.stub-get-trader-known-facts" -> "false")
-          .build()
-
-      lazy val connector: GetTraderKnownFactsConnector = app.injector.instanceOf[GetTraderKnownFactsConnector]
-
-      "must return Right(Seq[TraderKnownFacts]) when the server responds OK" in {
-
-        server.stubFor(
-          get(urlEqualTo(url(testErn)))
-            .willReturn(
-              aResponse()
-                .withStatus(OK)
-                .withBody(Json.stringify(Json.obj("traderName" -> "testTraderName"))))
-        )
-
-        connector.getTraderKnownFacts(testErn).futureValue mustBe Right(Some(testMinTraderKnownFacts))
-      }
-
-      "must return Right(None) when the server responds NO_CONTENT" in {
-
-        server.stubFor(
-          get(urlEqualTo(url(testErn)))
-            .willReturn(aResponse().withStatus(NO_CONTENT))
-        )
-
-        connector.getTraderKnownFacts(testErn).futureValue mustBe Right(None)
-      }
-
-      "must fail when the server responds with any other status" in {
-
-        server.stubFor(
-          get(urlEqualTo(url(testErn)))
-            .willReturn(aResponse().withStatus(INTERNAL_SERVER_ERROR))
-        )
-
-        connector.getTraderKnownFacts(testErn).futureValue mustBe Left(UnexpectedDownstreamResponseError)
-      }
-
-      "must fail when the connection fails" in {
-
-        server.stubFor(
-          get(urlEqualTo(url(testErn)))
-            .willReturn(aResponse().withFault(Fault.RANDOM_DATA_THEN_CLOSE))
-        )
-
-        connector.getTraderKnownFacts(testErn).futureValue mustBe Left(UnexpectedDownstreamResponseError)
-      }
-    }
-  }
-
-  "when the feature switch is enabled" - {
-
     def app: Application =
       new GuiceApplicationBuilder()
-        .configure("microservice.services.emcs-tfe-reference-data-stub.port" -> server.port)
-        .configure("features.stub-get-trader-known-facts" -> "true")
+        .configure("microservice.services.emcs-tfe.port" -> server.port)
         .build()
 
     lazy val connector: GetTraderKnownFactsConnector = app.injector.instanceOf[GetTraderKnownFactsConnector]
 
-    "must return true when the server responds OK" in {
+    "must return Right(Seq[TraderKnownFacts]) when the server responds OK" in {
 
       server.stubFor(
         get(urlEqualTo(url(testErn)))
@@ -119,7 +61,7 @@ class GetTraderKnownFactsConnectorISpec extends AnyFreeSpec
       connector.getTraderKnownFacts(testErn).futureValue mustBe Right(Some(testMinTraderKnownFacts))
     }
 
-    "must return false when the server responds NO_CONTENT" in {
+    "must return Right(None) when the server responds NO_CONTENT" in {
 
       server.stubFor(
         get(urlEqualTo(url(testErn)))
