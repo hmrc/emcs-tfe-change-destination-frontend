@@ -31,12 +31,12 @@ class GetTraderKnownFactsConnectorSpec extends SpecBase with MockHttpClient {
 
   lazy val connector = new GetTraderKnownFactsConnectorImpl(mockHttpClient, appConfig)
 
-  "check" - {
+  "getTraderKnownFacts" - {
     "should return a successful response" - {
       "when downstream call is successful" in {
 
         MockHttpClient.get(
-          url = s"${appConfig.traderKnownFactsReferenceDataBaseUrl}/oracle/trader-known-facts",
+          url = appConfig.traderKnownFactsBaseUrl,
           parameters = Seq("exciseRegistrationId" -> testErn)
         ).returns(Future.successful(Right(Some(testMinTraderKnownFacts))))
 
@@ -47,7 +47,7 @@ class GetTraderKnownFactsConnectorSpec extends SpecBase with MockHttpClient {
     "should return an error response" - {
       "when downstream call fails" in {
         MockHttpClient.get(
-          url = s"${appConfig.traderKnownFactsReferenceDataBaseUrl}/oracle/trader-known-facts",
+          url = appConfig.traderKnownFactsBaseUrl,
           parameters = Seq("exciseRegistrationId" -> testErn)
         ).returns(Future.successful(Left(UnexpectedDownstreamResponseError)))
 
