@@ -100,13 +100,16 @@ object TraderModel extends ModelConstructorHelpers {
   def applyDeliveryPlace(movementScenario: MovementScenario)(implicit request: DataRequest[_]): Option[TraderModel] = {
     if (DestinationSection.canBeCompletedForTraderAndDestinationType) {
       if (DestinationSection.shouldStartFlowAtDestinationWarehouseExcise(movementScenario)) {
-        val exciseId: String = mandatoryPage(DestinationWarehouseExcisePage)
+        val exciseId: Option[String] = {
+          val newId = mandatoryPage(DestinationWarehouseExcisePage)
+          Option.when(!request.movementDetails.deliveryPlaceTrader.flatMap(_.traderExciseNumber).contains(newId))(newId)
+        }
         val useConsigneeDetails: Boolean = mandatoryPage(DestinationConsigneeDetailsPage)
 
         if (useConsigneeDetails) {
           val consigneeTrader = applyConsignee
           Some(TraderModel(
-            traderExciseNumber = Some(exciseId),
+            traderExciseNumber = exciseId,
             traderName = consigneeTrader.traderName,
             address = consigneeTrader.address,
             vatNumber = None,
@@ -114,7 +117,7 @@ object TraderModel extends ModelConstructorHelpers {
           ))
         } else {
           Some(TraderModel(
-            traderExciseNumber = Some(exciseId),
+            traderExciseNumber = exciseId,
             traderName = Some(mandatoryPage(DestinationBusinessNamePage)),
             address = Some(AddressModel.fromUserAddress(mandatoryPage(DestinationAddressPage))),
             vatNumber = None,
@@ -122,7 +125,11 @@ object TraderModel extends ModelConstructorHelpers {
           ))
         }
       } else if (DestinationSection.shouldStartFlowAtDestinationWarehouseVat(movementScenario)) {
-        val exciseId: Option[String] = request.userAnswers.get(DestinationWarehouseVatPage)
+        val exciseId: Option[String] = {
+          request.userAnswers.get(DestinationWarehouseVatPage).flatMap { newId =>
+            Option.when(!request.movementDetails.deliveryPlaceTrader.flatMap(_.traderExciseNumber).contains(newId))(newId)
+          }
+        }
         val useConsigneeDetails: Boolean = DestinationConsigneeDetailsPage.value.fold(false)(identity)
 
         val giveAddressAndBusinessName: Boolean =
