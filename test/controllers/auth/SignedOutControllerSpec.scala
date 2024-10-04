@@ -23,6 +23,8 @@ import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import views.html.auth.SignedOutView
 
+import java.net.URLEncoder
+
 class SignedOutControllerSpec extends SpecBase with FeatureSwitching {
 
   override lazy val config = app.injector.instanceOf[AppConfig]
@@ -52,12 +54,46 @@ class SignedOutControllerSpec extends SpecBase with FeatureSwitching {
 
     ".signOut" - {
 
-      "must return SEE_OTHER to sign-out with a redirect to feedbackSurvey" in {
+      "when not triggered because of a timeout" - {
 
-        val result = testController.signOut()(request)
+        "must return SEE_OTHER to sign-out with a redirect to feedbackSurvey" in {
 
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result) mustBe Some("http://localhost:8308/gg/sign-out?continue=http%3A%2F%2Flocalhost%3A9514%2Ffeedback%2Femcstfe%2Fbeta")
+          val result = testController.signOut()(request)
+
+          status(result) mustEqual SEE_OTHER
+          redirectLocation(result) mustBe Some(s"http://localhost:8308/gg/sign-out?continue=${URLEncoder.encode(config.feedbackFrontendSurveyUrl, "UTF-8")}")
+        }
+      }
+
+      "when triggered because of a timeout" - {
+
+        "when triggered from a page that can be saved" - {
+
+          "must return SEE_OTHER to sign-out with a redirect to timeout, data saved" in {
+
+            val request = FakeRequest("GET", "/trader/1234567890/movement/1234/consignee-information")
+
+            val result = testController.signOut(true)(request)
+
+            status(result) mustEqual SEE_OTHER
+            redirectLocation(result) mustBe
+              Some(s"http://localhost:8308/gg/sign-out?continue=${URLEncoder.encode(appConfig.host + routes.SignedOutController.signedOutSaved().url, "UTF-8")}")
+          }
+        }
+
+        "when triggered from a page that can be saved" - {
+
+          "must return SEE_OTHER to sign-out with a redirect to timeout, data not saved" in {
+
+            val request = FakeRequest("GET", "/trader/1234567890/info")
+
+            val result = testController.signOut(true)(request)
+
+            status(result) mustEqual SEE_OTHER
+            redirectLocation(result) mustBe
+              Some(s"http://localhost:8308/gg/sign-out?continue=${URLEncoder.encode(appConfig.host + routes.SignedOutController.signedOutNotSaved().url, "UTF-8")}")
+          }
+        }
       }
     }
   }
