@@ -18,7 +18,7 @@ package fixtures.messages
 
 
 trait BaseMessages { _: i18n =>
-  def titleHelper(heading: String) = s"$heading - Excise Movement and Control System - GOV.UK"
+  def titleHelper(heading: String) = s"$heading - Create and manage excise goods movements with EMCS - GOV.UK"
   val opensInNewTab: String = "(opens in new tab)"
   val hiddenSectionContent: String = "This section is"
   val infoSection: String => String = s"$hiddenSectionContent Change of destination for " + _
