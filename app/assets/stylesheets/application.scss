@@ -26,5 +26,9 @@ $hmrc-assets-path: "/emcs/change-destination/assets/lib/hmrc-frontend/hmrc/asset
   }
 }
 
+.hmrc-header__service-name {
+  width: 80%;
+}
+
 @import "accessible-autocomplete";
 @import "active-trader-info";
