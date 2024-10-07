@@ -99,4 +99,43 @@ class GetMemberStatesServiceSpec extends SpecBase with MockGetMemberStatesConnec
       }
     }
   }
+
+  ".getEuMemberStates" - {
+
+    "should return Seq[CountryModel] WITHOUT GB and XI" - {
+
+      "when Connector returns success from downstream" in {
+
+        val expectedResult = Seq(
+          countryModelAT,
+          countryModelBE
+        )
+
+        MockGetMemberStatesConnector.getMemberStates().returns(Future(Right(Seq(
+          countryModelAT,
+          countryModelBE,
+          countryModelGB,
+          countryModelXI,
+        ))))
+
+        val actualResults = testService.getEuMemberStates().futureValue
+
+        actualResults mustBe expectedResult
+      }
+    }
+
+    "should throw MemberStatesException" - {
+
+      "when Connector returns failure from downstream" in {
+
+        val expectedResult = "No member states retrieved"
+
+        MockGetMemberStatesConnector.getMemberStates().returns(Future(Left(UnexpectedDownstreamResponseError)))
+
+        val actualResult = intercept[MemberStatesException](await(testService.getEuMemberStates())).getMessage
+
+        actualResult mustBe expectedResult
+      }
+    }
+  }
 }

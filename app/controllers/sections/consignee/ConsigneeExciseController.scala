@@ -16,19 +16,19 @@
 
 package controllers.sections.consignee
 
+import cats.implicits._
 import controllers.BaseNavigationController
 import controllers.actions._
 import forms.sections.consignee.ConsigneeExciseFormProvider
-import models.Mode
-import models.UserType.{NorthernIrelandRegisteredConsignor, NorthernIrelandWarehouseKeeper}
 import models.requests.DataRequest
-import models.sections.info.movementScenario.MovementScenario.TemporaryRegisteredConsignee
+import models.sections.info.movementScenario.MovementScenario.{EuTaxWarehouse, TemporaryCertifiedConsignee, TemporaryRegisteredConsignee}
+import models.{CountryModel, Mode}
 import navigation.ConsigneeNavigator
 import pages.sections.consignee.ConsigneeExcisePage
 import pages.sections.info.DestinationTypePage
 import play.api.i18n.MessagesApi
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
-import services.UserAnswersService
+import services.{GetMemberStatesService, UserAnswersService}
 import views.html.sections.consignee.ConsigneeExciseView
 
 import javax.inject.Inject
@@ -43,46 +43,53 @@ class ConsigneeExciseController @Inject()(override val messagesApi: MessagesApi,
                                           override val userAnswersService: UserAnswersService,
                                           formProvider: ConsigneeExciseFormProvider,
                                           val controllerComponents: MessagesControllerComponents,
+                                          memberStatesService: GetMemberStatesService,
                                           view: ConsigneeExciseView
                                          ) extends BaseNavigationController with AuthActionHelper {
 
   def onPageLoad(ern: String, arc: String, mode: Mode): Action[AnyContent] =
-    authorisedDataRequestWithUpToDateMovement(ern, arc) {
-      implicit request =>
-        Ok(view(
-          fillForm(ConsigneeExcisePage, formProvider(isNorthernIrishTemporaryRegisteredConsignee)),
+    authorisedDataRequestWithUpToDateMovementAsync(ern, arc) { implicit request =>
+      withOptionalEuMemberStates { memberStates =>
+        Future.successful(Ok(view(
+          fillForm(ConsigneeExcisePage, formProvider(memberStates)),
           routes.ConsigneeExciseController.onSubmit(ern, arc, mode),
-          isNorthernIrishTemporaryRegisteredConsignee
-        ))
+          isNorthernIrishTemporaryRegisteredConsignee,
+          isNorthernIrishTemporaryCertifiedConsignee
+        )))
+      }
     }
 
 
   def onSubmit(ern: String, arc: String, mode: Mode): Action[AnyContent] =
-    authorisedDataRequestWithUpToDateMovementAsync(ern, arc) {
-      implicit request =>
-        formProvider(isNorthernIrishTemporaryRegisteredConsignee).bindFromRequest().fold(
+    authorisedDataRequestWithUpToDateMovementAsync(ern, arc) { implicit request =>
+      withOptionalEuMemberStates { memberStates =>
+        formProvider(memberStates).bindFromRequest().fold(
           formWithErrors =>
             Future.successful(
               BadRequest(view(
                 formWithErrors,
                 routes.ConsigneeExciseController.onSubmit(ern, arc, mode),
-                isNorthernIrishTemporaryRegisteredConsignee
+                isNorthernIrishTemporaryRegisteredConsignee,
+                isNorthernIrishTemporaryCertifiedConsignee
               ))
             ),
           exciseRegistrationNumber =>
             saveAndRedirect(ConsigneeExcisePage, exciseRegistrationNumber, mode)
         )
+      }
     }
 
-  private def isNorthernIrishTemporaryRegisteredConsignee(implicit request: DataRequest[_]) = {
-    val isTemporaryRegisteredConsignee: Boolean =
-      request.userAnswers.get(DestinationTypePage).contains(TemporaryRegisteredConsignee)
-    val isNorthernIrish = request.userTypeFromErn match {
-      case NorthernIrelandRegisteredConsignor | NorthernIrelandWarehouseKeeper => true
-      case _ => false
-    }
+  def withOptionalEuMemberStates[A](f: Option[Seq[CountryModel]] => Future[A])(implicit request: DataRequest[_]): Future[A] =
+    Option.when(DestinationTypePage.value.contains(EuTaxWarehouse)) {
+      memberStatesService.getEuMemberStates()
+    }.traverse(identity).flatMap(f)
 
-    isNorthernIrish && isTemporaryRegisteredConsignee
-  }
+  private def isNorthernIrishTemporaryRegisteredConsignee(implicit request: DataRequest[_]) =
+    request.userTypeFromErn.isNorthernIrelandErn &&
+      DestinationTypePage.value.contains(TemporaryRegisteredConsignee)
+
+  private def isNorthernIrishTemporaryCertifiedConsignee(implicit request: DataRequest[_]) =
+    request.userTypeFromErn.isNorthernIrelandErn &&
+      DestinationTypePage.value.contains(TemporaryCertifiedConsignee)
 
 }

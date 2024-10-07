@@ -92,6 +92,11 @@ trait BaseFixtures {
     country = "United Kingdom"
   )
 
+  val countryModelXI = CountryModel(
+    countryCode = "XI",
+    country = "Northern Ireland"
+  )
+
   val countryModelAU = CountryModel(
     countryCode = "AU",
     country = "Australia"

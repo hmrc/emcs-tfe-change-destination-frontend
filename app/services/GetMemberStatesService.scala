@@ -16,6 +16,7 @@
 
 package services
 
+import config.Constants.{GB_PREFIX, NI_PREFIX}
 import connectors.referenceData.GetMemberStatesConnector
 import models.CountryModel
 import models.response.MemberStatesException
@@ -30,22 +31,20 @@ class GetMemberStatesService @Inject()(connector: GetMemberStatesConnector)
                                       (implicit ec: ExecutionContext) {
 
 
-  def getMemberStatesSelectItems()(implicit hc: HeaderCarrier): Future[Seq[SelectItem]] = {
-    connector.getMemberStates().map {
-      case Left(_) => throw MemberStatesException("No member states retrieved")
-      case Right(value) => value.map { memberState =>
-        SelectItem(
-          value = Some(memberState.countryCode),
-          text = s"${memberState.country} (${memberState.countryCode})"
-        )
-      }
-    }
-  }
+  def getMemberStatesSelectItems()(implicit hc: HeaderCarrier): Future[Seq[SelectItem]] =
+    getMemberStates().map(_.map { memberState =>
+      SelectItem(
+        value = Some(memberState.countryCode),
+        text = s"${memberState.country} (${memberState.countryCode})"
+      )
+    })
 
-  def getMemberStates()(implicit hc: HeaderCarrier): Future[Seq[CountryModel]] = {
+  def getMemberStates()(implicit hc: HeaderCarrier): Future[Seq[CountryModel]] =
     connector.getMemberStates().map {
       case Left(_) => throw MemberStatesException("No member states retrieved")
       case Right(value) => value
     }
-  }
+
+  def getEuMemberStates()(implicit hc: HeaderCarrier): Future[Seq[CountryModel]] =
+    getMemberStates().map(_.filterNot(country => country.countryCode == GB_PREFIX || country.countryCode == NI_PREFIX))
 }

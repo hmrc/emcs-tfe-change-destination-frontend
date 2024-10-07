@@ -24,4 +24,5 @@ package object forms {
   private[forms] val GB_00_EXCISE_NUMBER_REGEX = "(GB00)[a-zA-Z0-9]{9}"
   private[forms] val XI_00_EXCISE_NUMBER_REGEX = "(XI00)[a-zA-Z0-9]{9}"
   private[forms] val XI_OR_GB_00_EXCISE_NUMBER_REGEX = "(GB00|XI00)[a-zA-Z0-9]{9}"
+  private[forms] val EXCISE_NUMBER_REGEX = "[A-Z]{2}[a-zA-Z0-9]{11}"
 }

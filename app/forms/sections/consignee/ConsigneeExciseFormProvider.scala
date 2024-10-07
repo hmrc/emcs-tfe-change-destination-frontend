@@ -17,10 +17,12 @@
 package forms.sections.consignee
 
 import config.Constants
-import forms.ALPHANUMERIC_REGEX
+import forms.{ALPHANUMERIC_REGEX, EXCISE_NUMBER_REGEX}
 import forms.mappings.Mappings
+import models.CountryModel
 import models.requests.DataRequest
-import models.sections.info.movementScenario.MovementScenario.UkTaxWarehouse
+import models.sections.info.movementScenario.MovementScenario.{TemporaryCertifiedConsignee, TemporaryRegisteredConsignee, UkTaxWarehouse}
+import pages.sections.consignee.ConsigneeExcisePage
 import pages.sections.info.DestinationTypePage
 import play.api.data.Form
 import play.api.data.validation.{Constraint, Invalid, Valid}
@@ -29,44 +31,28 @@ import javax.inject.Inject
 
 class ConsigneeExciseFormProvider @Inject() extends Mappings {
 
+  def apply(memberStates: Option[Seq[CountryModel]])(implicit request: DataRequest[_]): Form[String] = {
 
-  def apply(isNorthernIrishTemporaryRegisteredConsignee: Boolean)(implicit request: DataRequest[_]): Form[String] = {
-    val maxLengthValue = if (isNorthernIrishTemporaryRegisteredConsignee) 16 else 13
-
-    val noInputErrorKey = if (isNorthernIrishTemporaryRegisteredConsignee) {
-      "consigneeExcise.temporaryConsignee.error.noInput"
-    } else {
-      "consigneeExcise.error.noInput"
-    }
-
-    val tooLongErrorKey = if (isNorthernIrishTemporaryRegisteredConsignee) {
-      "consigneeExcise.temporaryConsignee.error.tooLong"
-    }
-    else {
-      "consigneeExcise.error.tooLong"
-    }
-
-    val invalidCharactersErrorKey = if (isNorthernIrishTemporaryRegisteredConsignee) {
-      "consigneeExcise.temporaryConsignee.error.invalidCharacters"
-    }
-    else {
-      "consigneeExcise.error.invalidCharacters"
+    val keyPrefix = request.isNorthernIrelandErn -> DestinationTypePage.value match {
+      case true -> Some(TemporaryRegisteredConsignee) => "consigneeExcise.temporaryRegisteredConsignee"
+      case true -> Some(TemporaryCertifiedConsignee) => "consigneeExcise.temporaryCertifiedConsignee"
+      case _ => "consigneeExcise"
     }
 
     Form(
-      "value" -> text(noInputErrorKey)
+      "value" -> text(s"$keyPrefix.error.noInput")
         .transform[String](_.toUpperCase.replace(" ", ""), identity)
-        .verifying(
-          firstError(
-            maxLength(maxLengthValue, tooLongErrorKey),
-            regexpUnlessEmpty(ALPHANUMERIC_REGEX, invalidCharactersErrorKey),
-            validateErn
-          )
-        )
+        .verifying(firstError(
+          fixedLength(13, s"$keyPrefix.error.length"),
+          regexpUnlessEmpty(ALPHANUMERIC_REGEX, s"$keyPrefix.error.invalidCharacters"),
+          regexpUnlessEmpty(EXCISE_NUMBER_REGEX, s"$keyPrefix.error.format"),
+          validateErn(memberStates)
+        ))
     )
   }
 
-  private def validateErn(implicit request: DataRequest[_]): Constraint[String] =
+  //noinspection ScalaStyle
+  private def validateErn(memberStates: Option[Seq[CountryModel]])(implicit request: DataRequest[_]): Constraint[String] =
     Constraint {
       case ern if DestinationTypePage.value.contains(UkTaxWarehouse.GB) =>
         if (Seq(Constants.GBWK_PREFIX, Constants.XIWK_PREFIX).exists(ern.startsWith)) Valid else Invalid("consigneeExcise.error.mustStartWithGBWKOrXIWK")
@@ -75,7 +61,13 @@ class ConsigneeExciseFormProvider @Inject() extends Mappings {
         if (ern.startsWith(Constants.XIWK_PREFIX)) Valid else Invalid("consigneeExcise.error.mustStartWithXIWK")
 
       case ern if DestinationTypePage.isNItoEuMovement =>
-        if (ern.startsWith(Constants.NI_PREFIX) || ern.startsWith(Constants.GB_PREFIX)) Invalid("consigneeExcise.error.mustNotStartWithGBOrXI") else Valid
+        if (ern.startsWith(Constants.NI_PREFIX) || ern.startsWith(Constants.GB_PREFIX)) Invalid("consigneeExcise.error.mustNotStartWithGBOrXI") else {
+          memberStates.map(_.map(_.code)) match {
+            case Some(codes) if codes.contains(ern.take(2)) => Valid
+            case Some(_) => Invalid("consigneeExcise.error.invalidMemberState")
+            case _ => Valid
+          }
+        }
 
       case _ =>
         Valid

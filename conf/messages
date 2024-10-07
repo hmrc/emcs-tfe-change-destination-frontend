@@ -475,21 +475,35 @@ firstTransporterCheckAnswers.heading = Check your answers
 firstTransporterName.checkYourAnswers.label = Business name
 firstTransporterVat.checkYourAnswers.label = VAT registration number
 
-consigneeExcise.temporaryConsignee.heading = What is the Temporary Registered Consignee’s authorisation reference?
-consigneeExcise.temporaryConsignee.title = What is the Temporary Registered Consignee’s authorisation reference?
-consigneeExcise.temporaryConsignee.hint = This contains 13 characters, starting with 2 letters that represent the member state of the Temporary Registered Consignee. For example, GB12345678900. This is sometimes referred to as a Temporary Registration Code.
-consigneeExcise.temporaryConsignee.error.noInput = Enter the authorisation reference
-consigneeExcise.temporaryConsignee.error.tooLong = The authorisation reference must be 16 characters or less
-consigneeExcise.temporaryConsignee.error.invalidCharacters = The authorisation reference must only contain letters and numbers
 consigneeExcise.heading = What is the consignee’s excise registration number (ERN)?
 consigneeExcise.title = What is the consignee’s excise registration number (ERN)?
-consigneeExcise.hint = An ERN contains 13 characters, starting with GB. It can be found on your approval letter.
+consigneeExcise.hint = An ERN contains 13 characters, starting with 2 letters that represent the member state of the consignee, such as GBWK123456789. It can be found on your approval letter.
+
+consigneeExcise.temporaryRegisteredConsignee.heading = What is the Temporary Registered Consignee’s authorisation reference?
+consigneeExcise.temporaryRegisteredConsignee.title = What is the Temporary Registered Consignee’s authorisation reference?
+consigneeExcise.temporaryRegisteredConsignee.hint = This contains 13 characters, starting with 2 letters that represent the member state of the Temporary Registered Consignee. For example, XI12345678900. This is also known as a Temporary Consignment Authorisation (TCA) number.
+consigneeExcise.temporaryRegisteredConsignee.error.noInput = Enter the authorisation reference
+consigneeExcise.temporaryRegisteredConsignee.error.length = The authorisation reference must be 13 characters
+consigneeExcise.temporaryRegisteredConsignee.error.invalidCharacters = The authorisation reference must only contain letters and numbers
+consigneeExcise.temporaryRegisteredConsignee.error.format = Authorisation reference must start with 2 capital letters, usually followed by 11 numbers or mixed letters and numbers
+
+consigneeExcise.temporaryCertifiedConsignee.heading = What is the Temporary Certified Consignee’s authorisation reference?
+consigneeExcise.temporaryCertifiedConsignee.title = What is the Temporary Certified Consignee’s authorisation reference?
+consigneeExcise.temporaryCertifiedConsignee.hint = This contains 13 characters, starting with 2 letters that represent the member state of the Temporary Certified Consignee. For example, XI12345678900. This is also known as a Temporary Consignment Authorisation (TCA) number.
+consigneeExcise.temporaryCertifiedConsignee.error.noInput = Enter the authorisation reference
+consigneeExcise.temporaryCertifiedConsignee.error.length = The authorisation reference must be 13 characters
+consigneeExcise.temporaryCertifiedConsignee.error.invalidCharacters = The authorisation reference must only contain letters and numbers
+consigneeExcise.temporaryCertifiedConsignee.error.format = Authorisation reference must start with 2 capital letters, usually followed by 11 numbers or mixed letters and numbers
+
 consigneeExcise.error.noInput = Enter the consignee’s ERN
-consigneeExcise.error.tooLong = The ERN must be 13 characters or less
+consigneeExcise.error.length = The consignee’s ERN must be 13 characters
 consigneeExcise.error.invalidCharacters = The ERN must only contain letters and numbers
+consigneeExcise.error.format = ERN must start with 2 capital letters followed by 11 numbers or mixed letters and numbers
+consigneeExcise.error.invalidMemberState = ERN must start with a valid 2-letter EU Member State code
 consigneeExcise.error.mustStartWithGBWKOrXIWK = ERN must start with GBWK or XIWK because the destination is a tax warehouse in Great Britain
 consigneeExcise.error.mustStartWithXIWK = ERN must start with XIWK because the destination is a tax warehouse in Northern Ireland
 consigneeExcise.error.mustNotStartWithGBOrXI = ERN must not start with GBWK or XIWK because the destination is not a tax warehouse in the United Kingdom
+
 consigneeExcise.checkYourAnswersLabel.ern = Excise registration number (ERN)
 consigneeExcise.change.hidden.ern = consignee excise registration number (ERN)
 consigneeExcise.checkYourAnswersLabel.ernForTemporaryRegisteredConsignee = Identification number for Temporary Registered Consignee
