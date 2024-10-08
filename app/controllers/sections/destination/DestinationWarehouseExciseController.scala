@@ -23,7 +23,7 @@ import models.Mode
 import models.requests.DataRequest
 import navigation.DestinationNavigator
 import pages.sections.destination.DestinationWarehouseExcisePage
-import pages.sections.info.DestinationTypePage
+import pages.sections.info.{ChangeTypePage, DestinationTypePage}
 import play.api.data.Form
 import play.api.i18n.MessagesApi
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
@@ -49,17 +49,21 @@ class DestinationWarehouseExciseController @Inject()(
   def onPageLoad(ern: String, arc: String, mode: Mode): Action[AnyContent] =
     authorisedDataRequestWithUpToDateMovement(ern, arc) { implicit request =>
       withAnswer(DestinationTypePage) { movementScenario =>
-        renderView(Ok, fillForm(DestinationWarehouseExcisePage, formProvider(movementScenario)), mode)
+        withAnswer(ChangeTypePage) { changeType =>
+          renderView(Ok, fillForm(DestinationWarehouseExcisePage, formProvider(movementScenario, changeType)), mode)
+        }
       }
     }
 
   def onSubmit(ern: String, arc: String, mode: Mode): Action[AnyContent] =
     authorisedDataRequestWithUpToDateMovementAsync(ern, arc) { implicit request =>
       withAnswerAsync(DestinationTypePage) { movementScenario =>
-        formProvider(movementScenario).bindFromRequest().fold(
-          formWithError => Future.successful(renderView(BadRequest, formWithError, mode)),
-          saveAndRedirect(DestinationWarehouseExcisePage, _, mode)
-        )
+        withAnswerAsync(ChangeTypePage) { changeType =>
+          formProvider(movementScenario, changeType).bindFromRequest().fold(
+            formWithError => Future.successful(renderView(BadRequest, formWithError, mode)),
+            saveAndRedirect(DestinationWarehouseExcisePage, _, mode)
+          )
+        }
       }
     }
 

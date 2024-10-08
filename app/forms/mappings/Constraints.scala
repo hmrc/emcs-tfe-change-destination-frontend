@@ -121,26 +121,9 @@ trait Constraints {
         Invalid(errorKey, args: _*)
     }
 
-  protected def decimalMaxLength(maximum: Int, errorKey: String): Constraint[String] =
-    Constraint {
-      case str if str.replace(".", "").length <= maximum =>
-        Valid
-      case _ =>
-        Invalid(errorKey, maximum)
-    }
-
-
   protected def isDecimal(errorKey: String): Constraint[String] =
     Constraint {
       case answer if Try(BigDecimal(answer)).isSuccess =>
-        Valid
-      case _ =>
-        Invalid(errorKey)
-    }
-
-  protected def isInt(errorKey: String): Constraint[String] =
-    Constraint {
-      case answer if Try(BigInt(answer)).isSuccess =>
         Valid
       case _ =>
         Invalid(errorKey)
@@ -160,14 +143,6 @@ trait Constraints {
         Valid
       case _ =>
         Invalid(errorKey, max)
-    }
-
-  protected def decimalMaxAmount(maximum: BigDecimal, errorKey: String): Constraint[BigDecimal] =
-    Constraint {
-      case answer if answer <= maximum =>
-        Valid
-      case _ =>
-        Invalid(errorKey, maximum)
     }
 
   protected def maxDate(maximum: LocalDate, errorKey: String, args: Any*): Constraint[LocalDate] =

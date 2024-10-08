@@ -795,6 +795,7 @@ destinationWarehouseExcise.error.invalidCharacter = Excise ID of the tax warehou
 destinationWarehouseExcise.error.invalidGB00 = Excise ID must begin GB00, followed by 9 characters
 destinationWarehouseExcise.error.invalidXI00 = Excise ID must begin XI00, followed by 9 characters
 destinationWarehouseExcise.error.invalidXIOrGB = Excise ID must not begin XI or GB because the destination of this movement is not to a UK tax warehouse
+destinationWarehouseExcise.error.sameAsExisting = The excise ID for the destination warehouse must not be the same as the previous submission of this movement
 destinationWarehouseExcise.checkYourAnswersLabel = Warehouse excise ID
 destinationWarehouseExcise.change.hidden = Warehouse excise ID
 
