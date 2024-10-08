@@ -266,18 +266,19 @@ class DestinationWarehouseExciseFormProviderSpec extends SpecBase with StringFie
           }
         }
       }
-      "for movement scenarios that are not tax warehouses or registered consignee" - {
-        MovementScenario.values.filterNot(MovementScenario.taxWarehouses :+ MovementScenario.RegisteredConsignee contains _) foreach { movementScenario =>
-          s"when movement scenario is $movementScenario" - {
-            "must return Valid" in {
-              implicit val dr: DataRequest[_] = dataRequest(FakeRequest())
-              val result =
-                new DestinationWarehouseExciseFormProvider()
-                  .inputIsValidForChangeType(movementScenario, ChangeType.Destination)
-                  .apply("id")
+    }
 
-              result mustBe Valid
-            }
+    "for movement scenarios that are not tax warehouses or registered consignee" - {
+      MovementScenario.values.filterNot(MovementScenario.taxWarehouses :+ MovementScenario.RegisteredConsignee contains _) foreach { movementScenario =>
+        s"when movement scenario is $movementScenario" - {
+          "must return Valid" in {
+            implicit val dr: DataRequest[_] = dataRequest(FakeRequest())
+            val result =
+              new DestinationWarehouseExciseFormProvider()
+                .inputIsValidForChangeType(movementScenario, ChangeType.Destination)
+                .apply("id")
+
+            result mustBe Valid
           }
         }
       }

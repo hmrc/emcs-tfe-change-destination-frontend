@@ -25,7 +25,7 @@ import models.sections.info.movementScenario.MovementScenario.{EuTaxWarehouse, T
 import models.{CountryModel, Mode}
 import navigation.ConsigneeNavigator
 import pages.sections.consignee.ConsigneeExcisePage
-import pages.sections.info.DestinationTypePage
+import pages.sections.info.{ChangeTypePage, DestinationTypePage}
 import play.api.i18n.MessagesApi
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import services.{GetMemberStatesService, UserAnswersService}
@@ -50,12 +50,18 @@ class ConsigneeExciseController @Inject()(override val messagesApi: MessagesApi,
   def onPageLoad(ern: String, arc: String, mode: Mode): Action[AnyContent] =
     authorisedDataRequestWithUpToDateMovementAsync(ern, arc) { implicit request =>
       withOptionalEuMemberStates { memberStates =>
-        Future.successful(Ok(view(
-          fillForm(ConsigneeExcisePage, formProvider(memberStates)),
-          routes.ConsigneeExciseController.onSubmit(ern, arc, mode),
-          isNorthernIrishTemporaryRegisteredConsignee,
-          isNorthernIrishTemporaryCertifiedConsignee
-        )))
+        withAnswerAsync(DestinationTypePage) {
+          movementScenario =>
+            withAnswerAsync(ChangeTypePage) {
+              changeType =>
+                Future.successful(Ok(view(
+                  fillForm(ConsigneeExcisePage, formProvider(memberStates, movementScenario, changeType)),
+                  routes.ConsigneeExciseController.onSubmit(ern, arc, mode),
+                  isNorthernIrishTemporaryRegisteredConsignee,
+                  isNorthernIrishTemporaryCertifiedConsignee
+                )))
+            }
+        }
       }
     }
 
@@ -63,23 +69,29 @@ class ConsigneeExciseController @Inject()(override val messagesApi: MessagesApi,
   def onSubmit(ern: String, arc: String, mode: Mode): Action[AnyContent] =
     authorisedDataRequestWithUpToDateMovementAsync(ern, arc) { implicit request =>
       withOptionalEuMemberStates { memberStates =>
-        formProvider(memberStates).bindFromRequest().fold(
-          formWithErrors =>
-            Future.successful(
-              BadRequest(view(
-                formWithErrors,
-                routes.ConsigneeExciseController.onSubmit(ern, arc, mode),
-                isNorthernIrishTemporaryRegisteredConsignee,
-                isNorthernIrishTemporaryCertifiedConsignee
-              ))
-            ),
-          exciseRegistrationNumber =>
-            saveAndRedirect(ConsigneeExcisePage, exciseRegistrationNumber, mode)
-        )
+        withAnswerAsync(DestinationTypePage) {
+          movementScenario =>
+            withAnswerAsync(ChangeTypePage) {
+              changeType =>
+                formProvider(memberStates, movementScenario, changeType).bindFromRequest().fold(
+                  formWithErrors =>
+                    Future.successful(
+                      BadRequest(view(
+                        formWithErrors,
+                        routes.ConsigneeExciseController.onSubmit(ern, arc, mode),
+                        isNorthernIrishTemporaryRegisteredConsignee,
+                        isNorthernIrishTemporaryCertifiedConsignee
+                      ))
+                    ),
+                  exciseRegistrationNumber =>
+                    saveAndRedirect(ConsigneeExcisePage, exciseRegistrationNumber, mode)
+                )
+            }
+        }
       }
     }
 
-  def withOptionalEuMemberStates[A](f: Option[Seq[CountryModel]] => Future[A])(implicit request: DataRequest[_]): Future[A] =
+  private def withOptionalEuMemberStates[A](f: Option[Seq[CountryModel]] => Future[A])(implicit request: DataRequest[_]): Future[A] =
     Option.when(DestinationTypePage.value.contains(EuTaxWarehouse)) {
       memberStatesService.getEuMemberStates()
     }.traverse(identity).flatMap(f)

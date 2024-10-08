@@ -17,13 +17,19 @@
 package forms.sections.consignee
 
 import base.SpecBase
+import fixtures.messages.sections.consignee.ConsigneeExciseMessages.English
 import forms.behaviours.StringFieldBehaviours
 import models.CountryModel
 import models.requests.DataRequest
+import models.sections.info.ChangeType
+import models.sections.info.ChangeType.ChangeConsignee
+import models.sections.info.movementScenario.MovementScenario
 import models.sections.info.movementScenario.MovementScenario.{EuTaxWarehouse, TemporaryCertifiedConsignee, TemporaryRegisteredConsignee, UkTaxWarehouse}
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import pages.sections.info.DestinationTypePage
 import play.api.data.FormError
+import play.api.data.validation.{Invalid, Valid, ValidationResult}
+import play.api.i18n.Messages
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 
@@ -47,11 +53,12 @@ class ConsigneeExciseFormProviderSpec extends StringFieldBehaviours with GuiceOn
   )
 
   "ConsigneeExciseFormProvider" - {
+    implicit val msgs: Messages = messages(Seq(English.lang))
 
     "when a value is not provided" - {
       "for a Northern Ireland Temporary Registered Consignee" - {
         "must error with the expected msg key" in {
-          val form = new ConsigneeExciseFormProvider().apply(None)(niTemporaryRegisteredConsignee)
+          val form = new ConsigneeExciseFormProvider().apply(None, UkTaxWarehouse.GB, ChangeConsignee)(niTemporaryRegisteredConsignee)
 
           val boundForm = form.bind(Map(fieldName -> ""))
           boundForm.errors.headOption mustBe Some(FormError(fieldName, "consigneeExcise.temporaryRegisteredConsignee.error.noInput", Seq()))
@@ -59,7 +66,7 @@ class ConsigneeExciseFormProviderSpec extends StringFieldBehaviours with GuiceOn
       }
       "for a Northern Ireland Temporary Certified Consignee" - {
         "must error with the expected msg key" in {
-          val form = new ConsigneeExciseFormProvider().apply(None)(niTemporaryCertifiedConsignee)
+          val form = new ConsigneeExciseFormProvider().apply(None, UkTaxWarehouse.GB, ChangeConsignee)(niTemporaryCertifiedConsignee)
 
           val boundForm = form.bind(Map(fieldName -> ""))
           boundForm.errors.headOption mustBe Some(FormError(fieldName, "consigneeExcise.temporaryCertifiedConsignee.error.noInput", Seq()))
@@ -67,7 +74,7 @@ class ConsigneeExciseFormProviderSpec extends StringFieldBehaviours with GuiceOn
       }
       "for any other destination type" - {
         "must error with the expected msg key" in {
-          val form = new ConsigneeExciseFormProvider().apply(None)(dataRequest(FakeRequest()))
+          val form = new ConsigneeExciseFormProvider().apply(None, UkTaxWarehouse.GB, ChangeConsignee)(dataRequest(FakeRequest()))
 
           val boundForm = form.bind(Map(fieldName -> ""))
           boundForm.errors.headOption mustBe Some(FormError(fieldName, "consigneeExcise.error.noInput", Seq()))
@@ -78,7 +85,7 @@ class ConsigneeExciseFormProviderSpec extends StringFieldBehaviours with GuiceOn
     "when the value entered is not the correct length" - {
       "for a Northern Ireland Temporary Registered Consignee" - {
         "must error with the expected msg key" in {
-          val form = new ConsigneeExciseFormProvider().apply(None)(niTemporaryRegisteredConsignee)
+          val form = new ConsigneeExciseFormProvider().apply(None, UkTaxWarehouse.GB, ChangeConsignee)(niTemporaryRegisteredConsignee)
 
           val boundForm = form.bind(Map(fieldName -> "12345678901234"))
           boundForm.errors.headOption mustBe Some(FormError(fieldName, "consigneeExcise.temporaryRegisteredConsignee.error.length", Seq(fixedLength)))
@@ -86,7 +93,7 @@ class ConsigneeExciseFormProviderSpec extends StringFieldBehaviours with GuiceOn
       }
       "for a Northern Ireland Temporary Certified Consignee" - {
         "must error with the expected msg key" in {
-          val form = new ConsigneeExciseFormProvider().apply(None)(niTemporaryCertifiedConsignee)
+          val form = new ConsigneeExciseFormProvider().apply(None, UkTaxWarehouse.GB, ChangeConsignee)(niTemporaryCertifiedConsignee)
 
           val boundForm = form.bind(Map(fieldName -> "12345678901234"))
           boundForm.errors.headOption mustBe Some(FormError(fieldName, "consigneeExcise.temporaryCertifiedConsignee.error.length", Seq(fixedLength)))
@@ -94,7 +101,7 @@ class ConsigneeExciseFormProviderSpec extends StringFieldBehaviours with GuiceOn
       }
       "for any other destination type" - {
         "must error with the expected msg key" in {
-          val form = new ConsigneeExciseFormProvider().apply(None)(dataRequest(FakeRequest()))
+          val form = new ConsigneeExciseFormProvider().apply(None, UkTaxWarehouse.GB, ChangeConsignee)(dataRequest(FakeRequest()))
 
           val boundForm = form.bind(Map(fieldName -> "12345678901234"))
           boundForm.errors.headOption mustBe Some(FormError(fieldName, "consigneeExcise.error.length", Seq(fixedLength)))
@@ -105,7 +112,7 @@ class ConsigneeExciseFormProviderSpec extends StringFieldBehaviours with GuiceOn
     "when the value contains invalid characters" - {
       "for a Northern Ireland Temporary Registered Consignee" - {
         "must error with the expected msg key" in {
-          val form = new ConsigneeExciseFormProvider().apply(None)(niTemporaryRegisteredConsignee)
+          val form = new ConsigneeExciseFormProvider().apply(None, UkTaxWarehouse.GB, ChangeConsignee)(niTemporaryRegisteredConsignee)
 
           val boundForm = form.bind(Map(fieldName -> "!@£$%^&*()_+!"))
           boundForm.errors.headOption mustBe Some(FormError(fieldName, "consigneeExcise.temporaryRegisteredConsignee.error.invalidCharacters", Seq("^(?s)(?=.*[A-Za-z0-9]).{1,}$")))
@@ -113,7 +120,7 @@ class ConsigneeExciseFormProviderSpec extends StringFieldBehaviours with GuiceOn
       }
       "for a Northern Ireland Temporary Certified Consignee" - {
         "must error with the expected msg key" in {
-          val form = new ConsigneeExciseFormProvider().apply(None)(niTemporaryCertifiedConsignee)
+          val form = new ConsigneeExciseFormProvider().apply(None, UkTaxWarehouse.GB, ChangeConsignee)(niTemporaryCertifiedConsignee)
 
           val boundForm = form.bind(Map(fieldName -> "!@£$%^&*()_+!"))
           boundForm.errors.headOption mustBe Some(FormError(fieldName, "consigneeExcise.temporaryCertifiedConsignee.error.invalidCharacters", Seq("^(?s)(?=.*[A-Za-z0-9]).{1,}$")))
@@ -121,7 +128,7 @@ class ConsigneeExciseFormProviderSpec extends StringFieldBehaviours with GuiceOn
       }
       "for any other destination type" - {
         "must error with the expected msg key" in {
-          val form = new ConsigneeExciseFormProvider().apply(None)(dataRequest(FakeRequest()))
+          val form = new ConsigneeExciseFormProvider().apply(None, UkTaxWarehouse.GB, ChangeConsignee)(dataRequest(FakeRequest()))
 
           val boundForm = form.bind(Map(fieldName -> "!@£$%^&*()_+!"))
           boundForm.errors.headOption mustBe Some(FormError(fieldName, "consigneeExcise.error.invalidCharacters", Seq("^(?s)(?=.*[A-Za-z0-9]).{1,}$")))
@@ -132,7 +139,7 @@ class ConsigneeExciseFormProviderSpec extends StringFieldBehaviours with GuiceOn
     "when the value is in the incorrect format" - {
       "for a Northern Ireland Temporary Registered Consignee" - {
         "must error with the expected msg key" in {
-          val form = new ConsigneeExciseFormProvider().apply(None)(niTemporaryRegisteredConsignee)
+          val form = new ConsigneeExciseFormProvider().apply(None, UkTaxWarehouse.GB, ChangeConsignee)(niTemporaryRegisteredConsignee)
 
           val boundForm = form.bind(Map(fieldName -> "0034567890123"))
           boundForm.errors.headOption mustBe Some(FormError(fieldName, "consigneeExcise.temporaryRegisteredConsignee.error.format", Seq("[A-Z]{2}[a-zA-Z0-9]{11}")))
@@ -140,7 +147,7 @@ class ConsigneeExciseFormProviderSpec extends StringFieldBehaviours with GuiceOn
       }
       "for a Northern Ireland Temporary Certified Consignee" - {
         "must error with the expected msg key" in {
-          val form = new ConsigneeExciseFormProvider().apply(None)(niTemporaryCertifiedConsignee)
+          val form = new ConsigneeExciseFormProvider().apply(None, UkTaxWarehouse.GB, ChangeConsignee)(niTemporaryCertifiedConsignee)
 
           val boundForm = form.bind(Map(fieldName -> "0034567890123"))
           boundForm.errors.headOption mustBe Some(FormError(fieldName, "consigneeExcise.temporaryCertifiedConsignee.error.format", Seq("[A-Z]{2}[a-zA-Z0-9]{11}")))
@@ -148,7 +155,7 @@ class ConsigneeExciseFormProviderSpec extends StringFieldBehaviours with GuiceOn
       }
       "for any other destination type" - {
         "must error with the expected msg key" in {
-          val form = new ConsigneeExciseFormProvider().apply(None)(dataRequest(FakeRequest()))
+          val form = new ConsigneeExciseFormProvider().apply(None, UkTaxWarehouse.GB, ChangeConsignee)(dataRequest(FakeRequest()))
 
           val boundForm = form.bind(Map(fieldName -> "0034567890123"))
           boundForm.errors.headOption mustBe Some(FormError(fieldName, "consigneeExcise.error.format", Seq("[A-Z]{2}[a-zA-Z0-9]{11}")))
@@ -164,7 +171,7 @@ class ConsigneeExciseFormProviderSpec extends StringFieldBehaviours with GuiceOn
         ern = testNorthernIrelandWarehouseKeeperErn
       )
 
-      val form = new ConsigneeExciseFormProvider().apply(None)(gbTaxWarehouseDestination)
+      val form = new ConsigneeExciseFormProvider().apply(None, UkTaxWarehouse.GB, ChangeConsignee)(gbTaxWarehouseDestination)
 
       "when ERN does not start with GBWK or XIWK" - {
 
@@ -214,7 +221,7 @@ class ConsigneeExciseFormProviderSpec extends StringFieldBehaviours with GuiceOn
         ern = testNorthernIrelandWarehouseKeeperErn
       )
 
-      val form = new ConsigneeExciseFormProvider().apply(None)(niTaxWarehouseDestination)
+      val form = new ConsigneeExciseFormProvider().apply(None, UkTaxWarehouse.NI, ChangeConsignee)(niTaxWarehouseDestination)
 
       "when ERN does not start with XIWK" - {
 
@@ -244,7 +251,7 @@ class ConsigneeExciseFormProviderSpec extends StringFieldBehaviours with GuiceOn
         ern = testNorthernIrelandWarehouseKeeperErn
       )
 
-      val form = new ConsigneeExciseFormProvider().apply(Some(Seq(CountryModel("FR", "France"))))(euTaxWarehouseDestination)
+      val form = new ConsigneeExciseFormProvider().apply(Some(Seq(CountryModel("FR", "France"))), EuTaxWarehouse, ChangeConsignee)(euTaxWarehouseDestination)
 
       "when ERN starts with XI" - {
 
@@ -280,6 +287,74 @@ class ConsigneeExciseFormProviderSpec extends StringFieldBehaviours with GuiceOn
           val boundForm = form.bind(Map(fieldName -> testEuErn))
           boundForm.errors.headOption mustBe None
           boundForm.value mustBe Some(testEuErn)
+        }
+      }
+    }
+
+    "inputIsValidForChangeType" - {
+      "for movement scenarios that are tax warehouses or registered consignee" - {
+        MovementScenario.taxWarehouses :+ MovementScenario.RegisteredConsignee foreach { movementScenario =>
+          s"when movement scenario is $movementScenario" - {
+            "and change type is ChangeConsignee" - {
+              "must return Valid when the input different to the existing excise ID" in {
+                implicit val dr: DataRequest[_] = dataRequest(FakeRequest())
+                val result =
+                  new ConsigneeExciseFormProvider()
+                    .inputIsValidForChangeType(movementScenario, ChangeType.ChangeConsignee)
+                    .apply("id")
+
+                result mustBe Valid
+              }
+              "must return Valid when there is no existing excise ID" in {
+                implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), movementDetails = maxGetMovementResponse.copy(consigneeTrader = None))
+                val result =
+                  new ConsigneeExciseFormProvider()
+                    .inputIsValidForChangeType(movementScenario, ChangeType.ChangeConsignee)
+                    .apply("id")
+
+                result mustBe Valid
+              }
+              "must return Invalid when the input is the same as the existing excise ID" in {
+                implicit val dr: DataRequest[_] = dataRequest(FakeRequest())
+                val result: ValidationResult =
+                  new ConsigneeExciseFormProvider()
+                    .inputIsValidForChangeType(movementScenario, ChangeType.ChangeConsignee)
+                    .apply(dr.request.movementDetails.consigneeTrader.get.traderExciseNumber.get)
+
+                result mustBe a[Invalid]
+                result.asInstanceOf[Invalid].errors.flatMap(_.messages.map(msgs(_))) mustBe Seq(English.errorSameAsExisting)
+              }
+            }
+            "and change type is not Destination" - {
+              "must return Valid" in {
+                ChangeType.allValues.filterNot(_ == ChangeType.ChangeConsignee) foreach { changeType =>
+                  implicit val dr: DataRequest[_] = dataRequest(FakeRequest())
+                  val result =
+                    new ConsigneeExciseFormProvider()
+                      .inputIsValidForChangeType(movementScenario, changeType)
+                      .apply("id")
+
+                  result mustBe Valid
+                }
+              }
+            }
+          }
+        }
+      }
+
+      "for movement scenarios that are not tax warehouses or registered consignee" - {
+        MovementScenario.values.filterNot(MovementScenario.taxWarehouses :+ MovementScenario.RegisteredConsignee contains _) foreach { movementScenario =>
+          s"when movement scenario is $movementScenario" - {
+            "must return Valid" in {
+              implicit val dr: DataRequest[_] = dataRequest(FakeRequest())
+              val result =
+                new ConsigneeExciseFormProvider()
+                  .inputIsValidForChangeType(movementScenario, ChangeType.ChangeConsignee)
+                  .apply("id")
+
+              result mustBe Valid
+            }
+          }
         }
       }
     }

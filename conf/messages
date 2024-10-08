@@ -503,6 +503,7 @@ consigneeExcise.error.invalidMemberState = ERN must start with a valid 2-letter 
 consigneeExcise.error.mustStartWithGBWKOrXIWK = ERN must start with GBWK or XIWK because the destination is a tax warehouse in Great Britain
 consigneeExcise.error.mustStartWithXIWK = ERN must start with XIWK because the destination is a tax warehouse in Northern Ireland
 consigneeExcise.error.mustNotStartWithGBOrXI = ERN must not start with GBWK or XIWK because the destination is not a tax warehouse in the United Kingdom
+consigneeExcise.error.sameAsExisting = Consignee ERN must not be the same as the previous submission of this movement
 
 consigneeExcise.checkYourAnswersLabel.ern = Excise registration number (ERN)
 consigneeExcise.change.hidden.ern = consignee excise registration number (ERN)

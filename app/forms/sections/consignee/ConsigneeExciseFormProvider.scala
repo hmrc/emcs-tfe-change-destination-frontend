@@ -17,12 +17,13 @@
 package forms.sections.consignee
 
 import config.Constants
-import forms.{ALPHANUMERIC_REGEX, EXCISE_NUMBER_REGEX}
 import forms.mappings.Mappings
+import forms.{ALPHANUMERIC_REGEX, EXCISE_NUMBER_REGEX}
 import models.CountryModel
 import models.requests.DataRequest
+import models.sections.info.ChangeType
+import models.sections.info.movementScenario.MovementScenario
 import models.sections.info.movementScenario.MovementScenario.{TemporaryCertifiedConsignee, TemporaryRegisteredConsignee, UkTaxWarehouse}
-import pages.sections.consignee.ConsigneeExcisePage
 import pages.sections.info.DestinationTypePage
 import play.api.data.Form
 import play.api.data.validation.{Constraint, Invalid, Valid}
@@ -31,7 +32,26 @@ import javax.inject.Inject
 
 class ConsigneeExciseFormProvider @Inject() extends Mappings {
 
-  def apply(memberStates: Option[Seq[CountryModel]])(implicit request: DataRequest[_]): Form[String] = {
+  private[forms] def inputIsValidForChangeType(movementScenario: MovementScenario, changeType: ChangeType)
+                                              (implicit request: DataRequest[_]): Constraint[String] = {
+
+    // movementScenario is tax warehouse or registered consignee
+    def isCorrectMovementScenario: Boolean =
+      (MovementScenario.taxWarehouses :+ MovementScenario.RegisteredConsignee).contains(movementScenario)
+
+    Constraint {
+      case answer if (changeType == ChangeType.ChangeConsignee) && isCorrectMovementScenario =>
+        request.request.movementDetails.consigneeTrader.flatMap(_.traderExciseNumber).map {
+          exciseNumber =>
+            regexpToNotMatch(exciseNumber, "consigneeExcise.error.sameAsExisting").apply(answer)
+        }.getOrElse(Valid)
+      case _ =>
+        Valid
+    }
+  }
+
+  def apply(memberStates: Option[Seq[CountryModel]], movementScenario: MovementScenario, changeType: ChangeType)
+           (implicit request: DataRequest[_]): Form[String] = {
 
     val keyPrefix = request.isNorthernIrelandErn -> DestinationTypePage.value match {
       case true -> Some(TemporaryRegisteredConsignee) => "consigneeExcise.temporaryRegisteredConsignee"
@@ -46,7 +66,8 @@ class ConsigneeExciseFormProvider @Inject() extends Mappings {
           fixedLength(13, s"$keyPrefix.error.length"),
           regexpUnlessEmpty(ALPHANUMERIC_REGEX, s"$keyPrefix.error.invalidCharacters"),
           regexpUnlessEmpty(EXCISE_NUMBER_REGEX, s"$keyPrefix.error.format"),
-          validateErn(memberStates)
+          validateErn(memberStates),
+          inputIsValidForChangeType(movementScenario, changeType)
         ))
     )
   }

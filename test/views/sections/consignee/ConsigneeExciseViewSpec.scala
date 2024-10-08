@@ -20,10 +20,10 @@ import base.SpecBase
 import fixtures.messages.sections.consignee.ConsigneeExciseMessages.English
 import forms.sections.consignee.ConsigneeExciseFormProvider
 import models.requests.DataRequest
+import models.sections.info.ChangeType.ChangeConsignee
+import models.sections.info.movementScenario.MovementScenario.UkTaxWarehouse
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
-import pages.sections.consignee.ConsigneeExcisePage
-import play.api.data.FormError
 import play.api.i18n.Messages
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
@@ -41,7 +41,7 @@ class ConsigneeExciseViewSpec extends SpecBase with ViewBehaviours {
       implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), emptyUserAnswers)
 
       lazy val view = app.injector.instanceOf[ConsigneeExciseView]
-      val form = app.injector.instanceOf[ConsigneeExciseFormProvider].apply(None)
+      val form = app.injector.instanceOf[ConsigneeExciseFormProvider].apply(None, UkTaxWarehouse.GB, ChangeConsignee)
 
       implicit val doc: Document = Jsoup.parse(
         view(
@@ -67,7 +67,7 @@ class ConsigneeExciseViewSpec extends SpecBase with ViewBehaviours {
       implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), emptyUserAnswers)
 
       lazy val view = app.injector.instanceOf[ConsigneeExciseView]
-      val form = app.injector.instanceOf[ConsigneeExciseFormProvider].apply(None)
+      val form = app.injector.instanceOf[ConsigneeExciseFormProvider].apply(None, UkTaxWarehouse.GB, ChangeConsignee)
 
       implicit val doc: Document = Jsoup.parse(
         view(
@@ -93,7 +93,7 @@ class ConsigneeExciseViewSpec extends SpecBase with ViewBehaviours {
       implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), emptyUserAnswers)
 
       lazy val view = app.injector.instanceOf[ConsigneeExciseView]
-      val form = app.injector.instanceOf[ConsigneeExciseFormProvider].apply(None)
+      val form = app.injector.instanceOf[ConsigneeExciseFormProvider].apply(None, UkTaxWarehouse.GB, ChangeConsignee)
 
       implicit val doc: Document = Jsoup.parse(
         view(
