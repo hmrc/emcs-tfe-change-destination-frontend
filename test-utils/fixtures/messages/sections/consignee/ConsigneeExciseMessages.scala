@@ -21,12 +21,18 @@ import fixtures.messages.{BaseEnglish, BaseMessages, i18n}
 object ConsigneeExciseMessages {
   sealed trait ViewMessages extends BaseMessages {
     _: i18n =>
-    val temporaryConsigneeHeading = "What is the Temporary Registered Consignee’s authorisation reference?"
+
     val heading = "What is the consignee’s excise registration number (ERN)?"
     val title = titleHelper(heading)
-    val temporaryConsigneeTitle = titleHelper(temporaryConsigneeHeading)
-    val temporaryConsigneeHint = "This contains 13 characters, starting with 2 letters that represent the member state of the Temporary Registered Consignee. For example, GB12345678900. This is sometimes referred to as a Temporary Registration Code."
-    val hint = "An ERN contains 13 characters, starting with GB. It can be found on your approval letter."
+    val hint = "An ERN contains 13 characters, starting with 2 letters that represent the member state of the consignee, such as GBWK123456789. It can be found on your approval letter."
+
+    val temporaryRegisteredConsigneeHeading = "What is the Temporary Registered Consignee’s authorisation reference?"
+    val temporaryRegisteredConsigneeTitle: String = titleHelper(temporaryRegisteredConsigneeHeading)
+    val temporaryRegisteredConsigneeHint = "This contains 13 characters, starting with 2 letters that represent the member state of the Temporary Registered Consignee. For example, XI12345678900. This is also known as a Temporary Consignment Authorisation (TCA) number."
+
+    val temporaryCertifiedConsigneeHeading = "What is the Temporary Certified Consignee’s authorisation reference?"
+    val temporaryCertifiedConsigneeTitle: String = titleHelper(temporaryCertifiedConsigneeHeading)
+    val temporaryCertifiedConsigneeHint = "This contains 13 characters, starting with 2 letters that represent the member state of the Temporary Certified Consignee. For example, XI12345678900. This is also known as a Temporary Consignment Authorisation (TCA) number."
   }
 
   object English extends ViewMessages with BaseEnglish

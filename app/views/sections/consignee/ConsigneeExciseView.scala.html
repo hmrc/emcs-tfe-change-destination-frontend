@@ -26,12 +26,14 @@
         h2: components.h2,
         continueOrExit: components.continueOrExit)
 
-@(form: Form[_], action: Call, isNorthernIrishTemporaryRegisteredConsignee: Boolean)(implicit request: DataRequest[_], messages: Messages)
+@(form: Form[_], action: Call, isNorthernIrishTemporaryRegisteredConsignee: Boolean, isNorthernIrishTemporaryCertifiedConsignee: Boolean)(implicit request: DataRequest[_], messages: Messages)
 
 @layout(pageTitle = title(
     form = form,
     title = if(isNorthernIrishTemporaryRegisteredConsignee) {
-        messages("consigneeExcise.temporaryConsignee.title")
+        messages("consigneeExcise.temporaryRegisteredConsignee.title")
+    } else if(isNorthernIrishTemporaryCertifiedConsignee){
+        messages("consigneeExcise.temporaryCertifiedConsignee.title")
     } else {
         messages("consigneeExcise.title")
     }
@@ -49,7 +51,9 @@
                 field = form("value"),
                 label = LabelViewModel(HtmlContent(
                     if(isNorthernIrishTemporaryRegisteredConsignee) {
-                        messages("consigneeExcise.temporaryConsignee.heading")
+                        messages("consigneeExcise.temporaryRegisteredConsignee.heading")
+                    } else if(isNorthernIrishTemporaryCertifiedConsignee) {
+                        messages("consigneeExcise.temporaryCertifiedConsignee.heading")
                     } else {
                         messages("consigneeExcise.heading")
                     }
@@ -60,7 +64,9 @@
                     classes = "govuk-hint",
                     content = Text(
                         if(isNorthernIrishTemporaryRegisteredConsignee) {
-                            messages("consigneeExcise.temporaryConsignee.hint")
+                            messages("consigneeExcise.temporaryRegisteredConsignee.hint")
+                        } else if(isNorthernIrishTemporaryCertifiedConsignee){
+                            messages("consigneeExcise.temporaryCertifiedConsignee.hint")
                         } else {
                             messages("consigneeExcise.hint")
                         }

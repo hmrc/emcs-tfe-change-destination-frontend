@@ -36,5 +36,8 @@ trait MockGetMemberStatesService extends MockFactory {
 
     def getMemberStates(): CallHandler1[HeaderCarrier, Future[Seq[CountryModel]]] =
       (mockGetMemberStatesService.getMemberStates()(_: HeaderCarrier)).expects(*)
+
+    def getEuMemberStates(): CallHandler1[HeaderCarrier, Future[Seq[CountryModel]]] =
+      (mockGetMemberStatesService.getEuMemberStates()(_: HeaderCarrier)).expects(*)
   }
 }
