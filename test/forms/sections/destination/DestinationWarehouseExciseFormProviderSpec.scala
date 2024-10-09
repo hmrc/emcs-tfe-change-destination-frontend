@@ -20,10 +20,14 @@ import base.SpecBase
 import fixtures.messages.sections.destination.DestinationWarehouseExciseMessages.English
 import forms.XSS_REGEX
 import forms.behaviours.StringFieldBehaviours
+import models.requests.DataRequest
+import models.sections.info.ChangeType
+import models.sections.info.ChangeType.ChangeConsignee
 import models.sections.info.movementScenario.MovementScenario
 import play.api.data.FormError
 import play.api.data.validation.{Invalid, Valid, ValidationResult}
 import play.api.i18n.Messages
+import play.api.test.FakeRequest
 
 class DestinationWarehouseExciseFormProviderSpec extends SpecBase with StringFieldBehaviours {
 
@@ -32,7 +36,7 @@ class DestinationWarehouseExciseFormProviderSpec extends SpecBase with StringFie
   val maxLength = 16
   val invalidCharactersKey = "destinationWarehouseExcise.error.invalidCharacter"
 
-  val form = new DestinationWarehouseExciseFormProvider().apply(MovementScenario.CertifiedConsignee)
+  val form = new DestinationWarehouseExciseFormProvider().apply(MovementScenario.CertifiedConsignee, ChangeConsignee)(dataRequest(FakeRequest()))
 
   implicit val msgs: Messages = messages(Seq(English.lang))
 
@@ -92,13 +96,15 @@ class DestinationWarehouseExciseFormProviderSpec extends SpecBase with StringFie
 
   "must transform the inputted Excise ID" - {
     "removing any spaces" in {
-      val form = new DestinationWarehouseExciseFormProvider().apply(MovementScenario.UkTaxWarehouse.GB)
+      implicit val dr: DataRequest[_] = dataRequest(FakeRequest())
+      val form = new DestinationWarehouseExciseFormProvider().apply(MovementScenario.UkTaxWarehouse.GB, ChangeType.ChangeConsignee)
       val boundForm = form.bind(Map("value" -> "GB 0 012 3456789"))
 
       boundForm.value mustBe Some("GB00123456789")
     }
     "converting to uppercase" in {
-      val form = new DestinationWarehouseExciseFormProvider().apply(MovementScenario.UkTaxWarehouse.GB)
+      implicit val dr: DataRequest[_] = dataRequest(FakeRequest())
+      val form = new DestinationWarehouseExciseFormProvider().apply(MovementScenario.UkTaxWarehouse.GB, ChangeType.ChangeConsignee)
       val boundForm = form.bind(Map("value" -> "gb 0 012 3456789"))
 
       boundForm.value mustBe Some("GB00123456789")
@@ -207,6 +213,74 @@ class DestinationWarehouseExciseFormProviderSpec extends SpecBase with StringFie
               result.asInstanceOf[Invalid].errors.flatMap(_.messages.map(msgs(_))) mustBe Seq(English.errorInvalidXIOrGB)
             }
           }
+      }
+    }
+  }
+
+  "inputIsValidForChangeType" - {
+    "for movement scenarios that are tax warehouses or registered consignee" - {
+      MovementScenario.taxWarehouses :+ MovementScenario.RegisteredConsignee foreach { movementScenario =>
+        s"when movement scenario is $movementScenario" - {
+          "and change type is Destination" - {
+            "must return Valid when the input different to the existing excise ID" in {
+              implicit val dr: DataRequest[_] = dataRequest(FakeRequest())
+              val result =
+                new DestinationWarehouseExciseFormProvider()
+                  .inputIsValidForChangeType(movementScenario, ChangeType.Destination)
+                  .apply("id")
+
+              result mustBe Valid
+            }
+            "must return Valid when there is no existing excise ID" in {
+              implicit val dr: DataRequest[_] = dataRequest(FakeRequest(), movementDetails = maxGetMovementResponse.copy(deliveryPlaceTrader = None))
+              val result =
+                new DestinationWarehouseExciseFormProvider()
+                  .inputIsValidForChangeType(movementScenario, ChangeType.Destination)
+                  .apply("id")
+
+              result mustBe Valid
+            }
+            "must return Invalid when the input is the same as the existing excise ID" in {
+              implicit val dr: DataRequest[_] = dataRequest(FakeRequest())
+              val result: ValidationResult =
+                new DestinationWarehouseExciseFormProvider()
+                  .inputIsValidForChangeType(movementScenario, ChangeType.Destination)
+                  .apply(dr.request.movementDetails.deliveryPlaceTrader.get.traderExciseNumber.get)
+
+              result mustBe a[Invalid]
+              result.asInstanceOf[Invalid].errors.flatMap(_.messages.map(msgs(_))) mustBe Seq(English.errorSameAsExisting)
+            }
+          }
+          "and change type is not Destination" - {
+            "must return Valid" in {
+              ChangeType.allValues.filterNot(_ == ChangeType.Destination) foreach { changeType =>
+                implicit val dr: DataRequest[_] = dataRequest(FakeRequest())
+                val result =
+                  new DestinationWarehouseExciseFormProvider()
+                    .inputIsValidForChangeType(movementScenario, changeType)
+                    .apply("id")
+
+                result mustBe Valid
+              }
+            }
+          }
+        }
+      }
+    }
+
+    "for movement scenarios that are not tax warehouses or registered consignee" - {
+      MovementScenario.values.filterNot(MovementScenario.taxWarehouses :+ MovementScenario.RegisteredConsignee contains _) foreach { movementScenario =>
+        s"when movement scenario is $movementScenario" - {
+          "must return Valid" in {
+            implicit val dr: DataRequest[_] = dataRequest(FakeRequest())
+            val result =
+              new DestinationWarehouseExciseFormProvider()
+                .inputIsValidForChangeType(movementScenario, ChangeType.Destination)
+                .apply("id")
+
+            result mustBe Valid
+          }
+        }
       }
     }
   }

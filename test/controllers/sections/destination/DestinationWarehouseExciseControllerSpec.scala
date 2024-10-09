@@ -21,12 +21,13 @@ import controllers.actions.{FakeDataRetrievalAction, FakeMovementAction}
 import controllers.routes
 import forms.sections.destination.DestinationWarehouseExciseFormProvider
 import mocks.services.MockUserAnswersService
+import models.sections.info.ChangeType
 import models.sections.info.movementScenario.MovementScenario
 import models.sections.info.movementScenario.MovementScenario._
 import models.{NormalMode, UserAnswers}
 import navigation.FakeNavigators.FakeDestinationNavigator
 import pages.sections.destination.DestinationWarehouseExcisePage
-import pages.sections.info.DestinationTypePage
+import pages.sections.info.{ChangeTypePage, DestinationTypePage}
 import play.api.data.Form
 import play.api.mvc.Call
 import play.api.test.FakeRequest
@@ -38,7 +39,7 @@ import scala.concurrent.Future
 class DestinationWarehouseExciseControllerSpec extends SpecBase with MockUserAnswersService {
 
   lazy val formProvider: DestinationWarehouseExciseFormProvider = new DestinationWarehouseExciseFormProvider()
-  lazy val form: Form[String] = formProvider(MovementScenario.UkTaxWarehouse.NI)
+  lazy val form: Form[String] = formProvider(MovementScenario.UkTaxWarehouse.NI, ChangeType.Destination)(dataRequest(FakeRequest()))
   lazy val view: DestinationWarehouseExciseView = app.injector.instanceOf[DestinationWarehouseExciseView]
 
   lazy val destinationWarehouseExciseRoute: String =
@@ -65,8 +66,11 @@ class DestinationWarehouseExciseControllerSpec extends SpecBase with MockUserAns
 
   "DestinationWarehouseExcise Controller" - {
 
-    "must return OK and the correct view for a GET" in new Fixture(Some(emptyUserAnswers
-      .set(DestinationTypePage, DirectDelivery))) {
+    "must return OK and the correct view for a GET" in new Fixture(Some(
+      emptyUserAnswers
+        .set(DestinationTypePage, DirectDelivery)
+        .set(ChangeTypePage, ChangeType.Destination)
+    )) {
       val result = testController.onPageLoad(testErn, testArc, NormalMode)(request)
 
       status(result) mustEqual OK
@@ -76,8 +80,12 @@ class DestinationWarehouseExciseControllerSpec extends SpecBase with MockUserAns
       )(dataRequest(request), messages(request)).toString
     }
 
-    "must populate the view correctly on a GET when the question has previously been answered" in new Fixture(Some(emptyUserAnswers
-      .set(DestinationWarehouseExcisePage, "answer").set(DestinationTypePage, DirectDelivery))) {
+    "must populate the view correctly on a GET when the question has previously been answered" in new Fixture(Some(
+      emptyUserAnswers
+        .set(DestinationWarehouseExcisePage, "answer")
+        .set(DestinationTypePage, DirectDelivery)
+        .set(ChangeTypePage, ChangeType.Destination)
+    )) {
 
       val result = testController.onPageLoad(testErn, testArc, NormalMode)(request)
 
@@ -87,8 +95,11 @@ class DestinationWarehouseExciseControllerSpec extends SpecBase with MockUserAns
       )(dataRequest(request), messages(request)).toString
     }
 
-    "must redirect to the next page when valid data is submitted" in new Fixture(Some(emptyUserAnswers
-      .set(DestinationTypePage, DirectDelivery))) {
+    "must redirect to the next page when valid data is submitted" in new Fixture(Some(
+      emptyUserAnswers
+        .set(DestinationTypePage, DirectDelivery)
+        .set(ChangeTypePage, ChangeType.Destination)
+    )) {
 
       MockUserAnswersService.set().returns(Future.successful(emptyUserAnswers))
 
@@ -100,8 +111,11 @@ class DestinationWarehouseExciseControllerSpec extends SpecBase with MockUserAns
       redirectLocation(result).value mustEqual testOnwardRoute.url
     }
 
-    "must return a Bad Request and errors when invalid data is submitted" in new Fixture(Some(emptyUserAnswers
-      .set(DestinationTypePage, DirectDelivery))) {
+    "must return a Bad Request and errors when invalid data is submitted" in new Fixture(Some(
+      emptyUserAnswers
+        .set(DestinationTypePage, DirectDelivery)
+        .set(ChangeTypePage, ChangeType.Destination)
+    )) {
 
       val req = FakeRequest(POST, destinationWarehouseExciseRoute).withFormUrlEncodedBody(("value", ""))
 

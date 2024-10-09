@@ -22,12 +22,12 @@ import controllers.routes
 import forms.sections.consignee.ConsigneeExciseFormProvider
 import mocks.services.{MockGetMemberStatesService, MockUserAnswersService}
 import models.requests.DataRequest
+import models.sections.info.ChangeType.ChangeConsignee
 import models.sections.info.movementScenario.MovementScenario.{EuTaxWarehouse, TemporaryCertifiedConsignee, TemporaryRegisteredConsignee, UkTaxWarehouse}
-import models.sections.info.movementScenario.OriginType.TaxWarehouse
 import models.{CountryModel, NormalMode, UserAnswers}
 import navigation.FakeNavigators.FakeConsigneeNavigator
-import pages.sections.consignee.{ConsigneeAddressPage, ConsigneeExcisePage}
-import pages.sections.info.DestinationTypePage
+import pages.sections.consignee.ConsigneeExcisePage
+import pages.sections.info.{ChangeTypePage, DestinationTypePage}
 import play.api.data.Form
 import play.api.mvc.Call
 import play.api.test.FakeRequest
@@ -48,12 +48,14 @@ class ConsigneeExciseControllerSpec extends SpecBase
   lazy val consigneeExciseSubmit: Call =
     controllers.sections.consignee.routes.ConsigneeExciseController.onSubmit(testErn, testArc, NormalMode)
 
-  class Fixture(optUserAnswers: Option[UserAnswers] = Some(emptyUserAnswers)) {
+  val baseUserAnswers: UserAnswers = emptyUserAnswers.set(DestinationTypePage, UkTaxWarehouse.GB).set(ChangeTypePage, ChangeConsignee)
+
+  class Fixture(optUserAnswers: Option[UserAnswers] = Some(baseUserAnswers)) {
     val request = FakeRequest(GET, consigneeExciseRoute)
 
-    implicit val dr: DataRequest[_] = dataRequest(request, optUserAnswers.getOrElse(emptyUserAnswers))
+    implicit val dr: DataRequest[_] = dataRequest(request, optUserAnswers.getOrElse(baseUserAnswers))
 
-    lazy val form: Form[String] = formProvider(None)
+    lazy val form: Form[String] = formProvider(None, UkTaxWarehouse.GB, ChangeConsignee)
 
     lazy val testController = new ConsigneeExciseController(
       messagesApi,
@@ -71,12 +73,12 @@ class ConsigneeExciseControllerSpec extends SpecBase
 
   }
 
-  val userAnswersWithConsigneeExcise: UserAnswers = emptyUserAnswers
+  val userAnswersWithConsigneeExcise: UserAnswers = baseUserAnswers
     .set(ConsigneeExcisePage, testErn)
     .set(DestinationTypePage, UkTaxWarehouse.GB)
-  val userAnswersWithDestinationTypeTemporaryRegisteredConsignee: UserAnswers = emptyUserAnswers.set(DestinationTypePage, TemporaryRegisteredConsignee)
-  val userAnswersWithDestinationTypeTemporaryCertifiedConsignee: UserAnswers = emptyUserAnswers.set(DestinationTypePage, TemporaryCertifiedConsignee)
-  val userAnswersWithDestinationTypeEU: UserAnswers = emptyUserAnswers.set(DestinationTypePage, EuTaxWarehouse)
+  val userAnswersWithDestinationTypeTemporaryRegisteredConsignee: UserAnswers = baseUserAnswers.set(DestinationTypePage, TemporaryRegisteredConsignee)
+  val userAnswersWithDestinationTypeTemporaryCertifiedConsignee: UserAnswers = baseUserAnswers.set(DestinationTypePage, TemporaryCertifiedConsignee)
+  val userAnswersWithDestinationTypeEU: UserAnswers = baseUserAnswers.set(DestinationTypePage, EuTaxWarehouse)
 
   "ConsigneeExciseController Controller" - {
     "must return OK and the correct view for a GET" - {
@@ -86,7 +88,7 @@ class ConsigneeExciseControllerSpec extends SpecBase
 
           MockGetMemberStatesService.getEuMemberStates().returns(Future.successful(Seq(CountryModel("FR", "France"))))
 
-          override lazy val form = formProvider(Some(Seq(CountryModel("FR", "France"))))
+          override lazy val form = formProvider(Some(Seq(CountryModel("FR", "France"))), UkTaxWarehouse.GB, ChangeConsignee)
 
           val result = testController.onPageLoad(testErn, testArc, NormalMode)(request)
 
@@ -128,7 +130,7 @@ class ConsigneeExciseControllerSpec extends SpecBase
       "must populate the view correctly on a GET when the question has previously been answered" in new Fixture(Some(userAnswersWithConsigneeExcise)) {
         val result = testController.onPageLoad(testErn, testArc, NormalMode)(request)
 
-        override lazy val form = formProvider(None)
+        override lazy val form = formProvider(None, UkTaxWarehouse.GB, ChangeConsignee)
 
         status(result) mustEqual OK
         contentAsString(result) mustEqual view(
@@ -157,7 +159,7 @@ class ConsigneeExciseControllerSpec extends SpecBase
     "must return a Bad Request and errors when invalid data is submitted" in new Fixture(Some(userAnswersWithConsigneeExcise)) {
       val req = FakeRequest(POST, consigneeExciseSubmit.url).withFormUrlEncodedBody(("value", ""))
 
-      override lazy val form = formProvider(None)
+      override lazy val form = formProvider(None, UkTaxWarehouse.GB, ChangeConsignee)
 
       val boundForm = form.bind(Map("value" -> ""))
 

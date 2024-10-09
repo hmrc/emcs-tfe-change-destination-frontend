@@ -33,6 +33,7 @@ object ConsigneeExciseMessages {
     val temporaryCertifiedConsigneeHeading = "What is the Temporary Certified Consignee’s authorisation reference?"
     val temporaryCertifiedConsigneeTitle: String = titleHelper(temporaryCertifiedConsigneeHeading)
     val temporaryCertifiedConsigneeHint = "This contains 13 characters, starting with 2 letters that represent the member state of the Temporary Certified Consignee. For example, XI12345678900. This is also known as a Temporary Consignment Authorisation (TCA) number."
+    val errorSameAsExisting = "Consignee ERN must not be the same as the previous submission of this movement"
   }
 
   object English extends ViewMessages with BaseEnglish
