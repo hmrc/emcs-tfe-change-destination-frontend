@@ -19,8 +19,9 @@ package controllers.sections.firstTransporter
 import base.SpecBase
 import controllers.actions.{FakeDataRetrievalAction, FakeMovementAction}
 import forms.sections.firstTransporter.FirstTransporterVatFormProvider
+import forms.sections.firstTransporter.FirstTransporterVatFormProvider.hasVatField
 import mocks.services.MockUserAnswersService
-import models.{NormalMode, UserAnswers}
+import models.{NormalMode, UserAnswers, VatNumberModel}
 import navigation.FakeNavigators.FakeFirstTransporterNavigator
 import pages.sections.firstTransporter.FirstTransporterVatPage
 import play.api.data.Form
@@ -34,15 +35,13 @@ import scala.concurrent.Future
 class FirstTransporterVatControllerSpec extends SpecBase with MockUserAnswersService {
 
   lazy val formProvider: FirstTransporterVatFormProvider = new FirstTransporterVatFormProvider()
-  lazy val form: Form[String] = formProvider()
+  lazy val form: Form[VatNumberModel] = formProvider()
   lazy val view: FirstTransporterVatView = app.injector.instanceOf[FirstTransporterVatView]
 
   lazy val firstTransporterVatRoute: String =
     controllers.sections.firstTransporter.routes.FirstTransporterVatController.onPageLoad(testErn, testArc, NormalMode).url
   lazy val firstTransporterVatSubmitAction: Call =
     controllers.sections.firstTransporter.routes.FirstTransporterVatController.onSubmit(testErn, testArc, NormalMode)
-  lazy val firstTransporterVatNonGBVATRoute: String =
-    controllers.sections.firstTransporter.routes.FirstTransporterVatController.onNonGbVAT(testErn, testArc).url
 
   class Fixture(optUserAnswers: Option[UserAnswers] = Some(emptyUserAnswers)) {
     val request = FakeRequest(GET, firstTransporterVatRoute)
@@ -71,46 +70,35 @@ class FirstTransporterVatControllerSpec extends SpecBase with MockUserAnswersSer
     }
 
     "must populate the view correctly on a GET when the question has previously been answered" in new Fixture(
-      Some(emptyUserAnswers.set(FirstTransporterVatPage, "answer"))) {
+      Some(emptyUserAnswers.set(FirstTransporterVatPage, VatNumberModel(true, Some("Answer"))))) {
 
       val result = testController.onPageLoad(testErn, testArc, NormalMode)(request)
 
       status(result) mustEqual OK
-      contentAsString(result) mustEqual view(form.fill("answer"), firstTransporterVatSubmitAction)(dataRequest(request), messages(request)).toString
+      contentAsString(result) mustEqual view(form.fill(VatNumberModel(true, Some("Answer"))), firstTransporterVatSubmitAction)(dataRequest(request), messages(request)).toString
     }
 
     "must redirect to the next page when valid data is submitted" in new Fixture() {
       MockUserAnswersService.set().returns(Future.successful(emptyUserAnswers))
 
-      val req = FakeRequest(POST, firstTransporterVatRoute).withFormUrlEncodedBody(("value", "answer"))
+      val req = FakeRequest(POST, firstTransporterVatRoute).withFormUrlEncodedBody(("hasVatNumber" -> "true"), ("vatNumber" -> testVatNumber))
 
       val result = testController.onSubmit(testErn, testArc, NormalMode)(req)
-
-      status(result) mustEqual SEE_OTHER
-      redirectLocation(result).value mustEqual testOnwardRoute.url
-    }
-
-    "must redirect to the next page when the NONGBVAT link" in new Fixture() {
-      MockUserAnswersService.set().returns(Future.successful(emptyUserAnswers))
-
-      val req = FakeRequest(GET, firstTransporterVatNonGBVATRoute)
-
-      val result = testController.onNonGbVAT(testErn, testArc)(req)
 
       status(result) mustEqual SEE_OTHER
       redirectLocation(result).value mustEqual testOnwardRoute.url
     }
 
     "must return a Bad Request and errors when invalid data is submitted" in new Fixture() {
-      val req = FakeRequest(POST, firstTransporterVatRoute).withFormUrlEncodedBody(("value", ""))
-      val boundForm = form.bind(Map("value" -> ""))
+
+      val req = FakeRequest(POST, firstTransporterVatRoute).withFormUrlEncodedBody(hasVatField -> "")
+      val boundForm = form.bind(Map(hasVatField -> ""))
 
       val result = testController.onSubmit(testErn, testArc, NormalMode)(req)
 
       status(result) mustEqual BAD_REQUEST
       contentAsString(result) mustEqual view(boundForm, firstTransporterVatSubmitAction)(dataRequest(request), messages(request)).toString
     }
-
 
     "must redirect to Journey Recovery for a GET if no existing data is found" in new Fixture(None) {
       val result = testController.onPageLoad(testErn, testArc, NormalMode)(request)

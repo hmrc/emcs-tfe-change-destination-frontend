@@ -18,7 +18,7 @@ package viewmodels.checkAnswers.sections.firstTransporter
 
 import base.SpecBase
 import fixtures.messages.sections.firstTransporter.FirstTransporterVatMessages
-import models.CheckMode
+import models.{CheckMode, VatNumberModel}
 import org.scalatest.matchers.must.Matchers
 import pages.sections.firstTransporter.FirstTransporterVatPage
 import play.api.i18n.{Messages, MessagesApi}
@@ -37,90 +37,48 @@ class FirstTransporterVatSummarySpec extends SpecBase with Matchers {
 
         implicit val msgs: Messages = app.injector.instanceOf[MessagesApi].preferred(Seq(messagesForLanguage.lang))
 
-        "when the onReviewPage boolean is false" - {
+        "when there is no answer" in {
+          implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers, movementDetails = maxGetMovementResponse.copy(firstTransporterTrader = None))
 
-          "when there is no answer in either 801 or user answers" in {
-            implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers, movementDetails = maxGetMovementResponse.copy(firstTransporterTrader = None))
-
-            FirstTransporterVatSummary.row(onReviewPage = false) mustBe
-              SummaryListRowViewModel(
-                key = messagesForLanguage.cyaLabel,
-                value = Value(Text(messagesForLanguage.notProvided)),
-                actions = Seq(
-                  ActionItemViewModel(
-                    content = messagesForLanguage.change,
-                    href = controllers.sections.firstTransporter.routes.FirstTransporterVatController.onPageLoad(testErn, testArc, CheckMode).url,
-                    id = "changeFirstTransporterVat"
-                  ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHidden)
-                )
-              )
-          }
-
-          "when there's no answer in the user answers (defaulting to 801)" in {
-            implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers)
-
-            FirstTransporterVatSummary.row(onReviewPage = false) mustBe
-              SummaryListRowViewModel(
-                key = messagesForLanguage.cyaLabel,
-                value = Value(Text("FirstTransporterTraderVatNumber")),
-                actions = Seq(
-                  ActionItemViewModel(
-                    content = messagesForLanguage.change,
-                    href = controllers.sections.firstTransporter.routes.FirstTransporterVatController.onPageLoad(testErn, testArc, CheckMode).url,
-                    id = "changeFirstTransporterVat"
-                  ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHidden)
-                )
-              )
-          }
-
-          "when there is an answer" in {
-            implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(FirstTransporterVatPage, testVatNumber))
-
-            FirstTransporterVatSummary.row(onReviewPage = false) mustBe SummaryListRowViewModel(
-              key = messagesForLanguage.cyaLabel,
-              value = Value(Text(testVatNumber)),
-              actions = Seq(
-                ActionItemViewModel(
-                  content = messagesForLanguage.change,
-                  href = controllers.sections.firstTransporter.routes.FirstTransporterVatController.onPageLoad(testErn, testArc, CheckMode).url,
-                  id = "changeFirstTransporterVat"
-                ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHidden)
-              )
-            )
-          }
+          FirstTransporterVatSummary.row(onReviewPage = false) mustBe
+            None
         }
 
-        "when the onReviewPage boolean is true" - {
+        "when there is an answer" - {
 
-          "when there is no answer in either 801 or user answers" in {
-            implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers, movementDetails = maxGetMovementResponse.copy(firstTransporterTrader = None))
+          implicit lazy val request = dataRequest(
+            FakeRequest(),
+            emptyUserAnswers.set(FirstTransporterVatPage, VatNumberModel(hasVatNumber = true, Some(testVatNumber)))
+          )
 
-            FirstTransporterVatSummary.row(onReviewPage = true) mustBe
-              SummaryListRowViewModel(
+          "when not on the review page" - {
+
+            "should have change links" in {
+
+              FirstTransporterVatSummary.row(onReviewPage = false) mustBe Some(SummaryListRowViewModel(
                 key = messagesForLanguage.cyaLabel,
-                value = Value(Text(messagesForLanguage.notProvided)),
+                value = Value(Text(testVatNumber)),
+                actions = Seq(
+                  ActionItemViewModel(
+                    content = messagesForLanguage.change,
+                    href = controllers.sections.firstTransporter.routes.FirstTransporterVatController.onPageLoad(testErn, testArc, CheckMode).url,
+                    id = "changeFirstTransporterVatNumber"
+                  ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHidden)
+                )
+              ))
+            }
+          }
+
+          "when on the review page" - {
+
+            "should have no change links" in {
+
+              FirstTransporterVatSummary.row(onReviewPage = true) mustBe Some(SummaryListRowViewModel(
+                key = messagesForLanguage.cyaLabel,
+                value = Value(Text(testVatNumber)),
                 actions = Seq()
-              )
-          }
-
-          "when there's no answer in the user answers (defaulting to 801)" in {
-            implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers)
-
-            FirstTransporterVatSummary.row(onReviewPage = true) mustBe SummaryListRowViewModel(
-              key = messagesForLanguage.cyaLabel,
-              value = Value(Text("FirstTransporterTraderVatNumber")),
-              actions = Seq()
-            )
-          }
-
-          "when there is an answer" in {
-            implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(FirstTransporterVatPage, testVatNumber))
-
-            FirstTransporterVatSummary.row(onReviewPage = true) mustBe SummaryListRowViewModel(
-              key = messagesForLanguage.cyaLabel,
-              value = Value(Text(testVatNumber)),
-              actions = Seq()
-            )
+              ))
+            }
           }
         }
       }

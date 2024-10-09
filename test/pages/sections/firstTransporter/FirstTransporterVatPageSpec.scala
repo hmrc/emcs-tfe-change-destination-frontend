@@ -17,6 +17,7 @@
 package pages.sections.firstTransporter
 
 import base.SpecBase
+import models.VatNumberModel
 import models.response.emcsTfe.TraderModel
 import play.api.test.FakeRequest
 
@@ -25,18 +26,19 @@ class FirstTransporterVatPageSpec extends SpecBase {
   val firstTransporterTrader: TraderModel = maxGetMovementResponse.firstTransporterTrader.get
 
   "getValueFromIE801" - {
-    "must return Some(_)" - {
+    "must return VatTraderModel" - {
       "when first transporter trader is defined and has a VAT number" in {
-        FirstTransporterVatPage.getValueFromIE801(dataRequest(FakeRequest())) mustBe firstTransporterTrader.vatNumber
+        FirstTransporterVatPage.getValueFromIE801(dataRequest(FakeRequest())) mustBe
+          Some(VatNumberModel(hasVatNumber = true, firstTransporterTrader.vatNumber))
       }
-    }
-    "must return None" - {
       "when first transporter trader and has no vat number" in {
         FirstTransporterVatPage.getValueFromIE801(dataRequest(
           FakeRequest(),
           movementDetails = maxGetMovementResponse.copy(firstTransporterTrader = Some(firstTransporterTrader.copy(vatNumber = None)))
-        )) mustBe None
+        )) mustBe Some(VatNumberModel(hasVatNumber = false, None))
       }
+    }
+    "must return None" - {
       "when first transporter trader doesn't exist" in {
         FirstTransporterVatPage.getValueFromIE801(dataRequest(
           FakeRequest(),

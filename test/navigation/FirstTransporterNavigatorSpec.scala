@@ -20,7 +20,7 @@ import base.SpecBase
 import controllers.routes
 import models.requests.DataRequest
 import models.sections.ReviewAnswer.{ChangeAnswers, KeepAnswers}
-import models.{CheckMode, NormalMode, ReviewMode, UserAddress}
+import models.{CheckMode, NormalMode, ReviewMode, UserAddress, VatNumberModel}
 import pages._
 import pages.sections.firstTransporter._
 import play.api.mvc.AnyContentAsEmpty
@@ -120,7 +120,7 @@ class FirstTransporterNavigatorSpec extends SpecBase {
       "must redirect to FirstTransporterVatController" - {
         "when FirstTransporterNamePage is empty" in {
           val userAnswers = emptyUserAnswers
-            .set(FirstTransporterVatPage, "")
+            .set(FirstTransporterVatPage, VatNumberModel(hasVatNumber = false, None))
             .set(FirstTransporterAddressPage, UserAddress(None, "", "", ""))
           navigator.nextPage(FirstTransporterNamePage, CheckMode, userAnswers)(dataRequest(FakeRequest(), movementDetails = maxGetMovementResponse.copy(firstTransporterTrader = None))) mustBe
             controllers.sections.firstTransporter.routes.FirstTransporterVatController.onPageLoad(userAnswers.ern, userAnswers.arc, NormalMode)
@@ -135,7 +135,7 @@ class FirstTransporterNavigatorSpec extends SpecBase {
         "when FirstTransporterAddressPage is empty" in {
           val userAnswers = emptyUserAnswers
             .set(FirstTransporterNamePage, "")
-            .set(FirstTransporterVatPage, "")
+            .set(FirstTransporterVatPage, VatNumberModel(hasVatNumber = false, None))
           navigator.nextPage(FirstTransporterNamePage, CheckMode, userAnswers)(dataRequest(FakeRequest(), movementDetails = maxGetMovementResponse.copy(firstTransporterTrader = None))) mustBe
             controllers.sections.firstTransporter.routes.FirstTransporterVatController.onPageLoad(userAnswers.ern, userAnswers.arc, NormalMode)
         }
@@ -144,7 +144,7 @@ class FirstTransporterNavigatorSpec extends SpecBase {
         "when FirstTransporterNamePage, FirstTransporterVatPage and FirstTransporterAddressPage are non-empty" in {
           val userAnswers = emptyUserAnswers
             .set(FirstTransporterNamePage, "")
-            .set(FirstTransporterVatPage, "")
+            .set(FirstTransporterVatPage, VatNumberModel(hasVatNumber = false, None))
             .set(FirstTransporterAddressPage, UserAddress(None, "", "", ""))
           navigator.nextPage(FirstTransporterNamePage, CheckMode, userAnswers) mustBe
             controllers.sections.firstTransporter.routes.FirstTransporterCheckAnswersController.onPageLoad(userAnswers.ern, userAnswers.arc)

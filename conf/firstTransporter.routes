@@ -9,7 +9,6 @@ GET         /trader/:ern/movement/:arc/first-transporter/vat                   c
 POST        /trader/:ern/movement/:arc/first-transporter/vat                   controllers.sections.firstTransporter.FirstTransporterVatController.onSubmit(ern: String, arc: String, mode: Mode = NormalMode)
 GET         /trader/:ern/movement/:arc/first-transporter/vat/change            controllers.sections.firstTransporter.FirstTransporterVatController.onPageLoad(ern: String, arc: String, mode: Mode = CheckMode)
 POST        /trader/:ern/movement/:arc/first-transporter/vat/change            controllers.sections.firstTransporter.FirstTransporterVatController.onSubmit(ern: String, arc: String, mode: Mode = CheckMode)
-GET         /trader/:ern/movement/:arc/first-transporter/vat/non-gb-vat        controllers.sections.firstTransporter.FirstTransporterVatController.onNonGbVAT(ern: String, arc: String)
 
 GET         /trader/:ern/movement/:arc/first-transporter/address               controllers.sections.firstTransporter.FirstTransporterAddressController.onPageLoad(ern: String, arc: String, mode: Mode = NormalMode)
 POST        /trader/:ern/movement/:arc/first-transporter/address               controllers.sections.firstTransporter.FirstTransporterAddressController.onSubmit(ern: String, arc: String, mode: Mode = NormalMode)

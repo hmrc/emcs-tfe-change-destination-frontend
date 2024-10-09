@@ -18,17 +18,44 @@ package forms.sections.firstTransporter
 
 import forms.ONLY_ALPHANUMERIC_REGEX
 import forms.mappings.Mappings
+import models.VatNumberModel
 import play.api.data.Form
+import play.api.data.Forms.mapping
+import uk.gov.voa.play.form.ConditionalMappings
 
 import javax.inject.Inject
 
 class FirstTransporterVatFormProvider @Inject() extends Mappings {
 
-  def apply(): Form[String] =
+  import FirstTransporterVatFormProvider._
+
+  def apply(): Form[VatNumberModel] =
     Form(
-      "value" -> text("firstTransporterVat.error.required")
-        .verifying(maxLength(12, "firstTransporterVat.error.length"))
-        .transform[String](_.replace("-", "").replace(" ", ""), identity)
-        .verifying(regexpUnlessEmpty(ONLY_ALPHANUMERIC_REGEX, "firstTransporterVat.error.alphanumeric"))
+      mapping(
+        hasVatField -> boolean(radioRequired),
+        vatNumberField -> ConditionalMappings.mandatoryIfTrue(hasVatField,
+          text(vatRequired)
+            .transform[String](_.replace("-", "").replace(" ", ""), identity)
+            .verifying(
+              firstError(
+                maxLength(vatNumberMaxLength, vatNumberLength),
+                regexp(ONLY_ALPHANUMERIC_REGEX, vatNumberInvalid)
+              )
+            )
+
+        )
+      )(VatNumberModel.apply)(VatNumberModel.unapply)
     )
+}
+
+object FirstTransporterVatFormProvider {
+  val hasVatField: String = "hasVatNumber"
+  val vatNumberField: String = "vatNumber"
+
+  val radioRequired = "firstTransporterVat.error.radio.required"
+  val vatRequired = "firstTransporterVat.error.input.required"
+  val vatNumberInvalid = "firstTransporterVat.error.alphanumeric"
+  val vatNumberLength = "firstTransporterVat.error.length"
+
+  val vatNumberMaxLength: Int = 14
 }

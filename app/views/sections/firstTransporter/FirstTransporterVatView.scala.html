@@ -14,20 +14,19 @@
  * limitations under the License.
  *@
 
+@import forms.sections.firstTransporter.FirstTransporterVatFormProvider
 @import models.requests.DataRequest
 @import viewmodels.InputWidth._
-@import viewmodels.LabelSize
+@import viewmodels.LegendSize
 
 @this(
         layout: templates.Layout,
         formHelper: FormWithCSRF,
         govukErrorSummary: GovukErrorSummary,
         govukInput: GovukInput,
-        govukButton: GovukButton,
+        govukRadios: GovukRadios,
         h2: components.h2,
-        continueOrExit: components.continueOrExit,
-        link: components.link,
-        p: components.p
+        continueOrExit: components.continueOrExit
 )
 
 @(form: Form[_], action: Call)(implicit request: DataRequest[_], messages: Messages)
@@ -41,24 +40,40 @@
         }
 
         @h2(messages("firstTransporter.subHeading", request.arc), "govuk-caption-xl", hiddenContent = Some(messages("subHeading.hidden")))
-        @govukInput(
-            InputViewModel(
-                field = form("value"),
-                label = LabelViewModel(Text(messages("firstTransporterVat.heading"))).asPageHeading(LabelSize.Large)
-            )
-                    .withWidth(Full)
-                    .withHint(HintViewModel(Text(messages("firstTransporterVat.hint"))))
-        )
 
-        @p() {
-            @link(
-                controllers.sections.firstTransporter.routes.FirstTransporterVatController.onNonGbVAT(request.ern, request.arc).url,
-                "firstTransporterVat.notUkVatLink"
+        @govukRadios(
+            RadiosViewModel.apply(
+                field = form(FirstTransporterVatFormProvider.hasVatField),
+                items = Seq(
+                    RadioItem(
+                        id      = Some(form(FirstTransporterVatFormProvider.hasVatField).id),
+                        value   = Some("true"),
+                        content = Text(messages("site.yes")),
+                        conditionalHtml = Some(transporterVat)
+                    ),
+                    RadioItem(
+                        id      = Some(s"${form(FirstTransporterVatFormProvider.hasVatField).id}-no"),
+                        value   = Some("false"),
+                        content = Text(messages("site.no"))
+                    )
+                ),
+                legend = LegendViewModel(Text(messages("firstTransporterVat.heading"))).asPageHeading(LegendSize.Large)
             )
-        }
+            .withHint(Hint(content = Text(messages("firstTransporterVat.hint"))))
+        )
 
         @continueOrExit()
     }
+}
+
+@transporterVat = {
+    @govukInput(
+        InputViewModel(
+            field = form(FirstTransporterVatFormProvider.vatNumberField),
+            label = LabelViewModel(messages("firstTransporterVat.input.label"))
+        )
+        .withWidth(TwoThirds)
+    )
 }
 
 @{

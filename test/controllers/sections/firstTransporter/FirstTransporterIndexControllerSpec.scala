@@ -20,7 +20,7 @@ import base.SpecBase
 import controllers.actions.{FakeDataRetrievalAction, FakeMovementAction}
 import mocks.services.MockUserAnswersService
 import models.sections.ReviewAnswer.{ChangeAnswers, KeepAnswers}
-import models.{NormalMode, UserAddress, UserAnswers}
+import models.{NormalMode, UserAddress, UserAnswers, VatNumberModel}
 import navigation.FakeNavigators.FakeFirstTransporterNavigator
 import pages.sections.firstTransporter.{FirstTransporterAddressPage, FirstTransporterNamePage, FirstTransporterReviewPage, FirstTransporterVatPage}
 import play.api.http.Status.SEE_OTHER
@@ -50,7 +50,7 @@ class FirstTransporterIndexControllerSpec extends SpecBase with MockUserAnswersS
       "must redirect to the CYA controller" in new Fixture(Some(
         emptyUserAnswers
           .set(FirstTransporterNamePage, "")
-          .set(FirstTransporterVatPage, "")
+          .set(FirstTransporterVatPage, VatNumberModel(hasVatNumber = false, None))
           .set(FirstTransporterAddressPage, UserAddress(None, "", "", ""))
           .set(FirstTransporterReviewPage, ChangeAnswers))) {
 
@@ -67,7 +67,7 @@ class FirstTransporterIndexControllerSpec extends SpecBase with MockUserAnswersS
       "must redirect to the Review controller" in new Fixture(Some(
         emptyUserAnswers
           .set(FirstTransporterNamePage, "")
-          .set(FirstTransporterVatPage, "")
+          .set(FirstTransporterVatPage, VatNumberModel(hasVatNumber = false, None))
           .set(FirstTransporterAddressPage, UserAddress(None, "", "", "")))) {
 
         val result = testController.onPageLoad(testErn, testArc)(request)
