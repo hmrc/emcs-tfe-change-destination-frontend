@@ -18,7 +18,6 @@ package viewmodels.checkAnswers.sections.firstTransporter
 
 import models.CheckMode
 import models.requests.DataRequest
-import pages.QuestionPage
 import pages.sections.firstTransporter.FirstTransporterVatPage
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.Aliases.Text
@@ -28,25 +27,26 @@ import viewmodels.implicits._
 
 object FirstTransporterVatSummary {
 
-  def row(onReviewPage: Boolean)(implicit request: DataRequest[_], messages: Messages): SummaryListRow = {
-
-    val namePage: QuestionPage[String] = FirstTransporterVatPage
-
-    SummaryListRowViewModel(
-      key = "firstTransporterVat.checkYourAnswers.label",
-      value = ValueViewModel(Text(request.userAnswers.get(namePage).getOrElse(messages("site.notProvided")))),
-      actions = if (onReviewPage) Seq() else Seq(
-        ActionItemViewModel(
-          content = "site.change",
-          href = controllers.sections.firstTransporter.routes.FirstTransporterVatController.onPageLoad(
-            ern = request.userAnswers.ern,
-            arc = request.userAnswers.arc,
-            mode = CheckMode
-          ).url,
-          id = "changeFirstTransporterVat"
-        )
-          .withVisuallyHiddenText(messages("firstTransporterVat.change.hidden"))
-      )
-    )
-  }
+  def row(onReviewPage: Boolean)(implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] =
+    FirstTransporterVatPage.value.flatMap {
+      _.vatNumber.map {
+        vatNumber =>
+          SummaryListRowViewModel(
+            key = "firstTransporterVat.vatNumber.checkYourAnswers.label",
+            value = ValueViewModel(Text(vatNumber)),
+            actions = if (onReviewPage) Seq() else Seq(
+              ActionItemViewModel(
+                content = "site.change",
+                href = controllers.sections.firstTransporter.routes.FirstTransporterVatController.onPageLoad(
+                  ern = request.userAnswers.ern,
+                  arc = request.userAnswers.arc,
+                  mode = CheckMode
+                ).url,
+                id = "changeFirstTransporterVatNumber"
+              )
+                .withVisuallyHiddenText(messages("firstTransporterVat.change.hidden"))
+            )
+          )
+      }
+    }
 }

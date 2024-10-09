@@ -16,7 +16,7 @@
 
 package fixtures
 
-import models.UserAnswers
+import models.{UserAnswers, VatNumberModel}
 import models.response.SubmitChangeDestinationResponse
 import models.sections.ReviewAnswer.ChangeAnswers
 import models.sections.consignee.ConsigneeExportInformation.VatNumber
@@ -192,7 +192,7 @@ trait SubmitChangeDestinationFixtures extends GetMovementResponseFixtures { _: B
     // firstTransporterTrader
     .set(FirstTransporterNamePage, "first name")
     .set(FirstTransporterAddressPage, testUserAddress.copy(street = "first street"))
-    .set(FirstTransporterVatPage, "first vat")
+    .set(FirstTransporterVatPage, VatNumberModel(hasVatNumber = true, Some("first vat")))
     // headerEadEsad
     .set(JourneyTimeHoursPage, 2)
     // transportMode

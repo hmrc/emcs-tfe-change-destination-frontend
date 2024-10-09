@@ -461,19 +461,22 @@ firstTransporterName.error.invalidCharacter = Business name must not contain < a
 firstTransporterName.checkYourAnswersLabel = Business name
 firstTransporterName.change.hidden = first transporters business name
 
-firstTransporterVat.title = What is the first transporter’s VAT registration number?
-firstTransporterVat.heading = What is the first transporter’s VAT registration number?
-firstTransporterVat.hint = This is 9 or 12 numbers, sometimes with ‘GB’ at the start, like 123456789 or GB123456789.
-firstTransporterVat.notUkVatLink = The first transporter is not VAT registered
-firstTransporterVat.error.required = Enter a VAT registration number
-firstTransporterVat.error.length = VAT registration number must be 12 characters or less
-firstTransporterVat.error.alphanumeric = VAT registration number number must only contain letters and numbers
-firstTransporterVat.checkYourAnswersLabel = VAT registration number
+firstTransporterVat.title = Is the first transporter VAT registered in the UK?
+firstTransporterVat.heading = Is the first transporter VAT registered in the UK?
+firstTransporterVat.hint = A UK VAT registration number is 9 numbers, sometimes with ‘GB’ at the start, for example 123456789 or GB123456789.
+firstTransporterVat.input.label = UK VAT registration number
+firstTransporterVat.error.input.required = Enter a VAT registration number
+firstTransporterVat.error.radio.required = Select yes if the first transporter is VAT registered in the UK
+firstTransporterVat.error.length = VAT registration number must be 14 characters or less
+firstTransporterVat.error.alphanumeric = VAT registration number must only contain letters and numbers
 firstTransporterVat.change.hidden = first transporters VAT registration number
+firstTransporterVat.choice.change.hidden = VAT registered in the UK
 
 firstTransporterCheckAnswers.heading = Check your answers
+firstTransporterCheckAnswers.title = Check your answers
 firstTransporterName.checkYourAnswers.label = Business name
-firstTransporterVat.checkYourAnswers.label = VAT registration number
+firstTransporterVat.hasVat.checkYourAnswers.label = VAT registered in the UK
+firstTransporterVat.vatNumber.checkYourAnswers.label = VAT registration number
 
 consigneeExcise.heading = What is the consignee’s excise registration number (ERN)?
 consigneeExcise.title = What is the consignee’s excise registration number (ERN)?
