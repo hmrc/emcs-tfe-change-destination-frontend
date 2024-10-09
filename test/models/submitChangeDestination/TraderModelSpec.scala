@@ -18,6 +18,7 @@ package models.submitChangeDestination
 
 import base.SpecBase
 import config.Constants.NONGBVAT
+import models.VatNumberModel
 import models.requests.DataRequest
 import models.response.emcsTfe
 import models.response.emcsTfe.{GetMovementResponse, AddressModel => GetMovementAddressModel, TraderModel => GetMovementTraderModel}
@@ -477,7 +478,7 @@ class TraderModelSpec extends SpecBase {
           emptyUserAnswers
             .set(FirstTransporterNamePage, "first name")
             .set(FirstTransporterAddressPage, testUserAddress.copy(street = "first street"))
-            .set(FirstTransporterVatPage, "first vat")
+            .set(FirstTransporterVatPage, VatNumberModel(hasVatNumber = true, Some("first vat")))
         )
 
         TraderModel.applyFirstTransporter mustBe firstTransporterTrader

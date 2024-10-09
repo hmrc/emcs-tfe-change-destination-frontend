@@ -28,9 +28,10 @@ class FirstTransporterCheckAnswersHelper @Inject()() {
   def summaryList(onReviewPage: Boolean)(implicit request: DataRequest[_], messages: Messages): SummaryList =
     SummaryListViewModel(
       rows = Seq(
-        FirstTransporterNameSummary.row(onReviewPage),
+        Some(FirstTransporterNameSummary.row(onReviewPage)),
+        FirstTransporterVatChoiceSummary.row(onReviewPage),
         FirstTransporterVatSummary.row(onReviewPage),
-        FirstTransporterAddressSummary.row(onReviewPage)
-      )
+        Some(FirstTransporterAddressSummary.row(onReviewPage))
+      ).flatten
     ).withCssClass("govuk-!-margin-bottom-9")
 }

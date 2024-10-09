@@ -16,38 +16,125 @@
 
 package forms.sections.firstTransporter
 
+import forms.ONLY_ALPHANUMERIC_REGEX
 import forms.behaviours.StringFieldBehaviours
+import models.VatNumberModel
 import play.api.data.FormError
 
 class FirstTransporterVatFormProviderSpec extends StringFieldBehaviours {
 
-  val requiredKey = "firstTransporterVat.error.required"
+  val requiredKey = "firstTransporterVat.error.input.required"
   val lengthKey = "firstTransporterVat.error.length"
-  val maxLength = 12
+  val maxLength = 14
 
   val form = new FirstTransporterVatFormProvider()()
 
-  ".value" - {
+  "when binding 'Yes'" - {
 
-    val fieldName = "value"
+    "when vat number contains invalid characters" - {
 
-    behave like fieldThatBindsValidData(
-      form,
-      fieldName,
-      "0" * maxLength
-    )
+      "must error when binding the form" in {
 
-    behave like fieldWithMaxLength(
-      form,
-      fieldName,
-      maxLength = maxLength,
-      lengthError = FormError(fieldName, lengthKey, Seq(maxLength))
-    )
+        val boundForm = form.bind(Map(
+          FirstTransporterVatFormProvider.hasVatField -> "true",
+          FirstTransporterVatFormProvider.vatNumberField -> "<"
+        ))
 
-    behave like mandatoryField(
-      form,
-      fieldName,
-      requiredError = FormError(fieldName, requiredKey)
-    )
+        boundForm.errors mustBe Seq(FormError(
+          FirstTransporterVatFormProvider.vatNumberField,
+          FirstTransporterVatFormProvider.vatNumberInvalid,
+          Seq(ONLY_ALPHANUMERIC_REGEX)
+        ))
+      }
+    }
+
+    "when vat number is not entered" - {
+
+      "must error when binding the form" in {
+
+        val boundForm = form.bind(Map(
+          FirstTransporterVatFormProvider.hasVatField -> "true",
+          FirstTransporterVatFormProvider.vatNumberField -> ""
+        ))
+
+        boundForm.errors mustBe Seq(FormError(
+          FirstTransporterVatFormProvider.vatNumberField,
+          FirstTransporterVatFormProvider.vatRequired,
+          Seq()
+        ))
+      }
+    }
+
+    "when vat number is too long" - {
+
+      "must error when binding the form" in {
+
+        val boundForm = form.bind(Map(
+          FirstTransporterVatFormProvider.hasVatField -> "true",
+          FirstTransporterVatFormProvider.vatNumberField -> "a" * (FirstTransporterVatFormProvider.vatNumberMaxLength + 1)
+        ))
+
+        boundForm.errors mustBe Seq(FormError(
+          FirstTransporterVatFormProvider.vatNumberField,
+          FirstTransporterVatFormProvider.vatNumberLength,
+          Seq(FirstTransporterVatFormProvider.vatNumberMaxLength)
+        ))
+      }
+    }
+
+
+    "when vat number is valid" - {
+
+      "must bind the form successfully when true with value" in {
+
+        val boundForm = form.bind(Map(
+          FirstTransporterVatFormProvider.hasVatField -> "true",
+          FirstTransporterVatFormProvider.vatNumberField -> "123456789"
+        ))
+
+        boundForm.value mustBe Some(VatNumberModel(hasVatNumber = true, Some("123456789")))
+      }
+    }
   }
+
+  "when binding 'No'" - {
+
+    "must bind the form successfully when false with value (should be transformed to None on bind)" in {
+
+      val boundForm = form.bind(Map(
+        FirstTransporterVatFormProvider.hasVatField -> "false",
+        FirstTransporterVatFormProvider.vatNumberField -> "123456789"
+      ))
+
+      boundForm.value mustBe Some(VatNumberModel(hasVatNumber = false, None))
+    }
+
+    "must bind the form successfully when false with NO value" in {
+
+      val boundForm = form.bind(Map(
+        FirstTransporterVatFormProvider.hasVatField -> "false"
+      ))
+
+      boundForm.errors mustBe Seq()
+
+      boundForm.value mustBe Some(VatNumberModel(hasVatNumber = false, None))
+    }
+  }
+
+  "when no option is selected'" - {
+
+    "must error with correct error message when binding the form" in {
+
+      val boundForm = form.bind(Map(
+        FirstTransporterVatFormProvider.hasVatField -> ""
+      ))
+
+      boundForm.errors mustBe Seq(FormError(
+        FirstTransporterVatFormProvider.hasVatField,
+        FirstTransporterVatFormProvider.radioRequired
+      ))
+    }
+  }
+
+
 }
