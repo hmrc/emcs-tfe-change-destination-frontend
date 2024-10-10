@@ -18,6 +18,8 @@ package forms.sections.destination
 
 import forms.XSS_REGEX
 import forms.mappings.Mappings
+import models.sections.info.movementScenario.MovementScenario
+import pages.sections.destination.DestinationWarehouseVatPage
 import play.api.data.Form
 
 import javax.inject.Inject
@@ -25,11 +27,11 @@ import javax.inject.Inject
 
 class DestinationWarehouseVatFormProvider @Inject() extends Mappings {
 
-  private val VAT_NUMBER_MAX_LENGTH = 14
+  private val VAT_NUMBER_MAX_LENGTH = 16
 
-  def apply(): Form[String] = {
+  def apply(destinationType: MovementScenario): Form[String] =
     Form(
-      "value" -> text("destinationWarehouseVat.error.required")
+      "value" -> text("destinationWarehouseVat.error.required" + (if(DestinationWarehouseVatPage.isSkippable(destinationType)) ".skippable" else ""))
         .verifying(
           firstError(
             regexpUnlessEmpty(XSS_REGEX, "destinationWarehouseVat.error.invalidCharacters"),
@@ -37,5 +39,4 @@ class DestinationWarehouseVatFormProvider @Inject() extends Mappings {
           )
         )
     )
-  }
 }

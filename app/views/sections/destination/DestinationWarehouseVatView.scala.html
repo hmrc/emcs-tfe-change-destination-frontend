@@ -18,23 +18,25 @@
 @import models.sections.info.movementScenario.MovementScenario
 @import viewmodels.InputWidth._
 @import viewmodels.LabelSize
+@import pages.sections.destination.DestinationWarehouseVatPage
 
 @this(
-    layout: templates.Layout,
-    formHelper: FormWithCSRF,
-    govukErrorSummary: GovukErrorSummary,
-    govukInput: GovukInput,
-    govukButton: GovukButton,
-    continueOrSaveOrSkip: components.continueOrSaveOrSkip,
-    h1: components.h1,
-    h2: components.h2,
-    p: components.p,
-    link: components.link
+        layout: templates.Layout,
+        formHelper: FormWithCSRF,
+        govukErrorSummary: GovukErrorSummary,
+        govukInput: GovukInput,
+        govukButton: GovukButton,
+        continueOrSkip: components.continueOrSkip,
+        continueOrExit: components.continueOrExit,
+        h1: components.h1,
+        h2: components.h2,
+        p: components.p,
+        link: components.link
 )
 
 @(form: Form[_], action: Call, movementScenario: MovementScenario, skipQuestionCall: Call)(implicit request: DataRequest[_], messages: Messages)
 
- @layout(pageTitle = title(form, messages("destinationWarehouseVat.title", movementScenario.stringValue)), maybeShowActiveTrader = maybeShowActiveTrader(request)) {
+@layout(pageTitle = title(form, messages("destinationWarehouseVat.title", movementScenario.stringValue)), maybeShowActiveTrader = maybeShowActiveTrader(request)) {
 
     @formHelper(action, Symbol("autoComplete") -> "off") {
         @if(form.errors.nonEmpty) {
@@ -46,17 +48,20 @@
         @govukInput(
             InputViewModel(
                 field = form("value"),
-                label = LabelViewModel(Text(messages("destinationWarehouseVat.heading" , movementScenario.stringValue))).asPageHeading(LabelSize.Large)
+                label = LabelViewModel(Text(messages("destinationWarehouseVat.heading" , movementScenario.stringValue))).asPageHeading(LabelSize.Large),
             )
+            .withHint(HintViewModel(Text(messages("destinationWarehouseVat.hint"))))
             .withWidth(Full)
         )
 
-    @continueOrSaveOrSkip(skipQuestionCall.url)
-
-
+        @if(DestinationWarehouseVatPage.isSkippable(movementScenario)) {
+            @continueOrSkip(skipQuestionCall.url, "site.saveAndContinue", "site.skipThisQuestion")
+        } else {
+            @continueOrExit()
+        }
     }
 }
 
 @{
-        //$COVERAGE-OFF$
+    //$COVERAGE-OFF$
 }
