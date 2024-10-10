@@ -17,46 +17,79 @@
 package forms.sections.destination
 
 import base.SpecBase
+import fixtures.messages.sections.destination.DestinationWarehouseVatMessages
 import forms.XSS_REGEX
 import forms.behaviours.StringFieldBehaviours
+import models.sections.info.movementScenario.MovementScenario
+import models.sections.info.movementScenario.MovementScenario.{RegisteredConsignee, TemporaryCertifiedConsignee}
 import play.api.data.{Form, FormError}
 
 class DestinationWarehouseVatFormProviderSpec extends SpecBase with StringFieldBehaviours {
 
   val requiredKey = "destinationWarehouseVat.error.required"
+  val requiredKeySkippable = "destinationWarehouseVat.error.required.skippable"
   val lengthKey = "destinationWarehouseVat.error.length"
-  val maxLength = 14
   val invalidCharactersKey = "destinationWarehouseVat.error.invalidCharacters"
+  val maxLength = 16
 
-  val form: Form[String] = new DestinationWarehouseVatFormProvider()()
+  def form(destinationType: MovementScenario = RegisteredConsignee): Form[String] =
+    new DestinationWarehouseVatFormProvider()(destinationType)
 
   ".value" - {
 
     val fieldName = "value"
 
     behave like fieldThatBindsValidData(
-      form,
+      form(),
       fieldName,
       "0" * maxLength
     )
 
     behave like fieldWithMaxLength(
-      form,
+      form(),
       fieldName,
       maxLength = maxLength,
       lengthError = FormError(fieldName, lengthKey, Seq(maxLength))
     )
 
     behave like fieldWithXSSCharacters(
-      form,
+      form(),
       fieldName,
       FormError(fieldName, invalidCharactersKey, Seq(XSS_REGEX))
     )
 
-    behave like mandatoryField(
-      form,
-      fieldName,
-      requiredError = FormError(fieldName, requiredKey)
-    )
+    "when skippable" - {
+      behave like mandatoryField(
+        form(RegisteredConsignee),
+        fieldName,
+        requiredError = FormError(fieldName, requiredKeySkippable)
+      )
+    }
+
+    "when NOT skippable" - {
+      behave like mandatoryField(
+        form(TemporaryCertifiedConsignee),
+        fieldName,
+        requiredError = FormError(fieldName, requiredKey)
+      )
+    }
+  }
+
+  "Error Message content" - {
+
+    Seq(DestinationWarehouseVatMessages.English).foreach { messagesForLanguage =>
+
+      s"when being rendered in language code of '${messagesForLanguage.lang.code}'" - {
+
+        implicit val msgs = messages(Seq(messagesForLanguage.lang))
+
+        "output the correct error message content" in {
+          msgs(requiredKey) mustBe messagesForLanguage.errorRequired
+          msgs(requiredKeySkippable) mustBe messagesForLanguage.errorRequiredSkippable
+          msgs(lengthKey, maxLength) mustBe messagesForLanguage.errorLength(maxLength)
+          msgs(invalidCharactersKey) mustBe messagesForLanguage.errorInvalidCharacters
+        }
+      }
+    }
   }
 }

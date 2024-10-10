@@ -21,11 +21,12 @@ import controllers.actions.{FakeDataRetrievalAction, FakeMovementAction}
 import controllers.routes
 import forms.sections.destination.DestinationWarehouseVatFormProvider
 import mocks.services.MockUserAnswersService
+import models.sections.info.DispatchPlace.GreatBritain
 import models.sections.info.movementScenario.MovementScenario._
 import models.{NormalMode, UserAnswers}
 import navigation.FakeNavigators.FakeDestinationNavigator
 import pages.sections.destination.{DestinationDetailsChoicePage, DestinationWarehouseVatPage}
-import pages.sections.info.DestinationTypePage
+import pages.sections.info.{DestinationTypePage, DispatchPlacePage}
 import play.api.data.Form
 import play.api.mvc.Call
 import play.api.test.FakeRequest
@@ -37,7 +38,7 @@ import scala.concurrent.Future
 class DestinationWarehouseVatControllerSpec extends SpecBase with MockUserAnswersService {
 
   lazy val formProvider: DestinationWarehouseVatFormProvider = new DestinationWarehouseVatFormProvider()
-  lazy val form: Form[String] = formProvider()
+  lazy val form: Form[String] = formProvider(RegisteredConsignee)
   lazy val view: DestinationWarehouseVatView = app.injector.instanceOf[DestinationWarehouseVatView]
 
   lazy val destinationWarehouseVatRoute: String =

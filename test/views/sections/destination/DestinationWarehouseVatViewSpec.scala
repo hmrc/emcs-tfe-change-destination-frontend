@@ -20,7 +20,7 @@ import base.SpecBase
 import fixtures.messages.sections.destination.DestinationWarehouseVatMessages
 import forms.sections.destination.DestinationWarehouseVatFormProvider
 import models.requests.DataRequest
-import models.sections.info.movementScenario.MovementScenario
+import models.sections.info.movementScenario.MovementScenario.{RegisteredConsignee, TemporaryCertifiedConsignee}
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import play.api.i18n.Messages
@@ -31,6 +31,12 @@ import views.{BaseSelectors, ViewBehaviours}
 
 
 class DestinationWarehouseVatViewSpec extends SpecBase with ViewBehaviours {
+
+  lazy val view = app.injector.instanceOf[DestinationWarehouseVatView]
+  lazy val form = app.injector.instanceOf[DestinationWarehouseVatFormProvider]
+
+  val skipRoute: Call = Call("GET", "/skip-url")
+
   object Selectors extends BaseSelectors
 
   "DestinationWarehouseVatView" - {
@@ -42,20 +48,41 @@ class DestinationWarehouseVatViewSpec extends SpecBase with ViewBehaviours {
         implicit val msgs: Messages = messages(Seq(messagesForLanguage.lang))
         implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), emptyUserAnswers)
 
-       lazy val view = app.injector.instanceOf[DestinationWarehouseVatView]
-        val form = app.injector.instanceOf[DestinationWarehouseVatFormProvider]
+        "when the DestinationType is skippable" - {
 
-        val skipRoute: Call = Call("GET", "/skip-url")
+          implicit val doc: Document = Jsoup.parse(view(
+            form = form(RegisteredConsignee),
+            action = testOnwardRoute,
+            movementScenario = RegisteredConsignee,
+            skipQuestionCall = skipRoute
+          ).toString())
 
-        implicit val doc: Document = Jsoup.parse(view(form(), testOnwardRoute, MovementScenario.RegisteredConsignee,
-          skipQuestionCall = skipRoute).toString())
+          behave like pageWithExpectedElementsAndMessages(Seq(
+            Selectors.title -> messagesForLanguage.title(RegisteredConsignee.stringValue),
+            Selectors.h1 -> messagesForLanguage.heading(RegisteredConsignee.stringValue),
+            Selectors.hint -> messagesForLanguage.hint,
+            Selectors.button -> messagesForLanguage.saveAndContinue,
+            Selectors.link(1) -> messagesForLanguage.skipQuestion
+          ))
+        }
 
-        behave like pageWithExpectedElementsAndMessages(Seq(
-          Selectors.title -> messagesForLanguage.title,
-          Selectors.h1 -> messagesForLanguage.heading,
-          Selectors.button -> messagesForLanguage.saveAndContinue,
-          Selectors.link(1) -> messagesForLanguage.skipThisQuestion
-        ))
+        "when the DestinationType is NOT skippable" - {
+
+          implicit val doc: Document = Jsoup.parse(view(
+            form = form(TemporaryCertifiedConsignee),
+            action = testOnwardRoute,
+            movementScenario = TemporaryCertifiedConsignee,
+            skipQuestionCall = skipRoute
+          ).toString())
+
+          behave like pageWithExpectedElementsAndMessages(Seq(
+            Selectors.title -> messagesForLanguage.title(TemporaryCertifiedConsignee.stringValue),
+            Selectors.h1 -> messagesForLanguage.heading(TemporaryCertifiedConsignee.stringValue),
+            Selectors.hint -> messagesForLanguage.hint,
+            Selectors.button -> messagesForLanguage.saveAndContinue,
+            Selectors.link(1) -> messagesForLanguage.returnToDraft
+          ))
+        }
       }
     }
   }

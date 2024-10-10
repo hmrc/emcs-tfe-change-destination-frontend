@@ -21,13 +21,15 @@ import fixtures.messages.{BaseEnglish, BaseMessages, i18n}
 object DestinationWarehouseVatMessages {
 
   sealed trait ViewMessages extends BaseMessages { _: i18n =>
-    val title = titleHelper("What is the VAT number for the registered consignee? (optional)")
-    val heading: String = "What is the VAT number for the registered consignee? (optional)"
+    val heading: String => String = "Enter an identifier for the " + _
+    val title: String => String = destinationType => titleHelper(heading(destinationType))
+    val hint: String = "This can be a VAT registration number or any other identifier, such as an excise ID."
     val cyaLabel: String = "Identification number"
-    val cyaChangeHidden: String = "Identification number"
-    val errorRequired: String = "Enter a VAT number or use link to skip this question"
-    val errorInvalidCharacters: String = "VAT registration number must not contain special characters"
-    val errorLength: String = "VAT registration number must be 14 characters or less"
+    val cyaChangeHidden: String = "identification number"
+    val errorRequired: String = "Enter an identifier"
+    val errorRequiredSkippable: String = "Enter an identifier or use link to skip this question"
+    val errorInvalidCharacters: String = "Identifier must not include < and > and : and ;"
+    val errorLength: Int => String = i => s"Identifier must be $i characters or less"
   }
 
   object English extends ViewMessages with BaseEnglish
