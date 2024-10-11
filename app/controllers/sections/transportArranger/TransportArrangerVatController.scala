@@ -16,12 +16,12 @@
 
 package controllers.sections.transportArranger
 
-import config.Constants.NONGBVAT
 import controllers.BaseNavigationController
 import controllers.actions._
 import forms.sections.transportArranger.TransportArrangerVatFormProvider
+import models.Mode
 import models.requests.DataRequest
-import models.{Mode, NormalMode}
+import models.sections.transportArranger.TransportArranger
 import navigation.TransportArrangerNavigator
 import pages.sections.transportArranger.{TransportArrangerPage, TransportArrangerVatPage}
 import play.api.data.Form
@@ -47,32 +47,32 @@ class TransportArrangerVatController @Inject()(
                                               ) extends BaseNavigationController with AuthActionHelper {
 
   def onPageLoad(ern: String, arc: String, mode: Mode): Action[AnyContent] =
-    authorisedDataRequestWithUpToDateMovement(ern, arc) { implicit request =>
-      renderView(Ok, fillForm(TransportArrangerVatPage, formProvider()), mode)
+    authorisedDataRequestWithUpToDateMovementAsync(ern, arc) { implicit request =>
+      withAnswerAsync(
+        page = TransportArrangerPage,
+        redirectRoute = controllers.sections.transportArranger.routes.TransportArrangerIndexController.onPageLoad(request.ern, request.arc)
+      ) { arranger =>
+        renderView(Ok, fillForm(TransportArrangerVatPage, formProvider(arranger)), arranger, mode)
+      }
     }
 
   def onSubmit(ern: String, arc: String, mode: Mode): Action[AnyContent] =
     authorisedDataRequestWithUpToDateMovementAsync(ern, arc) { implicit request =>
-      formProvider().bindFromRequest().fold(
-        formWithErrors => Future.successful(renderView(BadRequest, formWithErrors, mode)),
-        saveAndRedirect(TransportArrangerVatPage, _, mode)
-      )
+      withAnswerAsync(
+        page = TransportArrangerPage,
+        redirectRoute = controllers.sections.transportArranger.routes.TransportArrangerIndexController.onPageLoad(request.ern, request.arc)
+      ) { arranger =>
+        formProvider(arranger).bindFromRequest().fold(
+          renderView(BadRequest, _, arranger, mode),
+          saveAndRedirect(TransportArrangerVatPage, _, mode)
+        )
+      }
     }
 
-  def onNonGbVAT(ern: String, arc: String): Action[AnyContent] =
-    authorisedDataRequestWithUpToDateMovementAsync(ern, arc) { implicit request =>
-      saveAndRedirect(TransportArrangerVatPage, NONGBVAT, NormalMode)
-    }
-
-  private def renderView(status: Status, form: Form[_], mode: Mode)(implicit request: DataRequest[_]): Result =
-    withAnswer(
-      page = TransportArrangerPage,
-      redirectRoute = controllers.sections.transportArranger.routes.TransportArrangerIndexController.onPageLoad(request.ern, request.arc)
-    ) { arranger =>
-      status(view(
-        form,
-        routes.TransportArrangerVatController.onSubmit(request.ern, request.arc, mode),
-        arranger
-      ))
-    }
+  private def renderView(status: Status, form: Form[_], arranger: TransportArranger, mode: Mode)(implicit request: DataRequest[_]): Future[Result] =
+    Future.successful(status(view(
+      form,
+      routes.TransportArrangerVatController.onSubmit(request.ern, request.arc, mode),
+      arranger
+    )))
 }

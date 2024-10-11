@@ -18,7 +18,7 @@ package viewmodels.checkAnswers.sections.transportArranger
 
 import base.SpecBase
 import fixtures.messages.sections.transportArranger.TransportArrangerVatMessages
-import models.CheckMode
+import models.{CheckMode, VatNumberModel}
 import models.sections.transportArranger.TransportArranger.{Consignor, GoodsOwner, Other}
 import org.scalatest.matchers.must.Matchers
 import pages.sections.transportArranger.{TransportArrangerPage, TransportArrangerVatPage}
@@ -38,25 +38,9 @@ class TransportArrangerVatSummarySpec extends SpecBase with Matchers {
 
         implicit val msgs: Messages = app.injector.instanceOf[MessagesApi].preferred(Seq(messagesForLanguage.lang))
 
-        "when user is on the review page and TransportArranger is GoodsOwner or Other" - {
-
-          "must output a row with no change link" in {
-
-            implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(TransportArrangerPage, GoodsOwner))
-
-            TransportArrangerVatSummary.row(onReviewPage = true) mustBe Some(
-              SummaryListRowViewModel(
-                key = messagesForLanguage.cyaLabel,
-                value = Value(Text("TransportArrangerTraderVatNumber")),
-                actions = Seq()
-              )
-            )
-          }
-        }
-
         "when TransportArranger is NOT GoodsOwner or Other" - {
 
-          "must output no row" in {
+          "must output None" in {
 
             implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(TransportArrangerPage, Consignor))
 
@@ -66,52 +50,89 @@ class TransportArrangerVatSummarySpec extends SpecBase with Matchers {
 
         "when TransportArranger is GoodsOwner or Other" - {
 
-          "when there's no answer in the user answers (defaulting to 801)" - {
+          "when there's no answer" - {
 
-            "must output the expected data" in {
+            "must output the expected data (from IE801)" in {
 
               implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(TransportArrangerPage, GoodsOwner))
 
               TransportArrangerVatSummary.row(onReviewPage = false) mustBe
                 Some(
                   SummaryListRowViewModel(
-                    key = messagesForLanguage.cyaLabel,
+                    key = messagesForLanguage.cyaInputLabel,
                     value = Value(Text("TransportArrangerTraderVatNumber")),
                     actions = Seq(
                       ActionItemViewModel(
                         content = messagesForLanguage.change,
                         href = controllers.sections.transportArranger.routes.TransportArrangerVatController.onPageLoad(testErn, testArc, CheckMode).url,
                         id = "changeTransportArrangerVat"
-                      ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHidden)
+                      ).withVisuallyHiddenText(messagesForLanguage.cyaInputChangeHidden)
                     )
                   )
                 )
             }
           }
 
-          "when there's an answer" - {
+          //NONGBVAT is added when the movement is submitted
+          "when the user selected 'No' to VAT number" - {
 
-            "must output the expected row" in {
+            "must output the expected data" in {
 
               implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers
-                .set(TransportArrangerPage, Other)
-                .set(TransportArrangerVatPage, testVatNumber)
+                .set(TransportArrangerPage, GoodsOwner)
+                .set(TransportArrangerVatPage, VatNumberModel(hasVatNumber = false, None))
               )
 
-              TransportArrangerVatSummary.row(onReviewPage = false) mustBe
-                Some(
-                  SummaryListRowViewModel(
-                    key = messagesForLanguage.cyaLabel,
-                    value = Value(Text(testVatNumber)),
-                    actions = Seq(
-                      ActionItemViewModel(
-                        content = messagesForLanguage.change,
-                        href = controllers.sections.transportArranger.routes.TransportArrangerVatController.onPageLoad(testErn, testArc, CheckMode).url,
-                        id = "changeTransportArrangerVat"
-                      ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHidden)
+              TransportArrangerVatSummary.row(onReviewPage = false) mustBe None
+            }
+          }
+
+          "when there's an answer" - {
+
+            "when NOT on review page" - {
+
+              "must output the expected row (when the user selected 'Yes' to VAT number)" in {
+
+                implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers
+                  .set(TransportArrangerPage, Other)
+                  .set(TransportArrangerVatPage, VatNumberModel(hasVatNumber = true, Some(testVatNumber)))
+                )
+
+                TransportArrangerVatSummary.row(onReviewPage = false) mustBe
+                  Some(
+                    SummaryListRowViewModel(
+                      key = messagesForLanguage.cyaInputLabel,
+                      value = Value(Text(testVatNumber)),
+                      actions = Seq(
+                        ActionItemViewModel(
+                          content = messagesForLanguage.change,
+                          href = controllers.sections.transportArranger.routes.TransportArrangerVatController.onPageLoad(testErn, testArc, CheckMode).url,
+                          id = "changeTransportArrangerVat"
+                        ).withVisuallyHiddenText(messagesForLanguage.cyaInputChangeHidden)
+                      )
                     )
                   )
+              }
+            }
+
+            "when on review page" - {
+
+              "must output the expected row (when the user selected 'Yes' to VAT number)" in {
+
+                implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers
+                  .set(TransportArrangerPage, Other)
+                  .set(TransportArrangerVatPage, VatNumberModel(hasVatNumber = true, Some(testVatNumber)))
                 )
+
+                TransportArrangerVatSummary.row(onReviewPage = true) mustBe
+                  Some(
+                    SummaryListRowViewModel(
+                      key = messagesForLanguage.cyaInputLabel,
+                      value = Value(Text(testVatNumber)),
+                      actions = Seq()
+                    )
+                  )
+              }
             }
           }
         }

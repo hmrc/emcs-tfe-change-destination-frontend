@@ -30,6 +30,7 @@ class TransportArrangerCheckAnswersHelper @Inject()() {
       rows = Seq(
         TransportArrangerSummary.row(onReviewPage),
         TransportArrangerNameSummary.row(onReviewPage),
+        TransportArrangerVatChoiceSummary.row(onReviewPage),
         TransportArrangerVatSummary.row(onReviewPage),
         Some(TransportArrangerAddressSummary.row(onReviewPage))
       ).flatten

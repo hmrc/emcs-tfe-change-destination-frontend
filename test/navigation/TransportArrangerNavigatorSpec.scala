@@ -21,7 +21,7 @@ import controllers.routes
 import models.requests.DataRequest
 import models.sections.ReviewAnswer.{ChangeAnswers, KeepAnswers}
 import models.sections.transportArranger.TransportArranger.{Consignee, Consignor, GoodsOwner, Other}
-import models.{CheckMode, NormalMode, ReviewMode}
+import models.{CheckMode, NormalMode, ReviewMode, VatNumberModel}
 import pages.Page
 import pages.sections.transportArranger._
 import play.api.mvc.AnyContentAsEmpty
@@ -153,7 +153,7 @@ class TransportArrangerNavigatorSpec extends SpecBase {
 
               val userAnswers = emptyUserAnswers
                 .set(TransportArrangerPage, GoodsOwner)
-                .set(TransportArrangerVatPage, testVatNumber)
+                .set(TransportArrangerVatPage, VatNumberModel(hasVatNumber = true, Some(testVatNumber)))
 
               navigator.nextPage(TransportArrangerPage, CheckMode, userAnswers)(dataRequest(FakeRequest(), movementDetails = maxGetMovementResponse.copy(transportArrangerTrader = None))) mustBe
                 controllers.sections.transportArranger.routes.TransportArrangerNameController.onPageLoad(testErn, testArc, NormalMode)
@@ -167,7 +167,7 @@ class TransportArrangerNavigatorSpec extends SpecBase {
               val userAnswers = emptyUserAnswers
                 .set(TransportArrangerPage, Other)
                 .set(TransportArrangerNamePage, "Jeff")
-                .set(TransportArrangerVatPage, testVatNumber)
+                .set(TransportArrangerVatPage, VatNumberModel(hasVatNumber = true, Some(testVatNumber)))
                 .set(TransportArrangerAddressPage, testUserAddress)
 
               navigator.nextPage(TransportArrangerPage, CheckMode, userAnswers) mustBe

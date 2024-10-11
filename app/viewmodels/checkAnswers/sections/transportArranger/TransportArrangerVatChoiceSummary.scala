@@ -21,35 +21,33 @@ import models.requests.DataRequest
 import models.sections.transportArranger.TransportArranger.{GoodsOwner, Other}
 import pages.sections.transportArranger.{TransportArrangerPage, TransportArrangerVatPage}
 import play.api.i18n.Messages
-import play.twirl.api.HtmlFormat
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
-object TransportArrangerVatSummary {
+object TransportArrangerVatChoiceSummary {
 
   def row(onReviewPage: Boolean)(implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] = {
 
     TransportArrangerPage.value match {
       case Some(GoodsOwner | Other) =>
-        TransportArrangerVatPage.value.flatMap { answer =>
-          Option.when(answer.vatNumber.isDefined) {
-            SummaryListRowViewModel(
-              key = "transportArrangerVat.checkYourAnswers.input.label",
-              value = ValueViewModel(HtmlFormat.escape(answer.vatNumber.get).toString()),
-              actions = if(onReviewPage) Seq.empty else Seq(
-                ActionItemViewModel(
-                  content = "site.change",
-                  href = controllers.sections.transportArranger.routes.TransportArrangerVatController.onPageLoad(
-                    ern = request.userAnswers.ern,
-                    arc = request.userAnswers.arc,
-                    mode = CheckMode
-                  ).url,
-                  id = "changeTransportArrangerVat"
-                ).withVisuallyHiddenText(messages("transportArrangerVat.change.input.hidden"))
-              )
+        TransportArrangerVatPage.value.map { answer =>
+          val value = if(answer.hasVatNumber) "site.yes" else "site.no"
+          SummaryListRowViewModel(
+            key = "transportArrangerVat.checkYourAnswers.choice.label",
+            value = ValueViewModel(value),
+            actions = if(onReviewPage) Seq() else Seq(
+              ActionItemViewModel(
+                content = "site.change",
+                href = controllers.sections.transportArranger.routes.TransportArrangerVatController.onPageLoad(
+                  ern = request.userAnswers.ern,
+                  arc = request.userAnswers.arc,
+                  mode = CheckMode
+                ).url,
+                id = "changeTransportArrangerVatChoice"
+              ).withVisuallyHiddenText(messages("transportArrangerVat.change.choice.hidden"))
             )
-          }
+          )
         }
       case _ => None
     }

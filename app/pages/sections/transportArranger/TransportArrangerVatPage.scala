@@ -16,14 +16,21 @@
 
 package pages.sections.transportArranger
 
+import config.Constants.NONGBVAT
+import models.VatNumberModel
 import models.requests.DataRequest
 import pages.QuestionPage
 import play.api.libs.json.JsPath
 
-case object TransportArrangerVatPage extends QuestionPage[String] {
+case object TransportArrangerVatPage extends QuestionPage[VatNumberModel] {
   override val toString: String = "vat"
   override val path: JsPath = TransportArrangerSection.path \ toString
 
-  override def getValueFromIE801(implicit request: DataRequest[_]): Option[String] =
-    request.movementDetails.transportArrangerTrader.flatMap(_.vatNumber)
+  override def getValueFromIE801(implicit request: DataRequest[_]): Option[VatNumberModel] =
+    request.movementDetails.transportArrangerTrader.flatMap(_.vatNumber) match {
+      case Some(number) if number != NONGBVAT && !number.isBlank =>
+        Some(VatNumberModel(hasVatNumber = true, Some(number)))
+      case _ =>
+        Some(VatNumberModel(hasVatNumber = false, None))
+    }
 }
