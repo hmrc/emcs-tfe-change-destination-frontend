@@ -36,7 +36,7 @@
     @formHelper(action = controllers.sections.guarantor.routes.GuarantorArrangerController.onSubmit(request.ern, request.arc, mode), 'autoComplete -> "off") {
 
         @if(form.errors.nonEmpty) {
-            @govukErrorSummary(ErrorSummaryViewModel(form,  errorLinkOverrides = Map("value" -> "value_0")))
+            @govukErrorSummary(ErrorSummaryViewModel(form,  errorLinkOverrides = Map("value" -> "value_1")))
         }
 
         @h2(messages("guarantor.subHeading"), "govuk-caption-xl", hiddenContent = Some(messages("subHeading.hidden")))
