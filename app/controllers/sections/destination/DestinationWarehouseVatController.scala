@@ -46,45 +46,39 @@ class DestinationWarehouseVatController @Inject()(
                                                  ) extends BaseNavigationController with AuthActionHelper with JsonOptionFormatter {
 
   def onPageLoad(ern: String, arc: String, mode: Mode): Action[AnyContent] =
-    authorisedDataRequestWithUpToDateMovement(ern, arc) {
-      implicit request =>
-        withAnswer(DestinationTypePage) {
-          movementScenario =>
-            Ok(view(
-              form = fillForm(DestinationWarehouseVatPage, formProvider()),
-              action = routes.DestinationWarehouseVatController.onSubmit(ern, arc, mode),
-              movementScenario = movementScenario,
-              skipQuestionCall = routes.DestinationWarehouseVatController.skipThisQuestion(ern, arc, mode)
-            ))
-        }
+    authorisedDataRequestWithUpToDateMovement(ern, arc) { implicit request =>
+      withAnswer(DestinationTypePage) { movementScenario =>
+        Ok(view(
+          form = fillForm(DestinationWarehouseVatPage, formProvider(movementScenario)),
+          action = routes.DestinationWarehouseVatController.onSubmit(ern, arc, mode),
+          movementScenario = movementScenario,
+          skipQuestionCall = routes.DestinationWarehouseVatController.skipThisQuestion(ern, arc, mode)
+        ))
+      }
     }
 
 
   def onSubmit(ern: String, arc: String, mode: Mode): Action[AnyContent] =
-    authorisedDataRequestWithUpToDateMovementAsync(ern, arc) {
-      implicit request =>
-        withAnswerAsync(DestinationTypePage) {
-          movementScenario =>
-            formProvider().bindFromRequest().fold(
-              formWithErrors =>
-                Future.successful(BadRequest(view(
-                  formWithErrors,
-                  routes.DestinationWarehouseVatController.onSubmit(ern, arc, mode),
-                  movementScenario = movementScenario,
-                  routes.DestinationWarehouseVatController.skipThisQuestion(ern, arc, mode)
-                ))),
-              value =>
-                saveAndRedirect(DestinationWarehouseVatPage, value, mode)
-            )
-        }
+    authorisedDataRequestWithUpToDateMovementAsync(ern, arc) { implicit request =>
+      withAnswerAsync(DestinationTypePage) { movementScenario =>
+        formProvider(movementScenario).bindFromRequest().fold(
+          formWithErrors =>
+            Future.successful(BadRequest(view(
+              formWithErrors,
+              routes.DestinationWarehouseVatController.onSubmit(ern, arc, mode),
+              movementScenario = movementScenario,
+              routes.DestinationWarehouseVatController.skipThisQuestion(ern, arc, mode)
+            ))),
+          value =>
+            saveAndRedirect(DestinationWarehouseVatPage, value, mode)
+        )
+      }
     }
 
   def skipThisQuestion(ern: String, arc: String, mode: Mode): Action[AnyContent] =
     authorisedDataRequestWithUpToDateMovementAsync(ern, arc) { implicit request =>
-      val newUserAnswers = request.userAnswers.remove(DestinationWarehouseVatPage)
-      userAnswersService.set(newUserAnswers).map(result => {
+      userAnswersService.set(request.userAnswers.remove(DestinationWarehouseVatPage)).map(result =>
         Redirect(navigator.nextPage(DestinationWarehouseVatPage, mode, result))
-      }
       )
     }
 }

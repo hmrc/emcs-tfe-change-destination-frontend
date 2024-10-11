@@ -17,6 +17,8 @@
 package pages.sections.destination
 
 import models.requests.DataRequest
+import models.sections.info.movementScenario.MovementScenario
+import models.sections.info.movementScenario.MovementScenario.{ExemptedOrganisation, RegisteredConsignee, TemporaryRegisteredConsignee}
 import pages.QuestionPage
 import play.api.libs.json.JsPath
 
@@ -25,4 +27,7 @@ case object DestinationWarehouseVatPage extends QuestionPage[String] {
   override val path: JsPath = DestinationSection.path \ toString
 
   override def getValueFromIE801(implicit request: DataRequest[_]): Option[String] = None
+
+  def isSkippable(destinationType: MovementScenario): Boolean =
+    Seq(RegisteredConsignee, TemporaryRegisteredConsignee, ExemptedOrganisation).contains(destinationType)
 }

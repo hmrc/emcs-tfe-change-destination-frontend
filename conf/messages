@@ -692,14 +692,16 @@ destinationDetailsChoice.error.required = Select ‘yes’ to enter the address 
 destinationDetailsChoice.checkYourAnswersLabel = Give details of {0}
 destinationDetailsChoice.change.hidden = Give details of {0}
 
-destinationWarehouseVat.title = What is the VAT number for the {0}? (optional)
-destinationWarehouseVat.heading = What is the VAT number for the {0}? (optional)
-destinationWarehouseVat.error.required = Enter a VAT number or use link to skip this question
-destinationWarehouseVat.error.invalidCharacters = VAT registration number must not contain < and > and : and ;
-destinationWarehouseVat.error.length = VAT registration number must be 14 characters or less
-destinationWarehouseVat.link.skip = Skip this question for now
+destinationWarehouseVat.title = Enter an identifier for the {0}
+destinationWarehouseVat.heading = Enter an identifier for the {0}
+destinationWarehouseVat.hint = This can be a VAT registration number or any other identifier, such as an excise ID.
+destinationWarehouseVat.error.required.skippable = Enter an identifier or use link to skip this question
+destinationWarehouseVat.error.required = Enter an identifier
+destinationWarehouseVat.error.invalidCharacters = Identifier must not include < and > and : and ;
+destinationWarehouseVat.error.length = Identifier must be 16 characters or less
+destinationWarehouseVat.link.skip = Skip this question
 destinationWarehouseVat.checkYourAnswers.label = Identification number
-destinationWarehouseVat.change.hidden = Identification number
+destinationWarehouseVat.change.hidden = identification number
 
 destinationConsigneeDetails.title = Is the place of destination the same as the consignee details?
 destinationConsigneeDetails.heading = Is the place of destination the same as the consignee details?
