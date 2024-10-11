@@ -22,6 +22,7 @@ import models.requests.DataRequest
 import models.response.emcsTfe.GuarantorType._
 import models.sections.guarantor.GuarantorArranger
 import models.sections.guarantor.GuarantorArranger.{GoodsOwner, Transporter}
+import models.sections.info.movementScenario.MovementScenario
 import models.sections.info.movementScenario.MovementScenario.ExportWithCustomsDeclarationLodgedInTheUk
 import org.scalamock.scalatest.MockFactory
 import pages.sections.consignee.{ConsigneeAddressPage, ConsigneeBusinessNamePage}
@@ -37,7 +38,7 @@ class GuarantorCheckAnswersHelperSpec extends SpecBase with MockFactory {
   }
 
   "summaryList" - {
-    GuarantorArranger.displayValues.foreach {
+    GuarantorArranger.displayValues(MovementScenario.UkTaxWarehouse.GB).foreach {
       case value@(GoodsOwner | Transporter) =>
 
         "must render 5 rows" - {

@@ -52,11 +52,15 @@ object GuarantorArranger extends Enumerable.Implicits {
     override val auditDescription: String = "NoGuarantorRequired"
   }
 
-  val displayValues: Seq[GuarantorArranger] = Seq(
-    Consignor, Consignee, GoodsOwner, Transporter
-  )
+  def displayValues(movementScenario: MovementScenario): Seq[GuarantorArranger] =
+    if(movementScenario == MovementScenario.UnknownDestination) {
+      // UnknownDestination cannot have a Consignee
+      Seq(Consignor, GoodsOwner, Transporter)
+    } else {
+      Seq(Consignor, Consignee, GoodsOwner, Transporter)
+    }
 
-  val values: Seq[GuarantorArranger] = displayValues ++ Seq(NoGuarantorRequiredUkToEu, NoGuarantorRequired)
+  val allValues: Seq[GuarantorArranger] = Seq(Consignor, Consignee, GoodsOwner, Transporter, NoGuarantorRequiredUkToEu, NoGuarantorRequired)
 
   def options(movementScenario: MovementScenario)(implicit messages: Messages): Seq[RadioItem] = {
     val scenariosWithConsignee: Seq[MovementScenario] = {
@@ -65,9 +69,9 @@ object GuarantorArranger extends Enumerable.Implicits {
     }
 
     val radioItems = if (scenariosWithConsignee.contains(movementScenario)) {
-      displayValues
+      displayValues(movementScenario)
     } else {
-      displayValues.filterNot(_ == Consignee)
+      displayValues(movementScenario).filterNot(_ == Consignee)
     }
 
     radioItems.map {
@@ -81,5 +85,5 @@ object GuarantorArranger extends Enumerable.Implicits {
   }
 
   implicit val enumerable: Enumerable[GuarantorArranger] =
-    Enumerable(values.map(v => v.toString -> v): _*)
+    Enumerable(allValues.map(v => v.toString -> v): _*)
 }

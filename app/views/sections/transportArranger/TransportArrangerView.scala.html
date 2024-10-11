@@ -15,6 +15,7 @@
  *@
 
 @import models.requests.DataRequest
+@import models.sections.info.movementScenario.MovementScenario
 @import models.sections.transportArranger.TransportArranger
 @import viewmodels.LegendSize
 
@@ -29,8 +30,7 @@
     continueOrExit: components.continueOrExit
 )
 
-
-@(form: Form[_], mode: Mode)(implicit request: DataRequest[_], messages: Messages)
+@(movementScenario: MovementScenario, form: Form[_], mode: Mode)(implicit request: DataRequest[_], messages: Messages)
 
 @layout(pageTitle = title(form, messages("transportArranger.title")), maybeShowActiveTrader = maybeShowActiveTrader(request)) {
 
@@ -46,7 +46,7 @@
             RadiosViewModel(
                 field  = form("value"),
                 legend = LegendViewModel(Text(messages("transportArranger.heading"))).asPageHeading(LegendSize.Large),
-                items  = TransportArranger.options
+                items  = TransportArranger.options(movementScenario)
             )
         )
 

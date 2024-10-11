@@ -36,7 +36,7 @@ class TransportArrangerCheckAnswersHelperSpec extends SpecBase with MockFactory 
   "summaryList" - {
     Seq(true, false).foreach { onReviewPage =>
       s"when onReviewPage = $onReviewPage" - {
-        TransportArranger.values.foreach {
+        TransportArranger.allValues.foreach {
           case value@(GoodsOwner | Other) =>
             // Only GoodsOwner or Other contain the VAT reg row
             "must render four rows" - {

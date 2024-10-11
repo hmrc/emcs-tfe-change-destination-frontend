@@ -33,7 +33,7 @@ class GuarantorArrangerSpec extends AnyFlatSpec with Matchers {
     UkTaxWarehouse.toList ++ Seq(CertifiedConsignee, TemporaryCertifiedConsignee)
 
   "GuarantorArranger" should "have correct values" in {
-    GuarantorArranger.values shouldBe Seq(
+    GuarantorArranger.allValues shouldBe Seq(
       GuarantorArranger.Consignor,
       GuarantorArranger.Consignee,
       GuarantorArranger.GoodsOwner,
@@ -41,6 +41,22 @@ class GuarantorArrangerSpec extends AnyFlatSpec with Matchers {
       GuarantorArranger.NoGuarantorRequiredUkToEu,
       GuarantorArranger.NoGuarantorRequired
     )
+  }
+
+  it should "have correct display values" in {
+    GuarantorArranger.displayValues(MovementScenario.UnknownDestination) shouldBe Seq(
+      Consignor,
+      GoodsOwner,
+      Transporter
+    )
+    MovementScenario.values.filterNot(_ == MovementScenario.UnknownDestination).foreach { scenario =>
+      GuarantorArranger.displayValues(scenario) shouldBe Seq(
+        Consignor,
+        Consignee,
+        GoodsOwner,
+        Transporter
+      )
+    }
   }
 
   it should "have correct audit descriptions" in {

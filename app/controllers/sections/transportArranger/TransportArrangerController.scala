@@ -24,6 +24,7 @@ import models.sections.transportArranger.TransportArranger
 import models.sections.transportArranger.TransportArranger.{Consignee, Consignor}
 import models.{Mode, UserAnswers}
 import navigation.TransportArrangerNavigator
+import pages.sections.info.DestinationTypePage
 import pages.sections.transportArranger.{TransportArrangerAddressPage, TransportArrangerNamePage, TransportArrangerPage, TransportArrangerVatPage}
 import play.api.i18n.MessagesApi
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
@@ -48,14 +49,19 @@ class TransportArrangerController @Inject()(
 
   def onPageLoad(ern: String, arc: String, mode: Mode): Action[AnyContent] =
     authorisedDataRequestWithUpToDateMovement(ern, arc) { implicit request =>
-      Ok(view(fillForm(TransportArrangerPage, formProvider()), mode))
+      withAnswer(DestinationTypePage) { movementScenario =>
+        Ok(view(movementScenario, fillForm(TransportArrangerPage, formProvider()), mode))
+      }
     }
 
   def onSubmit(ern: String, arc: String, mode: Mode): Action[AnyContent] =
     authorisedDataRequestWithUpToDateMovementAsync(ern, arc) { implicit request =>
       formProvider().bindFromRequest().fold(
-        formWithErrors =>
-          Future.successful(BadRequest(view(formWithErrors, mode))),
+        formWithErrors => {
+          withAnswerAsync(DestinationTypePage) { movementScenario =>
+            Future.successful(BadRequest(view(movementScenario, formWithErrors, mode)))
+          }
+        },
         value => {
           val cleansedAnswers = deletionLogic(value)
           saveAndRedirect(TransportArrangerPage, value, cleansedAnswers, mode)

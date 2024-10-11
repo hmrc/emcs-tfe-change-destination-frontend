@@ -21,9 +21,11 @@ import controllers.actions.{FakeDataRetrievalAction, FakeMovementAction}
 import controllers.routes
 import forms.sections.transportArranger.TransportArrangerFormProvider
 import mocks.services.MockUserAnswersService
+import models.sections.info.movementScenario.MovementScenario
 import models.sections.transportArranger.TransportArranger
 import models.{NormalMode, UserAnswers}
 import navigation.FakeNavigators.FakeTransportArrangerNavigator
+import pages.sections.info.DestinationTypePage
 import pages.sections.transportArranger.TransportArrangerPage
 import play.api.data.Form
 import play.api.mvc.AnyContentAsEmpty
@@ -39,7 +41,7 @@ class TransportArrangerControllerSpec extends SpecBase with MockUserAnswersServi
   lazy val form: Form[TransportArranger] = formProvider()
   lazy val view: TransportArrangerView = app.injector.instanceOf[TransportArrangerView]
 
-  class Test(val userAnswers: Option[UserAnswers] = Some(emptyUserAnswers)) {
+  class Test(val userAnswers: Option[UserAnswers] = Some(emptyUserAnswers.set(DestinationTypePage, MovementScenario.UkTaxWarehouse.GB))) {
     lazy val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest()
 
     lazy val controller = new TransportArrangerController(
@@ -59,20 +61,22 @@ class TransportArrangerControllerSpec extends SpecBase with MockUserAnswersServi
   "TransportArranger Controller" - {
 
     "must populate the view correctly on a GET when the question has previously been answered" in new Test(Some(
-      emptyUserAnswers.set(TransportArrangerPage, TransportArranger.values.head)
+      emptyUserAnswers
+        .set(DestinationTypePage, MovementScenario.UkTaxWarehouse.GB)
+        .set(TransportArrangerPage, TransportArranger.allValues.head)
     )) {
       val result = controller.onPageLoad(testErn, testArc, NormalMode)(request)
 
       status(result) mustEqual OK
       contentAsString(result) mustEqual
-        view(form.fill(TransportArranger.values.head), NormalMode)(dataRequest(request, userAnswers.get), messages(request)).toString
+        view(MovementScenario.UkTaxWarehouse.GB, form.fill(TransportArranger.allValues.head), NormalMode)(dataRequest(request, userAnswers.get), messages(request)).toString
     }
 
     "must redirect to the next page when valid data is submitted" in new Test() {
 
       MockUserAnswersService.set().returns(Future.successful(emptyUserAnswers))
 
-      val result = controller.onSubmit(testErn, testArc, NormalMode)(request.withFormUrlEncodedBody(("value", TransportArranger.values.head.toString)))
+      val result = controller.onSubmit(testErn, testArc, NormalMode)(request.withFormUrlEncodedBody(("value", TransportArranger.allValues.head.toString)))
 
       status(result) mustEqual SEE_OTHER
       redirectLocation(result).value mustEqual testOnwardRoute.url
@@ -85,7 +89,7 @@ class TransportArrangerControllerSpec extends SpecBase with MockUserAnswersServi
       val result = controller.onSubmit(testErn, testArc, NormalMode)(request.withFormUrlEncodedBody(("value", "")))
 
       status(result) mustEqual BAD_REQUEST
-      contentAsString(result) mustEqual view(boundForm, NormalMode)(dataRequest(request, userAnswers.get), messages(request)).toString
+      contentAsString(result) mustEqual view(MovementScenario.UkTaxWarehouse.GB, boundForm, NormalMode)(dataRequest(request, userAnswers.get), messages(request)).toString
     }
 
     "must redirect to Journey Recovery for a GET if no existing data is found" in new Test(None) {
@@ -96,7 +100,7 @@ class TransportArrangerControllerSpec extends SpecBase with MockUserAnswersServi
     }
 
     "redirect to Journey Recovery for a POST if no existing data is found" in new Test(None) {
-      val result = controller.onSubmit(testErn, testArc, NormalMode)(request.withFormUrlEncodedBody(("value", TransportArranger.values.head.toString)))
+      val result = controller.onSubmit(testErn, testArc, NormalMode)(request.withFormUrlEncodedBody(("value", TransportArranger.allValues.head.toString)))
 
       status(result) mustEqual SEE_OTHER
 
