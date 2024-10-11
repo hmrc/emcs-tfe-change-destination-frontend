@@ -22,6 +22,7 @@ import models.requests.DataRequest
 import models.sections.ReviewAnswer.{ChangeAnswers, KeepAnswers}
 import models.sections.guarantor.GuarantorArranger
 import models.sections.guarantor.GuarantorArranger._
+import models.sections.info.movementScenario.MovementScenario
 import models.{CheckMode, NormalMode, ReviewMode}
 import pages.Page
 import pages.sections.guarantor._
@@ -96,7 +97,7 @@ class GuarantorNavigatorSpec extends SpecBase {
 
       "for GuarantorArrangerPage" - {
 
-        GuarantorArranger.displayValues.foreach {
+        GuarantorArranger.displayValues(MovementScenario.UkTaxWarehouse.GB).foreach {
           case value@(GoodsOwner | Transporter) =>
             "must goto CAM-G03" - {
               s"when the arranger value is $value aka ${value.getClass.getSimpleName}" in {

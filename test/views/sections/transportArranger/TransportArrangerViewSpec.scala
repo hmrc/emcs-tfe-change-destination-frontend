@@ -21,6 +21,7 @@ import fixtures.messages.sections.transportArranger.TransportArrangerMessages
 import forms.sections.transportArranger.TransportArrangerFormProvider
 import models.NormalMode
 import models.requests.DataRequest
+import models.sections.info.movementScenario.MovementScenario
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import play.api.i18n.Messages
@@ -46,6 +47,7 @@ class TransportArrangerViewSpec extends SpecBase with ViewBehaviours {
 
         implicit val doc: Document = Jsoup.parse(
           view(
+            movementScenario = MovementScenario.UkTaxWarehouse.GB,
             form = form,
             mode = NormalMode
           ).toString())

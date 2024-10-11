@@ -18,6 +18,7 @@ package forms.sections.guarantor
 
 import forms.behaviours.OptionFieldBehaviours
 import models.sections.guarantor.GuarantorArranger
+import models.sections.info.movementScenario.MovementScenario
 import play.api.data.FormError
 
 class GuarantorArrangerFormProviderSpec extends OptionFieldBehaviours {
@@ -32,7 +33,7 @@ class GuarantorArrangerFormProviderSpec extends OptionFieldBehaviours {
     behave like optionsField[GuarantorArranger](
       form,
       fieldName,
-      validValues = GuarantorArranger.displayValues,
+      validValues = GuarantorArranger.displayValues(MovementScenario.UkTaxWarehouse.GB),
       invalidError = FormError(fieldName, "error.invalid")
     )
 

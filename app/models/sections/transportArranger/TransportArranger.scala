@@ -17,6 +17,7 @@
 package models.sections.transportArranger
 
 import models.audit.Auditable
+import models.sections.info.movementScenario.MovementScenario
 import models.{Enumerable, WithName}
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.Aliases.Text
@@ -42,11 +43,19 @@ object TransportArranger extends Enumerable.Implicits {
     override val auditDescription: String = "Other"
   }
 
-  val values: Seq[TransportArranger] = Seq(
+  def displayValues(movementScenario: MovementScenario): Seq[TransportArranger] =
+    if(movementScenario == MovementScenario.UnknownDestination) {
+      // UnknownDestination cannot have a Consignee
+      Seq(Consignor, GoodsOwner, Other)
+    } else {
+      Seq(Consignor, Consignee, GoodsOwner, Other)
+    }
+
+  val allValues: Seq[TransportArranger] = Seq(
     Consignor, Consignee, GoodsOwner, Other
   )
 
-  def options(implicit messages: Messages): Seq[RadioItem] = values.zipWithIndex.map {
+  def options(movementScenario: MovementScenario)(implicit messages: Messages): Seq[RadioItem] = displayValues(movementScenario).zipWithIndex.map {
     case (value, index) =>
       RadioItem(
         content = Text(messages(s"transportArranger.${value.toString}")),
@@ -56,5 +65,5 @@ object TransportArranger extends Enumerable.Implicits {
   }
 
   implicit val enumerable: Enumerable[TransportArranger] =
-    Enumerable(values.map(v => v.toString -> v): _*)
+    Enumerable(allValues.map(v => v.toString -> v): _*)
 }

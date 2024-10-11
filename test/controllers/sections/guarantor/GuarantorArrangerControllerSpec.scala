@@ -74,18 +74,18 @@ class GuarantorArrangerControllerSpec extends SpecBase with MockUserAnswersServi
     "must populate the view correctly on a GET when the question has previously been answered" in new Fixture(
       Some(emptyUserAnswers
         .set(DestinationTypePage, GB)
-        .set(GuarantorArrangerPage, GuarantorArranger.values.head))) {
+        .set(GuarantorArrangerPage, GuarantorArranger.allValues.head))) {
 
       val result = testController.onPageLoad(testErn, testArc, NormalMode)(request)
 
       status(result) mustEqual OK
-      contentAsString(result) mustEqual view(form.fill(GuarantorArranger.values.head), NormalMode, GB)(dataRequest(request), messages(request)).toString
+      contentAsString(result) mustEqual view(form.fill(GuarantorArranger.allValues.head), NormalMode, GB)(dataRequest(request), messages(request)).toString
     }
 
     "must redirect to the next page when valid data is submitted" in new Fixture(Some(emptyUserAnswers)) {
       MockUserAnswersService.set().returns(Future.successful(emptyUserAnswers))
 
-      val req = FakeRequest(POST, guarantorArrangerRoute).withFormUrlEncodedBody(("value", GuarantorArranger.values.head.toString))
+      val req = FakeRequest(POST, guarantorArrangerRoute).withFormUrlEncodedBody(("value", GuarantorArranger.allValues.head.toString))
 
       val result = testController.onSubmit(testErn, testArc, NormalMode)(req)
 
@@ -113,7 +113,7 @@ class GuarantorArrangerControllerSpec extends SpecBase with MockUserAnswersServi
     }
 
     "redirect to Journey Recovery for a POST if no existing data is found" in new Fixture(None) {
-      val req = FakeRequest(POST, guarantorArrangerRoute).withFormUrlEncodedBody(("value", GuarantorArranger.values.head.toString))
+      val req = FakeRequest(POST, guarantorArrangerRoute).withFormUrlEncodedBody(("value", GuarantorArranger.allValues.head.toString))
 
       val result = testController.onSubmit(testErn, testArc, NormalMode)(req)
 

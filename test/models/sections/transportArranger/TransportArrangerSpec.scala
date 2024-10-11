@@ -16,6 +16,7 @@
 
 package models.sections.transportArranger
 
+import models.sections.info.movementScenario.MovementScenario
 import org.mockito.ArgumentMatchers.{any, anyString}
 import org.mockito.Mockito.when
 import org.scalatest.flatspec.AnyFlatSpec
@@ -28,12 +29,28 @@ import uk.gov.hmrc.govukfrontend.views.viewmodels.radios.RadioItem
 class TransportArrangerSpec extends AnyFlatSpec with Matchers {
 
   "TransportArranger" should "have correct values" in {
-    TransportArranger.values shouldBe Seq(
+    TransportArranger.allValues shouldBe Seq(
       TransportArranger.Consignor,
       TransportArranger.Consignee,
       TransportArranger.GoodsOwner,
       TransportArranger.Other
     )
+  }
+
+  it should "have correct display values" in {
+    TransportArranger.displayValues(MovementScenario.UnknownDestination) shouldBe Seq(
+      TransportArranger.Consignor,
+      TransportArranger.GoodsOwner,
+      TransportArranger.Other
+    )
+    MovementScenario.values.filterNot(_ == MovementScenario.UnknownDestination).foreach { scenario =>
+      TransportArranger.displayValues(scenario) shouldBe Seq(
+        TransportArranger.Consignor,
+        TransportArranger.Consignee,
+        TransportArranger.GoodsOwner,
+        TransportArranger.Other
+      )
+    }
   }
 
   it should "have correct audit descriptions" in {
@@ -47,7 +64,7 @@ class TransportArrangerSpec extends AnyFlatSpec with Matchers {
     implicit val messages: Messages = mock[Messages]
     when(messages.apply(anyString(),any())).thenReturn("test")
 
-    val options = TransportArranger.options
+    val options = TransportArranger.options(MovementScenario.UkTaxWarehouse.GB)
 
     options should contain theSameElementsAs Seq(
       RadioItem(content = Text("test"), value = Some(TransportArranger.Consignor.toString), id = Some("value_0")),
