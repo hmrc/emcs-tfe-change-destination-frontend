@@ -54,8 +54,7 @@ class ConsigneeIndexControllerSpec extends SpecBase with MockUserAnswersService 
         Some(emptyUserAnswers
           .set(DestinationTypePage, ExemptedOrganisation)
           .set(ConsigneeExemptOrganisationPage, ExemptOrganisationDetailsModel("", ""))
-          .set(ConsigneeBusinessNamePage, "")
-          .set(ConsigneeAddressPage, UserAddress(None, "", "", ""))
+          .set(ConsigneeAddressPage, UserAddress(None, None, "", "", ""))
         )) {
 
         val result: Future[Result] = testController.onPageLoad(testErn, testArc)(request)

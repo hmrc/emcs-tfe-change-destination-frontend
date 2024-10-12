@@ -39,8 +39,6 @@ class DestinationNavigator @Inject() extends BaseNavigator {
       destinationDetailsChoiceRouting()
     case DestinationConsigneeDetailsPage =>
       destinationConsigneeDetailsRouting()
-    case DestinationBusinessNamePage =>
-      (userAnswers: UserAnswers) => routes.DestinationAddressController.onPageLoad(userAnswers.ern, userAnswers.arc, NormalMode)
     case DestinationAddressPage =>
       (userAnswers: UserAnswers) => routes.DestinationCheckAnswersController.onPageLoad(userAnswers.ern, userAnswers.arc)
     case DestinationCheckAnswersPage =>
@@ -91,7 +89,7 @@ class DestinationNavigator @Inject() extends BaseNavigator {
       case Some(true) =>
         routes.DestinationCheckAnswersController.onPageLoad(userAnswers.ern, userAnswers.arc)
       case Some(false) =>
-        routes.DestinationBusinessNameController.onPageLoad(userAnswers.ern, userAnswers.arc, mode)
+        routes.DestinationAddressController.onPageLoad(userAnswers.ern, userAnswers.arc, mode)
       case _ =>
         controllers.routes.JourneyRecoveryController.onPageLoad()
     }

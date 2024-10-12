@@ -27,13 +27,13 @@ class TransportArrangerAddressPageSpec extends SpecBase {
 
   "getValueFromIE801" - {
     "must return Some(_)" - {
-      "when guarantor trader is defined and has an address" in {
-        TransportArrangerAddressPage.getValueFromIE801(dataRequest(FakeRequest())) mustBe transportArrangerTrader.address.map(UserAddress.userAddressFromTraderAddress)
+      "when guarantor trader is defined and has an trader" in {
+        TransportArrangerAddressPage.getValueFromIE801(dataRequest(FakeRequest())) mustBe UserAddress.userAddressFromTraderAddress(transportArrangerTrader)
       }
     }
 
     "must return None" - {
-      "when guarantor trader and has no address" in {
+      "when guarantor trader and has no trader" in {
         TransportArrangerAddressPage.getValueFromIE801(dataRequest(
           FakeRequest(),
           movementDetails = maxGetMovementResponse.copy(transportArrangerTrader = maxGetMovementResponse.transportArrangerTrader.map(_.copy(address = None)))

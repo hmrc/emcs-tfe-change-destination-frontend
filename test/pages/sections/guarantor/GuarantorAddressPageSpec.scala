@@ -27,12 +27,12 @@ class GuarantorAddressPageSpec extends SpecBase {
 
   "getValueFromIE801" - {
     "must return Some(_)" - {
-      "when guarantor trader is defined and has an address" in {
-        GuarantorAddressPage.getValueFromIE801(dataRequest(FakeRequest())) mustBe guarantorTraders.headOption.flatMap(_.address).map(UserAddress.userAddressFromTraderAddress)
+      "when guarantor trader is defined and has an trader" in {
+        GuarantorAddressPage.getValueFromIE801(dataRequest(FakeRequest())) mustBe UserAddress.userAddressFromTraderAddress(guarantorTraders.head)
       }
     }
     "must return None" - {
-      "when guarantor trader and has no address" in {
+      "when guarantor trader and has no trader" in {
         GuarantorAddressPage.getValueFromIE801(dataRequest(
           FakeRequest(),
           movementDetails = maxGetMovementResponse.copy(movementGuarantee = maxGetMovementResponse.movementGuarantee.copy(guarantorTrader = Some(guarantorTraders.map(_.copy(address = None)))))

@@ -85,10 +85,10 @@ class AddressFormProviderSpec extends FieldBehaviours with UserAddressFixtures {
 
     s".$fieldName" - {
 
-      val requiredKey = s"address.$fieldName.error.required"
-      val lengthKey = s"address.$fieldName.error.length"
-      val invalidKey = s"address.$fieldName.error.invalid"
-      val charactersKey = s"address.$fieldName.error.characters"
+      val requiredKey = s"trader.$fieldName.error.required"
+      val lengthKey = s"trader.$fieldName.error.length"
+      val invalidKey = s"trader.$fieldName.error.invalid"
+      val charactersKey = s"trader.$fieldName.error.characters"
 
       if (isMandatory) {
 

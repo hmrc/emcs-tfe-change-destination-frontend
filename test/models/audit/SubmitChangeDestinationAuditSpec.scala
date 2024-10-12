@@ -54,7 +54,7 @@ class SubmitChangeDestinationAuditSpec extends SpecBase with SubmitChangeDestina
           |  "exciseRegistrationNumber": "XIRC123",
           |  "newTransportArrangerTrader": {
           |    "traderName": "arranger name",
-          |    "address": {
+          |    "trader": {
           |      "streetNumber": "10",
           |      "street": "arranger street",
           |      "postcode": "ZZ1 1ZZ",
@@ -85,7 +85,7 @@ class SubmitChangeDestinationAuditSpec extends SpecBase with SubmitChangeDestina
           |    "newConsigneeTrader": {
           |      "traderExciseNumber": "consignee ern",
           |      "traderName": "consignee name",
-          |      "address": {
+          |      "trader": {
           |        "streetNumber": "10",
           |        "street": "consignee street",
           |        "postcode": "ZZ1 1ZZ",
@@ -104,7 +104,7 @@ class SubmitChangeDestinationAuditSpec extends SpecBase with SubmitChangeDestina
           |      "guarantorTrader": [
           |        {
           |          "traderName": "guarantor name",
-          |          "address": {
+          |          "trader": {
           |            "streetNumber": "10",
           |            "street": "guarantor street",
           |            "postcode": "ZZ1 1ZZ",
@@ -117,7 +117,7 @@ class SubmitChangeDestinationAuditSpec extends SpecBase with SubmitChangeDestina
           |  },
           |  "newTransporterTrader": {
           |    "traderName": "first name",
-          |    "address": {
+          |    "trader": {
           |      "streetNumber": "10",
           |      "street": "first street",
           |      "postcode": "ZZ1 1ZZ",

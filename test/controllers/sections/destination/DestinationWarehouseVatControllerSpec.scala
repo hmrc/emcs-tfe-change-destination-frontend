@@ -21,12 +21,11 @@ import controllers.actions.{FakeDataRetrievalAction, FakeMovementAction}
 import controllers.routes
 import forms.sections.destination.DestinationWarehouseVatFormProvider
 import mocks.services.MockUserAnswersService
-import models.sections.info.DispatchPlace.GreatBritain
 import models.sections.info.movementScenario.MovementScenario._
 import models.{NormalMode, UserAnswers}
 import navigation.FakeNavigators.FakeDestinationNavigator
 import pages.sections.destination.{DestinationDetailsChoicePage, DestinationWarehouseVatPage}
-import pages.sections.info.{DestinationTypePage, DispatchPlacePage}
+import pages.sections.info.DestinationTypePage
 import play.api.data.Form
 import play.api.mvc.Call
 import play.api.test.FakeRequest

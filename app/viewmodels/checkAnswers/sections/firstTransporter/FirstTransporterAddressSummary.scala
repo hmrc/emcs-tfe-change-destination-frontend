@@ -20,8 +20,7 @@ import models.CheckMode
 import models.requests.DataRequest
 import pages.sections.firstTransporter.FirstTransporterAddressPage
 import play.api.i18n.Messages
-import play.twirl.api.{Html, HtmlFormat}
-import uk.gov.hmrc.govukfrontend.views.viewmodels.content.{Content, HtmlContent, Text}
+import uk.gov.hmrc.govukfrontend.views.viewmodels.content.{Content, Text}
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
@@ -30,20 +29,12 @@ object FirstTransporterAddressSummary {
 
   def row(onReviewPage: Boolean)(implicit request: DataRequest[_], messages: Messages): SummaryListRow = {
 
-    val value: Content = request.userAnswers.get(FirstTransporterAddressPage).fold[Content] {
-      Text(messages("site.notProvided"))
-    } { address =>
-      HtmlContent(
-        HtmlFormat.fill(Seq(
-          Html(address.property.fold("")(_ + " ") + address.street + "<br>"),
-          Html(address.town + "<br>"),
-          Html(address.postcode)
-        ))
-      )
-    }
+    val value: Content = request.userAnswers.get(FirstTransporterAddressPage).fold[Content]
+      { Text(messages("site.notProvided")) }
+      { _.toCheckYourAnswersFormat }
 
     SummaryListRowViewModel(
-      key = "address.firstTransporterAddress.checkYourAnswers.label",
+      key = "trader.firstTransporterAddress.checkYourAnswers.label",
       value = ValueViewModel(value),
       actions = if (onReviewPage) Seq() else Seq(
         ActionItemViewModel(
@@ -54,7 +45,7 @@ object FirstTransporterAddressSummary {
             mode = CheckMode
           ).url,
           id = "changeFirstTransporterAddress"
-        ).withVisuallyHiddenText(messages("address.firstTransporterAddress.change.hidden"))
+        ).withVisuallyHiddenText(messages("trader.firstTransporterAddress.change.hidden"))
       )
     )
   }

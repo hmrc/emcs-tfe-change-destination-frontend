@@ -20,7 +20,7 @@ import controllers.BaseController
 import controllers.actions._
 import models.NormalMode
 import navigation.ConsigneeNavigator
-import pages.sections.consignee.{CheckAnswersConsigneePage, ConsigneeAddressPage, ConsigneeBusinessNamePage}
+import pages.sections.consignee.{CheckAnswersConsigneePage, ConsigneeAddressPage}
 import pages.sections.info.DestinationTypePage
 import play.api.i18n.MessagesApi
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
@@ -43,19 +43,16 @@ class CheckYourAnswersConsigneeController @Inject()(override val messagesApi: Me
   def onPageLoad(ern: String, arc: String): Action[AnyContent] =
     authorisedDataRequestWithUpToDateMovement(ern, arc) {
       implicit request =>
-        withAnswer(ConsigneeBusinessNamePage, controllers.sections.consignee.routes.ConsigneeIndexController.onPageLoad(ern, arc)) {
+        withAnswer(ConsigneeAddressPage, controllers.sections.consignee.routes.ConsigneeIndexController.onPageLoad(ern, arc)) {
           _ =>
-            withAnswer(ConsigneeAddressPage, controllers.sections.consignee.routes.ConsigneeIndexController.onPageLoad(ern, arc)) {
+            withAnswer(DestinationTypePage) {
               _ =>
-                withAnswer(DestinationTypePage) {
-                  _ =>
-                    Ok(view(
-                      controllers.sections.consignee.routes.CheckYourAnswersConsigneeController.onSubmit(ern, arc),
-                      ern,
-                      arc,
-                      consigneeCheckAnswersHelper.summaryList
-                    ))
-                }
+                Ok(view(
+                  controllers.sections.consignee.routes.CheckYourAnswersConsigneeController.onSubmit(ern, arc),
+                  ern,
+                  arc,
+                  consigneeCheckAnswersHelper.summaryList
+                ))
             }
         }
     }

@@ -28,7 +28,6 @@ class FirstTransporterCheckAnswersHelper @Inject()() {
   def summaryList(onReviewPage: Boolean)(implicit request: DataRequest[_], messages: Messages): SummaryList =
     SummaryListViewModel(
       rows = Seq(
-        FirstTransporterNameSummary.row(onReviewPage),
         FirstTransporterVatSummary.row(onReviewPage),
         FirstTransporterAddressSummary.row(onReviewPage)
       )

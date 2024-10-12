@@ -26,5 +26,5 @@ case object ConsignorAddressPage extends QuestionPage[UserAddress] {
   override val path: JsPath = ConsignorSection.path \ toString
 
   override def getValueFromIE801(implicit request: DataRequest[_]): Option[UserAddress] =
-    request.movementDetails.consignorTrader.address.map(UserAddress.userAddressFromTraderAddress)
+    Some(UserAddress.userAddressFromTraderAddress(request.movementDetails.consignorTrader))
 }

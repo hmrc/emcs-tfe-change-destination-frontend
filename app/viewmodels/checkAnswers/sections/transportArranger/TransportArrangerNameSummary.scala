@@ -16,56 +16,50 @@
 
 package viewmodels.checkAnswers.sections.transportArranger
 
-import models.CheckMode
 import models.requests.DataRequest
-import models.sections.transportArranger.TransportArranger
-import models.sections.transportArranger.TransportArranger.{Consignee, Consignor, GoodsOwner, Other}
-import pages.sections.consignee.ConsigneeBusinessNamePage
-import pages.sections.transportArranger.{TransportArrangerNamePage, TransportArrangerPage}
 import play.api.i18n.Messages
-import uk.gov.hmrc.govukfrontend.views.Aliases.Text
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
-import viewmodels.govuk.summarylist._
-import viewmodels.implicits._
 
 object TransportArrangerNameSummary {
 
   def row(onReviewPage: Boolean)(implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] = {
 
-    val transportArranger: Option[TransportArranger] = request.userAnswers.get(TransportArrangerPage)
-
-    val showChangeLink: Boolean = transportArranger.contains(GoodsOwner) || transportArranger.contains(Other)
-
-    transportArrangerNameValue(transportArranger).map { name =>
-      SummaryListRowViewModel(
-        key = "transportArrangerName.checkYourAnswers.label",
-        value = ValueViewModel(Text(name)),
-        actions = if (!showChangeLink || onReviewPage) Seq() else Seq(
-          ActionItemViewModel(
-            content = "site.change",
-            href = controllers.sections.transportArranger.routes.TransportArrangerNameController.onPageLoad(
-              ern = request.userAnswers.ern,
-              arc = request.userAnswers.arc,
-              mode = CheckMode
-            ).url,
-            id = "changeTransportArrangerName"
-          )
-            .withVisuallyHiddenText(messages("transportArrangerName.change.hidden"))
-        )
-      )
-    }
+//    val transportArranger: Option[TransportArranger] = request.userAnswers.get(TransportArrangerPage)
+//
+//    val showChangeLink: Boolean = transportArranger.contains(GoodsOwner) || transportArranger.contains(Other)
+//
+//    transportArrangerNameValue(transportArranger).map { name =>
+//      SummaryListRowViewModel(
+//        key = "transportArrangerName.checkYourAnswers.label",
+//        value = ValueViewModel(Text(name)),
+//        actions = if (!showChangeLink || onReviewPage) Seq() else Seq(
+//          ActionItemViewModel(
+//            content = "site.change",
+//            href = controllers.sections.transportArranger.routes.TransportArrangerNameController.onPageLoad(
+//              ern = request.userAnswers.ern,
+//              arc = request.userAnswers.arc,
+//              mode = CheckMode
+//            ).url,
+//            id = "changeTransportArrangerName"
+//          )
+//            .withVisuallyHiddenText(messages("transportArrangerName.change.hidden"))
+//        )
+//      )
+//    }
+    // TODO
+    None
   }
 
-  private[transportArranger] def transportArrangerNameValue(transportArranger: Option[TransportArranger])
-                                                           (implicit request: DataRequest[_], messages: Messages): Option[String] =
-    transportArranger match {
-      case Some(Consignor) => request.movementDetails.consignorTrader.traderName
-      case Some(Consignee) => Some(request.userAnswers.get(ConsigneeBusinessNamePage).getOrElse(
-        messages("transportArrangerName.checkYourAnswers.notProvided", messages(s"transportArranger.$Consignee"))
-      ))
-      case Some(arranger) => Some(request.userAnswers.get(TransportArrangerNamePage).getOrElse(
-        messages("transportArrangerName.checkYourAnswers.notProvided", messages(s"transportArranger.$arranger"))
-      ))
-      case _ => Some(request.userAnswers.get(TransportArrangerNamePage).getOrElse(messages("site.notProvided")))
-    }
+//  private[transportArranger] def transportArrangerNameValue(transportArranger: Option[TransportArranger])
+//                                                           (implicit request: DataRequest[_], messages: Messages): Option[String] =
+//    transportArranger match {
+//      case Some(Consignor) => request.movementDetails.consignorTrader.traderName
+//      case Some(Consignee) => Some(request.userAnswers.get(ConsigneeBusinessNamePage).getOrElse(
+//        messages("transportArrangerName.checkYourAnswers.notProvided", messages(s"transportArranger.$Consignee"))
+//      ))
+//      case Some(arranger) => Some(request.userAnswers.get(TransportArrangerNamePage).getOrElse(
+//        messages("transportArrangerName.checkYourAnswers.notProvided", messages(s"transportArranger.$arranger"))
+//      ))
+//      case _ => Some(request.userAnswers.get(TransportArrangerNamePage).getOrElse(messages("site.notProvided")))
+//    }
 }

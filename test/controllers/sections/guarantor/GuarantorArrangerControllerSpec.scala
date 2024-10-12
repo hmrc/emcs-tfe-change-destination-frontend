@@ -127,9 +127,8 @@ class GuarantorArrangerControllerSpec extends SpecBase with MockUserAnswersServi
         s"must cleanse further guarantor sections when choosing an arranger of ${guarantorArranger.getClass.getSimpleName.stripSuffix("$")}" in new Fixture(
           Some(emptyUserAnswers
             .set(GuarantorArrangerPage, Transporter)
-            .set(GuarantorNamePage, "Some name")
             .set(GuarantorVatPage, "GB12345678")
-            .set(GuarantorAddressPage, UserAddress(Some("1"), "Street", "town", "AA11AA")))) {
+            .set(GuarantorAddressPage, UserAddress(Some("Some name"), Some("1"), "Street", "town", "AA11AA")))) {
 
           val expectedAnswers = emptyUserAnswers
             .set(GuarantorArrangerPage, guarantorArranger)

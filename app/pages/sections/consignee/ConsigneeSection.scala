@@ -66,7 +66,6 @@ case object ConsigneeSection extends Section[JsObject] with Enumerable.Implicits
   private def checkBusinessNameAndAddressBothExistWithPage[A](pageGetResults: Seq[Option[A]])
                                                              (implicit request: DataRequest[_], @unused rds: Reads[A]): TaskListStatus = {
     val pages: Seq[Option[_]] = Seq(
-      request.userAnswers.get(ConsigneeBusinessNamePage),
       request.userAnswers.get(ConsigneeAddressPage)
     ) ++ pageGetResults
 
@@ -93,7 +92,6 @@ case object ConsigneeSection extends Section[JsObject] with Enumerable.Implicits
     Seq(
       isDifferentFromIE801(ConsigneeExcisePage),
       isDifferentFromIE801(ConsigneeExemptOrganisationPage),
-      isDifferentFromIE801(ConsigneeBusinessNamePage),
       isDifferentFromIE801(ConsigneeAddressPage),
       isDifferentFromIE801(ConsigneeExportVatPage),
       isDifferentFromIE801(ConsigneeExportEoriPage)

@@ -84,7 +84,7 @@ class GuarantorAddressSummarySpec extends SpecBase {
 
               "must output the expected data" in {
 
-                val userAddressFrom801 = UserAddress(Some("GuarantorTraderStreetNumber1"), "GuarantorTraderStreetName1", "GuarantorTraderCity1", "GuarantorTraderPostcode1")
+                val userAddressFrom801 = UserAddress(None, Some("GuarantorTraderStreetNumber1"), "GuarantorTraderStreetName1", "GuarantorTraderCity1", "GuarantorTraderPostcode1")
 
                 implicit lazy val request: DataRequest[_] = dataRequest(
                   request = FakeRequest(),

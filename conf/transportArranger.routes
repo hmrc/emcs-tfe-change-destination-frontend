@@ -16,10 +16,10 @@ GET         /trader/:ern/movement/:arc/transport-arranger/vat/change            
 POST        /trader/:ern/movement/:arc/transport-arranger/vat/change             controllers.sections.transportArranger.TransportArrangerVatController.onSubmit(ern: String, arc: String, mode: Mode = CheckMode)
 GET         /trader/:ern/movement/:arc/transport-arranger/vat/non-gb-vat         controllers.sections.transportArranger.TransportArrangerVatController.onNonGbVAT(ern: String, arc: String)
 
-GET         /trader/:ern/movement/:arc/transport-arranger/address                controllers.sections.transportArranger.TransportArrangerAddressController.onPageLoad(ern: String, arc: String, mode: Mode = NormalMode)
-POST        /trader/:ern/movement/:arc/transport-arranger/address                controllers.sections.transportArranger.TransportArrangerAddressController.onSubmit(ern: String, arc: String, mode: Mode = NormalMode)
-GET         /trader/:ern/movement/:arc/transport-arranger/address/change         controllers.sections.transportArranger.TransportArrangerAddressController.onPageLoad(ern: String, arc: String, mode: Mode = CheckMode)
-POST        /trader/:ern/movement/:arc/transport-arranger/address/change         controllers.sections.transportArranger.TransportArrangerAddressController.onSubmit(ern: String, arc: String, mode: Mode = CheckMode)
+GET         /trader/:ern/movement/:arc/transport-arranger/trader                controllers.sections.transportArranger.TransportArrangerAddressController.onPageLoad(ern: String, arc: String, mode: Mode = NormalMode)
+POST        /trader/:ern/movement/:arc/transport-arranger/trader                controllers.sections.transportArranger.TransportArrangerAddressController.onSubmit(ern: String, arc: String, mode: Mode = NormalMode)
+GET         /trader/:ern/movement/:arc/transport-arranger/trader/change         controllers.sections.transportArranger.TransportArrangerAddressController.onPageLoad(ern: String, arc: String, mode: Mode = CheckMode)
+POST        /trader/:ern/movement/:arc/transport-arranger/trader/change         controllers.sections.transportArranger.TransportArrangerAddressController.onSubmit(ern: String, arc: String, mode: Mode = CheckMode)
 
 GET         /trader/:ern/movement/:arc/transport-arranger/check-answers          controllers.sections.transportArranger.TransportArrangerCheckAnswersController.onPageLoad(ern: String, arc: String)
 POST        /trader/:ern/movement/:arc/transport-arranger/check-answers          controllers.sections.transportArranger.TransportArrangerCheckAnswersController.onSubmit(ern: String, arc: String)

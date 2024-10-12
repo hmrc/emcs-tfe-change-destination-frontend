@@ -22,7 +22,7 @@ object DestinationDetailsChoiceMessages {
 
   sealed trait ViewMessages extends BaseMessages { _: i18n =>
 
-    val heading = "Do you want to give the address and business name of the registered consignee?"
+    val heading = "Do you want to give the trader and business name of the registered consignee?"
     val title = titleHelper(heading)
     val hint = "This information is optional."
     val cyaLabel: String => String = destinationType => s"Give details of $destinationType"

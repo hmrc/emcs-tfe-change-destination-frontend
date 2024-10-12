@@ -45,7 +45,7 @@ class FirstTransporterIndexController @Inject()(
         } else if (FirstTransporterSection.isCompleted) {
           controllers.sections.firstTransporter.routes.FirstTransporterCheckAnswersController.onPageLoad(ern, arc)
         } else {
-          controllers.sections.firstTransporter.routes.FirstTransporterNameController.onPageLoad(ern, arc, NormalMode)
+          controllers.sections.firstTransporter.routes.FirstTransporterAddressController.onPageLoad(ern, arc, NormalMode)
         }
       )
     }

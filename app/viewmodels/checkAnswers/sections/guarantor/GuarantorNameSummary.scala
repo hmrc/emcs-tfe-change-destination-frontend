@@ -17,54 +17,48 @@
 package viewmodels.checkAnswers.sections.guarantor
 
 import models.requests.DataRequest
-import models.sections.guarantor.GuarantorArranger
-import models.sections.guarantor.GuarantorArranger._
-import models.{CheckMode, NormalMode}
-import pages.sections.consignee.ConsigneeBusinessNamePage
-import pages.sections.guarantor.{GuarantorArrangerPage, GuarantorNamePage}
 import play.api.i18n.Messages
-import play.twirl.api.HtmlFormat
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
-import viewmodels.govuk.summarylist._
-import viewmodels.implicits._
 
 object GuarantorNameSummary {
 
   def row(onReviewPage: Boolean = false)(implicit request: DataRequest[_], messages: Messages): Option[SummaryListRow] =
-    request.userAnswers.get(GuarantorArrangerPage).flatMap { arranger =>
-      businessName(arranger).map { name =>
-        SummaryListRowViewModel(
-          key = "guarantorName.checkYourAnswersLabel",
-          value = ValueViewModel(name),
-          actions = if (!showChangeLink(arranger) || onReviewPage) {
-            Seq()
-          } else {
-            val mode = if (request.userAnswers.get(GuarantorNamePage).nonEmpty) CheckMode else NormalMode
-            Seq(
-              ActionItemViewModel(
-                "site.change",
-                controllers.sections.guarantor.routes.GuarantorNameController.onPageLoad(request.ern, request.arc, mode).url,
-                "changeGuarantorName"
-              ).withVisuallyHiddenText(messages("guarantorName.change.hidden"))
-            )
-          }
-        )
-      }
-    }
+//    request.userAnswers.get(GuarantorArrangerPage).flatMap { arranger =>
+//      businessName(arranger).map { name =>
+//        SummaryListRowViewModel(
+//          key = "guarantorName.checkYourAnswersLabel",
+//          value = ValueViewModel(name),
+//          actions = if (!showChangeLink(arranger) || onReviewPage) {
+//            Seq()
+//          } else {
+//            val mode = if (request.userAnswers.get(GuarantorNamePage).nonEmpty) CheckMode else NormalMode
+//            Seq(
+//              ActionItemViewModel(
+//                "site.change",
+//                controllers.sections.guarantor.routes.GuarantorNameController.onPageLoad(request.ern, request.arc, mode).url,
+//                "changeGuarantorName"
+//              ).withVisuallyHiddenText(messages("guarantorName.change.hidden"))
+//            )
+//          }
+//        )
+//      }
+//    }
+//
+//  private def showChangeLink(arranger: GuarantorArranger): Boolean = arranger == GoodsOwner || arranger == Transporter
+//
+//  private def businessName(arranger: GuarantorArranger)(implicit request: DataRequest[_], messages: Messages): Option[String] = arranger match {
+//    case Consignor => request.movementDetails.consignorTrader.traderName
+//    case Consignee => Some(request.userAnswers.get(ConsigneeBusinessNamePage) match {
+//      case Some(answer) => HtmlFormat.escape(answer).toString()
+//      case None => messages("guarantorName.checkYourAnswers.notProvided", messages(s"guarantorArranger.$arranger"))
+//    })
+//    case _ =>
+//      Some(request.userAnswers.get(GuarantorNamePage) match {
+//        case Some(answer) => HtmlFormat.escape(answer).toString()
+//        case None => messages("site.notProvided")
+//      })
+//  }
 
-  private def showChangeLink(arranger: GuarantorArranger): Boolean = arranger == GoodsOwner || arranger == Transporter
-
-  private def businessName(arranger: GuarantorArranger)(implicit request: DataRequest[_], messages: Messages): Option[String] = arranger match {
-    case Consignor => request.movementDetails.consignorTrader.traderName
-    case Consignee => Some(request.userAnswers.get(ConsigneeBusinessNamePage) match {
-      case Some(answer) => HtmlFormat.escape(answer).toString()
-      case None => messages("guarantorName.checkYourAnswers.notProvided", messages(s"guarantorArranger.$arranger"))
-    })
-    case _ =>
-      Some(request.userAnswers.get(GuarantorNamePage) match {
-        case Some(answer) => HtmlFormat.escape(answer).toString()
-        case None => messages("site.notProvided")
-      })
-  }
-
+    // TODO
+  None
 }

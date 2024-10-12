@@ -74,7 +74,7 @@ trait BaseFixtures {
     postcode = None
   )
 
-  val testUserAddress = UserAddress(Some("10"), "Test Street", "Testown", "ZZ1 1ZZ")
+  val testUserAddress = UserAddress(Some(testBusinessName), Some("10"), "Test Street", "Testown", "ZZ1 1ZZ")
 
 
   val countryModelAT = CountryModel(

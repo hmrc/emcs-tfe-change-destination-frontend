@@ -61,7 +61,7 @@ object TraderModel extends ModelConstructorHelpers {
         case (_, ern@Some(_)) => ern
         case _ => None
       },
-      traderName = Some(mandatoryPage(ConsigneeBusinessNamePage)),
+      traderName = mandatoryPage(ConsigneeAddressPage).businessName,
       address = Some(AddressModel.fromUserAddress(mandatoryPage(ConsigneeAddressPage))),
       vatNumber = None,
       eoriNumber = request.userAnswers.get(ConsigneeExportEoriPage)
@@ -115,7 +115,7 @@ object TraderModel extends ModelConstructorHelpers {
         } else {
           Some(TraderModel(
             traderExciseNumber = Some(exciseId),
-            traderName = Some(mandatoryPage(DestinationBusinessNamePage)),
+            traderName = mandatoryPage(DestinationAddressPage).businessName,
             address = Some(AddressModel.fromUserAddress(mandatoryPage(DestinationAddressPage))),
             vatNumber = None,
             eoriNumber = None
@@ -141,7 +141,7 @@ object TraderModel extends ModelConstructorHelpers {
         } else if (giveAddressAndBusinessName) {
           Some(TraderModel(
             traderExciseNumber = exciseId,
-            traderName = request.userAnswers.get(DestinationBusinessNamePage),
+            traderName = request.userAnswers.get(DestinationAddressPage).flatMap(_.businessName),
             address = request.userAnswers.get(DestinationAddressPage).map(AddressModel.fromUserAddress),
             vatNumber = None,
             eoriNumber = None
@@ -158,7 +158,7 @@ object TraderModel extends ModelConstructorHelpers {
       } else {
         Some(TraderModel(
           traderExciseNumber = None,
-          traderName = request.userAnswers.get(DestinationBusinessNamePage),
+          traderName = request.userAnswers.get(DestinationAddressPage).flatMap(_.businessName),
           address = request.userAnswers.get(DestinationAddressPage).map(AddressModel.fromUserAddress),
           vatNumber = None,
           eoriNumber = None
@@ -185,7 +185,7 @@ object TraderModel extends ModelConstructorHelpers {
   def applyFirstTransporter(implicit request: DataRequest[_]): TraderModel =
     TraderModel(
       traderExciseNumber = None,
-      traderName = Some(mandatoryPage(FirstTransporterNamePage)),
+      traderName = mandatoryPage(FirstTransporterAddressPage).businessName,
       address = Some(AddressModel.fromUserAddress(mandatoryPage(FirstTransporterAddressPage))),
       vatNumber = Some(request.userAnswers.get(FirstTransporterVatPage).getOrElse(NONGBVAT)),
       eoriNumber = None

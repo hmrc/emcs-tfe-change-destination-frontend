@@ -44,7 +44,7 @@ case object DestinationSection extends Section[JsObject] with JsonOptionFormatte
       ExemptedOrganisation
     ).contains(destinationTypePageAnswer)
 
-  def shouldStartFlowAtDestinationBusinessName(implicit destinationTypePageAnswer: MovementScenario): Boolean =
+  def shouldStartFlowAtDestinationAddress(implicit destinationTypePageAnswer: MovementScenario): Boolean =
     Seq(
       DirectDelivery
     ).contains(destinationTypePageAnswer)
@@ -63,8 +63,8 @@ case object DestinationSection extends Section[JsObject] with JsonOptionFormatte
           startFlowAtDestinationWarehouseExciseStatus
         } else if (shouldStartFlowAtDestinationWarehouseVat) {
           startFlowAtDestinationWarehouseVatStatus
-        } else if (shouldStartFlowAtDestinationBusinessName) {
-          startFlowAtDestinationBusinessNameStatus
+        } else if (shouldStartFlowAtDestinationAddress) {
+          startFlowAtDestinationAddressStatus
         } else {
           NotStarted
         }
@@ -75,14 +75,13 @@ case object DestinationSection extends Section[JsObject] with JsonOptionFormatte
     (
       request.userAnswers.get(DestinationWarehouseExcisePage),
       request.userAnswers.get(DestinationConsigneeDetailsPage),
-      request.userAnswers.get(DestinationBusinessNamePage),
       request.userAnswers.get(DestinationAddressPage)
     ) match {
-      case (Some(_), Some(true), _, _) => Completed
-      case (Some(_), Some(false), Some(_), Some(_)) => Completed
-      case (Some(_), Some(_), None, Some(_)) if isDirectDelivery => Completed
-      case (Some(_), Some(false), bn, a) if bn.isEmpty || a.isEmpty => InProgress
-      case (Some(_), _, _, _) => InProgress
+      case (Some(_), Some(true), _) => Completed
+      case (Some(_), Some(false), Some(_)) => Completed
+      case (Some(_), Some(_), Some(_)) if isDirectDelivery => Completed
+      case (Some(_), Some(false), a) if a.isEmpty => InProgress
+      case (Some(_), _, _) => InProgress
       case _ => NotStarted
     }
 
@@ -96,28 +95,24 @@ case object DestinationSection extends Section[JsObject] with JsonOptionFormatte
     (
       destinationDetailsChoice,
       request.userAnswers.get(DestinationConsigneeDetailsPage),
-      request.userAnswers.get(DestinationBusinessNamePage),
       request.userAnswers.get(DestinationAddressPage)
     ) match {
-      case (Some(false), _, _, _) => Completed
-      case (Some(true), Some(true), _, _) => Completed
-      case (Some(true), Some(false), Some(_), Some(_)) => Completed
-      case (Some(true), Some(false), None, Some(_)) if isDirectDelivery => Completed
-      case (Some(_), Some(false), bn, a) if bn.isEmpty || a.isEmpty => InProgress
-      case (Some(_), _, _, _) if !shouldSkipDestinationDetailsChoice => InProgress
+      case (Some(false), _, _) => Completed
+      case (Some(true), _, _) => Completed
+      case (Some(true), Some(_), Some(_)) => Completed
+      case (Some(true), None, Some(_)) if isDirectDelivery => Completed
+      case (Some(_), bn, a) if bn.isEmpty || a.isEmpty => InProgress
+      case (Some(_), _, _) if !shouldSkipDestinationDetailsChoice => InProgress
       case _ if request.userAnswers.get(DestinationWarehouseVatPage).nonEmpty => InProgress
       case _ => NotStarted
     }
   }
 
-  private def startFlowAtDestinationBusinessNameStatus(implicit request: DataRequest[_]): TaskListStatus =
-    (
-      request.userAnswers.get(DestinationBusinessNamePage),
-      request.userAnswers.get(DestinationAddressPage)
-    ) match {
-      case (Some(_), Some(_)) => Completed
-      case (None, Some(_)) if isDirectDelivery => Completed
-      case (bn, a) if bn.isEmpty && a.isEmpty => NotStarted
+  private def startFlowAtDestinationAddressStatus(implicit request: DataRequest[_]): TaskListStatus =
+    request.userAnswers.get(DestinationAddressPage) match {
+      case Some(_) => Completed
+      case Some(_) if isDirectDelivery => Completed
+      case a if a.isEmpty => NotStarted
       case _ => InProgress
     }
 

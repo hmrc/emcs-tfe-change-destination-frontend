@@ -41,17 +41,6 @@ class FirstTransporterNavigatorSpec extends SpecBase {
         controllers.sections.firstTransporter.routes.FirstTransporterCheckAnswersController.onPageLoad(testErn, testArc)
     }
 
-    "for the FirstTransporterNamePage (CAM-FT01)" - {
-
-      "must go to CAM-FT02" in {
-        val userAnswers = emptyUserAnswers.set(FirstTransporterNamePage, "transporter name here")
-
-        navigator.nextPage(FirstTransporterNamePage, NormalMode, userAnswers) mustBe
-          controllers.sections.firstTransporter.routes.FirstTransporterVatController.onPageLoad(userAnswers.ern, userAnswers.arc, NormalMode)
-      }
-
-    }
-
     "for the FirstTransporterVATPage (CAM-FT02)" - {
 
       "must go to CAM-FT03" in {
@@ -81,11 +70,11 @@ class FirstTransporterNavigatorSpec extends SpecBase {
 
     "for the FirstTransporterReviewPage" - {
 
-      "must go to FirstTransporterNamePage (CAM-FT01)" - {
+      "must go to FirstTransporterAddressPage" - {
 
         "when the user answers yes (change answers)" in {
           navigator.nextPage(FirstTransporterReviewPage, NormalMode, emptyUserAnswers.set(FirstTransporterReviewPage, ChangeAnswers)) mustBe
-            controllers.sections.firstTransporter.routes.FirstTransporterNameController.onPageLoad(testErn, testArc, NormalMode)
+            controllers.sections.firstTransporter.routes.FirstTransporterAddressController.onPageLoad(testErn, testArc, NormalMode)
         }
       }
 
@@ -116,37 +105,20 @@ class FirstTransporterNavigatorSpec extends SpecBase {
         controllers.sections.firstTransporter.routes.FirstTransporterCheckAnswersController.onPageLoad(emptyUserAnswers.ern, emptyUserAnswers.arc)
     }
 
-    "for the FirstTransporterNamePage" - {
+    "for the FirstTransporterAddressPage" - {
       "must redirect to FirstTransporterVatController" - {
-        "when FirstTransporterNamePage is empty" in {
-          val userAnswers = emptyUserAnswers
-            .set(FirstTransporterVatPage, "")
-            .set(FirstTransporterAddressPage, UserAddress(None, "", "", ""))
-          navigator.nextPage(FirstTransporterNamePage, CheckMode, userAnswers)(dataRequest(FakeRequest(), movementDetails = maxGetMovementResponse.copy(firstTransporterTrader = None))) mustBe
-            controllers.sections.firstTransporter.routes.FirstTransporterVatController.onPageLoad(userAnswers.ern, userAnswers.arc, NormalMode)
-        }
         "when FirstTransporterVatPage is empty" in {
           val userAnswers = emptyUserAnswers
-            .set(FirstTransporterNamePage, "")
-            .set(FirstTransporterAddressPage, UserAddress(None, "", "", ""))
-          navigator.nextPage(FirstTransporterNamePage, CheckMode, userAnswers)(dataRequest(FakeRequest(), movementDetails = maxGetMovementResponse.copy(firstTransporterTrader = None))) mustBe
-            controllers.sections.firstTransporter.routes.FirstTransporterVatController.onPageLoad(userAnswers.ern, userAnswers.arc, NormalMode)
-        }
-        "when FirstTransporterAddressPage is empty" in {
-          val userAnswers = emptyUserAnswers
-            .set(FirstTransporterNamePage, "")
-            .set(FirstTransporterVatPage, "")
-          navigator.nextPage(FirstTransporterNamePage, CheckMode, userAnswers)(dataRequest(FakeRequest(), movementDetails = maxGetMovementResponse.copy(firstTransporterTrader = None))) mustBe
+          navigator.nextPage(FirstTransporterAddressPage, CheckMode, userAnswers)(dataRequest(FakeRequest(), movementDetails = maxGetMovementResponse.copy(firstTransporterTrader = None))) mustBe
             controllers.sections.firstTransporter.routes.FirstTransporterVatController.onPageLoad(userAnswers.ern, userAnswers.arc, NormalMode)
         }
       }
       "must redirect to CYA" - {
-        "when FirstTransporterNamePage, FirstTransporterVatPage and FirstTransporterAddressPage are non-empty" in {
+        "when FirstTransporterVatPage and FirstTransporterAddressPage are non-empty" in {
           val userAnswers = emptyUserAnswers
-            .set(FirstTransporterNamePage, "")
             .set(FirstTransporterVatPage, "")
-            .set(FirstTransporterAddressPage, UserAddress(None, "", "", ""))
-          navigator.nextPage(FirstTransporterNamePage, CheckMode, userAnswers) mustBe
+            .set(FirstTransporterAddressPage, UserAddress(None, None, "", "", ""))
+          navigator.nextPage(FirstTransporterAddressPage, CheckMode, userAnswers) mustBe
             controllers.sections.firstTransporter.routes.FirstTransporterCheckAnswersController.onPageLoad(userAnswers.ern, userAnswers.arc)
         }
       }

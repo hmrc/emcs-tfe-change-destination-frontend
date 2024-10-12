@@ -26,7 +26,6 @@ import models.sections.guarantor.GuarantorArranger.{Consignee, Consignor, GoodsO
 import models.sections.info.movementScenario.MovementScenario.ExportWithCustomsDeclarationLodgedInTheUk
 import models.{CheckMode, Mode, NormalMode}
 import org.scalatest.matchers.must.Matchers
-import pages.sections.consignee.ConsigneeBusinessNamePage
 import pages.sections.guarantor.{GuarantorArrangerPage, GuarantorNamePage}
 import pages.sections.info.DestinationTypePage
 import play.api.i18n.Messages
@@ -81,8 +80,8 @@ class GuarantorNameSummarySpec extends SpecBase with Matchers {
               FakeRequest(),
               emptyUserAnswers
                 .set(DestinationTypePage, ExportWithCustomsDeclarationLodgedInTheUk)
-                .set(GuarantorArrangerPage, Consignee)
-                .set(ConsigneeBusinessNamePage, "consignee name here"),
+                .set(GuarantorArrangerPage, Consignee),
+                // TODO .set(ConsigneeBusinessNamePage, "consignee name here"),
               movementDetails = maxGetMovementResponse.copy(movementGuarantee = MovementGuaranteeModel(NoGuarantor, None))
             )
 

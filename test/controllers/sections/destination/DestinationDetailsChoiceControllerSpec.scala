@@ -112,8 +112,7 @@ class DestinationDetailsChoiceControllerSpec extends SpecBase with MockUserAnswe
         .set(DestinationWarehouseVatPage, "vat")
         .set(DestinationDetailsChoicePage, true)
         .set(DestinationConsigneeDetailsPage, false)
-        .set(DestinationBusinessNamePage, "business name")
-        .set(DestinationAddressPage, userAddressModelMax)
+        .set(DestinationAddressPage, userAddressModelMax.copy(businessName = Some("business name")))
       )) {
 
         val req = FakeRequest(POST, destinationDetailsChoiceRouteCheckMode)
@@ -132,8 +131,7 @@ class DestinationDetailsChoiceControllerSpec extends SpecBase with MockUserAnswe
         .set(DestinationWarehouseVatPage, "vat")
         .set(DestinationDetailsChoicePage, true)
         .set(DestinationConsigneeDetailsPage, false)
-        .set(DestinationBusinessNamePage, "business name")
-        .set(DestinationAddressPage, userAddressModelMax)
+        .set(DestinationAddressPage, userAddressModelMax.copy(businessName = Some("business name")))
       )) {
 
         val expectedAnswers = emptyUserAnswers

@@ -28,9 +28,8 @@ class FirstTransporterSectionSpec extends SpecBase {
       "when finished" in {
         implicit val dr: DataRequest[_] = dataRequest(FakeRequest(),
           emptyUserAnswers
-            .set(FirstTransporterNamePage, "")
             .set(FirstTransporterVatPage, "")
-            .set(FirstTransporterAddressPage, UserAddress(None, "", "", ""))
+            .set(FirstTransporterAddressPage, UserAddress(None, None, "", "", ""))
             .set(FirstTransporterReviewPage, ChangeAnswers)
         )
         FirstTransporterSection.isCompleted mustBe true
@@ -50,7 +49,6 @@ class FirstTransporterSectionSpec extends SpecBase {
       "when not finished" in {
         implicit val dr: DataRequest[_] = dataRequest(FakeRequest(),
           emptyUserAnswers
-            .set(FirstTransporterNamePage, "")
             .set(FirstTransporterReviewPage, ChangeAnswers),
           movementDetails = maxGetMovementResponse.copy(firstTransporterTrader = None)
         )

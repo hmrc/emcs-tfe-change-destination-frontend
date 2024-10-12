@@ -20,7 +20,7 @@ import base.SpecBase
 import fixtures.messages.sections.guarantor.GuarantorArrangerMessages.English
 import models.requests.DataRequest
 import org.scalamock.scalatest.MockFactory
-import pages.sections.firstTransporter.{FirstTransporterAddressPage, FirstTransporterNamePage, FirstTransporterVatPage}
+import pages.sections.firstTransporter.{FirstTransporterAddressPage, FirstTransporterVatPage}
 import play.api.i18n.Messages
 import play.api.test.FakeRequest
 
@@ -37,9 +37,8 @@ class FirstTransporterCheckAnswersHelperSpec extends SpecBase with MockFactory {
         implicit val request: DataRequest[_] = dataRequest(
           FakeRequest(),
           emptyUserAnswers
-            .set(FirstTransporterNamePage, "Business name")
             .set(FirstTransporterVatPage, "GB123456789")
-            .set(FirstTransporterAddressPage, testUserAddress)
+            .set(FirstTransporterAddressPage, testUserAddress.copy(businessName = Some("Business name")))
         )
         helper.summaryList(onReviewPage = false)(request, msgs).rows.length mustBe 3
       }

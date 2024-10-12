@@ -59,7 +59,7 @@ class FirstTransporterAddressSummarySpec extends SpecBase with Matchers {
 
           "when there's no answer in the user answers (defaulting to 801)" in {
 
-            val userAddressFrom801 = UserAddress(Some("FirstTransporterTraderStreetNumber"), "FirstTransporterTraderStreetName", "FirstTransporterTraderCity", "FirstTransporterTraderPostcode")
+            val userAddressFrom801 = UserAddress(None, Some("FirstTransporterTraderStreetNumber"), "FirstTransporterTraderStreetName", "FirstTransporterTraderCity", "FirstTransporterTraderPostcode")
 
             implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers)
 
@@ -122,7 +122,7 @@ class FirstTransporterAddressSummarySpec extends SpecBase with Matchers {
 
           "when there's no answer in the user answers (defaulting to 801)" in {
 
-            val userAddressFrom801 = UserAddress(Some("FirstTransporterTraderStreetNumber"), "FirstTransporterTraderStreetName", "FirstTransporterTraderCity", "FirstTransporterTraderPostcode")
+            val userAddressFrom801 = UserAddress(None, Some("FirstTransporterTraderStreetNumber"), "FirstTransporterTraderStreetName", "FirstTransporterTraderCity", "FirstTransporterTraderPostcode")
 
             implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers)
 

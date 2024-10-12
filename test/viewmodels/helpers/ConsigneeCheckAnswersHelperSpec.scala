@@ -50,40 +50,39 @@ class ConsigneeCheckAnswersHelperSpec extends SpecBase {
 
       val warehouseUserAnswers = {
         emptyUserAnswers
-          .set(ConsigneeBusinessNamePage, "testBusinessName")
+          // TODO .set(ConsigneeBusinessNamePage, "testBusinessName")
           .set(ConsigneeExcisePage, testGbWarehouseErn)
           .set(ConsigneeAddressPage, testUserAddress)
       }
       val exemptDataUserAnswers = {
         emptyUserAnswers
-          .set(ConsigneeBusinessNamePage, "testBusinessName")
+          // TODO .set(ConsigneeBusinessNamePage, "testBusinessName")
           .set(ConsigneeExemptOrganisationPage, testExemptedOrganisation)
           .set(ConsigneeAddressPage, testUserAddress)
       }
       val vatNumberUserAnswers = {
         emptyUserAnswers
-          .set(ConsigneeBusinessNamePage, "testBusinessName")
+          // TODO .set(ConsigneeBusinessNamePage, "testBusinessName")
           .set(ConsigneeExportInformationPage, Set(VatNumber))
           .set(ConsigneeExportVatPage, testVatNumber)
           .set(ConsigneeAddressPage, testUserAddress)
       }
       val eoriUserAnswers = {
         emptyUserAnswers
-          .set(ConsigneeBusinessNamePage, "testBusinessName")
+          // TODO .set(ConsigneeBusinessNamePage, "testBusinessName")
           .set(ConsigneeExportInformationPage, Set(EoriNumber))
           .set(ConsigneeExportEoriPage, testEoriNumber)
           .set(ConsigneeAddressPage, testUserAddress)
       }
       val noVatNumberOrEoriUserAnswers = {
         emptyUserAnswers
-          .set(ConsigneeBusinessNamePage, "testBusinessName")
+          // TODO .set(ConsigneeBusinessNamePage, "testBusinessName")
           .set(ConsigneeAddressPage, testUserAddress)
       }
 
       "the user type is GreatBritainWarehouse" in new Setup(testGbWarehouseErn, warehouseUserAnswers) {
 
         val expectedSummaryListRows: Seq[SummaryListRow] = Seq(
-          ConsigneeBusinessNameSummary.row(fakeDataRequest, msgs),
           ConsigneeExciseSummary.row(fakeDataRequest, msgs),
           ConsigneeAddressSummary.row(fakeDataRequest, msgs)
         ).flatten
@@ -94,7 +93,6 @@ class ConsigneeCheckAnswersHelperSpec extends SpecBase {
       "the user type is NorthernIrelandWarehouse" in new Setup(testNiWarehouseErn, warehouseUserAnswers) {
 
         val expectedSummaryListRows: Seq[SummaryListRow] = Seq(
-          ConsigneeBusinessNameSummary.row(fakeDataRequest, msgs),
           ConsigneeExciseSummary.row(fakeDataRequest, msgs),
           ConsigneeAddressSummary.row(fakeDataRequest, msgs)
         ).flatten
@@ -105,7 +103,6 @@ class ConsigneeCheckAnswersHelperSpec extends SpecBase {
       "the destination type is DirectDelivery" in new Setup(testGbWarehouseErn, warehouseUserAnswers) {
 
         val expectedSummaryListRows: Seq[SummaryListRow] = Seq(
-          ConsigneeBusinessNameSummary.row(fakeDataRequest, msgs),
           ConsigneeExciseSummary.row(fakeDataRequest, msgs),
           ConsigneeAddressSummary.row(fakeDataRequest, msgs)
         ).flatten
@@ -117,7 +114,6 @@ class ConsigneeCheckAnswersHelperSpec extends SpecBase {
         new Setup(testGbrcWarehouseErn, warehouseUserAnswers) {
 
           val expectedSummaryListRows: Seq[SummaryListRow] = Seq(
-            ConsigneeBusinessNameSummary.row(fakeDataRequest, msgs),
             ConsigneeExciseSummary.row(fakeDataRequest, msgs),
             ConsigneeAddressSummary.row(fakeDataRequest, msgs)
           ).flatten
@@ -129,7 +125,6 @@ class ConsigneeCheckAnswersHelperSpec extends SpecBase {
         new Setup(testGbrcWarehouseErn, warehouseUserAnswers) {
 
           val expectedSummaryListRows: Seq[SummaryListRow] = Seq(
-            ConsigneeBusinessNameSummary.row(fakeDataRequest, msgs),
             ConsigneeExciseSummary.row(fakeDataRequest, msgs),
             ConsigneeAddressSummary.row(fakeDataRequest, msgs)
           ).flatten
@@ -141,7 +136,6 @@ class ConsigneeCheckAnswersHelperSpec extends SpecBase {
         new Setup(testGbrcWarehouseErn, warehouseUserAnswers) {
 
           val expectedSummaryListRows: Seq[SummaryListRow] = Seq(
-            ConsigneeBusinessNameSummary.row(fakeDataRequest, msgs),
             ConsigneeExciseSummary.row(fakeDataRequest, msgs),
             ConsigneeAddressSummary.row(fakeDataRequest, msgs)
           ).flatten
@@ -153,7 +147,6 @@ class ConsigneeCheckAnswersHelperSpec extends SpecBase {
         new Setup(testXircWarehouseErn, warehouseUserAnswers) {
 
           val expectedSummaryListRows: Seq[SummaryListRow] = Seq(
-            ConsigneeBusinessNameSummary.row(fakeDataRequest, msgs),
             ConsigneeExciseSummary.row(fakeDataRequest, msgs),
             ConsigneeAddressSummary.row(fakeDataRequest, msgs)
           ).flatten
@@ -165,7 +158,6 @@ class ConsigneeCheckAnswersHelperSpec extends SpecBase {
         new Setup(testXircWarehouseErn, warehouseUserAnswers) {
 
           val expectedSummaryListRows: Seq[SummaryListRow] = Seq(
-            ConsigneeBusinessNameSummary.row(fakeDataRequest, msgs),
             ConsigneeExciseSummary.row(fakeDataRequest, msgs),
             ConsigneeAddressSummary.row(fakeDataRequest, msgs)
           ).flatten
@@ -176,7 +168,6 @@ class ConsigneeCheckAnswersHelperSpec extends SpecBase {
       "the destination type is ExemptedOrganisations" in new Setup(testGbWarehouseErn, exemptDataUserAnswers) {
 
         val expectedSummaryListRows: Seq[SummaryListRow] = Seq(
-          ConsigneeBusinessNameSummary.row(fakeDataRequest, msgs),
           ConsigneeExemptOrganisationSummary.row(fakeDataRequest, msgs),
           ConsigneeAddressSummary.row(fakeDataRequest, msgs)
         ).flatten
@@ -188,7 +179,6 @@ class ConsigneeCheckAnswersHelperSpec extends SpecBase {
 
         val expectedSummaryListRows: Seq[SummaryListRow] = Seq(
           consigneeExportInformationSummary.row(fakeDataRequest, msgs),
-          ConsigneeBusinessNameSummary.row(fakeDataRequest, msgs),
           ConsigneeExportVatSummary.row(fakeDataRequest, msgs),
           ConsigneeAddressSummary.row(fakeDataRequest, msgs)
         ).flatten
@@ -200,7 +190,6 @@ class ConsigneeCheckAnswersHelperSpec extends SpecBase {
 
         val expectedSummaryListRows: Seq[SummaryListRow] = Seq(
           consigneeExportInformationSummary.row(fakeDataRequest, msgs),
-          ConsigneeBusinessNameSummary.row(fakeDataRequest, msgs),
           ConsigneeExportEoriSummary.row(fakeDataRequest, msgs),
           ConsigneeAddressSummary.row(fakeDataRequest, msgs)
         ).flatten
@@ -211,7 +200,6 @@ class ConsigneeCheckAnswersHelperSpec extends SpecBase {
       "the user has selected no VAT or Eori number" in new Setup(testGbWarehouseErn, noVatNumberOrEoriUserAnswers) {
 
         val expectedSummaryListRows: Seq[SummaryListRow] = Seq(
-          ConsigneeBusinessNameSummary.row(fakeDataRequest, msgs),
           ConsigneeAddressSummary.row(fakeDataRequest, msgs)
         ).flatten
 

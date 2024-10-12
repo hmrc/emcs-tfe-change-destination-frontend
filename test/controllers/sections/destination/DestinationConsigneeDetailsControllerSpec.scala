@@ -120,8 +120,7 @@ class DestinationConsigneeDetailsControllerSpec extends SpecBase with MockUserAn
       "when for a user with WarehouseExcise answered" in new Test(Some(emptyUserAnswers
         .set(DestinationWarehouseExcisePage, "excise")
         .set(DestinationConsigneeDetailsPage, false)
-        .set(DestinationBusinessNamePage, "business name")
-        .set(DestinationAddressPage, userAddressModelMax)
+        .set(DestinationAddressPage, userAddressModelMax.copy(businessName = Some("business name")))
       )) {
 
         val req = FakeRequest(POST, destinationConsigneeDetailsRouteCheckMode).withFormUrlEncodedBody(("value", "false"))
@@ -135,8 +134,7 @@ class DestinationConsigneeDetailsControllerSpec extends SpecBase with MockUserAn
         .set(DestinationWarehouseVatPage, "vat")
         .set(DestinationDetailsChoicePage, true)
         .set(DestinationConsigneeDetailsPage, true)
-        .set(DestinationBusinessNamePage, "business name")
-        .set(DestinationAddressPage, userAddressModelMax)
+        .set(DestinationAddressPage, userAddressModelMax.copy(businessName = Some("business name")))
       )) {
         val req = FakeRequest(POST, destinationConsigneeDetailsRouteCheckMode).withFormUrlEncodedBody(("value", "true"))
 
@@ -151,8 +149,7 @@ class DestinationConsigneeDetailsControllerSpec extends SpecBase with MockUserAn
       "when for a user with WarehouseExcise answered" in new Test(Some(emptyUserAnswers
         .set(DestinationWarehouseExcisePage, "excise")
         .set(DestinationConsigneeDetailsPage, false)
-        .set(DestinationBusinessNamePage, "business name")
-        .set(DestinationAddressPage, userAddressModelMax)
+        .set(DestinationAddressPage, userAddressModelMax.copy(businessName = Some("business name")))
       )) {
 
         val expectedAnswers = emptyUserAnswers
@@ -172,8 +169,7 @@ class DestinationConsigneeDetailsControllerSpec extends SpecBase with MockUserAn
         .set(DestinationWarehouseVatPage, "vat")
         .set(DestinationDetailsChoicePage, true)
         .set(DestinationConsigneeDetailsPage, false)
-        .set(DestinationBusinessNamePage, "business name")
-        .set(DestinationAddressPage, userAddressModelMax)
+        .set(DestinationAddressPage, userAddressModelMax.copy(businessName = Some("business name")))
       )) {
 
         val expectedAnswers = emptyUserAnswers

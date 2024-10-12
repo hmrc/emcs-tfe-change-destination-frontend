@@ -30,7 +30,6 @@ class ConsigneeCheckAnswersHelper @Inject()(consigneeExportInformationSummary: C
     SummaryListViewModel(
       rows = Seq(
         consigneeExportInformationSummary.row,
-        ConsigneeBusinessNameSummary.row,
         ConsigneeExciseSummary.row,
         ConsigneeExportVatSummary.row,
         ConsigneeExportEoriSummary.row,

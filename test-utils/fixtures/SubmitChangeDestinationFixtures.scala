@@ -30,7 +30,7 @@ import models.sections.transportUnit.{TransportSealTypeModel, TransportUnitType}
 import models.submitChangeDestination._
 import pages.sections.consignee._
 import pages.sections.exportInformation.ExportCustomsOfficePage
-import pages.sections.firstTransporter.{FirstTransporterAddressPage, FirstTransporterNamePage, FirstTransporterReviewPage, FirstTransporterVatPage}
+import pages.sections.firstTransporter.{FirstTransporterAddressPage, FirstTransporterReviewPage, FirstTransporterVatPage}
 import pages.sections.guarantor._
 import pages.sections.info.{ChangeDestinationTypePage, ChangeTypePage, DestinationTypePage}
 import pages.sections.journeyType.{GiveInformationOtherTransportPage, HowMovementTransportedPage, JourneyTimeHoursPage, JourneyTypeReviewPage}
@@ -176,7 +176,7 @@ trait SubmitChangeDestinationFixtures extends GetMovementResponseFixtures { _: B
     // Movement
     .set(InvoiceDetailsPage, invoiceDetailsModel)
     // consignee
-    .set(ConsigneeBusinessNamePage, "consignee name")
+// TODO   .set(ConsigneeBusinessNamePage, "consignee name")
     .set(ConsigneeExcisePage, "consignee ern")
     .set(ConsigneeExportInformationPage, Set(VatNumber))
     .set(ConsigneeExportVatPage, "vat no")
@@ -190,8 +190,7 @@ trait SubmitChangeDestinationFixtures extends GetMovementResponseFixtures { _: B
     .set(TransportArrangerAddressPage, testUserAddress.copy(street = "arranger street"))
     .set(TransportArrangerVatPage, "arranger vat")
     // firstTransporterTrader
-    .set(FirstTransporterNamePage, "first name")
-    .set(FirstTransporterAddressPage, testUserAddress.copy(street = "first street"))
+    .set(FirstTransporterAddressPage, testUserAddress.copy(businessName = Some("first name"), street = "first street"))
     .set(FirstTransporterVatPage, "first vat")
     // headerEadEsad
     .set(JourneyTimeHoursPage, 2)

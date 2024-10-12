@@ -150,12 +150,11 @@ class TraderModelSpec extends SpecBase {
             implicit val dr: DataRequest[_] = dataRequest(fakeRequest,
               emptyUserAnswers
                 .set(DestinationTypePage, movementScenario)
-                .set(ConsigneeBusinessNamePage, "consignee name")
                 .set(ConsigneeExcisePage, "consignee ern")
                 .set(ConsigneeExportInformationPage, Set(VatNumber, EoriNumber))
                 .set(ConsigneeExportVatPage, testVatNumber)
                 .set(ConsigneeExportEoriPage, "consignee eori")
-                .set(ConsigneeAddressPage, testUserAddress.copy(street = "consignee street"))
+                .set(ConsigneeAddressPage, testUserAddress.copy(businessName = Some("consignee name"), street = "consignee street"))
             )
 
             TraderModel.applyConsignee mustBe consigneeTraderWithErn
@@ -168,9 +167,8 @@ class TraderModelSpec extends SpecBase {
             implicit val dr: DataRequest[_] = dataRequest(fakeRequest,
               emptyUserAnswers
                 .set(DestinationTypePage, movementScenario)
-                .set(ConsigneeBusinessNamePage, "consignee name")
                 .set(ConsigneeExportVatPage, testVatNumber)
-                .set(ConsigneeAddressPage, testUserAddress.copy(street = "consignee street")),
+                .set(ConsigneeAddressPage, testUserAddress.copy(businessName = Some("consignee name"), street = "consignee street")),
               movementDetails = maxGetMovementResponse.copy(consigneeTrader = None)
             )
 
@@ -184,10 +182,9 @@ class TraderModelSpec extends SpecBase {
             implicit val dr: DataRequest[_] = dataRequest(fakeRequest,
               emptyUserAnswers
                 .set(DestinationTypePage, movementScenario)
-                .set(ConsigneeBusinessNamePage, "consignee name")
                 .set(ConsigneeExportVatPage, "vat no")
                 .set(ConsigneeExportEoriPage, "eori no")
-                .set(ConsigneeAddressPage, testUserAddress.copy(street = "consignee street")),
+                .set(ConsigneeAddressPage, testUserAddress.copy(businessName = Some("consignee name"), street = "consignee street")),
               movementDetails = maxGetMovementResponse.copy(consigneeTrader = None)
             )
 
@@ -202,9 +199,8 @@ class TraderModelSpec extends SpecBase {
               emptyUserAnswers
                 .set(ConsigneeExcisePage, "consignee ern")
                 .set(DestinationTypePage, movementScenario)
-                .set(ConsigneeBusinessNamePage, "consignee name")
                 .set(ConsigneeExportEoriPage, "eori no")
-                .set(ConsigneeAddressPage, testUserAddress.copy(street = "consignee street")),
+                .set(ConsigneeAddressPage, testUserAddress.copy(businessName = Some("consignee name"), street = "consignee street")),
               movementDetails = maxGetMovementResponse.copy(consigneeTrader = None)
             )
 
@@ -218,8 +214,7 @@ class TraderModelSpec extends SpecBase {
             implicit val dr: DataRequest[_] = dataRequest(fakeRequest,
               emptyUserAnswers
                 .set(DestinationTypePage, movementScenario)
-                .set(ConsigneeBusinessNamePage, "consignee name")
-                .set(ConsigneeAddressPage, testUserAddress.copy(street = "consignee street")),
+                .set(ConsigneeAddressPage, testUserAddress.copy(businessName = Some("consignee name"), street = "consignee street")),
               movementDetails = maxGetMovementResponse.copy(consigneeTrader = None)
             )
 
@@ -289,12 +284,10 @@ class TraderModelSpec extends SpecBase {
                   .set(DestinationTypePage, movementScenario)
                   .set(DestinationWarehouseExcisePage, "destination ern")
                   .set(DestinationConsigneeDetailsPage, true)
-                  .set(DestinationBusinessNamePage, "destination name")
-                  .set(DestinationAddressPage, testUserAddress.copy(street = "destination street"))
-                  .set(ConsigneeBusinessNamePage, "consignee name")
+                  .set(DestinationAddressPage, testUserAddress.copy(businessName = Some("destination name"), street = "destination street"))
                   .set(ConsigneeExcisePage, "consignee ern")
                   .set(ConsigneeExportInformationPage, Set(VatNumber, EoriNumber))
-                  .set(ConsigneeAddressPage, testUserAddress.copy(street = "consignee street"))
+                  .set(ConsigneeAddressPage, testUserAddress.copy(businessName = Some("consignee name"), street = "consignee street"))
               )
 
               TraderModel.applyDeliveryPlace(movementScenario) mustBe
@@ -310,8 +303,7 @@ class TraderModelSpec extends SpecBase {
                   .set(DestinationTypePage, movementScenario)
                   .set(DestinationWarehouseExcisePage, "destination ern")
                   .set(DestinationConsigneeDetailsPage, false)
-                  .set(DestinationBusinessNamePage, "destination name")
-                  .set(DestinationAddressPage, testUserAddress.copy(street = "destination street"))
+                  .set(DestinationAddressPage, testUserAddress.copy(businessName = Some("destination name"), street = "destination street"))
               )
 
               TraderModel.applyDeliveryPlace(movementScenario) mustBe Some(deliveryPlaceTrader)
@@ -345,8 +337,7 @@ class TraderModelSpec extends SpecBase {
                   .set(DestinationTypePage, movementScenario)
                   .set(DestinationWarehouseVatPage, "destination ern")
                   .set(DestinationDetailsChoicePage, true)
-                  .set(DestinationBusinessNamePage, "destination name")
-                  .set(DestinationAddressPage, testUserAddress.copy(street = "destination street"))
+                  .set(DestinationAddressPage, testUserAddress.copy(businessName = Some("destination name"), street = "destination street"))
               )
 
               TraderModel.applyDeliveryPlace(movementScenario) mustBe Some(deliveryPlaceTrader)
@@ -361,8 +352,7 @@ class TraderModelSpec extends SpecBase {
                   .set(DestinationTypePage, movementScenario)
                   .set(DestinationWarehouseVatPage, "destination ern")
                   .set(DestinationDetailsChoicePage, false)
-                  .set(DestinationBusinessNamePage, "destination name")
-                  .set(DestinationAddressPage, testUserAddress.copy(street = "destination street"))
+                  .set(DestinationAddressPage, testUserAddress.copy(businessName = Some("destination name"), street = "destination street"))
               )
 
               TraderModel.applyDeliveryPlace(movementScenario) mustBe Some(deliveryPlaceTrader.copy(traderName = None, address = None))
@@ -376,8 +366,7 @@ class TraderModelSpec extends SpecBase {
                 emptyUserAnswers
                   .set(DestinationTypePage, movementScenario)
                   .set(DestinationWarehouseVatPage, "destination ern")
-                  .set(DestinationBusinessNamePage, "destination name")
-                  .set(DestinationAddressPage, testUserAddress.copy(street = "destination street"))
+                  .set(DestinationAddressPage, testUserAddress.copy(businessName = Some("destination name"), street = "destination street"))
               )
 
               TraderModel.applyDeliveryPlace(movementScenario) mustBe Some(deliveryPlaceTrader)
@@ -392,8 +381,7 @@ class TraderModelSpec extends SpecBase {
               emptyUserAnswers
                 .set(DestinationTypePage, movementScenario)
                 .set(DestinationWarehouseVatPage, "destination ern")
-                .set(DestinationBusinessNamePage, "destination name")
-                .set(DestinationAddressPage, testUserAddress.copy(street = "destination street"))
+                .set(DestinationAddressPage, testUserAddress.copy(businessName = Some("destination name"), street = "destination street"))
             )
 
             TraderModel.applyDeliveryPlace(movementScenario) mustBe Some(deliveryPlaceTrader.copy(traderExciseNumber = None))
@@ -413,8 +401,7 @@ class TraderModelSpec extends SpecBase {
                   .set(DestinationTypePage, movementScenario)
                   .set(DestinationWarehouseVatPage, "destination ern")
                   .set(DestinationDetailsChoicePage, true)
-                  .set(DestinationBusinessNamePage, "destination name")
-                  .set(DestinationAddressPage, testUserAddress.copy(street = "destination street"))
+                  .set(DestinationAddressPage, testUserAddress.copy(businessName = Some("destination name"), street = "destination street"))
               )
 
               TraderModel.applyDeliveryPlace(movementScenario) mustBe None
@@ -441,12 +428,11 @@ class TraderModelSpec extends SpecBase {
           emptyUserAnswers
             .set(TransportArrangerPage, TransportArranger.Consignee)
             .set(DestinationTypePage, MovementScenario.UkTaxWarehouse.GB)
-            .set(ConsigneeBusinessNamePage, "consignee name")
             .set(ConsigneeExcisePage, "consignee ern")
             .set(ConsigneeExportInformationPage, Set(EoriNumber))
             .set(ConsigneeExportVatPage, testVatNumber)
             .set(ConsigneeExportEoriPage, "consignee eori")
-            .set(ConsigneeAddressPage, testUserAddress.copy(street = "consignee street"))
+            .set(ConsigneeAddressPage, testUserAddress.copy(businessName = Some("consignee name"), street = "consignee street"))
         )
 
         TraderModel.applyTransportArranger mustBe None
@@ -475,8 +461,7 @@ class TraderModelSpec extends SpecBase {
         implicit val dr: DataRequest[_] = dataRequest(
           fakeRequest,
           emptyUserAnswers
-            .set(FirstTransporterNamePage, "first name")
-            .set(FirstTransporterAddressPage, testUserAddress.copy(street = "first street"))
+            .set(FirstTransporterAddressPage, testUserAddress.copy(businessName = Some("first name"), street = "first street"))
             .set(FirstTransporterVatPage, "first vat")
         )
 
@@ -486,8 +471,7 @@ class TraderModelSpec extends SpecBase {
         implicit val dr: DataRequest[_] = dataRequest(
           fakeRequest,
           emptyUserAnswers
-            .set(FirstTransporterNamePage, "first name")
-            .set(FirstTransporterAddressPage, testUserAddress.copy(street = "first street")),
+            .set(FirstTransporterAddressPage, testUserAddress.copy(businessName = Some("first name"), street = "first street")),
           movementDetails = maxGetMovementResponse.copy(firstTransporterTrader = Some(GetMovementTraderModel(
             traderExciseNumber = None,
             traderName = Some("first name"),
@@ -509,8 +493,7 @@ class TraderModelSpec extends SpecBase {
         implicit val dr: DataRequest[_] = dataRequest(
           fakeRequest,
           emptyUserAnswers
-            .set(FirstTransporterNamePage, "first name")
-            .set(FirstTransporterAddressPage, testUserAddress.copy(street = "first street")),
+            .set(FirstTransporterAddressPage, testUserAddress.copy(businessName = Some("first name"), street = "first street")),
           movementDetails = maxGetMovementResponse.copy(firstTransporterTrader = Some(GetMovementTraderModel(
             traderExciseNumber = None,
             traderName = Some("first name"),
@@ -547,12 +530,11 @@ class TraderModelSpec extends SpecBase {
           fakeRequest,
           emptyUserAnswers
             .set(DestinationTypePage, MovementScenario.UkTaxWarehouse.GB)
-            .set(ConsigneeBusinessNamePage, "consignee name")
             .set(ConsigneeExcisePage, "consignee ern")
             .set(ConsigneeExportInformationPage, Set(EoriNumber))
             .set(ConsigneeExportVatPage, testVatNumber)
             .set(ConsigneeExportEoriPage, testEoriNumber)
-            .set(ConsigneeAddressPage, testUserAddress.copy(street = "consignee street"))
+            .set(ConsigneeAddressPage, testUserAddress.copy(businessName = Some("consignee name"), street = "consignee street"))
         )
 
         TraderModel.applyGuarantor(GuarantorArranger.Consignee) mustBe None

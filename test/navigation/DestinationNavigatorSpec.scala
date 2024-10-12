@@ -105,12 +105,12 @@ class DestinationNavigatorSpec extends SpecBase {
 
       "for the DestinationConsigneeDetailsPage" - {
 
-        "must go to Destination Business Name page (CAM-DES04) if answer is no" in {
+        "must go to Destination Address page (CAM-DES05) if answer is no" in {
 
           val userAnswers = emptyUserAnswers.set(DestinationConsigneeDetailsPage, false)
 
           navigator.nextPage(DestinationConsigneeDetailsPage, NormalMode, userAnswers) mustBe
-            routes.DestinationBusinessNameController.onPageLoad(testErn, testArc, NormalMode)
+            routes.DestinationAddressController.onPageLoad(testErn, testArc, NormalMode)
 
         }
 
@@ -126,15 +126,6 @@ class DestinationNavigatorSpec extends SpecBase {
 
           navigator.nextPage(DestinationConsigneeDetailsPage, NormalMode, emptyUserAnswers) mustBe
             controllers.routes.JourneyRecoveryController.onPageLoad()
-        }
-      }
-
-      "for the DestinationBusinessNamePage" - {
-
-        "must go to Destination Address page" in {
-
-          navigator.nextPage(DestinationBusinessNamePage, NormalMode, emptyUserAnswers) mustBe
-            routes.DestinationAddressController.onPageLoad(testErn, testArc, NormalMode)
         }
       }
 

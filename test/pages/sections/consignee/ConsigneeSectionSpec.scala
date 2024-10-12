@@ -30,8 +30,7 @@ class ConsigneeSectionSpec extends SpecBase {
           emptyUserAnswers
             .set(ConsigneeExportInformationPage, Set(VatNumber))
             .set(ConsigneeExportVatPage, testVatNumber)
-            .set(ConsigneeBusinessNamePage, "")
-            .set(ConsigneeAddressPage, UserAddress(None, "", "", ""))
+            .set(ConsigneeAddressPage, UserAddress(None, None, "", "", ""))
         )
         ConsigneeSection.isCompleted mustBe true
       }
@@ -40,8 +39,7 @@ class ConsigneeSectionSpec extends SpecBase {
           emptyUserAnswers
             .set(ConsigneeExportInformationPage, Set(EoriNumber))
             .set(ConsigneeExportEoriPage, testEoriNumber)
-            .set(ConsigneeBusinessNamePage, "")
-            .set(ConsigneeAddressPage, UserAddress(None, "", "", ""))
+            .set(ConsigneeAddressPage, UserAddress(None, None, "", "", ""))
         )
         ConsigneeSection.isCompleted mustBe true
       }
@@ -51,8 +49,7 @@ class ConsigneeSectionSpec extends SpecBase {
             .set(ConsigneeExportInformationPage, Set(VatNumber, EoriNumber))
             .set(ConsigneeExportVatPage, testVatNumber)
             .set(ConsigneeExportEoriPage, testEoriNumber)
-            .set(ConsigneeBusinessNamePage, "")
-            .set(ConsigneeAddressPage, UserAddress(None, "", "", ""))
+            .set(ConsigneeAddressPage, UserAddress(None, None, "", "", ""))
         )
         ConsigneeSection.isCompleted mustBe true
       }
@@ -60,8 +57,7 @@ class ConsigneeSectionSpec extends SpecBase {
         implicit val dr: DataRequest[_] = dataRequest(FakeRequest(),
           emptyUserAnswers
             .set(ConsigneeExportInformationPage, Set(NoInformation))
-            .set(ConsigneeBusinessNamePage, "")
-            .set(ConsigneeAddressPage, UserAddress(None, "", "", ""))
+            .set(ConsigneeAddressPage, UserAddress(None, None, "", "", ""))
         )
         ConsigneeSection.isCompleted mustBe true
       }
@@ -69,8 +65,7 @@ class ConsigneeSectionSpec extends SpecBase {
         implicit val dr: DataRequest[_] = dataRequest(FakeRequest(),
           emptyUserAnswers
             .set(ConsigneeExcisePage, "")
-            .set(ConsigneeBusinessNamePage, "")
-            .set(ConsigneeAddressPage, UserAddress(None, "", "", "")),
+            .set(ConsigneeAddressPage, UserAddress(None, None, "", "", "")),
           movementDetails = maxGetMovementResponse.copy(consigneeTrader = None)
         )
         ConsigneeSection.isCompleted mustBe true
@@ -79,8 +74,7 @@ class ConsigneeSectionSpec extends SpecBase {
         implicit val dr: DataRequest[_] = dataRequest(FakeRequest(),
           emptyUserAnswers
             .set(ConsigneeExemptOrganisationPage, ExemptOrganisationDetailsModel("", ""))
-            .set(ConsigneeBusinessNamePage, "")
-            .set(ConsigneeAddressPage, UserAddress(None, "", "", "")),
+            .set(ConsigneeAddressPage, UserAddress(None, None, "", "", "")),
           movementDetails = maxGetMovementResponse.copy(consigneeTrader = None)
         )
         ConsigneeSection.isCompleted mustBe true
@@ -100,8 +94,7 @@ class ConsigneeSectionSpec extends SpecBase {
         implicit val dr: DataRequest[_] = dataRequest(FakeRequest(),
           emptyUserAnswers
             .set(ConsigneeExportInformationPage, Set(VatNumber))
-            .set(ConsigneeBusinessNamePage, "")
-            .set(ConsigneeAddressPage, UserAddress(None, "", "", "")),
+            .set(ConsigneeAddressPage, UserAddress(None, None, "", "", "")),
           movementDetails = maxGetMovementResponse.copy(consigneeTrader = None)
         )
         ConsigneeSection.isCompleted mustBe false
@@ -110,31 +103,26 @@ class ConsigneeSectionSpec extends SpecBase {
         implicit val dr: DataRequest[_] = dataRequest(FakeRequest(),
           emptyUserAnswers
             .set(ConsigneeExportInformationPage, Set(EoriNumber))
-            .set(ConsigneeBusinessNamePage, "")
-            .set(ConsigneeAddressPage, UserAddress(None, "", "", "")),
+            .set(ConsigneeAddressPage, UserAddress(None, None, "", "", "")),
           movementDetails = maxGetMovementResponse.copy(consigneeTrader = None)
         )
         ConsigneeSection.isCompleted mustBe false
       }
-
       "when user starts on ConsigneeExportInformation and selects both VAT / EORI number (and has NOT provided VAT)" in {
         implicit val dr: DataRequest[_] = dataRequest(FakeRequest(),
           emptyUserAnswers
             .set(ConsigneeExportInformationPage, Set(VatNumber, EoriNumber))
             .set(ConsigneeExportEoriPage, testEoriNumber)
-            .set(ConsigneeBusinessNamePage, "")
-            .set(ConsigneeAddressPage, UserAddress(None, "", "", ""))
+            .set(ConsigneeAddressPage, UserAddress(None, None, "", "", ""))
         )
         ConsigneeSection.isCompleted mustBe false
       }
-
       "when user starts on ConsigneeExportInformation and selects both VAT / EORI number (and has NOT provided EORI)" in {
         implicit val dr: DataRequest[_] = dataRequest(FakeRequest(),
           emptyUserAnswers
             .set(ConsigneeExportInformationPage, Set(VatNumber, EoriNumber))
             .set(ConsigneeExportVatPage, testVatNumber)
-            .set(ConsigneeBusinessNamePage, "")
-            .set(ConsigneeAddressPage, UserAddress(None, "", "", "")),
+            .set(ConsigneeAddressPage, UserAddress(None, None, "", "", "")),
           movementDetails = maxGetMovementResponse.copy(consigneeTrader = None)
         )
         ConsigneeSection.isCompleted mustBe false
@@ -143,8 +131,7 @@ class ConsigneeSectionSpec extends SpecBase {
         implicit val dr: DataRequest[_] = dataRequest(FakeRequest(),
           emptyUserAnswers
             .set(ConsigneeExportInformationPage, Set(VatNumber, EoriNumber))
-            .set(ConsigneeBusinessNamePage, "")
-            .set(ConsigneeAddressPage, UserAddress(None, "", "", ""))
+            .set(ConsigneeAddressPage, UserAddress(None, None, "", "", ""))
         )
         ConsigneeSection.isCompleted mustBe false
       }
@@ -174,7 +161,6 @@ class ConsigneeSectionSpec extends SpecBase {
       Seq(
         ConsigneeExcisePage -> emptyUserAnswers.set(ConsigneeExcisePage, "excise number changed"),
         ConsigneeExemptOrganisationPage -> emptyUserAnswers.set(ConsigneeExemptOrganisationPage, ExemptOrganisationDetailsModel("member state changed", "certificate serial number changed")),
-        ConsigneeBusinessNamePage -> emptyUserAnswers.set(ConsigneeBusinessNamePage, "business name changed"),
         ConsigneeAddressPage -> emptyUserAnswers.set(ConsigneeAddressPage, testUserAddress),
         ConsigneeExportVatPage -> emptyUserAnswers.set(ConsigneeExportVatPage, "vat no"),
         ConsigneeExportEoriPage -> emptyUserAnswers.set(ConsigneeExportEoriPage, "eori no")
@@ -194,8 +180,7 @@ class ConsigneeSectionSpec extends SpecBase {
         val userAnswers = emptyUserAnswers
           .set(ConsigneeExcisePage, maxGetMovementResponse.consigneeTrader.get.traderExciseNumber.get)
           .set(ConsigneeExemptOrganisationPage, ExemptOrganisationDetailsModel(maxGetMovementResponse.memberStateCode.get, maxGetMovementResponse.serialNumberOfCertificateOfExemption.get))
-          .set(ConsigneeBusinessNamePage, maxGetMovementResponse.consigneeTrader.get.traderName.get)
-          .set(ConsigneeAddressPage, maxGetMovementResponse.consigneeTrader.get.address.map(UserAddress.userAddressFromTraderAddress).get)
+          .set(ConsigneeAddressPage, maxGetMovementResponse.consigneeTrader.map(UserAddress.userAddressFromTraderAddress).get)
           .set(ConsigneeExportInformationPage, Set(EoriNumber))
 
         ConsigneeSection.hasConsigneeChanged(dataRequest(FakeRequest(), userAnswers)) mustBe false

@@ -79,9 +79,8 @@ class GuarantorSectionSpec extends SpecBase {
                   answers = emptyUserAnswers
                     .set(DestinationTypePage, ExportWithCustomsDeclarationLodgedInTheUk)
                     .set(GuarantorArrangerPage, arranger)
-                    .set(GuarantorNamePage, "")
                     .set(GuarantorVatPage, "")
-                    .set(GuarantorAddressPage, UserAddress(None, "", "", "")),
+                    .set(GuarantorAddressPage, UserAddress(None, None, "", "", "")),
                   ern = testGreatBritainWarehouseErn,
                   movementDetails = maxGetMovementResponse.copy(movementGuarantee = MovementGuaranteeModel(NoGuarantor, None))
                 )
@@ -162,9 +161,8 @@ class GuarantorSectionSpec extends SpecBase {
                       .set(GuarantorReviewPage, ChangeAnswers)
                       .set(DestinationTypePage, UkTaxWarehouse.GB)
                       .set(GuarantorArrangerPage, arranger)
-                      .set(GuarantorNamePage, "")
                       .set(GuarantorVatPage, "")
-                      .set(GuarantorAddressPage, UserAddress(None, "", "", "")),
+                      .set(GuarantorAddressPage, UserAddress(None, None, "", "", "")),
                     ern = testGreatBritainWarehouseErn,
                     movementDetails = maxGetMovementResponse.copy(movementGuarantee = MovementGuaranteeModel(NoGuarantor, None))
                   )
@@ -270,9 +268,8 @@ class GuarantorSectionSpec extends SpecBase {
                     .set(GuarantorReviewPage, ChangeAnswers)
                     .set(DestinationTypePage, UkTaxWarehouse.GB)
                     .set(GuarantorArrangerPage, arranger)
-                    .set(GuarantorNamePage, "")
                     .set(GuarantorVatPage, "")
-                    .set(GuarantorAddressPage, UserAddress(None, "", "", "")),
+                    .set(GuarantorAddressPage, UserAddress(None, None, "", "", "")),
                   ern = testGreatBritainWarehouseErn,
                   movementDetails = maxGetMovementResponse
                 )

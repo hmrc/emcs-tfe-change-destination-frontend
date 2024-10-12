@@ -18,30 +18,25 @@ package pages.sections.consignee
 
 import base.SpecBase
 import models.UserAddress
-import models.response.emcsTfe.AddressModel
+import models.response.emcsTfe.TraderModel
 import play.api.test.FakeRequest
 
 class ConsigneeAddressPageSpec extends SpecBase {
   "getValueFromIE801" - {
     "must return Some(_)" - {
-      "when Consignee exists and has an address" in {
-        val consigneeAddress: AddressModel = maxGetMovementResponse.consigneeTrader.get.address.get
+      "when Consignee exists in the movement" in {
+        val consigneeTrader: TraderModel = maxGetMovementResponse.consigneeTrader.get
         ConsigneeAddressPage.getValueFromIE801(dataRequest(FakeRequest())) mustBe Some(UserAddress(
-          property = Some(consigneeAddress.streetNumber.get),
-          street = consigneeAddress.street.get,
-          town = consigneeAddress.city.get,
-          postcode = consigneeAddress.postcode.get
+          businessName = consigneeTrader.traderName,
+          property = consigneeTrader.address.flatMap(_.streetNumber),
+          street = consigneeTrader.address.flatMap(_.street).getOrElse(""),
+          town = consigneeTrader.address.flatMap(_.city).getOrElse(""),
+          postcode = consigneeTrader.address.flatMap(_.postcode).getOrElse("")
         ))
       }
     }
     "must return None" - {
-      "when Consignee exists and has no address" in {
-        ConsigneeAddressPage.getValueFromIE801(dataRequest(
-          FakeRequest(),
-          movementDetails = maxGetMovementResponse.copy(consigneeTrader = Some(maxGetMovementResponse.consigneeTrader.get.copy(address = None)))
-        )) mustBe None
-      }
-      "when Consignee doesn't exist" in {
+      "when Consignee doesn't exist within the movement" in {
         ConsigneeAddressPage.getValueFromIE801(dataRequest(
           FakeRequest(),
           movementDetails = maxGetMovementResponse.copy(consigneeTrader = None)

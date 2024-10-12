@@ -125,13 +125,13 @@ unauthorised.p1 = You do not have permission to view this page.
 unauthorised.p2 = You should:
 unauthorised.bullet1 = check you have signed in with the right details
 unauthorised.bullet2 = check you are using the right excise reference number (ERN)
-unauthorised.p3 = If you are using the right sign in details and ERN, check the web address is correct.
+unauthorised.p3 = If you are using the right sign in details and ERN, check the web trader is correct.
 
 notOnPrivateBeta.title = There is a problem
 notOnPrivateBeta.heading = There is a problem
 notOnPrivateBeta.p1 = You do not have permission to view this page.
 notOnPrivateBeta.alreadySignedUp.h2 = If you have signed up for the Excise Movement and Control System (EMCS) private beta research
-notOnPrivateBeta.alreadySignedUp.p1 = If you typed the web address, check it is correct. If you pasted the web address, check you copied the entire address.
+notOnPrivateBeta.alreadySignedUp.p1 = If you typed the web trader, check it is correct. If you pasted the web trader, check you copied the entire trader.
 notOnPrivateBeta.alreadySignedUp.p2 = If you think you have signed in with the wrong details, sign out and check the details you have are correct.
 notOnPrivateBeta.notSignedUp.h2 = If you have not signed up for the EMCS private beta research
 notOnPrivateBeta.notSignedUp.p1.preLink = You can choose to
@@ -194,70 +194,75 @@ checkYourAnswers.title = Check your answers before submitting your movement
 checkYourAnswers.heading = Check your answers before submitting your movement
 checkYourAnswers.submit.button = Submit movement
 
-address.consignorAddress.title = Enter the consignor’s address
-address.consignorAddress.heading = Enter the consignor’s address
-address.consignorAddress.subheading = Consignor information
+trader.businessName = Business name
+trader.businessName.error.required = Enter a business name
+trader.businessName.error.length = Business name must be 182 characters or less
+trader.businessName.error.invalid = Business name must not contain < and > and : and ;
 
-address.consigneeAddress.title = Enter the consignee’s address
-address.consigneeAddress.heading = Enter the consignee’s address
-address.consigneeAddress.subheading = Consignee information
-address.consigneeAddress.checkYourAnswers.label = Address
+trader.consignorAddress.title = Enter the consignor’s trader
+trader.consignorAddress.heading = Enter the consignor’s trader
+trader.consignorAddress.subheading = Consignor information
 
-address.destinationAddress.title = Enter the place of destination address
-address.destinationAddress.heading = Enter the place of destination address
-address.destinationAddress.subheading = Place of destination information
-address.destinationAddress.checkYourAnswers.label = Address
-address.destinationAddress.change.hidden = Address
+trader.consigneeAddress.title = Enter the consignee’s details
+trader.consigneeAddress.heading = Enter the consignee’s details
+trader.consigneeAddress.subheading = Consignee information
+trader.consigneeAddress.checkYourAnswers.label = Consignee''s details
 
-address.dispatchAddress.title = Enter the place of dispatch address
-address.dispatchAddress.heading = Enter the place of dispatch address
-address.dispatchAddress.subheading = Place of dispatch information
-address.dispatchAddress.checkYourAnswersLabel = Address
-address.dispatchAddress.checkYourAnswers.consignorNotComplete = Consignor section not complete
-address.dispatchAddress.change.hidden = Address
+trader.destinationAddress.title = Enter the place of destination trader
+trader.destinationAddress.heading = Enter the place of destination trader
+trader.destinationAddress.subheading = Place of destination information
+trader.destinationAddress.checkYourAnswers.label = Address
+trader.destinationAddress.change.hidden = Address
 
-address.transportArrangerAddress.3.title = Enter the goods owner’s business address
-address.transportArrangerAddress.3.heading = Enter the goods owner’s business address
-address.transportArrangerAddress.4.title = Enter the transporter’s business address
-address.transportArrangerAddress.4.heading = Enter the transporter’s business address
-address.transportArrangerAddress.subheading = Transport arranger
+trader.dispatchAddress.title = Enter the place of dispatch trader
+trader.dispatchAddress.heading = Enter the place of dispatch trader
+trader.dispatchAddress.subheading = Place of dispatch information
+trader.dispatchAddress.checkYourAnswersLabel = Address
+trader.dispatchAddress.checkYourAnswers.consignorNotComplete = Consignor section not complete
+trader.dispatchAddress.change.hidden = Address
 
-address.firstTransporterAddress.title = Enter the first transporter’s business address
-address.firstTransporterAddress.heading = Enter the first transporter’s business address
-address.firstTransporterAddress.subheading = First transporter
-address.firstTransporterAddress.checkYourAnswers.label = Address
-address.firstTransporterAddress.change.hidden = first transporters address
+trader.transportArrangerAddress.3.title = Enter the goods owner’s business trader
+trader.transportArrangerAddress.3.heading = Enter the goods owner’s business trader
+trader.transportArrangerAddress.4.title = Enter the transporter’s business trader
+trader.transportArrangerAddress.4.heading = Enter the transporter’s business trader
+trader.transportArrangerAddress.subheading = Transport arranger
 
-address.guarantorAddress.subheading = Guarantor
-address.guarantorAddress.checkYourAnswers.label = Address
-address.guarantorAddress.checkYourAnswers.notProvided = {0} section not complete
-address.guarantorAddress.3.title = Enter the good owner’s business address
-address.guarantorAddress.3.heading = Enter the good owner’s business address
-address.guarantorAddress.3.change.hidden = good owner’s address
-address.guarantorAddress.2.title = Enter the transporter’s business address
-address.guarantorAddress.2.heading = Enter the transporter’s business address
-address.guarantorAddress.2.change.hidden = transporter’s address
+trader.firstTransporterAddress.title = Enter the first transporter’s business trader
+trader.firstTransporterAddress.heading = Enter the first transporter’s business trader
+trader.firstTransporterAddress.subheading = First transporter
+trader.firstTransporterAddress.checkYourAnswers.label = First transporter''s details
+trader.firstTransporterAddress.change.hidden = first transporters trader
+
+trader.guarantorAddress.subheading = Guarantor
+trader.guarantorAddress.checkYourAnswers.label = Address
+trader.guarantorAddress.checkYourAnswers.notProvided = {0} section not complete
+trader.guarantorAddress.3.title = Enter the good owner’s business trader
+trader.guarantorAddress.3.heading = Enter the good owner’s business trader
+trader.guarantorAddress.3.change.hidden = good owner’s trader
+trader.guarantorAddress.2.title = Enter the transporter’s business trader
+trader.guarantorAddress.2.heading = Enter the transporter’s business trader
+trader.guarantorAddress.2.change.hidden = transporter’s trader
 
 
-address.property = Property name or number (optional)
-address.property.error.length = Enter a property name or number up to 11 characters
-address.property.error.character = Property must contain letters or numbers
-address.property.error.invalid = Property name or number must not contain < and > and : and ;
-address.street = Street name
-address.street.error.required = Enter a street name
-address.street.error.length = Enter a street name up to 65 characters
-address.street.error.character = Street must contain letters or numbers
-address.street.error.invalid = Street name must not contain < and > and : and ;
-address.town = Town or city
-address.town.error.required = Enter a town or city
-address.town.error.length = Enter a town or city name up to 50 characters
-address.town.error.character = Town or city must contain letters or numbers
-address.town.error.invalid = Town or city must not contain < and > and : and ;
-address.postcode = Postcode
-address.postcode.error.required = Enter a postcode
-address.postcode.error.length = Enter a postcode up to 10 characters
-address.postcode.error.character = Postcode must contain letters or numbers
-address.postcode.error.invalid = Postcode must not contain < and > and : and ;
+trader.property = Property name or number (optional)
+trader.property.error.length = Enter a property name or number up to 11 characters
+trader.property.error.character = Property must contain letters or numbers
+trader.property.error.invalid = Property name or number must not contain < and > and : and ;
+trader.street = Street name
+trader.street.error.required = Enter a street name
+trader.street.error.length = Enter a street name up to 65 characters
+trader.street.error.character = Street must contain letters or numbers
+trader.street.error.invalid = Street name must not contain < and > and : and ;
+trader.town = Town or city
+trader.town.error.required = Enter a town or city
+trader.town.error.length = Enter a town or city name up to 50 characters
+trader.town.error.character = Town or city must contain letters or numbers
+trader.town.error.invalid = Town or city must not contain < and > and : and ;
+trader.postcode = Postcode
+trader.postcode.error.required = Enter a postcode
+trader.postcode.error.length = Enter a postcode up to 10 characters
+trader.postcode.error.character = Postcode must contain letters or numbers
+trader.postcode.error.invalid = Postcode must not contain < and > and : and ;
 
 checkYourAnswersConsignor.caption = Consignor information
 checkYourAnswersConsignor.title = Check your answers
@@ -265,7 +270,7 @@ checkYourAnswersConsignor.heading = Check your answers
 checkYourAnswersConsignor.subHeading = Consignor
 checkYourAnswersConsignor.traderName = Trader name
 checkYourAnswersConsignor.ern = Excise registration number (ERN)
-checkYourAnswersConsignor.address = Address
+checkYourAnswersConsignor.trader = Address
 
 journeyType.subHeading = Journey type
 consignee.subHeading = Consignee information
@@ -363,14 +368,6 @@ journeyTimeHours.error.wholeNumber = The number of hours must not include a deci
 journeyTimeHours.error.outOfRange = Hours must be between {0} and {1}
 journeyTimeHours.change.hidden = how many hours the journey will take
 
-consigneeBusinessName.title = What is the consignee’s business name?
-consigneeBusinessName.heading = What is the consignee’s business name?
-consigneeBusinessName.checkYourAnswersLabel = Business name
-consigneeBusinessName.error.required = Enter the consignee business name
-consigneeBusinessName.error.length = Consignee business name must be {0} characters or less
-consigneeBusinessName.error.invalidCharacter = Consignee business name must not contain < and > and : and ;
-consigneeBusinessName.change.hidden = consignee business name
-
 consigneeAddress.title = StringPageH1
 consigneeAddress.heading = StringPageH1
 consigneeAddress.checkYourAnswersLabel = consigneeAddress
@@ -448,7 +445,7 @@ transportArrangerVat.change.hidden = VAT registration number
 
 transportArrangerAddress.checkYourAnswers.label = Address
 transportArrangerAddress.checkYourAnswers.notProvided = {0} section not complete
-transportArrangerAddress.change.hidden = transport arranger address
+transportArrangerAddress.change.hidden = transport arranger trader
 
 transportArrangerCheckAnswers.title = Check your answers
 transportArrangerCheckAnswers.heading = Check your answers
@@ -664,7 +661,7 @@ checkYourAnswersConsignee.ern = Excise registration number (ERN)
 checkYourAnswersConsignee.yesEoriNumber = EORI Number
 checkYourAnswersConsignee.yesVatNumber = VAT Number
 checkYourAnswersConsignee.exemptOrganisation = Exempted organisation details
-checkYourAnswersConsignee.address = Address
+checkYourAnswersConsignee.trader = Address
 
 invoiceDetails.title = Invoice details
 invoiceDetails.heading = Invoice details
@@ -685,10 +682,10 @@ invoiceDetails.invoice-reference.change.hidden = Invoice reference
 invoiceDetails.invoice-date.checkYourAnswersLabel = Invoice date of issue
 invoiceDetails.invoice-date.change.hidden = Invoice date of issue
 
-destinationDetailsChoice.title = Do you want to give the address and business name of the {0}?
-destinationDetailsChoice.heading = Do you want to give the address and business name of the {0}?
+destinationDetailsChoice.title = Do you want to give the trader and business name of the {0}?
+destinationDetailsChoice.heading = Do you want to give the trader and business name of the {0}?
 destinationDetailsChoice.hint = This information is optional.
-destinationDetailsChoice.error.required = Select ‘yes’ to enter the address and business name of the {0}
+destinationDetailsChoice.error.required = Select ‘yes’ to enter the trader and business name of the {0}
 destinationDetailsChoice.checkYourAnswersLabel = Give details of {0}
 destinationDetailsChoice.change.hidden = Give details of {0}
 

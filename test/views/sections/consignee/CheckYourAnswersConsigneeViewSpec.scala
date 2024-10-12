@@ -59,7 +59,6 @@ class CheckYourAnswersConsigneeViewSpec extends SpecBase with ViewBehaviours {
           implicit val request: DataRequest[AnyContentAsEmpty.type] =
             dataRequest(FakeRequest(), emptyUserAnswers
               .set(ConsigneeAddressPage, testUserAddress)
-              .set(ConsigneeBusinessNamePage, testBusinessName)
               .set(ConsigneeExcisePage, testErn)
               .set(DestinationTypePage, movementScenario)
             )
@@ -69,7 +68,6 @@ class CheckYourAnswersConsigneeViewSpec extends SpecBase with ViewBehaviours {
             testErn,
             testArc,
             SummaryList(Seq(
-              ConsigneeBusinessNameSummary.row,
               ConsigneeExciseSummary.row,
               ConsigneeAddressSummary.row
             ).flatten)
@@ -79,16 +77,10 @@ class CheckYourAnswersConsigneeViewSpec extends SpecBase with ViewBehaviours {
             Selectors.title -> messagesForLanguage.title,
             Selectors.h1 -> messagesForLanguage.heading,
             Selectors.h2(1) -> messagesForLanguage.caption,
-            Selectors.govukSummaryListKey(1) -> messagesForLanguage.traderName,
-            Selectors.govukSummaryListKey(2) -> messagesForLanguage.ern,
-            Selectors.govukSummaryListKey(3) -> messagesForLanguage.address,
+            Selectors.govukSummaryListKey(1) -> messagesForLanguage.ern,
+            Selectors.govukSummaryListKey(2) -> messagesForLanguage.details,
             Selectors.button -> messagesForLanguage.confirmAnswers,
           ))
-
-          "have a link to change business name" in {
-            doc.getElementById("changeConsigneeBusinessName").attr("href") mustBe
-              controllers.sections.consignee.routes.ConsigneeBusinessNameController.onPageLoad(testErn, testArc, CheckMode).url
-          }
 
           "have a link to change ERN" in {
             doc.getElementById("changeConsigneeExcise").attr("href") mustBe
@@ -110,7 +102,6 @@ class CheckYourAnswersConsigneeViewSpec extends SpecBase with ViewBehaviours {
             request = FakeRequest(),
             answers = emptyUserAnswers.copy(ern = testNorthernIrelandWarehouseKeeperErn)
             .set(ConsigneeAddressPage, testUserAddress)
-            .set(ConsigneeBusinessNamePage, testBusinessName)
             .set(ConsigneeExcisePage, "TMPREGCON")
             .set(DestinationTypePage, TemporaryRegisteredConsignee),
             ern = testNorthernIrelandWarehouseKeeperErn
@@ -121,7 +112,6 @@ class CheckYourAnswersConsigneeViewSpec extends SpecBase with ViewBehaviours {
           testNorthernIrelandWarehouseKeeperErn,
           testArc,
           SummaryList(Seq(
-            ConsigneeBusinessNameSummary.row,
             ConsigneeExciseSummary.row,
             ConsigneeAddressSummary.row
           ).flatten)
@@ -131,16 +121,10 @@ class CheckYourAnswersConsigneeViewSpec extends SpecBase with ViewBehaviours {
           Selectors.title -> messagesForLanguage.title,
           Selectors.h1 -> messagesForLanguage.heading,
           Selectors.h2(1) -> messagesForLanguage.caption,
-          Selectors.govukSummaryListKey(1) -> messagesForLanguage.traderName,
-          Selectors.govukSummaryListKey(2) -> messagesForLanguage.identificationForTemporaryRegisteredConsignee,
-          Selectors.govukSummaryListKey(3) -> messagesForLanguage.address,
+          Selectors.govukSummaryListKey(1) -> messagesForLanguage.identificationForTemporaryRegisteredConsignee,
+          Selectors.govukSummaryListKey(2) -> messagesForLanguage.details,
           Selectors.button -> messagesForLanguage.confirmAnswers,
         ))
-
-        "have a link to change business name" in {
-          doc.getElementById("changeConsigneeBusinessName").attr("href") mustBe
-            controllers.sections.consignee.routes.ConsigneeBusinessNameController.onPageLoad(testNorthernIrelandWarehouseKeeperErn, testArc, CheckMode).url
-        }
 
         "have a link to change identification for temporary registered consignee" in {
           doc.getElementById("changeConsigneeExcise").attr("href") mustBe
@@ -161,7 +145,6 @@ class CheckYourAnswersConsigneeViewSpec extends SpecBase with ViewBehaviours {
             request = FakeRequest(),
             answers = emptyUserAnswers.copy(ern = testNorthernIrelandWarehouseKeeperErn)
               .set(ConsigneeAddressPage, testUserAddress)
-              .set(ConsigneeBusinessNamePage, testBusinessName)
               .set(ConsigneeExcisePage, "TMPREGCON")
               .set(DestinationTypePage, TemporaryCertifiedConsignee),
             ern = testNorthernIrelandWarehouseKeeperErn
@@ -172,7 +155,6 @@ class CheckYourAnswersConsigneeViewSpec extends SpecBase with ViewBehaviours {
           testNorthernIrelandWarehouseKeeperErn,
           testArc,
           SummaryList(Seq(
-            ConsigneeBusinessNameSummary.row,
             ConsigneeExciseSummary.row,
             ConsigneeAddressSummary.row
           ).flatten)
@@ -182,16 +164,10 @@ class CheckYourAnswersConsigneeViewSpec extends SpecBase with ViewBehaviours {
           Selectors.title -> messagesForLanguage.title,
           Selectors.h1 -> messagesForLanguage.heading,
           Selectors.h2(1) -> messagesForLanguage.caption,
-          Selectors.govukSummaryListKey(1) -> messagesForLanguage.traderName,
-          Selectors.govukSummaryListKey(2) -> messagesForLanguage.identificationForTemporaryCertifiedConsignee,
-          Selectors.govukSummaryListKey(3) -> messagesForLanguage.address,
+          Selectors.govukSummaryListKey(1) -> messagesForLanguage.identificationForTemporaryCertifiedConsignee,
+          Selectors.govukSummaryListKey(2) -> messagesForLanguage.details,
           Selectors.button -> messagesForLanguage.confirmAnswers,
         ))
-
-        "have a link to change business name" in {
-          doc.getElementById("changeConsigneeBusinessName").attr("href") mustBe
-            controllers.sections.consignee.routes.ConsigneeBusinessNameController.onPageLoad(testNorthernIrelandWarehouseKeeperErn, testArc, CheckMode).url
-        }
 
         "have a link to change identification for temporary certified consignee" in {
           doc.getElementById("changeConsigneeExcise").attr("href") mustBe
@@ -210,7 +186,6 @@ class CheckYourAnswersConsigneeViewSpec extends SpecBase with ViewBehaviours {
         implicit val request: DataRequest[AnyContentAsEmpty.type] =
           dataRequest(FakeRequest(), emptyUserAnswers
             .set(ConsigneeAddressPage, testUserAddress)
-            .set(ConsigneeBusinessNamePage, testBusinessName)
             .set(ConsigneeExcisePage, testErn)
             .set(ConsigneeExportInformationPage, Set(VatNumber))
             .set(ConsigneeExportVatPage, testVatNumber)
@@ -222,7 +197,6 @@ class CheckYourAnswersConsigneeViewSpec extends SpecBase with ViewBehaviours {
           testErn,
           testArc,
           SummaryList(Seq(
-            ConsigneeBusinessNameSummary.row,
             consigneeExportInformationSummary.row,
             ConsigneeExportVatSummary.row,
             ConsigneeAddressSummary.row
@@ -233,17 +207,11 @@ class CheckYourAnswersConsigneeViewSpec extends SpecBase with ViewBehaviours {
           Selectors.title -> messagesForLanguage.title,
           Selectors.h1 -> messagesForLanguage.heading,
           Selectors.h2(1) -> messagesForLanguage.caption,
-          Selectors.govukSummaryListKey(1) -> messagesForLanguage.traderName,
-          Selectors.govukSummaryListKey(2) -> messagesForLanguage.identificationProvided,
-          Selectors.govukSummaryListKey(3) -> messagesForLanguage.vat,
-          Selectors.govukSummaryListKey(4) -> messagesForLanguage.address,
+          Selectors.govukSummaryListKey(1) -> messagesForLanguage.identificationProvided,
+          Selectors.govukSummaryListKey(2) -> messagesForLanguage.vat,
+          Selectors.govukSummaryListKey(3) -> messagesForLanguage.details,
           Selectors.button -> messagesForLanguage.confirmAnswers,
         ))
-
-        "have a link to change business name" in {
-          doc.getElementById("changeConsigneeBusinessName").attr("href") mustBe
-            controllers.sections.consignee.routes.ConsigneeBusinessNameController.onPageLoad(testErn, testArc, CheckMode).url
-        }
 
         "have a link to change Vat Number" in {
           doc.getElementById("changeConsigneeExportInformation").attr("href") mustBe
@@ -262,7 +230,6 @@ class CheckYourAnswersConsigneeViewSpec extends SpecBase with ViewBehaviours {
         implicit val request: DataRequest[AnyContentAsEmpty.type] =
           dataRequest(FakeRequest(), emptyUserAnswers
             .set(ConsigneeAddressPage, testUserAddress)
-            .set(ConsigneeBusinessNamePage, testBusinessName)
             .set(ConsigneeExcisePage, testErn)
             .set(ConsigneeExportInformationPage, Set(EoriNumber))
             .set(DestinationTypePage, UkTaxWarehouse.GB)
@@ -273,7 +240,6 @@ class CheckYourAnswersConsigneeViewSpec extends SpecBase with ViewBehaviours {
           testErn,
           testArc,
           SummaryList(Seq(
-            ConsigneeBusinessNameSummary.row,
             consigneeExportInformationSummary.row,
             ConsigneeExportEoriSummary.row,
             ConsigneeAddressSummary.row
@@ -284,17 +250,11 @@ class CheckYourAnswersConsigneeViewSpec extends SpecBase with ViewBehaviours {
           Selectors.title -> messagesForLanguage.title,
           Selectors.h1 -> messagesForLanguage.heading,
           Selectors.h2(1) -> messagesForLanguage.caption,
-          Selectors.govukSummaryListKey(1) -> messagesForLanguage.traderName,
-          Selectors.govukSummaryListKey(2) -> messagesForLanguage.identificationProvided,
-          Selectors.govukSummaryListKey(3) -> messagesForLanguage.eori,
-          Selectors.govukSummaryListKey(4) -> messagesForLanguage.address,
+          Selectors.govukSummaryListKey(1) -> messagesForLanguage.identificationProvided,
+          Selectors.govukSummaryListKey(2) -> messagesForLanguage.eori,
+          Selectors.govukSummaryListKey(3) -> messagesForLanguage.details,
           Selectors.button -> messagesForLanguage.confirmAnswers
         ))
-
-        "have a link to change business name" in {
-          doc.getElementById("changeConsigneeBusinessName").attr("href") mustBe
-            controllers.sections.consignee.routes.ConsigneeBusinessNameController.onPageLoad(testErn, testArc, CheckMode).url
-        }
 
         "have a link to change Eori Number" in {
           doc.getElementById("changeConsigneeExportInformation").attr("href") mustBe
@@ -313,7 +273,6 @@ class CheckYourAnswersConsigneeViewSpec extends SpecBase with ViewBehaviours {
         implicit val request: DataRequest[AnyContentAsEmpty.type] =
           dataRequest(FakeRequest(), emptyUserAnswers
             .set(ConsigneeAddressPage, testUserAddress)
-            .set(ConsigneeBusinessNamePage, testBusinessName)
             .set(ConsigneeExcisePage, testErn)
             .set(ConsigneeExportInformationPage, Set(VatNumber, EoriNumber))
             .set(ConsigneeExportVatPage, testVatNumber)
@@ -326,7 +285,6 @@ class CheckYourAnswersConsigneeViewSpec extends SpecBase with ViewBehaviours {
           testErn,
           testArc,
           SummaryList(Seq(
-            ConsigneeBusinessNameSummary.row,
             consigneeExportInformationSummary.row,
             ConsigneeExportVatSummary.row,
             ConsigneeExportEoriSummary.row,
@@ -338,18 +296,12 @@ class CheckYourAnswersConsigneeViewSpec extends SpecBase with ViewBehaviours {
           Selectors.title -> messagesForLanguage.title,
           Selectors.h1 -> messagesForLanguage.heading,
           Selectors.h2(1) -> messagesForLanguage.caption,
-          Selectors.govukSummaryListKey(1) -> messagesForLanguage.traderName,
-          Selectors.govukSummaryListKey(2) -> messagesForLanguage.identificationProvided,
-          Selectors.govukSummaryListKey(3) -> messagesForLanguage.vat,
-          Selectors.govukSummaryListKey(4) -> messagesForLanguage.eori,
-          Selectors.govukSummaryListKey(5) -> messagesForLanguage.address,
+          Selectors.govukSummaryListKey(1) -> messagesForLanguage.identificationProvided,
+          Selectors.govukSummaryListKey(2) -> messagesForLanguage.vat,
+          Selectors.govukSummaryListKey(3) -> messagesForLanguage.eori,
+          Selectors.govukSummaryListKey(4) -> messagesForLanguage.details,
           Selectors.button -> messagesForLanguage.confirmAnswers,
         ))
-
-        "have a link to change business name" in {
-          doc.getElementById("changeConsigneeBusinessName").attr("href") mustBe
-            controllers.sections.consignee.routes.ConsigneeBusinessNameController.onPageLoad(testErn, testArc, CheckMode).url
-        }
 
         "have a link to change Vat Number" in {
           doc.getElementById("changeConsigneeExportInformation").attr("href") mustBe
@@ -368,7 +320,6 @@ class CheckYourAnswersConsigneeViewSpec extends SpecBase with ViewBehaviours {
         implicit val request: DataRequest[AnyContentAsEmpty.type] =
           dataRequest(FakeRequest(), emptyUserAnswers
             .set(ConsigneeAddressPage, testUserAddress)
-            .set(ConsigneeBusinessNamePage, testBusinessName)
             .set(ConsigneeExcisePage, testErn)
             .set(ConsigneeExemptOrganisationPage, testExemptedOrganisation)
             .set(DestinationTypePage, ExemptedOrganisation)
@@ -379,7 +330,6 @@ class CheckYourAnswersConsigneeViewSpec extends SpecBase with ViewBehaviours {
           testErn,
           testArc,
           SummaryList(Seq(
-            ConsigneeBusinessNameSummary.row,
             ConsigneeExemptOrganisationSummary.row,
             ConsigneeAddressSummary.row
           ).flatten)
@@ -389,16 +339,10 @@ class CheckYourAnswersConsigneeViewSpec extends SpecBase with ViewBehaviours {
           Selectors.title -> messagesForLanguage.title,
           Selectors.h1 -> messagesForLanguage.heading,
           Selectors.h2(1) -> messagesForLanguage.caption,
-          Selectors.govukSummaryListKey(1) -> messagesForLanguage.traderName,
-          Selectors.govukSummaryListKey(2) -> messagesForLanguage.exempt,
-          Selectors.govukSummaryListKey(3) -> messagesForLanguage.address,
+          Selectors.govukSummaryListKey(1) -> messagesForLanguage.exempt,
+          Selectors.govukSummaryListKey(2) -> messagesForLanguage.details,
           Selectors.button -> messagesForLanguage.confirmAnswers,
         ))
-
-        "have a link to change business name" in {
-          doc.getElementById("changeConsigneeBusinessName").attr("href") mustBe
-            controllers.sections.consignee.routes.ConsigneeBusinessNameController.onPageLoad(testErn, testArc, CheckMode).url
-        }
 
         "have a link to change Exempted Organisation" in {
           doc.getElementById("changeConsigneeExemptOrganisation").attr("href") mustBe

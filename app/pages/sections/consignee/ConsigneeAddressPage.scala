@@ -30,7 +30,6 @@ case object ConsigneeAddressPage extends QuestionPage[UserAddress] {
   override def getValueFromIE801(implicit request: DataRequest[_]): Option[UserAddress] =
     request.userAnswers.get(ChangeTypePage) match {
       case Some(ChangeConsignee) => None
-      case _ => request.movementDetails.consigneeTrader.flatMap(_.address.map(UserAddress.userAddressFromTraderAddress))
+      case _ => request.movementDetails.consigneeTrader.map(UserAddress.userAddressFromTraderAddress)
     }
-
 }

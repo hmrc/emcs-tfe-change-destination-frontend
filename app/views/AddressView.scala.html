@@ -32,7 +32,7 @@
 
 @defining(headingKey.getOrElse(addressPage.toString)) { msgKey =>
 
-    @layout(pageTitle = title(form, messages(s"address.$msgKey.title")), maybeShowActiveTrader = maybeShowActiveTrader(request)) {
+    @layout(pageTitle = title(form, messages(s"trader.$msgKey.title")), maybeShowActiveTrader = maybeShowActiveTrader(request)) {
 
         @formHelper(action = call) {
 
@@ -40,39 +40,48 @@
                 @govukErrorSummary(ErrorSummaryViewModel(form))
             }
 
-            @h1(s"address.$msgKey.heading", Some(messages(s"address.$addressPage.subheading")), "govuk-heading-l")
+            @h1(s"trader.$msgKey.heading", Some(messages(s"trader.$addressPage.subheading")), "govuk-heading-l")
+
+            @govukInput(
+                InputViewModel(
+                    field = form("businessName"),
+                    label = LabelViewModel(Text(messages("trader.businessName")))
+                )
+                .withWidth(Full)
+                .withAutocomplete("organization")
+            )
 
             @govukInput(
                 InputViewModel(
                     field = form("property"),
-                    label = LabelViewModel(Text(messages("address.property")))
+                    label = LabelViewModel(Text(messages("trader.property")))
                 )
                         .withWidth(Full)
-                        .withAutocomplete("address-line1")
+                        .withAutocomplete("trader-line1")
             )
 
             @govukInput(
                 InputViewModel(
                     field = form("street"),
-                    label = LabelViewModel(Text(messages("address.street")))
+                    label = LabelViewModel(Text(messages("trader.street")))
                 )
                         .withWidth(Full)
-                        .withAutocomplete("address-line2")
+                        .withAutocomplete("trader-line2")
             )
 
             @govukInput(
                 InputViewModel(
                     field = form("town"),
-                    label = LabelViewModel(Text(messages("address.town")))
+                    label = LabelViewModel(Text(messages("trader.town")))
                 )
                         .withWidth(TwoThirds)
-                        .withAutocomplete("address-level1")
+                        .withAutocomplete("trader-level1")
             )
 
             @govukInput(
                 InputViewModel(
                     field = form("postcode"),
-                    label = LabelViewModel(Text(messages("address.postcode")))
+                    label = LabelViewModel(Text(messages("trader.postcode")))
                 )
                         .withWidth(OneThird)
                         .withAutocomplete("postal-code")

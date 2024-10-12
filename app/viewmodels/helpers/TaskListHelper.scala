@@ -89,7 +89,6 @@ class TaskListHelper @Inject()(list: list, p: p) extends Logging {
     )
   )
 
-  //noinspection ScalaStyle
   private[helpers] def deliverySection(implicit request: DataRequest[_], messages: Messages): Option[TaskListSection] = {
     if(request.userAnswers.get(ChangeTypePage).contains(ReturnToConsignor)) None else {
       Some(TaskListSection(
@@ -132,8 +131,6 @@ class TaskListHelper @Inject()(list: list, p: p) extends Logging {
       ))
     }
   }
-
-
 
   private[helpers] def guarantorSection(implicit request: DataRequest[_], messages: Messages): TaskListSection =
     TaskListSection(
@@ -185,15 +182,7 @@ class TaskListHelper @Inject()(list: list, p: p) extends Logging {
     )
   }
 
-  private def sectionsExceptSubmit(implicit request: DataRequest[_], messages: Messages): Seq[TaskListSection] = Seq(
-    Some(movementSection),
-    deliverySection,
-    Some(guarantorSection),
-    Some(transportSection)
-  ).flatten
-
-  private[helpers] def submitSection(sectionsExceptSubmit: Seq[TaskListSection])
-                                    (implicit request: DataRequest[_], messages: Messages): TaskListSection = {
+  private[helpers] def submitSection(sectionsExceptSubmit: Seq[TaskListSection])(implicit request: DataRequest[_], messages: Messages): TaskListSection = {
 
     val rows: Seq[TaskListSectionRow] = sectionsExceptSubmit.flatMap(_.rows).filter(_.section.exists(_.canBeCompletedForTraderAndDestinationType))
 
@@ -210,6 +199,19 @@ class TaskListHelper @Inject()(list: list, p: p) extends Logging {
       ))
     )
   }
+
+  private[helpers] def removeAmendEntryMessageFromErrorReason(errorReason: String): String =
+    errorReason
+      .replaceAll("\\s*Please amend your entry and resubmit\\.*", "")
+      .replaceAll("origin type code is .Tax Warehouse.\\.", "origin type code is 'Tax Warehouse' or 'Duty Paid'.")
+      .replaceAll("'(Import|Tax Warehouse|Duty Paid|Export)'", "‘$1’")
+
+  private def sectionsExceptSubmit(implicit request: DataRequest[_], messages: Messages): Seq[TaskListSection] = Seq(
+    Some(movementSection),
+    deliverySection,
+    Some(guarantorSection),
+    Some(transportSection)
+  ).flatten
 
   def sections(implicit request: DataRequest[_], messages: Messages): Seq[TaskListSection] =
     sectionsExceptSubmit :+ submitSection(sectionsExceptSubmit)
@@ -239,10 +241,4 @@ class TaskListHelper @Inject()(list: list, p: p) extends Logging {
       formattedErrorList
     )))
   }
-
-  private[helpers] def removeAmendEntryMessageFromErrorReason(errorReason: String): String =
-    errorReason
-      .replaceAll("\\s*Please amend your entry and resubmit\\.*", "")
-      .replaceAll("origin type code is .Tax Warehouse.\\.", "origin type code is 'Tax Warehouse' or 'Duty Paid'.")
-      .replaceAll("'(Import|Tax Warehouse|Duty Paid|Export)'", "‘$1’")
 }

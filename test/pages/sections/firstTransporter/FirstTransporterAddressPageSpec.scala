@@ -27,12 +27,12 @@ class FirstTransporterAddressPageSpec extends SpecBase {
 
   "getValueFromIE801" - {
     "must return Some(_)" - {
-      "when first transporter trader is defined and has an address" in {
-        FirstTransporterAddressPage.getValueFromIE801(dataRequest(FakeRequest())) mustBe firstTransporterTrader.address.map(UserAddress.userAddressFromTraderAddress)
+      "when first transporter trader is defined and has an trader" in {
+        FirstTransporterAddressPage.getValueFromIE801(dataRequest(FakeRequest())) mustBe UserAddress.userAddressFromTraderAddress(firstTransporterTrader)
       }
     }
     "must return None" - {
-      "when first transporter trader and has no address" in {
+      "when first transporter trader and has no trader" in {
         FirstTransporterAddressPage.getValueFromIE801(dataRequest(
           FakeRequest(),
           movementDetails = maxGetMovementResponse.copy(firstTransporterTrader = Some(firstTransporterTrader.copy(address = None)))

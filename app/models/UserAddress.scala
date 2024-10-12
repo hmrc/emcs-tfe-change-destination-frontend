@@ -16,18 +16,23 @@
 
 package models
 
-import models.response.emcsTfe.AddressModel
+import models.response.emcsTfe.TraderModel
 import play.api.libs.json.{Json, OFormat}
 import play.twirl.api.{Html, HtmlFormat}
 import uk.gov.hmrc.govukfrontend.views.Aliases.HtmlContent
 
-case class UserAddress(property: Option[String],
-                       street: String,
-                       town: String,
-                       postcode: String) {
+case class UserAddress(
+                        businessName: Option[String],
+                        property: Option[String],
+                        street: String,
+                        town: String,
+                        postcode: String
+                      ) {
+
   def toCheckYourAnswersFormat: HtmlContent = HtmlContent(
     HtmlFormat.fill(
       Seq(
+        Html(businessName.fold("")(_ + "<br>")),
         Html(property.fold("")(_ + " ") + street + "<br>"),
         Html(town + "<br>"),
         Html(postcode)
@@ -41,10 +46,11 @@ object UserAddress {
 
   implicit lazy val format: OFormat[UserAddress] = Json.format[UserAddress]
 
-  def userAddressFromTraderAddress(address: AddressModel): UserAddress = UserAddress(
-    property = address.streetNumber,
-    street = address.street.get,
-    town = address.city.get,
-    postcode = address.postcode.get
+  def userAddressFromTraderAddress(trader: TraderModel): UserAddress = UserAddress(
+    businessName = trader.traderName,
+    property = trader.address.flatMap(_.streetNumber),
+    street = trader.address.flatMap(_.street).getOrElse(""),
+    town = trader.address.flatMap(_.city).getOrElse(""),
+    postcode = trader.address.flatMap(_.postcode).getOrElse("")
   )
 }

@@ -33,7 +33,7 @@ class ConsigneeNavigator @Inject() extends BaseNavigator with Logging {
   private def normalRoutes(implicit request: DataRequest[_]): Page => UserAnswers => Call = {
 
     case ConsigneeExemptOrganisationPage => (userAnswers: UserAnswers) =>
-      controllers.sections.consignee.routes.ConsigneeBusinessNameController.onPageLoad(userAnswers.ern, userAnswers.arc, NormalMode)
+      controllers.sections.consignee.routes.ConsigneeAddressController.onPageLoad(userAnswers.ern, userAnswers.arc, NormalMode)
 
     case ConsigneeExportInformationPage => (userAnswers: UserAnswers) =>
       userAnswers.get(ConsigneeExportInformationPage) match {
@@ -42,7 +42,7 @@ class ConsigneeNavigator @Inject() extends BaseNavigator with Logging {
         case Some(answers) if answers.contains(EoriNumber) =>
           controllers.sections.consignee.routes.ConsigneeExportEoriController.onPageLoad(userAnswers.ern, userAnswers.arc, NormalMode)
         case Some(answers) if answers.contains(NoInformation) =>
-          controllers.sections.consignee.routes.ConsigneeBusinessNameController.onPageLoad(userAnswers.ern, userAnswers.arc, NormalMode)
+          controllers.sections.consignee.routes.ConsigneeAddressController.onPageLoad(userAnswers.ern, userAnswers.arc, NormalMode)
         case _ =>
           logger.warn("[normalRoutes] - Unexpected answer for ConsigneeExportInformationPage")
           controllers.routes.JourneyRecoveryController.onPageLoad()
@@ -53,16 +53,13 @@ class ConsigneeNavigator @Inject() extends BaseNavigator with Logging {
         case Some(answers) if answers.contains(EoriNumber) =>
           controllers.sections.consignee.routes.ConsigneeExportEoriController.onPageLoad(userAnswers.ern, userAnswers.arc, NormalMode)
         case _ =>
-          controllers.sections.consignee.routes.ConsigneeBusinessNameController.onPageLoad(userAnswers.ern, userAnswers.arc, NormalMode)
+          controllers.sections.consignee.routes.ConsigneeAddressController.onPageLoad(userAnswers.ern, userAnswers.arc, NormalMode)
       }
 
     case ConsigneeExportEoriPage => (userAnswers: UserAnswers) =>
-      controllers.sections.consignee.routes.ConsigneeBusinessNameController.onPageLoad(userAnswers.ern, userAnswers.arc, NormalMode)
+      controllers.sections.consignee.routes.ConsigneeAddressController.onPageLoad(userAnswers.ern, userAnswers.arc, NormalMode)
 
     case ConsigneeExcisePage => (userAnswers: UserAnswers) =>
-      controllers.sections.consignee.routes.ConsigneeBusinessNameController.onPageLoad(userAnswers.ern, userAnswers.arc, NormalMode)
-
-    case ConsigneeBusinessNamePage => (userAnswers: UserAnswers) =>
       controllers.sections.consignee.routes.ConsigneeAddressController.onPageLoad(userAnswers.ern, userAnswers.arc, NormalMode)
 
     case ConsigneeAddressPage =>

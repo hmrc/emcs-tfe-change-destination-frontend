@@ -32,29 +32,29 @@ object AddressMessages {
     _: i18n =>
 
     val heading = (page: QuestionPage[UserAddress]) => page match {
-      case ConsignorAddressPage => "Enter the consignor’s address"
-      case _ => "Enter the consignee’s address"
+      case ConsignorAddressPage => "Enter the consignor’s trader"
+      case _ => "Enter the consignee’s details"
     }
 
     val title = (page: QuestionPage[UserAddress]) => titleHelper(heading(page))
 
-    val transportArrangerAddressGoodsOwnerHeading = "Enter the goods owner’s business address"
+    val transportArrangerAddressGoodsOwnerHeading = "Enter the goods owner’s business trader"
     val transportArrangerAddressGoodsOwnerTitle = titleHelper(transportArrangerAddressGoodsOwnerHeading)
-    val transportArrangerAddressOtherHeading = "Enter the transporter’s business address"
+    val transportArrangerAddressOtherHeading = "Enter the transporter’s business trader"
     val transportArrangerAddressOtherTitle = titleHelper(transportArrangerAddressOtherHeading)
 
-    val firstTransporterAddressHeading = "Enter the first transporter’s business address"
+    val firstTransporterAddressHeading = "Enter the first transporter’s business trader"
     val firstTransporterAddressTitle = titleHelper(firstTransporterAddressHeading)
 
-    val destinationAddressHeading = "Enter the place of destination address"
+    val destinationAddressHeading = "Enter the place of destination trader"
     val destinationAddressTitle = titleHelper(destinationAddressHeading)
 
-    val dispatchAddressHeading = "Enter the place of dispatch address"
+    val dispatchAddressHeading = "Enter the place of dispatch trader"
     val dispatchAddressTitle = titleHelper(dispatchAddressHeading)
 
     def guarantorAddressHeading(guarantorArranger: GuarantorArranger): String = guarantorArranger match {
-      case GoodsOwner => "Enter the good owner’s business address"
-      case Transporter => "Enter the transporter’s business address"
+      case GoodsOwner => "Enter the good owner’s business trader"
+      case Transporter => "Enter the transporter’s business trader"
       case _ => ""
     }
 

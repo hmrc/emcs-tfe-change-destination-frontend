@@ -31,7 +31,7 @@ class ConsigneeExcisePageSpec extends SpecBase {
       }
     }
     "must return None" - {
-      "when Consignee exists and has no address" in {
+      "when Consignee exists and has no trader" in {
         ConsigneeExcisePage.getValueFromIE801(dataRequest(
           FakeRequest(),
           movementDetails = maxGetMovementResponse.copy(consigneeTrader = Some(consignee.copy(traderExciseNumber = None)))

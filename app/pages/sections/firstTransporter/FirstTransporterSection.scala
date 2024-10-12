@@ -26,9 +26,10 @@ case object FirstTransporterSection extends Section[JsObject] with Enumerable.Im
   override val path: JsPath = JsPath \ "firstTransporter"
 
   override def status(implicit request: DataRequest[_]): TaskListStatus = {
-    val pages = Seq(request.userAnswers.get(FirstTransporterNamePage),
+    val pages = Seq(
       request.userAnswers.get(FirstTransporterVatPage),
-      request.userAnswers.get(FirstTransporterAddressPage))
+      request.userAnswers.get(FirstTransporterAddressPage)
+    )
 
     sectionHasBeenReviewed(FirstTransporterReviewPage) {
       if (pages.forall(_.nonEmpty)) {

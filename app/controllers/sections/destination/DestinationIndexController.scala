@@ -49,8 +49,8 @@ class DestinationIndexController @Inject()(
               Redirect(routes.DestinationWarehouseExciseController.onPageLoad(ern, arc, NormalMode))
             } else if (DestinationSection.shouldStartFlowAtDestinationWarehouseVat) {
               Redirect(routes.DestinationWarehouseVatController.onPageLoad(ern, arc, NormalMode))
-            } else if (DestinationSection.shouldStartFlowAtDestinationBusinessName) {
-              Redirect(routes.DestinationBusinessNameController.onPageLoad(ern, arc, NormalMode))
+            } else if (DestinationSection.shouldStartFlowAtDestinationAddress) {
+              Redirect(routes.DestinationAddressController.onPageLoad(ern, arc, NormalMode))
             } else {
               logger.info(s"[onPageLoad] Invalid DestinationTypePage answer $destinationTypePageAnswer not allowed on Place of Destination flow")
               Redirect(controllers.routes.TaskListController.onPageLoad(ern, arc))

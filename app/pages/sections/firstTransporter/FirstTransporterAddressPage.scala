@@ -26,5 +26,5 @@ case object FirstTransporterAddressPage extends QuestionPage[UserAddress] {
   override val path: JsPath = FirstTransporterSection.path \ toString
 
   override def getValueFromIE801(implicit request: DataRequest[_]): Option[UserAddress] =
-    request.movementDetails.firstTransporterTrader.flatMap(_.address.map(UserAddress.userAddressFromTraderAddress))
+    request.movementDetails.firstTransporterTrader.map(UserAddress.userAddressFromTraderAddress)
 }

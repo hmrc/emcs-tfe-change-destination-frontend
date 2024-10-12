@@ -91,7 +91,6 @@ class ConfirmationControllerSpec extends SpecBase with MockFactory {
 
       Seq(ConsigneeExcisePage -> testUserAnswers.set(ConsigneeExcisePage, "changed"),
         ConsigneeExemptOrganisationPage -> testUserAnswers.set(ConsigneeExemptOrganisationPage, ExemptOrganisationDetailsModel("changed", "changed")),
-        ConsigneeBusinessNamePage -> testUserAnswers.set(ConsigneeBusinessNamePage, "changed"),
         ConsigneeAddressPage -> testUserAnswers.set(ConsigneeAddressPage, testUserAddress),
         ConsigneeExportVatPage -> testUserAnswers.set(ConsigneeExportVatPage, testVatNumber)).foreach { pageAndAnswers =>
         s"must return OK and the correct view for a GET - when the answer has changed from the 801 for ${pageAndAnswers._1}" in {

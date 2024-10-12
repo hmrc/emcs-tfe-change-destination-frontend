@@ -23,7 +23,7 @@ import models.response.emcsTfe.GuarantorType.NoGuarantor
 import models.sections.ReviewAnswer.KeepAnswers
 import models.sections.info.ChangeType.Destination
 import models.sections.info.movementScenario.MovementScenario.UkTaxWarehouse
-import pages.sections.destination.{DestinationAddressPage, DestinationBusinessNamePage, DestinationConsigneeDetailsPage, DestinationWarehouseExcisePage}
+import pages.sections.destination.{DestinationAddressPage, DestinationConsigneeDetailsPage, DestinationWarehouseExcisePage}
 import pages.sections.guarantor.GuarantorReviewPage
 import pages.sections.info.{ChangeTypePage, DestinationTypePage}
 import play.api.mvc.AnyContentAsEmpty
@@ -58,8 +58,7 @@ class DestinationChangedModelSpec extends SpecBase with SubmitChangeDestinationF
             .set(ChangeTypePage, Destination)
             .set(DestinationWarehouseExcisePage, testGreatBritainErn)
             .set(DestinationConsigneeDetailsPage, false)
-            .set(DestinationBusinessNamePage, "destination name")
-            .set(DestinationAddressPage, testUserAddress.copy(street = "destination street"))
+            .set(DestinationAddressPage, testUserAddress.copy(businessName = Some("destination name"), street = "destination street"))
             .set(DestinationTypePage, UkTaxWarehouse.GB)
             .set(GuarantorReviewPage, KeepAnswers),
           ern = testGreatBritainWarehouseErn

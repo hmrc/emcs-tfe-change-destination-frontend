@@ -21,7 +21,7 @@ import controllers.actions._
 import forms.sections.destination.DestinationDetailsChoiceFormProvider
 import models.{Mode, NormalMode}
 import navigation.DestinationNavigator
-import pages.sections.destination.{DestinationAddressPage, DestinationBusinessNamePage, DestinationConsigneeDetailsPage, DestinationDetailsChoicePage}
+import pages.sections.destination.{DestinationAddressPage, DestinationConsigneeDetailsPage, DestinationDetailsChoicePage}
 import pages.sections.info.DestinationTypePage
 import play.api.i18n.MessagesApi
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
@@ -74,7 +74,6 @@ class DestinationDetailsChoiceController @Inject()(override val messagesApi: Mes
 
                   val cleanedUserAnswers = if (value) request.userAnswers else request.userAnswers
                     .remove(DestinationConsigneeDetailsPage)
-                    .remove(DestinationBusinessNamePage)
                     .remove(DestinationAddressPage)
 
                   saveAndRedirect(

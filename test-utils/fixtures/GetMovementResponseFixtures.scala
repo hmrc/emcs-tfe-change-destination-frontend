@@ -252,7 +252,7 @@ trait GetMovementResponseFixtures extends BaseFixtures {
     "consignorTrader" -> Json.obj(
       "traderExciseNumber" -> "ConsignorTraderExciseNumber",
       "traderName"         -> "ConsignorTraderName",
-      "address" -> Json.obj(
+      "trader" -> Json.obj(
         "streetNumber" -> "ConsignorTraderStreetNumber",
         "street"       -> "ConsignorTraderStreetName",
         "postcode"     -> "ConsignorTraderPostcode",
@@ -262,7 +262,7 @@ trait GetMovementResponseFixtures extends BaseFixtures {
     "consigneeTrader" -> Json.obj(
       "traderExciseNumber" -> "ConsigneeTraderId",
       "traderName"         -> "ConsigneeTraderName",
-      "address" -> Json.obj(
+      "trader" -> Json.obj(
         "streetNumber" -> "ConsigneeTraderStreetNumber",
         "street"       -> "ConsigneeTraderStreetName",
         "postcode"     -> "ConsigneeTraderPostcode",
@@ -273,7 +273,7 @@ trait GetMovementResponseFixtures extends BaseFixtures {
     "deliveryPlaceTrader" -> Json.obj(
       "traderExciseNumber" -> "DeliveryPlaceTraderId",
       "traderName"         -> "DeliveryPlaceTraderName",
-      "address" -> Json.obj(
+      "trader" -> Json.obj(
         "streetNumber" -> "DeliveryPlaceTraderStreetNumber",
         "street"       -> "DeliveryPlaceTraderStreetName",
         "postcode"     -> "DeliveryPlaceTraderPostcode",
@@ -283,7 +283,7 @@ trait GetMovementResponseFixtures extends BaseFixtures {
     "placeOfDispatchTrader" -> Json.obj(
       "traderExciseNumber" -> "PlaceOfDispatchTraderReferenceOfTaxWarehouse",
       "traderName"         -> "PlaceOfDispatchTraderName",
-      "address" -> Json.obj(
+      "trader" -> Json.obj(
         "streetNumber" -> "PlaceOfDispatchTraderStreetNumber",
         "street"       -> "PlaceOfDispatchTraderStreetName",
         "postcode"     -> "PlaceOfDispatchTraderPostcode",
@@ -292,7 +292,7 @@ trait GetMovementResponseFixtures extends BaseFixtures {
     ),
     "transportArrangerTrader" -> Json.obj(
       "traderName" -> "TransportArrangerTraderName",
-      "address" -> Json.obj(
+      "trader" -> Json.obj(
         "streetNumber" -> "TransportArrangerTraderStreetNumber",
         "street"       -> "TransportArrangerTraderStreetName",
         "postcode"     -> "TransportArrangerTraderPostcode",
@@ -302,7 +302,7 @@ trait GetMovementResponseFixtures extends BaseFixtures {
     ),
     "firstTransporterTrader" -> Json.obj(
       "traderName" -> "FirstTransporterTraderName",
-      "address" -> Json.obj(
+      "trader" -> Json.obj(
         "streetNumber" -> "FirstTransporterTraderStreetNumber",
         "street"       -> "FirstTransporterTraderStreetName",
         "postcode"     -> "FirstTransporterTraderPostcode",
@@ -359,7 +359,7 @@ trait GetMovementResponseFixtures extends BaseFixtures {
         Json.obj(
           "traderExciseNumber" -> "GuarantorTraderErn1",
           "traderName"         -> "GuarantorTraderName1",
-          "address" -> Json.obj(
+          "trader" -> Json.obj(
             "streetNumber" -> "GuarantorTraderStreetNumber1",
             "street"       -> "GuarantorTraderStreetName1",
             "postcode"     -> "GuarantorTraderPostcode1",
@@ -370,7 +370,7 @@ trait GetMovementResponseFixtures extends BaseFixtures {
         Json.obj(
           "traderExciseNumber" -> "GuarantorTraderErn2",
           "traderName"         -> "GuarantorTraderName2",
-          "address" -> Json.obj(
+          "trader" -> Json.obj(
             "streetNumber" -> "GuarantorTraderStreetNumber2",
             "street"       -> "GuarantorTraderStreetName2",
             "postcode"     -> "GuarantorTraderPostcode2",

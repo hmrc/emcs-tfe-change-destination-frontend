@@ -48,9 +48,8 @@ class TransportArrangerSectionSpec extends SpecBase {
             implicit val dr: DataRequest[_] = dataRequest(FakeRequest(),
               emptyUserAnswers
                 .set(TransportArrangerPage, arranger)
-                .set(TransportArrangerNamePage, "")
                 .set(TransportArrangerVatPage, "")
-                .set(TransportArrangerAddressPage, UserAddress(None, "", "", ""))
+                .set(TransportArrangerAddressPage, UserAddress(None, None, "", "", ""))
                 .set(TransportArrangerReviewPage, ChangeAnswers)
             )
             TransportArrangerSection.isCompleted mustBe true

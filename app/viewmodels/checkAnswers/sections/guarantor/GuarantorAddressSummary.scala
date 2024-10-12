@@ -47,8 +47,8 @@ object GuarantorAddressSummary {
 
         val value: Content = request.userAnswers.get(addressPage).fold[Content] {
           guarantorArranger match {
-            case Consignor => Text(messages("address.guarantorAddress.checkYourAnswers.notProvided", messages(s"guarantorArranger.$Consignor")))
-            case Consignee => Text(messages("address.guarantorAddress.checkYourAnswers.notProvided", messages(s"guarantorArranger.$Consignee")))
+            case Consignor => Text(messages("trader.guarantorAddress.checkYourAnswers.notProvided", messages(s"guarantorArranger.$Consignor")))
+            case Consignee => Text(messages("trader.guarantorAddress.checkYourAnswers.notProvided", messages(s"guarantorArranger.$Consignee")))
             case _ => Text(messages("site.notProvided"))
           }
         } { address =>
@@ -62,7 +62,7 @@ object GuarantorAddressSummary {
         }
 
         SummaryListRowViewModel(
-          key = "address.guarantorAddress.checkYourAnswers.label",
+          key = "trader.guarantorAddress.checkYourAnswers.label",
           value = ValueViewModel(value),
           actions = if (!showChangeLink || onReviewPage) Seq() else Seq(
             ActionItemViewModel(
@@ -74,7 +74,7 @@ object GuarantorAddressSummary {
               ).url,
               id = "changeGuarantorAddress"
             )
-              .withVisuallyHiddenText(messages("address.guarantorAddress.3.change.hidden"))
+              .withVisuallyHiddenText(messages("trader.guarantorAddress.3.change.hidden"))
           )
         )
       }

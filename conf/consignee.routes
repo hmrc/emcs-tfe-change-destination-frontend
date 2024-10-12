@@ -25,15 +25,10 @@ POST        /trader/:ern/movement/:arc/consignee/exempt-organisation            
 GET         /trader/:ern/movement/:arc/consignee/exempt-organisation/change             controllers.sections.consignee.ConsigneeExemptOrganisationController.onPageLoad(ern: String, arc: String, mode: Mode = CheckMode)
 POST        /trader/:ern/movement/:arc/consignee/exempt-organisation/change             controllers.sections.consignee.ConsigneeExemptOrganisationController.onSubmit(ern: String, arc: String, mode: Mode = CheckMode)
 
-GET         /trader/:ern/movement/:arc/consignee/business-name                          controllers.sections.consignee.ConsigneeBusinessNameController.onPageLoad(ern: String, arc: String, mode: Mode = NormalMode)
-POST        /trader/:ern/movement/:arc/consignee/business-name                          controllers.sections.consignee.ConsigneeBusinessNameController.onSubmit(ern: String, arc: String, mode: Mode = NormalMode)
-GET         /trader/:ern/movement/:arc/consignee/business-name/change                   controllers.sections.consignee.ConsigneeBusinessNameController.onPageLoad(ern: String, arc: String, mode: Mode = CheckMode)
-POST        /trader/:ern/movement/:arc/consignee/business-name/change                   controllers.sections.consignee.ConsigneeBusinessNameController.onSubmit(ern: String, arc: String, mode: Mode = CheckMode)
+GET         /trader/:ern/movement/:arc/consignee/consignee-trader-manual               controllers.sections.consignee.ConsigneeAddressController.onPageLoad(ern: String, arc: String, mode: Mode = NormalMode)
+POST        /trader/:ern/movement/:arc/consignee/consignee-trader-manual               controllers.sections.consignee.ConsigneeAddressController.onSubmit(ern: String, arc: String, mode: Mode = NormalMode)
+GET         /trader/:ern/movement/:arc/consignee/consignee-trader-manual/change        controllers.sections.consignee.ConsigneeAddressController.onPageLoad(ern: String, arc: String, mode: Mode = CheckMode)
+POST        /trader/:ern/movement/:arc/consignee/consignee-trader-manual/change        controllers.sections.consignee.ConsigneeAddressController.onSubmit(ern: String, arc: String, mode: Mode = CheckMode)
 
-GET         /trader/:ern/movement/:arc/consignee/consignee-address-manual               controllers.sections.consignee.ConsigneeAddressController.onPageLoad(ern: String, arc: String, mode: Mode = NormalMode)
-POST        /trader/:ern/movement/:arc/consignee/consignee-address-manual               controllers.sections.consignee.ConsigneeAddressController.onSubmit(ern: String, arc: String, mode: Mode = NormalMode)
-GET         /trader/:ern/movement/:arc/consignee/consignee-address-manual/change        controllers.sections.consignee.ConsigneeAddressController.onPageLoad(ern: String, arc: String, mode: Mode = CheckMode)
-POST        /trader/:ern/movement/:arc/consignee/consignee-address-manual/change        controllers.sections.consignee.ConsigneeAddressController.onSubmit(ern: String, arc: String, mode: Mode = CheckMode)
-
-GET        /trader/:ern/movement/:arc/consignee/check-answers-consignee              controllers.sections.consignee.CheckYourAnswersConsigneeController.onPageLoad(ern: String, arc: String)
-POST       /trader/:ern/movement/:arc/consignee/check-answers-consignee              controllers.sections.consignee.CheckYourAnswersConsigneeController.onSubmit(ern: String, arc: String)
+GET        /trader/:ern/movement/:arc/consignee/check-answers-consignee                 controllers.sections.consignee.CheckYourAnswersConsigneeController.onPageLoad(ern: String, arc: String)
+POST       /trader/:ern/movement/:arc/consignee/check-answers-consignee                 controllers.sections.consignee.CheckYourAnswersConsigneeController.onSubmit(ern: String, arc: String)

@@ -42,7 +42,7 @@ object DestinationAddressSummary {
         content = "site.change",
         href = controllers.sections.destination.routes.DestinationAddressController.onPageLoad(request.ern, request.arc, CheckMode).url,
         id = "changeDestinationAddress"
-      ).withVisuallyHiddenText(messages("address.destinationAddress.change.hidden"))
+      ).withVisuallyHiddenText(messages("trader.destinationAddress.change.hidden"))
     )
 
     val (value, actions) = request.userAnswers.get(businessNamePage).fold[(HtmlContent, Seq[ActionItem])] {
@@ -58,7 +58,7 @@ object DestinationAddressSummary {
     }
 
     SummaryListRowViewModel(
-      key = "address.destinationAddress.checkYourAnswers.label",
+      key = "trader.destinationAddress.checkYourAnswers.label",
       value = Value(value),
       actions = actions
     )

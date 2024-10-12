@@ -59,7 +59,7 @@ class GuarantorIndexControllerSpec extends SpecBase with MockUserAnswersService 
           .set(GuarantorReviewPage, ChangeAnswers)
           .set(DestinationTypePage, ExportWithCustomsDeclarationLodgedInTheUk)
           .set(GuarantorArrangerPage, Consignor)
-          .set(ConsignorAddressPage, UserAddress(None, "", "", ""))
+          .set(ConsignorAddressPage, UserAddress(None, None, "", "", ""))
         )) {
 
         val result = testController.onPageLoad(testErn, testArc)(request)
@@ -77,7 +77,7 @@ class GuarantorIndexControllerSpec extends SpecBase with MockUserAnswersService 
           Some(emptyUserAnswers
             .set(DestinationTypePage, ExportWithCustomsDeclarationLodgedInTheUk)
             .set(GuarantorArrangerPage, Consignor)
-            .set(ConsignorAddressPage, UserAddress(None, "", "", ""))
+            .set(ConsignorAddressPage, UserAddress(None, None, "", "", ""))
           )) {
 
           val result = testController.onPageLoad(testErn, testArc)(request)

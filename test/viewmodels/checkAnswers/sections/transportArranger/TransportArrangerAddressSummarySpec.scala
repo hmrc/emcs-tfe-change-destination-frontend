@@ -49,7 +49,7 @@ class TransportArrangerAddressSummarySpec extends SpecBase {
 
               implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(TransportArrangerPage, GoodsOwner))
 
-              val userAddressFrom801 = UserAddress(Some("TransportArrangerTraderStreetNumber"), "TransportArrangerTraderStreetName", "TransportArrangerTraderCity", "TransportArrangerTraderPostcode")
+              val userAddressFrom801 = UserAddress(None, Some("TransportArrangerTraderStreetNumber"), "TransportArrangerTraderStreetName", "TransportArrangerTraderCity", "TransportArrangerTraderPostcode")
 
               TransportArrangerAddressSummary.row(onReviewPage = false) mustBe
                 SummaryListRowViewModel(
@@ -77,7 +77,7 @@ class TransportArrangerAddressSummarySpec extends SpecBase {
 
                 implicit lazy val request = dataRequest(FakeRequest(), emptyUserAnswers.set(TransportArrangerPage, GoodsOwner))
 
-                val userAddressFrom801 = UserAddress(Some("TransportArrangerTraderStreetNumber"), "TransportArrangerTraderStreetName", "TransportArrangerTraderCity", "TransportArrangerTraderPostcode")
+                val userAddressFrom801 = UserAddress(None, Some("TransportArrangerTraderStreetNumber"), "TransportArrangerTraderStreetName", "TransportArrangerTraderCity", "TransportArrangerTraderPostcode")
 
 
                 TransportArrangerAddressSummary.row(onReviewPage = true) mustBe

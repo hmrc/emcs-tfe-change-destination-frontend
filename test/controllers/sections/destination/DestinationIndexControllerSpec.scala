@@ -99,7 +99,7 @@ class DestinationIndexControllerSpec extends SpecBase with MockUserAnswersServic
       )
     }
 
-    "must redirect to the destination business name controller" - {
+    "must redirect to the destination address controller" - {
       Seq(DirectDelivery).foreach(
         answer =>
           s"when DestinationTypePage answer is $answer" in new Fixture(Some(emptyUserAnswers
@@ -111,7 +111,7 @@ class DestinationIndexControllerSpec extends SpecBase with MockUserAnswersServic
 
                 status(result) mustEqual SEE_OTHER
                 redirectLocation(result) mustBe
-                  Some(routes.DestinationBusinessNameController.onPageLoad(ern, testArc, NormalMode).url)
+                  Some(routes.DestinationAddressController.onPageLoad(ern, testArc, NormalMode).url)
             }
           }
       )

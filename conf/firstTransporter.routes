@@ -1,20 +1,15 @@
 GET         /trader/:ern/movement/:arc/first-transporter                       controllers.sections.firstTransporter.FirstTransporterIndexController.onPageLoad(ern: String, arc: String)
 
-GET         /trader/:ern/movement/:arc/first-transporter/name                  controllers.sections.firstTransporter.FirstTransporterNameController.onPageLoad(ern: String, arc: String, mode: Mode = NormalMode)
-POST        /trader/:ern/movement/:arc/first-transporter/name                  controllers.sections.firstTransporter.FirstTransporterNameController.onSubmit(ern: String, arc: String, mode: Mode = NormalMode)
-GET         /trader/:ern/movement/:arc/first-transporter/name/change           controllers.sections.firstTransporter.FirstTransporterNameController.onPageLoad(ern: String, arc: String, mode: Mode = CheckMode)
-POST        /trader/:ern/movement/:arc/first-transporter/name/change           controllers.sections.firstTransporter.FirstTransporterNameController.onSubmit(ern: String, arc: String, mode: Mode = CheckMode)
-
 GET         /trader/:ern/movement/:arc/first-transporter/vat                   controllers.sections.firstTransporter.FirstTransporterVatController.onPageLoad(ern: String, arc: String, mode: Mode = NormalMode)
 POST        /trader/:ern/movement/:arc/first-transporter/vat                   controllers.sections.firstTransporter.FirstTransporterVatController.onSubmit(ern: String, arc: String, mode: Mode = NormalMode)
 GET         /trader/:ern/movement/:arc/first-transporter/vat/change            controllers.sections.firstTransporter.FirstTransporterVatController.onPageLoad(ern: String, arc: String, mode: Mode = CheckMode)
 POST        /trader/:ern/movement/:arc/first-transporter/vat/change            controllers.sections.firstTransporter.FirstTransporterVatController.onSubmit(ern: String, arc: String, mode: Mode = CheckMode)
 GET         /trader/:ern/movement/:arc/first-transporter/vat/non-gb-vat        controllers.sections.firstTransporter.FirstTransporterVatController.onNonGbVAT(ern: String, arc: String)
 
-GET         /trader/:ern/movement/:arc/first-transporter/address               controllers.sections.firstTransporter.FirstTransporterAddressController.onPageLoad(ern: String, arc: String, mode: Mode = NormalMode)
-POST        /trader/:ern/movement/:arc/first-transporter/address               controllers.sections.firstTransporter.FirstTransporterAddressController.onSubmit(ern: String, arc: String, mode: Mode = NormalMode)
-GET         /trader/:ern/movement/:arc/first-transporter/address/change        controllers.sections.firstTransporter.FirstTransporterAddressController.onPageLoad(ern: String, arc: String, mode: Mode = CheckMode)
-POST        /trader/:ern/movement/:arc/first-transporter/address/change        controllers.sections.firstTransporter.FirstTransporterAddressController.onSubmit(ern: String, arc: String, mode: Mode = CheckMode)
+GET         /trader/:ern/movement/:arc/first-transporter/trader               controllers.sections.firstTransporter.FirstTransporterAddressController.onPageLoad(ern: String, arc: String, mode: Mode = NormalMode)
+POST        /trader/:ern/movement/:arc/first-transporter/trader               controllers.sections.firstTransporter.FirstTransporterAddressController.onSubmit(ern: String, arc: String, mode: Mode = NormalMode)
+GET         /trader/:ern/movement/:arc/first-transporter/trader/change        controllers.sections.firstTransporter.FirstTransporterAddressController.onPageLoad(ern: String, arc: String, mode: Mode = CheckMode)
+POST        /trader/:ern/movement/:arc/first-transporter/trader/change        controllers.sections.firstTransporter.FirstTransporterAddressController.onSubmit(ern: String, arc: String, mode: Mode = CheckMode)
 
 GET         /trader/:ern/movement/:arc/first-transporter/check-answers         controllers.sections.firstTransporter.FirstTransporterCheckAnswersController.onPageLoad(ern: String, arc: String)
 POST        /trader/:ern/movement/:arc/first-transporter/check-answers         controllers.sections.firstTransporter.FirstTransporterCheckAnswersController.onSubmit(ern: String, arc: String)

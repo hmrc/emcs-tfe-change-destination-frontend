@@ -53,19 +53,16 @@ class CheckYourAnswersConsigneeControllerSpec extends SpecBase with SummaryListF
   class Fixture(optUserAnswers: Option[UserAnswers]) {
 
     val ernList: Seq[SummaryListRow] = Seq(
-      ConsigneeBusinessNameSummary.row,
       ConsigneeExciseSummary.row,
       ConsigneeAddressSummary.row
     ).flatten
 
     val exemptedList: Seq[SummaryListRow] = Seq(
-      ConsigneeBusinessNameSummary.row,
       ConsigneeExemptOrganisationSummary.row,
       ConsigneeAddressSummary.row
     ).flatten
 
     val vatEoriList: Seq[SummaryListRow] = Seq(
-      ConsigneeBusinessNameSummary.row,
       consigneeExportInformationSummary.row,
       ConsigneeAddressSummary.row
     ).flatten
@@ -103,7 +100,6 @@ class CheckYourAnswersConsigneeControllerSpec extends SpecBase with SummaryListF
         Some(
           emptyUserAnswers
             .set(ConsigneeAddressPage, testUserAddress)
-            .set(ConsigneeBusinessNamePage, testBusinessName)
             .set(ConsigneeExcisePage, testErn)
             .set(DestinationTypePage, UkTaxWarehouse.GB)
         )) {
@@ -128,7 +124,6 @@ class CheckYourAnswersConsigneeControllerSpec extends SpecBase with SummaryListF
         Some(
           emptyUserAnswers
             .set(ConsigneeAddressPage, testUserAddress)
-            .set(ConsigneeBusinessNamePage, testBusinessName)
             .set(ConsigneeExemptOrganisationPage, testExemptedOrganisation)
             .set(DestinationTypePage, ExemptedOrganisation)
         )) {
@@ -153,7 +148,6 @@ class CheckYourAnswersConsigneeControllerSpec extends SpecBase with SummaryListF
         Some(
           emptyUserAnswers
             .set(ConsigneeAddressPage, testUserAddress)
-            .set(ConsigneeBusinessNamePage, testBusinessName)
             .set(ConsigneeExportInformationPage, Set(EoriNumber))
             .set(DestinationTypePage, EuTaxWarehouse)
         )) {
@@ -178,7 +172,6 @@ class CheckYourAnswersConsigneeControllerSpec extends SpecBase with SummaryListF
         Some(
           emptyUserAnswers
             .set(ConsigneeAddressPage, testUserAddress)
-            .set(ConsigneeBusinessNamePage, testBusinessName)
             .set(ConsigneeExportInformationPage, Set(VatNumber))
             .set(ConsigneeExportVatPage, testVatNumber)
             .set(DestinationTypePage, UkTaxWarehouse.GB)

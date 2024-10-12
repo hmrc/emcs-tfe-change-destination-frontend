@@ -25,8 +25,8 @@ import models.sections.ReviewAnswer.{ChangeAnswers, KeepAnswers}
 import models.sections.consignee.ConsigneeExportInformation.EoriNumber
 import models.sections.info.ChangeType.Destination
 import models.sections.transportArranger.TransportArranger
-import pages.sections.consignee.{ConsigneeAddressPage, ConsigneeBusinessNamePage, ConsigneeExcisePage, ConsigneeExportInformationPage}
-import pages.sections.destination.{DestinationAddressPage, DestinationBusinessNamePage, DestinationConsigneeDetailsPage, DestinationWarehouseExcisePage}
+import pages.sections.consignee.{ConsigneeAddressPage, ConsigneeExcisePage, ConsigneeExportInformationPage}
+import pages.sections.destination.{DestinationAddressPage, DestinationConsigneeDetailsPage, DestinationWarehouseExcisePage}
 import pages.sections.firstTransporter.FirstTransporterReviewPage
 import pages.sections.guarantor.GuarantorReviewPage
 import pages.sections.info.ChangeTypePage
@@ -238,15 +238,13 @@ class SubmitChangeDestinationModelSpec extends SpecBase with SubmitChangeDestina
           .set(TransportArrangerReviewPage, KeepAnswers)
           .set(GuarantorReviewPage, KeepAnswers)
           // consignee
-          .set(ConsigneeBusinessNamePage, "consignee name")
           .set(ConsigneeExcisePage, "consignee ern")
           .set(ConsigneeExportInformationPage, Set(EoriNumber))
-          .set(ConsigneeAddressPage, testUserAddress.copy(street = "consignee street"))
+          .set(ConsigneeAddressPage, testUserAddress.copy(businessName = Some("consignee name"), street = "consignee street"))
           // deliveryPlaceTrader
           .set(DestinationWarehouseExcisePage, testGreatBritainErn)
           .set(DestinationConsigneeDetailsPage, false)
-          .set(DestinationBusinessNamePage, "destination name")
-          .set(DestinationAddressPage, testUserAddress.copy(street = "destination street"))
+          .set(DestinationAddressPage, testUserAddress.copy(businessName = Some("destination name"), street = "destination street"))
 
         implicit val dr: DataRequest[_] = dataRequest(
           request = fakeRequest,

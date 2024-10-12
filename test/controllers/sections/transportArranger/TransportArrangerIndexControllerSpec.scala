@@ -53,7 +53,7 @@ class TransportArrangerIndexControllerSpec extends SpecBase with MockUserAnswers
       "must redirect to the CYA controller" in new Test(Some(
         emptyUserAnswers
           .set(TransportArrangerPage, Consignor)
-          .set(ConsignorAddressPage, UserAddress(None, "", "", ""))
+          .set(ConsignorAddressPage, UserAddress(None, None, "", "", ""))
           .set(TransportArrangerReviewPage, ChangeAnswers)
       )) {
         val result = controller.onPageLoad(testErn, testArc)(request)
@@ -69,7 +69,7 @@ class TransportArrangerIndexControllerSpec extends SpecBase with MockUserAnswers
       "must redirect to TransportArrangerReviewAnswerPage" in new Test(Some(
         emptyUserAnswers
           .set(TransportArrangerPage, Consignor)
-          .set(ConsignorAddressPage, UserAddress(None, "", "", ""))
+          .set(ConsignorAddressPage, UserAddress(None, None, "", "", ""))
       )) {
         val result = controller.onPageLoad(testErn, testArc)(request)
 

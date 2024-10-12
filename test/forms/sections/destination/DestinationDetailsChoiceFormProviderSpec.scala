@@ -24,7 +24,7 @@ import play.api.test.FakeRequest
 
 class DestinationDetailsChoiceFormProviderSpec extends SpecBase with BooleanFieldBehaviours {
 
-  val requiredErrorMessage = "Select ‘yes’ to enter the address and business name of the registered consignee"
+  val requiredErrorMessage = "Select ‘yes’ to enter the trader and business name of the registered consignee"
   val invalidErrorMessage = "error.boolean"
 
   val form: Form[Boolean] = new DestinationDetailsChoiceFormProvider().apply(RegisteredConsignee)(messages(FakeRequest()))

@@ -27,6 +27,6 @@ case object GuarantorAddressPage extends QuestionPage[UserAddress] {
 
   override def getValueFromIE801(implicit request: DataRequest[_]): Option[UserAddress] =
     if (GuarantorSection.doNotRetrieveValuesFromIE801) None else {
-      request.movementDetails.movementGuarantee.guarantorTrader.flatMap(_.headOption.flatMap(_.address.map(UserAddress.userAddressFromTraderAddress)))
+      request.movementDetails.movementGuarantee.guarantorTrader.flatMap(_.headOption.map(UserAddress.userAddressFromTraderAddress))
     }
 }

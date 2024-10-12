@@ -25,7 +25,7 @@ import models.sections.guarantor.GuarantorArranger.{GoodsOwner, Transporter}
 import models.sections.info.movementScenario.MovementScenario
 import models.sections.info.movementScenario.MovementScenario.ExportWithCustomsDeclarationLodgedInTheUk
 import org.scalamock.scalatest.MockFactory
-import pages.sections.consignee.{ConsigneeAddressPage, ConsigneeBusinessNamePage}
+import pages.sections.consignee.ConsigneeAddressPage
 import pages.sections.guarantor._
 import pages.sections.info.DestinationTypePage
 import play.api.i18n.Messages
@@ -64,7 +64,7 @@ class GuarantorCheckAnswersHelperSpec extends SpecBase with MockFactory {
               emptyUserAnswers
                 .set(DestinationTypePage, ExportWithCustomsDeclarationLodgedInTheUk)
                 .set(GuarantorArrangerPage, value)
-                .set(ConsigneeBusinessNamePage, s"$value name")
+                // TODO  .set(ConsigneeBusinessNamePage, s"$value name")
                 .set(ConsigneeAddressPage, testUserAddress),
               movementDetails = maxGetMovementResponse
             )

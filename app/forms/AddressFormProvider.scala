@@ -25,6 +25,7 @@ import javax.inject.Inject
 
 class AddressFormProvider @Inject() extends Mappings {
 
+  val businessNameMax = 182
   val propertyMax = 11
   val streetMax = 65
   val townMax = 50
@@ -32,36 +33,41 @@ class AddressFormProvider @Inject() extends Mappings {
 
   def apply(): Form[UserAddress] =
     Form(mapping(
+      "businessName" -> text(s"trader.businessName.error.required")
+        .verifying(maxLength(businessNameMax, s"trader.businessName.error.length"))
+        .verifying(regexpUnlessEmpty(XSS_REGEX, s"trader.businessName.error.invalid"))
+        .transform[Option[String]](Some(_), _.get),
+
       "property" -> optional(text()
         .verifying(
           firstError(
-            maxLength(propertyMax, s"address.property.error.length"),
-            regexp(ALPHANUMERIC_REGEX, s"address.property.error.characters"),
-            regexpUnlessEmpty(XSS_REGEX, s"address.property.error.invalid")
+            maxLength(propertyMax, s"trader.property.error.length"),
+            regexp(ALPHANUMERIC_REGEX, s"trader.property.error.characters"),
+            regexpUnlessEmpty(XSS_REGEX, s"trader.property.error.invalid")
           )
         )),
-      "street" -> text(s"address.street.error.required")
+      "street" -> text(s"trader.street.error.required")
         .verifying(
           firstError(
-            maxLength(streetMax, s"address.street.error.length"),
-            regexp(ALPHANUMERIC_REGEX, s"address.street.error.characters"),
-            regexpUnlessEmpty(XSS_REGEX, s"address.street.error.invalid")
+            maxLength(streetMax, s"trader.street.error.length"),
+            regexp(ALPHANUMERIC_REGEX, s"trader.street.error.characters"),
+            regexpUnlessEmpty(XSS_REGEX, s"trader.street.error.invalid")
           )
         ),
-      "town" -> text(s"address.town.error.required")
+      "town" -> text(s"trader.town.error.required")
         .verifying(
           firstError(
-            maxLength(townMax, s"address.town.error.length"),
-            regexp(ALPHANUMERIC_REGEX, s"address.town.error.characters"),
-            regexpUnlessEmpty(XSS_REGEX, s"address.town.error.invalid")
+            maxLength(townMax, s"trader.town.error.length"),
+            regexp(ALPHANUMERIC_REGEX, s"trader.town.error.characters"),
+            regexpUnlessEmpty(XSS_REGEX, s"trader.town.error.invalid")
           )
         ),
-      "postcode" -> text(s"address.postcode.error.required")
+      "postcode" -> text(s"trader.postcode.error.required")
         .verifying(
           firstError(
-            maxLength(postcodeMax, s"address.postcode.error.length"),
-            regexp(ALPHANUMERIC_REGEX, s"address.postcode.error.characters"),
-            regexpUnlessEmpty(XSS_REGEX, s"address.postcode.error.invalid")
+            maxLength(postcodeMax, s"trader.postcode.error.length"),
+            regexp(ALPHANUMERIC_REGEX, s"trader.postcode.error.characters"),
+            regexpUnlessEmpty(XSS_REGEX, s"trader.postcode.error.invalid")
           )
         )
     )(UserAddress.apply)(UserAddress.unapply))

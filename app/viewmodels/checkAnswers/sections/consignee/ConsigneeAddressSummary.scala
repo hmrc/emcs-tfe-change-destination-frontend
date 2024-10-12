@@ -32,7 +32,7 @@ object ConsigneeAddressSummary {
       answer =>
 
         SummaryListRowViewModel(
-          key = "address.consigneeAddress.checkYourAnswers.label",
+          key = "trader.consigneeAddress.checkYourAnswers.label",
           value = Value(answer.toCheckYourAnswersFormat),
           actions = Seq(
             ActionItemViewModel(

@@ -73,8 +73,7 @@ class DestinationSectionSpec extends SpecBase with UserAddressFixtures with Json
                 .set(DestinationTypePage, destinationTypePageAnswer)
                 .set(DestinationWarehouseExcisePage, "")
                 .set(DestinationConsigneeDetailsPage, false)
-                .set(DestinationBusinessNamePage, "")
-                .set(DestinationAddressPage, testUserAddress)
+                .set(DestinationAddressPage, testUserAddress.copy(businessName = Some("")))
               )
 
               DestinationSection.status mustBe Completed
@@ -130,13 +129,11 @@ class DestinationSectionSpec extends SpecBase with UserAddressFixtures with Json
                 .set(DestinationTypePage, destinationTypePageAnswer)
                 .set(DestinationWarehouseExcisePage, "")
                 .set(DestinationConsigneeDetailsPage, false)
-                .set(DestinationBusinessNamePage, "")
-                .set(DestinationAddressPage, testUserAddress)
+                .set(DestinationAddressPage, testUserAddress.copy(businessName = Some("")))
 
 
               Seq[QuestionPage[_]](
                 DestinationConsigneeDetailsPage,
-                DestinationBusinessNamePage,
                 DestinationAddressPage
               ).foreach {
                 page =>
@@ -215,8 +212,7 @@ class DestinationSectionSpec extends SpecBase with UserAddressFixtures with Json
                 .set(DestinationTypePage, destinationTypePageAnswer)
                 .set(DestinationDetailsChoicePage, true)
                 .set(DestinationConsigneeDetailsPage, false)
-                .set(DestinationBusinessNamePage, "")
-                .set(DestinationAddressPage, testUserAddress)
+                .set(DestinationAddressPage, testUserAddress.copy(businessName = Some("")))
               )
 
               DestinationSection.status mustBe Completed
@@ -263,11 +259,10 @@ class DestinationSectionSpec extends SpecBase with UserAddressFixtures with Json
                 .set(DestinationTypePage, destinationTypePageAnswer)
                 .set(DestinationDetailsChoicePage, true)
                 .set(DestinationConsigneeDetailsPage, false)
-                .set(DestinationBusinessNamePage, "")
-                .set(DestinationAddressPage, testUserAddress)
+                .set(DestinationAddressPage, testUserAddress.copy(businessName = Some("")))
 
 
-              Seq(DestinationBusinessNamePage, DestinationAddressPage).foreach {
+              Seq(DestinationAddressPage).foreach {
                 page =>
                   implicit val dr: DataRequest[_] = dataRequest(request, baseUserAnswers
                     .remove(page), movementDetails = maxGetMovementResponse.copy(deliveryPlaceTrader = None)
@@ -345,7 +340,7 @@ class DestinationSectionSpec extends SpecBase with UserAddressFixtures with Json
       }
     }
 
-    "when shouldStartFlowAtDestinationBusinessName" - {
+    "when shouldStartFlowAtDestinationAddress" - {
       "must return Completed" - {
         "when mandatory pages have an answer and the section has been reviewed" in {
           Seq(
@@ -353,8 +348,8 @@ class DestinationSectionSpec extends SpecBase with UserAddressFixtures with Json
           ).foreach {
             implicit destinationTypePageAnswer =>
               assert(
-                DestinationSection.shouldStartFlowAtDestinationBusinessName === true,
-                s"shouldStartFlowAtDestinationBusinessName returned false for MovementScenario $destinationTypePageAnswer"
+                DestinationSection.shouldStartFlowAtDestinationAddress === true,
+                s"shouldStartFlowAtDestinationAddress returned false for MovementScenario $destinationTypePageAnswer"
               )
               implicit val dr: DataRequest[_] = dataRequest(request, emptyUserAnswers
                 .set(DestinationTypePage, destinationTypePageAnswer)
@@ -373,8 +368,8 @@ class DestinationSectionSpec extends SpecBase with UserAddressFixtures with Json
           ).foreach {
             implicit destinationTypePageAnswer =>
               assert(
-                DestinationSection.shouldStartFlowAtDestinationBusinessName === true,
-                s"shouldStartFlowAtDestinationBusinessName returned false for MovementScenario $destinationTypePageAnswer"
+                DestinationSection.shouldStartFlowAtDestinationAddress === true,
+                s"shouldStartFlowAtDestinationAddress returned false for MovementScenario $destinationTypePageAnswer"
               )
               implicit val dr: DataRequest[_] = dataRequest(request, emptyUserAnswers
                 .set(DestinationTypePage, destinationTypePageAnswer),
@@ -395,8 +390,7 @@ class DestinationSectionSpec extends SpecBase with UserAddressFixtures with Json
             movementScenario =>
               implicit val dr: DataRequest[_] = dataRequest(request, emptyUserAnswers
                 .set(DestinationTypePage, movementScenario)
-                .set(DestinationAddressPage, testUserAddress)
-                .set(DestinationBusinessNamePage, "")
+                .set(DestinationAddressPage, testUserAddress.copy(businessName = Some("")))
                 .set(DestinationConsigneeDetailsPage, false)
                 .set(DestinationDetailsChoicePage, true)
                 .set(DestinationWarehouseExcisePage, "")

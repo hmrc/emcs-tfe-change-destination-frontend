@@ -22,7 +22,7 @@ object TransportArrangerAddressMessages {
 
   sealed trait ViewMessages extends BaseMessages { _: i18n =>
     val cyaLabel: String = "Address"
-    val cyaChangeHidden: String = "transport arranger address"
+    val cyaChangeHidden: String = "transport arranger trader"
   }
 
   object English extends ViewMessages with BaseEnglish
