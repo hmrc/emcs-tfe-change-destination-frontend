@@ -17,7 +17,7 @@
 package pages.sections.transportArranger
 
 import base.SpecBase
-import models.UserAddress
+import models.{UserAddress, VatNumberModel}
 import models.requests.DataRequest
 import models.sections.ReviewAnswer.{ChangeAnswers, KeepAnswers}
 import models.sections.transportArranger.TransportArranger._
@@ -49,7 +49,7 @@ class TransportArrangerSectionSpec extends SpecBase {
               emptyUserAnswers
                 .set(TransportArrangerPage, arranger)
                 .set(TransportArrangerNamePage, "")
-                .set(TransportArrangerVatPage, "")
+                .set(TransportArrangerVatPage, VatNumberModel(hasVatNumber = false, None))
                 .set(TransportArrangerAddressPage, UserAddress(None, "", "", ""))
                 .set(TransportArrangerReviewPage, ChangeAnswers)
             )

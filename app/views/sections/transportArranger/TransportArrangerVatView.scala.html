@@ -14,22 +14,19 @@
  * limitations under the License.
  *@
 
+@import forms.sections.transportArranger.TransportArrangerVatFormProvider
 @import models.requests.DataRequest
 @import models.sections.transportArranger.TransportArranger
-@import viewmodels.InputWidth._
-@import viewmodels.LabelSize
+@import viewmodels.{InputWidth, LegendSize}
 
 @this(
         layout: templates.Layout,
         formHelper: FormWithCSRF,
         govukErrorSummary: GovukErrorSummary,
         govukInput: GovukInput,
-        govukButton: GovukButton,
-        h1: components.h1,
         h2: components.h2,
         continueOrExit: components.continueOrExit,
-        link: components.link,
-        p: components.p
+        govukRadios: GovukRadios
 )
 
 @(form: Form[_], action: Call, arranger: TransportArranger)(implicit request: DataRequest[_], messages: Messages)
@@ -43,25 +40,35 @@
         }
 
         @h2(messages("transportArranger.subHeading", request.arc), "govuk-caption-xl", hiddenContent = Some(messages("subHeading.hidden")))
-        @govukInput(
-            InputViewModel(
-                field = form("value"),
-                label = LabelViewModel(Text(messages(s"transportArrangerVat.$arranger.heading"))).asPageHeading(LabelSize.Large)
-            )
-            .withWidth(Full)
-            .withHint(HintViewModel(Text(messages(s"transportArrangerVat.hint"))))
-
+        @govukRadios(
+            RadiosViewModel.apply(
+                field = form(TransportArrangerVatFormProvider.hasVatNumberField),
+                items = Seq(
+                    RadioItem(
+                        id      = Some(form(TransportArrangerVatFormProvider.hasVatNumberField).id),
+                        value   = Some("true"),
+                        content = Text(messages("site.yes")),
+                        conditionalHtml = Some(vatRegistrationNumber)
+                    ),
+                    RadioItem(
+                        id      = Some(s"${form(TransportArrangerVatFormProvider.hasVatNumberField).id}-no"),
+                        value   = Some("false"),
+                        content = Text(messages("site.no"))
+                    )
+                ),
+                legend = LegendViewModel(Text(messages(s"transportArrangerVat.$arranger.heading"))).asPageHeading(LegendSize.Large)
+            ).withHint(HintViewModel(content = Text(messages("transportArrangerVat.hint"))))
         )
-
-        @p() {
-            @link(
-                controllers.sections.transportArranger.routes.TransportArrangerVatController.onNonGbVAT(request.ern, request.arc).url,
-                s"transportArrangerVat.$arranger.notUkVatLink"
-            )
-        }
 
         @continueOrExit()
     }
+}
+
+@vatRegistrationNumber = {
+    @govukInput(InputViewModel.apply(
+        form(TransportArrangerVatFormProvider.vatNumberField),
+        LabelViewModel(Text(messages("transportArrangerVat.input.label")))
+    ).withWidth(InputWidth.TwoThirds))
 }
 
 @{

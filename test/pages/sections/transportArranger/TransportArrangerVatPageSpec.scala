@@ -17,6 +17,7 @@
 package pages.sections.transportArranger
 
 import base.SpecBase
+import models.VatNumberModel
 import models.response.emcsTfe.TraderModel
 import play.api.test.FakeRequest
 
@@ -27,7 +28,8 @@ class TransportArrangerVatPageSpec extends SpecBase {
   "getValueFromIE801" - {
     "must return Some(_)" - {
       "when transport arranger trader is defined and has a VAT number" in {
-        TransportArrangerVatPage.getValueFromIE801(dataRequest(FakeRequest())) mustBe transportArrangerTrader.vatNumber
+        TransportArrangerVatPage.getValueFromIE801(dataRequest(FakeRequest())) mustBe
+          Some(VatNumberModel(hasVatNumber = true, transportArrangerTrader.vatNumber))
       }
     }
 
@@ -36,14 +38,14 @@ class TransportArrangerVatPageSpec extends SpecBase {
         TransportArrangerVatPage.getValueFromIE801(dataRequest(
           FakeRequest(),
           movementDetails = maxGetMovementResponse.copy(transportArrangerTrader = maxGetMovementResponse.transportArrangerTrader.map(_.copy(vatNumber = None)))
-        )) mustBe None
+        )) mustBe Some(VatNumberModel(hasVatNumber = false, None))
       }
       
       "when transport arranger trader trader doesn't exist" in {
         TransportArrangerVatPage.getValueFromIE801(dataRequest(
           FakeRequest(),
           movementDetails = maxGetMovementResponse.copy(transportArrangerTrader = None)
-        )) mustBe None
+        )) mustBe Some(VatNumberModel(hasVatNumber = false, None))
       }
     }
   }

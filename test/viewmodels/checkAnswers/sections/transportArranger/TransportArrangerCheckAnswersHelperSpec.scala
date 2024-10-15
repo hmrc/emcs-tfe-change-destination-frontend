@@ -18,6 +18,7 @@ package viewmodels.checkAnswers.sections.transportArranger
 
 import base.SpecBase
 import fixtures.messages.sections.transportArranger.TransportArrangerMessages
+import models.VatNumberModel
 import models.requests.DataRequest
 import models.sections.transportArranger.TransportArranger
 import models.sections.transportArranger.TransportArranger.{GoodsOwner, Other}
@@ -39,15 +40,15 @@ class TransportArrangerCheckAnswersHelperSpec extends SpecBase with MockFactory 
         TransportArranger.allValues.foreach {
           case value@(GoodsOwner | Other) =>
             // Only GoodsOwner or Other contain the VAT reg row
-            "must render four rows" - {
+            "must render five rows" - {
               s"when TransportArranger value is $value" in new Test {
                 implicit val request: DataRequest[_] = dataRequest(
                   FakeRequest(),
                   emptyUserAnswers
                     .set(TransportArrangerPage, value)
-                    .set(TransportArrangerVatPage, "beans")
+                    .set(TransportArrangerVatPage, VatNumberModel(hasVatNumber = true, Some(testVatNumber)))
                 )
-                helper.summaryList(onReviewPage)(request, msgs).rows.length mustBe 4
+                helper.summaryList(onReviewPage)(request, msgs).rows.length mustBe 5
               }
             }
           case value =>
@@ -57,7 +58,7 @@ class TransportArrangerCheckAnswersHelperSpec extends SpecBase with MockFactory 
                   FakeRequest(),
                   emptyUserAnswers
                     .set(TransportArrangerPage, value)
-                    .set(TransportArrangerVatPage, "beans")
+                    .set(TransportArrangerVatPage, VatNumberModel(hasVatNumber = true, Some(testVatNumber)))
                 )
                 helper.summaryList(onReviewPage)(request, msgs).rows.length mustBe 3
               }
