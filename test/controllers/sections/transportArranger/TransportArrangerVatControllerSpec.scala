@@ -19,12 +19,14 @@ package controllers.sections.transportArranger
 import base.SpecBase
 import controllers.actions.{FakeDataRetrievalAction, FakeMovementAction}
 import forms.sections.transportArranger.TransportArrangerVatFormProvider
+import forms.sections.transportArranger.TransportArrangerVatFormProvider.{hasVatNumberField, vatNumberField, vatNumberRequired}
 import mocks.services.MockUserAnswersService
 import models.sections.transportArranger.TransportArranger.GoodsOwner
-import models.{NormalMode, UserAnswers}
+import models.{NormalMode, UserAnswers, VatNumberModel}
 import navigation.FakeNavigators.FakeTransportArrangerNavigator
 import pages.sections.transportArranger.{TransportArrangerPage, TransportArrangerVatPage}
 import play.api.data.Form
+import play.api.i18n.Messages
 import play.api.mvc.{AnyContentAsEmpty, Call}
 import play.api.test.Helpers._
 import play.api.test.{FakeRequest, Helpers}
@@ -36,8 +38,10 @@ class TransportArrangerVatControllerSpec extends SpecBase with MockUserAnswersSe
 
   val goodsOwnerUserAnswers: UserAnswers = emptyUserAnswers.set(TransportArrangerPage, GoodsOwner)
 
+  val inputModelWithVATNumber: VatNumberModel = VatNumberModel(hasVatNumber = true, Some("GB123456789"))
+
   lazy val formProvider: TransportArrangerVatFormProvider = new TransportArrangerVatFormProvider()
-  lazy val form: Form[String] = formProvider()
+  lazy val form: Form[VatNumberModel] = formProvider(GoodsOwner)
   lazy val view: TransportArrangerVatView = app.injector.instanceOf[TransportArrangerVatView]
 
   lazy val transportArrangerVatSubmitAction: Call = routes.TransportArrangerVatController.onSubmit(testErn, testArc, NormalMode)
@@ -66,40 +70,52 @@ class TransportArrangerVatControllerSpec extends SpecBase with MockUserAnswersSe
 
       status(result) mustEqual OK
       contentAsString(result) mustEqual
-        view(form, transportArrangerVatSubmitAction, GoodsOwner)(dataRequest(request, userAnswers.get), messages(request)).toString
-    }
-
-    "must redirect for a GET onNonGbVAT" in new Fixture() {
-      MockUserAnswersService.set().returns(Future.successful(goodsOwnerUserAnswers))
-
-      val result = controller.onNonGbVAT(testErn, testArc)(request)
-
-      status(result) mustEqual SEE_OTHER
-      redirectLocation(result).value mustEqual testOnwardRoute.url
+        view(
+          form = form.fill(VatNumberModel(hasVatNumber = false, None)),
+          action = transportArrangerVatSubmitAction,
+          arranger = GoodsOwner
+        )(dataRequest(request, userAnswers.get), messages(request)).toString
     }
 
     "must populate the view correctly on a GET when the question has previously been answered" in new Fixture(
-      Some(goodsOwnerUserAnswers.set(TransportArrangerVatPage, "answer"))
+      Some(goodsOwnerUserAnswers.set(TransportArrangerVatPage, inputModelWithVATNumber))
     ) {
       val result = controller.onPageLoad(testErn, testArc, NormalMode)(request)
 
       status(result) mustEqual OK
       contentAsString(result) mustEqual
-        view(form.fill("answer"), transportArrangerVatSubmitAction, GoodsOwner)(dataRequest(request, userAnswers.get), messages(request)).toString
+        view(
+          form = form.fill(inputModelWithVATNumber),
+          action = transportArrangerVatSubmitAction,
+          arranger = GoodsOwner
+        )(dataRequest(request, userAnswers.get), messages(request)).toString
     }
 
-    "must redirect to the next page when valid data is submitted" in new Fixture() {
+    "must redirect to the next page when valid data is submitted (no selected)" in new Fixture() {
       MockUserAnswersService.set().returns(Future.successful(goodsOwnerUserAnswers))
 
-      val result = controller.onSubmit(testErn, testArc, NormalMode)(request.withFormUrlEncodedBody(("value", "answer")))
+      val result = controller.onSubmit(testErn, testArc, NormalMode)(request.withFormUrlEncodedBody((hasVatNumberField, "false")))
 
       status(result) mustEqual SEE_OTHER
       redirectLocation(result).value mustEqual testOnwardRoute.url
     }
 
-    "must return a Bad Request and errors when invalid data is submitted" in new Fixture() {
-      val boundForm = form.bind(Map("value" -> ""))
-      val result = controller.onSubmit(testErn, testArc, NormalMode)(request.withFormUrlEncodedBody(("value", "")))
+    "must redirect to the next page when valid data is submitted (yes selected with VAT number)" in new Fixture() {
+      MockUserAnswersService.set().returns(Future.successful(goodsOwnerUserAnswers))
+
+      val result = controller.onSubmit(testErn, testArc, NormalMode)(request.withFormUrlEncodedBody(hasVatNumberField -> "true", vatNumberField -> testVatNumber))
+
+      status(result) mustEqual SEE_OTHER
+      redirectLocation(result).value mustEqual testOnwardRoute.url
+    }
+
+    "must return a Bad Request and errors when invalid data is submitted (empty VAT number)" in new Fixture() {
+
+      implicit val msgs: Messages = messages(request)
+
+      val boundForm = form.fill(inputModelWithVATNumber.copy(vatNumber = None)).withError(vatNumberField, msgs(vatNumberRequired))
+
+      val result = controller.onSubmit(testErn, testArc, NormalMode)(request.withFormUrlEncodedBody(hasVatNumberField -> "true", vatNumberField -> ""))
 
       status(result) mustEqual BAD_REQUEST
       contentAsString(result) mustEqual

@@ -461,7 +461,7 @@ class TraderModelSpec extends SpecBase {
                 .set(TransportArrangerPage, transportArranger)
                 .set(TransportArrangerNamePage, "arranger name")
                 .set(TransportArrangerAddressPage, testUserAddress.copy(street = "arranger street"))
-                .set(TransportArrangerVatPage, "arranger vat")
+                .set(TransportArrangerVatPage, VatNumberModel(hasVatNumber = true, Some("arranger vat")))
             )
 
             TraderModel.applyTransportArranger mustBe Some(transportArrangerTrader)

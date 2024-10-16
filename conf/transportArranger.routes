@@ -14,7 +14,6 @@ GET         /trader/:ern/movement/:arc/transport-arranger/vat                   
 POST        /trader/:ern/movement/:arc/transport-arranger/vat                    controllers.sections.transportArranger.TransportArrangerVatController.onSubmit(ern: String, arc: String, mode: Mode = NormalMode)
 GET         /trader/:ern/movement/:arc/transport-arranger/vat/change             controllers.sections.transportArranger.TransportArrangerVatController.onPageLoad(ern: String, arc: String, mode: Mode = CheckMode)
 POST        /trader/:ern/movement/:arc/transport-arranger/vat/change             controllers.sections.transportArranger.TransportArrangerVatController.onSubmit(ern: String, arc: String, mode: Mode = CheckMode)
-GET         /trader/:ern/movement/:arc/transport-arranger/vat/non-gb-vat         controllers.sections.transportArranger.TransportArrangerVatController.onNonGbVAT(ern: String, arc: String)
 
 GET         /trader/:ern/movement/:arc/transport-arranger/address                controllers.sections.transportArranger.TransportArrangerAddressController.onPageLoad(ern: String, arc: String, mode: Mode = NormalMode)
 POST        /trader/:ern/movement/:arc/transport-arranger/address                controllers.sections.transportArranger.TransportArrangerAddressController.onSubmit(ern: String, arc: String, mode: Mode = NormalMode)

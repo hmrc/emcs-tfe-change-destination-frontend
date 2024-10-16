@@ -37,8 +37,8 @@ class TransportArrangerVatViewSpec extends SpecBase with ViewBehaviours {
     implicit val msgs: Messages = messages(Seq(lang))
     implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(), emptyUserAnswers)
 
-   lazy val view = app.injector.instanceOf[TransportArrangerVatView]
-    val form = app.injector.instanceOf[TransportArrangerVatFormProvider].apply()
+    lazy val view = app.injector.instanceOf[TransportArrangerVatView]
+    val form = app.injector.instanceOf[TransportArrangerVatFormProvider].apply(arranger)
 
     implicit val doc: Document = Jsoup.parse(view(form, testOnwardRoute, arranger).toString())
   }
@@ -57,7 +57,10 @@ class TransportArrangerVatViewSpec extends SpecBase with ViewBehaviours {
             Selectors.title -> messagesForLanguage.goodsOwnerTitle,
             Selectors.h1 -> messagesForLanguage.goodsOwnerHeading,
             Selectors.hint -> messagesForLanguage.hint,
-            Selectors.link(1) -> messagesForLanguage.goodsOwnerNonGbVatLink,
+            Selectors.radioButton(1) -> messagesForLanguage.yes,
+            Selectors.label(TransportArrangerVatFormProvider.vatNumberField) -> messagesForLanguage.vatNumberLabel,
+            //Note, this is radio button 2 but index is 3 due to hidden HTML conditional content for radio 1
+            Selectors.radioButton(3) -> messagesForLanguage.no,
             Selectors.button -> messagesForLanguage.saveAndContinue,
             Selectors.saveAndExitLink -> messagesForLanguage.returnToDraft
           ))
@@ -69,7 +72,10 @@ class TransportArrangerVatViewSpec extends SpecBase with ViewBehaviours {
             Selectors.title -> messagesForLanguage.otherTitle,
             Selectors.h1 -> messagesForLanguage.otherHeading,
             Selectors.hint -> messagesForLanguage.hint,
-            Selectors.link(1) -> messagesForLanguage.otherNonGbVatLink,
+            Selectors.radioButton(1) -> messagesForLanguage.yes,
+            Selectors.label(TransportArrangerVatFormProvider.vatNumberField) -> messagesForLanguage.vatNumberLabel,
+            //Note, this is radio button 2 but index is 3 due to hidden HTML conditional content for radio 1
+            Selectors.radioButton(3) -> messagesForLanguage.no,
             Selectors.button -> messagesForLanguage.saveAndContinue,
             Selectors.saveAndExitLink -> messagesForLanguage.returnToDraft
           ))
