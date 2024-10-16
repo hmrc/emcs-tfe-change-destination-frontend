@@ -18,6 +18,7 @@ package viewmodels.checkAnswers.sections.firstTransporter
 
 import base.SpecBase
 import fixtures.messages.sections.guarantor.GuarantorArrangerMessages.English
+import models.VatNumberModel
 import models.requests.DataRequest
 import org.scalamock.scalatest.MockFactory
 import pages.sections.firstTransporter.{FirstTransporterAddressPage, FirstTransporterNamePage, FirstTransporterVatPage}
@@ -32,27 +33,29 @@ class FirstTransporterCheckAnswersHelperSpec extends SpecBase with MockFactory {
 
   "summaryList" - {
 
-    "must render 3 rows" - {
+    "must render 4 rows" - {
       "when all answers are entered for the first transporter section" in new Test {
         implicit val request: DataRequest[_] = dataRequest(
           FakeRequest(),
           emptyUserAnswers
             .set(FirstTransporterNamePage, "Business name")
-            .set(FirstTransporterVatPage, "GB123456789")
+            .set(FirstTransporterVatPage, VatNumberModel(hasVatNumber = true, Some("123456789")))
             .set(FirstTransporterAddressPage, testUserAddress)
         )
-        helper.summaryList(onReviewPage = false)(request, msgs).rows.length mustBe 3
+        helper.summaryList(onReviewPage = false)(request, msgs).rows.length mustBe 4
       }
+    }
 
-      "when no answers are entered for the first transporter section" in new Test {
+    "must render 2 rows" - {
+
+      "when no answers are entered for the first transporter section (retrieved from IE801)" in new Test {
         implicit val request: DataRequest[_] = dataRequest(
           FakeRequest(),
           emptyUserAnswers,
           movementDetails = maxGetMovementResponse.copy(firstTransporterTrader = None)
         )
-        helper.summaryList(onReviewPage = false)(request, msgs).rows.length mustBe 3
+        helper.summaryList(onReviewPage = false)(request, msgs).rows.length mustBe 2
       }
     }
-
   }
 }

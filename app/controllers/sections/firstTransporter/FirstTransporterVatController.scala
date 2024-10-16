@@ -16,12 +16,11 @@
 
 package controllers.sections.firstTransporter
 
-import config.Constants.NONGBVAT
 import controllers.BaseNavigationController
 import controllers.actions._
 import forms.sections.firstTransporter.FirstTransporterVatFormProvider
+import models.Mode
 import models.requests.DataRequest
-import models.{Mode, NormalMode}
 import navigation.FirstTransporterNavigator
 import pages.sections.firstTransporter.FirstTransporterVatPage
 import play.api.data.Form
@@ -64,10 +63,4 @@ class FirstTransporterVatController @Inject()(
       form,
       controllers.sections.firstTransporter.routes.FirstTransporterVatController.onSubmit(request.ern, request.arc, mode)
     )))
-
-
-  def onNonGbVAT(ern: String, arc: String): Action[AnyContent] =
-    authorisedDataRequestWithUpToDateMovementAsync(ern, arc) { implicit request =>
-      saveAndRedirect(FirstTransporterVatPage, NONGBVAT, NormalMode)
-    }
 }

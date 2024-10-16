@@ -21,16 +21,14 @@ import fixtures.messages.{BaseEnglish, BaseMessages, i18n}
 object FirstTransporterVatMessages {
 
   sealed trait ViewMessages extends BaseMessages { _: i18n =>
-    val heading = "What is the first transporter’s VAT registration number?"
+    val heading = "Is the first transporter VAT registered in the UK?"
     val title = titleHelper(heading)
-    val hint = "This is 9 or 12 numbers, sometimes with ‘GB’ at the start, like 123456789 or GB123456789."
-    val nonGbVatLink = "The first transporter is not VAT registered"
-
-    val errorRequired = "Enter a VAT registration number"
-    val errorLength = "VAT registration number must be 12 characters or less"
-    val errorAlphanumeric = "VAT registration number number must only contain letters and numbers"
+    val hint = "A UK VAT registration number is 9 numbers, sometimes with ‘GB’ at the start, for example 123456789 or GB123456789."
+    val input = "UK VAT registration number"
 
     val cyaLabel: String = "VAT registration number"
+    val vatChoiceCyaLabel: String = "VAT registered in the UK"
+    val cyaChangeChoiceHidden: String = "VAT registered in the UK"
     val cyaChangeHidden: String = "first transporters VAT registration number"
   }
 

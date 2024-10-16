@@ -192,7 +192,7 @@ trait SubmitChangeDestinationFixtures extends GetMovementResponseFixtures { _: B
     // firstTransporterTrader
     .set(FirstTransporterNamePage, "first name")
     .set(FirstTransporterAddressPage, testUserAddress.copy(street = "first street"))
-    .set(FirstTransporterVatPage, "first vat")
+    .set(FirstTransporterVatPage, VatNumberModel(hasVatNumber = true, Some("first vat")))
     // headerEadEsad
     .set(JourneyTimeHoursPage, 2)
     // transportMode
