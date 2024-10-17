@@ -34,7 +34,7 @@
 
 @(form: Form[_], guarantorArranger: GuarantorArranger, mode: Mode)(implicit request: DataRequest[_], messages: Messages)
 
-@layout(pageTitle = title(form, messages(s"guarantorVat.$guarantorArranger.title")), maybeShowActiveTrader = maybeShowActiveTrader(request)) {
+@layout(pageTitle = title(form, messages(s"guarantorVat.$guarantorArranger.title"), Some(messages("guarantor.subHeading"))), maybeShowActiveTrader = maybeShowActiveTrader(request)) {
 
     @formHelper(action = controllers.sections.guarantor.routes.GuarantorVatController.onSubmit(request.ern, request.arc, mode)) {
 

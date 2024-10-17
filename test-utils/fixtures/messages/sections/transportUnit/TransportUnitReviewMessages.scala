@@ -16,13 +16,13 @@
 
 package fixtures.messages.sections.transportUnit
 
-import fixtures.messages.{BaseEnglish, BaseMessages, i18n}
+import fixtures.messages.{BaseEnglish, BaseMessages, SectionMessages, i18n}
 
 object TransportUnitReviewMessages {
 
   sealed trait ViewMessages extends BaseMessages { _: i18n =>
     val heading: String = "Section summary"
-    val title: String = titleHelper(s"$heading - Transport units")
+    val title: String = titleHelper(heading, Some(SectionMessages.English.transportUnitSubHeading))
 
     val legend = "Do you need to change any details in this section?"
 

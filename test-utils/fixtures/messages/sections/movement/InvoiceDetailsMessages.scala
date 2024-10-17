@@ -16,14 +16,14 @@
 
 package fixtures.messages.sections.movement
 
-import fixtures.messages.{BaseEnglish, BaseMessages, i18n}
+import fixtures.messages.{BaseEnglish, BaseMessages, SectionMessages, i18n}
 
 object InvoiceDetailsMessages {
 
   sealed trait ViewMessages extends BaseMessages { _: i18n =>
 
     val heading = "Invoice details"
-    val title = titleHelper(heading)
+    val title = titleHelper(heading, Some(SectionMessages.English.movementInformationSubHeading))
     val text = "If you do not have an invoice, you can use a delivery note or transport document. The reference should relate to these specific goods in your records."
     val referenceLabel = "Invoice reference"
     val referenceErrorRequired = "Enter a reference for an invoice, delivery note or transport document"

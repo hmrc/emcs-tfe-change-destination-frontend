@@ -31,7 +31,7 @@
 
 @(form: Form[_], mode: Mode, transportUnitType: TransportUnitType, onSubmitCall: Call)(implicit request: DataRequest[_], messages: Messages)
 
-@layout(pageTitle = title(form, messages(s"transportSealChoice.heading.${transportUnitType.toString}")), maybeShowActiveTrader = maybeShowActiveTrader(request)) {
+@layout(pageTitle = title(form, messages(s"transportSealChoice.heading.${transportUnitType.toString}"), Some(messages("transportUnit.subHeading"))), maybeShowActiveTrader = maybeShowActiveTrader(request)) {
 
     @formHelper(action = onSubmitCall, 'autoComplete -> "off") {
 

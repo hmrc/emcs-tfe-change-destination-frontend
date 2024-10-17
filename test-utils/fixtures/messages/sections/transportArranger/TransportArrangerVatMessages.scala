@@ -16,15 +16,15 @@
 
 package fixtures.messages.sections.transportArranger
 
-import fixtures.messages.{BaseEnglish, BaseMessages, i18n}
+import fixtures.messages.{BaseEnglish, BaseMessages, SectionMessages, i18n}
 
 object TransportArrangerVatMessages {
 
   sealed trait ViewMessages extends BaseMessages { _: i18n =>
     val goodsOwnerHeading = "Is the goods owner VAT registered in the UK?"
-    val goodsOwnerTitle = titleHelper(goodsOwnerHeading)
+    val goodsOwnerTitle = titleHelper(goodsOwnerHeading, Some(SectionMessages.English.transportArrangerSubHeading))
     val otherHeading = "Is the transport arranger VAT registered in the UK?"
-    val otherTitle = titleHelper(otherHeading)
+    val otherTitle = titleHelper(otherHeading, Some(SectionMessages.English.transportArrangerSubHeading))
     val hint = "A UK VAT registration number is 9 numbers, sometimes with ‘GB’ at the start, for example 123456789 or GB123456789."
     val vatNumberLabel = "UK VAT registration number"
 

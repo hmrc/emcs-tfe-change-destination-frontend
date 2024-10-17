@@ -29,6 +29,6 @@ class TransportArrangerNameHelper @Inject()(p: views.html.components.p) {
     messages(s"transportArrangerName.$transportArranger.$key")
 
   def title(form: Form[_], transportArranger: TransportArranger)(implicit messages: Messages): String =
-    ViewUtils.title(form, messageFor("title", transportArranger))
+    ViewUtils.title(form, messageFor("title", transportArranger), Some(messages("transportArranger.subHeading")))
 
 }

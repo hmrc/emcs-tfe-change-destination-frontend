@@ -16,13 +16,13 @@
 
 package fixtures.messages.sections.consignee
 
-import fixtures.messages.{BaseEnglish, BaseMessages, i18n}
+import fixtures.messages.{BaseEnglish, BaseMessages, SectionMessages, i18n}
 
 object ConsigneeExportMessages {
 
   sealed trait ViewMessages extends BaseMessages { _: i18n =>
-    val title = titleHelper("Are the goods being exported outside of the UK and EU?")
     val heading = "Are the goods being exported outside of the UK and EU?"
+    val title = titleHelper(heading, Some(SectionMessages.English.consigneeSubHeading))
     val errorRequired = "Select yes if this is a deferred movement"
 
     val cyaLabel: String = "Export outside of the UK and EU"

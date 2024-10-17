@@ -16,13 +16,13 @@
 
 package fixtures.messages.sections.transportUnit
 
-import fixtures.messages.{BaseEnglish, BaseMessages, i18n}
+import fixtures.messages.{BaseEnglish, BaseMessages, SectionMessages, i18n}
 
 object TransportUnitGiveMoreInformationChoiceMessages {
 
   sealed trait ViewMessages extends BaseMessages { _: i18n =>
-    def title(transportUnitType: String): String = titleHelper(s"Do you know any more information about this $transportUnitType?")
     def heading(transportUnitType: String): String = s"Do you know any more information about this $transportUnitType?"
+    def title(transportUnitType: String): String = titleHelper(heading(transportUnitType), Some(SectionMessages.English.transportUnitSubHeading))
     val hintText = "For example, the identity of the subsequent transporter or information about subsequent transport units."
     def errorRequired(transportUnitType: String): String = s"Select yes if you know more information about this $transportUnitType"
   }

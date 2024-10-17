@@ -36,7 +36,8 @@
         messages("consigneeExcise.temporaryCertifiedConsignee.title")
     } else {
         messages("consigneeExcise.title")
-    }
+    },
+    section = Some(messages("consignee.subHeading"))
 ), maybeShowActiveTrader = maybeShowActiveTrader(request)) {
 
     @formHelper(action, Symbol("autoComplete") -> "off") {

@@ -35,7 +35,7 @@
 
 @(form: Form[_], action: Call, euExport: Boolean)(implicit request: DataRequest[_], messages: Messages)
 
-@layout(pageTitle = title(form, messages("exportCustomsOffice.title")), maybeShowActiveTrader = maybeShowActiveTrader(request)) {
+@layout(pageTitle = title(form, messages("exportCustomsOffice.title"), Some(messages("exportInformation.subHeading"))), maybeShowActiveTrader = maybeShowActiveTrader(request)) {
 
     @formHelper(action) {
 

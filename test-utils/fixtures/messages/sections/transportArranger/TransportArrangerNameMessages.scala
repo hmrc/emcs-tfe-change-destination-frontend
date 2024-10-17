@@ -16,7 +16,7 @@
 
 package fixtures.messages.sections.transportArranger
 
-import fixtures.messages.{BaseEnglish, BaseMessages, i18n}
+import fixtures.messages.{BaseEnglish, BaseMessages, SectionMessages, i18n}
 import models.sections.transportArranger.TransportArranger
 import models.sections.transportArranger.TransportArranger.GoodsOwner
 
@@ -24,8 +24,8 @@ object TransportArrangerNameMessages {
 
   sealed trait ViewMessages extends BaseMessages { _: i18n =>
     def title()(implicit transportArranger: TransportArranger): String = transportArranger match {
-      case GoodsOwner => titleHelper(heading())
-      case _ => titleHelper(heading())
+      case GoodsOwner => titleHelper(heading(), Some(SectionMessages.English.transportArrangerSubHeading))
+      case _ => titleHelper(heading(), Some(SectionMessages.English.transportArrangerSubHeading))
     }
 
     def heading()(implicit transportArranger: TransportArranger): String = transportArranger match {

@@ -31,7 +31,7 @@
 
 @(form: Form[_], mode: Mode)(implicit request: DataRequest[_], messages: Messages)
 
-@layout(pageTitle = title(form, messages("giveInformationOtherTransport.title")), maybeShowActiveTrader = maybeShowActiveTrader(request)) {
+@layout(pageTitle = title(form, messages("giveInformationOtherTransport.title"), Some(messages("journeyType.subHeading"))), maybeShowActiveTrader = maybeShowActiveTrader(request)) {
 
     @formHelper(action = controllers.sections.journeyType.routes.GiveInformationOtherTransportController.onSubmit(request.ern, request.arc, mode)) {
 

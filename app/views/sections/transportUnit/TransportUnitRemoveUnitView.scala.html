@@ -31,7 +31,7 @@
 
 @(form: Form[_], indexOfTransportUnit: Index)(implicit request: DataRequest[_], messages: Messages)
 
-@layout(pageTitle = title(form, messages("transportUnitRemoveUnit.title", indexOfTransportUnit.displayIndex)), maybeShowActiveTrader = maybeShowActiveTrader(request)) {
+@layout(pageTitle = title(form, messages("transportUnitRemoveUnit.title", indexOfTransportUnit.displayIndex), Some(messages("transportUnit.subHeading"))), maybeShowActiveTrader = maybeShowActiveTrader(request)) {
 
     @formHelper(action = controllers.sections.transportUnit.routes.TransportUnitRemoveUnitController.onSubmit(request.ern, request.arc, indexOfTransportUnit), 'autoComplete -> "off") {
 

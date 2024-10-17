@@ -16,13 +16,13 @@
 
 package fixtures.messages.sections.consignee
 
-import fixtures.messages.{BaseEnglish, BaseMessages, i18n}
+import fixtures.messages.{BaseEnglish, BaseMessages, SectionMessages, i18n}
 
 object ConsigneeExportInformationMessages {
 
   sealed trait ViewMessages extends BaseMessages { _: i18n =>
-    val title = titleHelper("What information do you have about the person representing the consignor at the office of export?")
     val heading = "What information do you have about the person representing the consignor at the office of export?"
+    val title = titleHelper(heading, Some(SectionMessages.English.consigneeSubHeading))
 
     val hint = "Select all that apply."
 

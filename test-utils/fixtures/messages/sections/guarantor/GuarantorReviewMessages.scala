@@ -16,12 +16,12 @@
 
 package fixtures.messages.sections.guarantor
 
-import fixtures.messages.{BaseEnglish, BaseMessages, i18n}
+import fixtures.messages.{BaseEnglish, BaseMessages, SectionMessages, i18n}
 
 object GuarantorReviewMessages {
   sealed trait ViewMessages extends BaseMessages { _: i18n =>
     val heading = "Section summary"
-    val title = titleHelper(s"$heading - Guarantor")
+    val title = titleHelper(heading, Some(SectionMessages.English.guarantorSubHeading))
 
     val legend = "Do you need to change any details in this section?"
     val errorRequired: String = "Select yes if you need to change any of these details"

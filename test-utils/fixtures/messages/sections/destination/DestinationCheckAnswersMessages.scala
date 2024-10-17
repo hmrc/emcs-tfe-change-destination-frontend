@@ -16,13 +16,13 @@
 
 package fixtures.messages.sections.destination
 
-import fixtures.messages.{BaseEnglish, BaseMessages, i18n}
+import fixtures.messages.{BaseEnglish, BaseMessages, SectionMessages, i18n}
 
 object DestinationCheckAnswersMessages {
 
   sealed trait ViewMessages extends BaseMessages { _: i18n =>
     val heading = "Check your answers"
-    val title = titleHelper(heading)
+    val title = titleHelper(heading, Some(SectionMessages.English.destinationSubHeading))
     val traderNameLabel = "Trader name"
     val traderNameChangeHidden = "Trader name"
     val addressLabel: String = "Address"

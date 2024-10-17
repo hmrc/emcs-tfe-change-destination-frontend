@@ -16,13 +16,13 @@
 
 package fixtures.messages.sections.journeyType
 
-import fixtures.messages.{BaseEnglish, BaseMessages, i18n}
+import fixtures.messages.{BaseEnglish, BaseMessages, SectionMessages, i18n}
 
 object CheckYourAnswersJourneyTypeMessages {
 
   sealed trait ViewMessages extends BaseMessages { _: i18n =>
     val heading = "Check your answers"
-    val title: String = titleHelper(heading)
+    val title: String = titleHelper(heading, Some(SectionMessages.English.journeyTypeSubHeading))
     val sectionSubheading = "Journey type"
   }
 

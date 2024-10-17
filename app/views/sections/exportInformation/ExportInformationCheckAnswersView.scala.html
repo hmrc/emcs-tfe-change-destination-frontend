@@ -28,7 +28,7 @@
 
 @(list: SummaryList, submitAction: Call)(implicit request: DataRequest[_], messages: Messages)
 
-@layout(pageTitle = titleNoForm(messages("exportInformationCheckAnswers.title")), maybeShowActiveTrader = maybeShowActiveTrader(request)) {
+@layout(pageTitle = titleNoForm(messages("exportInformationCheckAnswers.title"), Some(messages("exportInformation.subHeading"))), maybeShowActiveTrader = maybeShowActiveTrader(request)) {
 
     @formHelper(action = submitAction) {
 

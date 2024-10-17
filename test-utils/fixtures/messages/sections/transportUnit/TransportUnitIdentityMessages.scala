@@ -16,7 +16,7 @@
 
 package fixtures.messages.sections.transportUnit
 
-import fixtures.messages.{BaseEnglish, BaseMessages, i18n}
+import fixtures.messages.{BaseEnglish, BaseMessages, SectionMessages, i18n}
 import models.Index
 import models.sections.transportUnit.TransportUnitType
 
@@ -24,7 +24,7 @@ object TransportUnitIdentityMessages {
 
   sealed trait ViewMessages extends BaseMessages {
     _: i18n =>
-    val title: TransportUnitType => String = transportUnitType => titleHelper(heading(transportUnitType))
+    val title: TransportUnitType => String = transportUnitType => titleHelper(heading(transportUnitType), Some(SectionMessages.English.transportUnitSubHeading))
     val heading: TransportUnitType => String = {
       case TransportUnitType.Tractor =>  "What is the vehicle registration number or unique identifier for this tractor?"
       case TransportUnitType.Trailer => "What is the trailer number or unique identifier for this trailer?"

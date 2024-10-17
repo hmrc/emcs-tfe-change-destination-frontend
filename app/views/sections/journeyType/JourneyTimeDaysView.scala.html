@@ -33,7 +33,7 @@
 
 @(form: Form[_], mode: Mode)(implicit request: DataRequest[_], messages: Messages)
 
-@layout(pageTitle = title(form, messages("journeyTimeDays.title")), maybeShowActiveTrader = maybeShowActiveTrader(request)) {
+@layout(pageTitle = title(form, messages("journeyTimeDays.title"), Some(messages("journeyType.subHeading"))), maybeShowActiveTrader = maybeShowActiveTrader(request)) {
 
     @formHelper(action = controllers.sections.journeyType.routes.JourneyTimeDaysController.onSubmit(request.ern, request.arc, mode), 'autoComplete -> "off") {
 

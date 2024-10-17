@@ -30,7 +30,7 @@ class TransportUnitTypeHelper @Inject()() {
     messages(s"$page.$key", messages(s"$page.transportUnitType.$transportUnitType"))
 
   def title(form: Form[_], transportUnitType: TransportUnitType, page: Page)(implicit messages: Messages): String =
-    ViewUtils.title(form, messageFor(page.toString, "title", transportUnitType))
+    ViewUtils.title(form, messageFor(page.toString, "title", transportUnitType), Some(messages("transportUnit.subHeading")))
 
   def heading(transportUnitType: TransportUnitType, page: Page)(implicit messages: Messages): String =
     messageFor(page.toString, "heading", transportUnitType)

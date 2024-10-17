@@ -16,12 +16,12 @@
 
 package fixtures.messages.sections.journeyType
 
-import fixtures.messages.{BaseEnglish, BaseMessages, i18n}
+import fixtures.messages.{BaseEnglish, BaseMessages, SectionMessages, i18n}
 
 object JourneyTypeReviewMessages {
   sealed trait ViewMessages extends BaseMessages { _: i18n =>
     val heading = "Section summary"
-    val title = titleHelper(s"$heading - Journey type")
+    val title = titleHelper(heading, Some(SectionMessages.English.journeyTypeSubHeading))
 
     val legend = "Do you need to change any details in this section?"
 

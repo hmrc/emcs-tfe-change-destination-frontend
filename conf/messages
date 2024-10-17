@@ -269,6 +269,7 @@ checkYourAnswersConsignor.address = Address
 
 journeyType.subHeading = Journey type
 consignee.subHeading = Consignee information
+consignor.subHeading = Consignor information
 transportArranger.subHeading = Transport arranger
 firstTransporter.subHeading = First transporter
 transportUnit.subHeading = Transport units
@@ -277,9 +278,6 @@ destination.subHeading = Place of destination information
 guarantor.subHeading = Guarantor
 movementInformation.subHeading = Movement information
 exportInformation.subHeading = Export information
-importInformation.subHeading = Import information
-documents.subHeading = Documents
-items.subHeading = Item information
 taskList.subHeading = Draft movement
 subHeading.hidden = This section is
 
@@ -1425,34 +1423,34 @@ changeDestinationType.legend = Do you want to change the destination type for th
 changeDestinationType.no = No, I want to keep the destination type the same
 changeDestinationType.error.required = Select yes if you want to change the destination type
 
-firstTransporterReview.title = Section summary - First transporter
+firstTransporterReview.title = Section summary
 firstTransporterReview.heading = Section summary
 firstTransporterReview.legend = Do you need to change any details in this section?
 firstTransporterReview.error.required = Select yes if you need to change any of these details
 
-transportUnitsReview.title = Section summary - Transport units
+transportUnitsReview.title = Section summary
 transportUnitsReview.heading = Section summary
 transportUnitsReview.legend = Do you need to change any details in this section?
 transportUnitsReview.error.required = Select yes if you need to change any of these details
 
-transportArrangerReview.title = Section summary - Transport arranger
+transportArrangerReview.title = Section summary
 transportArrangerReview.heading = Section summary
 transportArrangerReview.legend = Do you need to change any details in this section?
 transportArrangerReview.error.required = Select yes if you need to change any of these details
 
-journeyTypeReview.title = Section summary - Journey type
+journeyTypeReview.title = Section summary
 journeyTypeReview.heading = Section summary
 journeyTypeReview.legend = Do you need to change any details in this section?
 journeyTypeReview.error.required = Select yes if you need to change any of these details
 
-movementReviewAnswers.title = Section summary - Movement details
+movementReviewAnswers.title = Section summary
 movementReviewAnswers.heading = Section summary
 movementReviewAnswers.row.invoiceReference = Invoice Reference
 movementReviewAnswers.row.invoiceDate = Invoice date of issue
 movementReviewAnswers.question = Do you need to change any details in this section?
 movementReviewAnswers.error.required = Select yes if you need to change any of these details
 
-guarantorReview.title = Section summary - Guarantor
+guarantorReview.title = Section summary
 guarantorReview.heading = Section summary
 guarantorReview.legend = Do you need to change any details in this section?
 guarantorReview.error.required = Select yes if you need to change any of these details

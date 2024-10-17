@@ -16,13 +16,13 @@
 
 package fixtures.messages.sections.consignee
 
-import fixtures.messages.{BaseEnglish, BaseMessages, i18n}
+import fixtures.messages.{BaseEnglish, BaseMessages, SectionMessages, i18n}
 
 object ConsigneeBusinessNameMessages {
 
   sealed trait ViewMessages extends BaseMessages { _: i18n =>
     val heading = "What is the consignee’s business name?"
-    val title: String = titleHelper(heading)
+    val title: String = titleHelper(heading, Some(SectionMessages.English.consigneeSubHeading))
     val errorRequired = "Enter the consignee business name"
     val errorLength = "Consignee business name must be 182 characters or less"
     val errorInvalid = "Consignee business name must not contain < and > and : and ;"

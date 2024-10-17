@@ -16,13 +16,13 @@
 
 package fixtures.messages.sections.transportUnit
 
-import fixtures.messages.{BaseEnglish, BaseMessages, i18n}
+import fixtures.messages.{BaseEnglish, BaseMessages, SectionMessages, i18n}
 
 object TransportUnitCheckAnswersMessages {
 
   sealed trait ViewMessages extends BaseMessages { _: i18n =>
-    val title = titleHelper("Check your answers")
     val heading = "Check your answers"
+    val title = titleHelper(heading, Some(SectionMessages.English.transportUnitSubHeading))
     val summaryListKey = "Type of transport"
   }
 

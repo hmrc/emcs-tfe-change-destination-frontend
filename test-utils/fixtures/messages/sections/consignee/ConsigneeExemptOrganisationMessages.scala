@@ -16,14 +16,14 @@
 
 package fixtures.messages.sections.consignee
 
-import fixtures.messages.{BaseEnglish, BaseMessages, i18n}
+import fixtures.messages.{BaseEnglish, BaseMessages, SectionMessages, i18n}
 
 object ConsigneeExemptOrganisationMessages {
 
   trait ViewMessages extends BaseMessages { _: i18n =>
 
     val heading = "Exempt organisation details"
-    val title = titleHelper(heading)
+    val title = titleHelper(heading, Some(SectionMessages.English.consigneeSubHeading))
 
     val memberStateLabel = "Select the member state of destination"
     val memberStateErrorRequired = "Select the member state of destination"

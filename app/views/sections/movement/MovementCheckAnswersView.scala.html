@@ -28,7 +28,7 @@
 
 @(list: SummaryList, onSubmitCall: Call)(implicit request: DataRequest[_], messages: Messages)
 
-@layout(pageTitle = titleNoForm(messages("movementCheckAnswers.title")), maybeShowActiveTrader = maybeShowActiveTrader(request)) {
+@layout(pageTitle = titleNoForm(messages("movementCheckAnswers.title"), Some(messages("movementInformation.subHeading"))), maybeShowActiveTrader = maybeShowActiveTrader(request)) {
 
     @formHelper(action = onSubmitCall, 'autoComplete -> "off") {
 
