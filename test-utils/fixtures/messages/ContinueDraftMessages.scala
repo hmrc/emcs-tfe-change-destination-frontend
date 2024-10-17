@@ -19,12 +19,13 @@ package fixtures.messages
 object ContinueDraftMessages {
 
   sealed trait ViewMessages extends BaseMessages { _: i18n =>
-    val heading = "Do you want to continue with this draft change of destination?"
+    val heading = "A change of destination is already in progress for this movement"
     val title: String = titleHelper(heading)
 
-    val p1 = "A change of destination is already in progress for this movement. You can continue with this draft, or start a new one."
+    val p1 = "You can continue with this draft, or start a new one."
     val insetText = "If you choose to start a new change of destination this draft will be deleted."
 
+    val label = "Do you want to continue with this draft?"
     override val yes = "Continue with this draft"
     override val no = "Start a new change of destination"
 
