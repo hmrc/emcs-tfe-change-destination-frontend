@@ -16,7 +16,7 @@
 
 package fixtures.messages.sections.guarantor
 
-import fixtures.messages.{BaseEnglish, BaseMessages, i18n}
+import fixtures.messages.{BaseEnglish, BaseMessages, SectionMessages, i18n}
 
 
 object GuarantorRequiredMessages {
@@ -26,9 +26,9 @@ object GuarantorRequiredMessages {
     val headingNotRequired = "Movement guarantee"
     val headingRequiredUkToUk = "Your movement requires a new guarantor"
     val headingRequiredNiToEu = "Your movement requires a guarantee"
-    val titleNotRequired = titleHelper(headingNotRequired)
-    val titleRequiredUkToUk = titleHelper(headingRequiredUkToUk)
-    val titleRequiredNiToEu = titleHelper(headingRequiredNiToEu)
+    val titleNotRequired = titleHelper(headingNotRequired, Some(SectionMessages.English.guarantorSubHeading))
+    val titleRequiredUkToUk = titleHelper(headingRequiredUkToUk, Some(SectionMessages.English.guarantorSubHeading))
+    val titleRequiredNiToEu = titleHelper(headingRequiredNiToEu, Some(SectionMessages.English.guarantorSubHeading))
     val p1NotRequired = "Generally, excise goods moving within the UK (between UK warehouses or before export), or from Northern Ireland to the EU, must be covered by financial security in the form of a movement guarantee."
     val p1RequiredUkToUk = "This movement is now an export. The original consignee can no longer be the guarantor for this movement. You must give the details of a new guarantor."
     val p1RequiredNiToEu = "This movement must be covered by financial security in the form of a movement guarantee. The only type of movement that is allowed to take place without a guarantee from Northern Ireland to the EU is the movement of energy products using fixed transport installations."

@@ -16,14 +16,14 @@
 
 package fixtures.messages.sections.exportInformation
 
-import fixtures.messages.{BaseEnglish, BaseMessages, i18n}
+import fixtures.messages.{BaseEnglish, BaseMessages, SectionMessages, i18n}
 
 object ExportCustomsOfficeMessages {
 
   sealed trait ViewMessages extends BaseMessages { _: i18n =>
 
     val heading: String = "Enter the customs office code for the place where the export declaration is lodged"
-    val title: String = titleHelper(heading)
+    val title: String = titleHelper(heading, Some(SectionMessages.English.exportInformationSubHeading))
 
     def hint(euExport: Boolean): String =
       if(euExport) {

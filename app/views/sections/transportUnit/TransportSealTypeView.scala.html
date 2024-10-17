@@ -35,7 +35,7 @@
 
 @(form: Form[_], transportUnitType: TransportUnitType, onSubmitCall: Call)(implicit request: DataRequest[_], messages: Messages)
 
-@layout(pageTitle = title(form, messages(s"transportSealType.heading.${transportUnitType.toString}")), maybeShowActiveTrader = maybeShowActiveTrader(request)) {
+@layout(pageTitle = title(form, messages(s"transportSealType.heading.${transportUnitType.toString}"), Some(messages("transportUnit.subHeading"))), maybeShowActiveTrader = maybeShowActiveTrader(request)) {
 
     @formHelper(action = onSubmitCall) {
 

@@ -16,14 +16,14 @@
 
 package fixtures.messages.sections.movement
 
-import fixtures.messages.{BaseEnglish, BaseMessages, i18n}
+import fixtures.messages.{BaseEnglish, BaseMessages, SectionMessages, i18n}
 
 object MovementCheckAnswersMessages {
 
   sealed trait ViewMessages extends BaseMessages { _: i18n =>
 
     val heading = "Check your answers"
-    val title: String = titleHelper(heading)
+    val title: String = titleHelper(heading, Some(SectionMessages.English.movementInformationSubHeading))
   }
 
   object English extends ViewMessages with BaseEnglish

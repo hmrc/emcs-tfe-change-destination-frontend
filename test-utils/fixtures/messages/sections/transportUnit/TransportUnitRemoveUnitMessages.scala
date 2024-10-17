@@ -16,13 +16,13 @@
 
 package fixtures.messages.sections.transportUnit
 
-import fixtures.messages.{BaseEnglish, BaseMessages, i18n}
+import fixtures.messages.{BaseEnglish, BaseMessages, SectionMessages, i18n}
 
 object TransportUnitRemoveUnitMessages {
 
   sealed trait ViewMessages extends BaseMessages { _: i18n =>
-    def title(transportUnitNumber: Int): String = titleHelper(s"Are you sure you want to remove transport unit $transportUnitNumber?")
     def heading(transportUnitNumber: Int): String = s"Are you sure you want to remove transport unit $transportUnitNumber?"
+    def title(transportUnitNumber: Int): String = titleHelper(heading(transportUnitNumber), Some(SectionMessages.English.transportUnitSubHeading))
   }
 
   object English extends ViewMessages with BaseEnglish

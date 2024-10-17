@@ -18,28 +18,9 @@ package fixtures.messages
 
 
 trait BaseMessages { _: i18n =>
-  def titleHelper(heading: String) = s"$heading - Create and manage excise goods movements with EMCS - GOV.UK"
+  def titleHelper(heading: String, section: Option[String] = None) =
+    s"$heading ${section.fold("")("- " + _ + " ")}- Create and manage excise goods movements with EMCS - GOV.UK"
   val opensInNewTab: String = "(opens in new tab)"
-  val hiddenSectionContent: String = "This section is"
-  val infoSection: String => String = s"$hiddenSectionContent Change of destination for " + _
-  val movementInformationSection: String = s"$hiddenSectionContent Movement information"
-  val consigneeInformationSection = s"$hiddenSectionContent Consignee information"
-  val transportArrangerSection: String = s"$hiddenSectionContent Transport arranger"
-  val dispatchSection: String = s"$hiddenSectionContent Place of dispatch information"
-  val exportInformationSection: String = s"$hiddenSectionContent Export information"
-  val importInformationSection: String = s"$hiddenSectionContent Import information"
-  val itemInformationSection: String = s"$hiddenSectionContent Item information"
-  val destinationSection: String = s"$hiddenSectionContent Place of destination information"
-  val sadSection: String = s"$hiddenSectionContent Single Administrative Document"
-  val documentsSection: String = s"$hiddenSectionContent Documents"
-  val itemSection: String = s"$hiddenSectionContent Item information"
-  val firstTransporterSection: String = s"$hiddenSectionContent First transporter"
-  val taskListSection: String = s"$hiddenSectionContent Draft movement"
-  val transportUnitsSection: String = s"$hiddenSectionContent Transport units"
-  val journeyTypeSection: String = s"$hiddenSectionContent Journey type"
-  val guarantorSection: String = s"$hiddenSectionContent Guarantor"
-  val changeOfDestinationSection: String => String = arc =>s"$hiddenSectionContent Change of destination for $arc"
-
   val continue = "Continue"
   val confirmAnswers = "Confirm answers"
   val notProvided = "Not provided"
@@ -67,5 +48,5 @@ trait BaseMessages { _: i18n =>
   val incompleteMessageHelper: String => String = _ + " " + incompleteTag
 }
 
-trait BaseEnglish extends BaseMessages with EN
+trait BaseEnglish extends BaseMessages with SectionMessages.English with EN
 object BaseEnglish extends BaseEnglish

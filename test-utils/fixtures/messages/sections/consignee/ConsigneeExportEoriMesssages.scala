@@ -16,13 +16,13 @@
 
 package fixtures.messages.sections.consignee
 
-import fixtures.messages.{BaseEnglish, BaseMessages, i18n}
+import fixtures.messages.{BaseEnglish, BaseMessages, SectionMessages, i18n}
 
 object ConsigneeExportEoriMesssages {
 
   sealed trait ViewMessages extends BaseMessages { _: i18n =>
-    val title = titleHelper("Enter the EORI number of the person representing the consignor at the office of export")
     val heading = "Enter the EORI number of the person representing the consignor at the office of export"
+    val title = titleHelper(heading, Some(SectionMessages.English.consigneeSubHeading))
     val hint = "The first 2 letters are the country code, like GB or XI. This is usually followed by 12 or 15 digits, like GB123456123456."
 
     val errorRequired = "Enter the EORI number"

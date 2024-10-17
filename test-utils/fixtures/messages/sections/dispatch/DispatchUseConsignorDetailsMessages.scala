@@ -16,14 +16,14 @@
 
 package fixtures.messages.sections.dispatch
 
-import fixtures.messages.{BaseEnglish, BaseMessages, i18n}
+import fixtures.messages.{BaseEnglish, BaseMessages, SectionMessages, i18n}
 
 object DispatchUseConsignorDetailsMessages {
 
   sealed trait ViewMessages extends BaseMessages {
     _: i18n =>
     val heading = "Is the place of dispatch the same as the consignor details?"
-    val title = titleHelper(heading)
+    val title = titleHelper(heading, Some(SectionMessages.English.dispatchSubHeading))
     val checkAnswersLabel = "Use consignor details"
     val checkAnswersHiddenChangeLink = "whether to use consignor details"
     val errorRequired = "Select yes if the place of dispatch and consignor details are the same"

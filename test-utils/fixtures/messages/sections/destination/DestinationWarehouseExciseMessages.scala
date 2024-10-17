@@ -16,14 +16,14 @@
 
 package fixtures.messages.sections.destination
 
-import fixtures.messages.{BaseEnglish, BaseMessages, i18n}
+import fixtures.messages.{BaseEnglish, BaseMessages, SectionMessages, i18n}
 
 object DestinationWarehouseExciseMessages {
 
   sealed trait ViewMessages extends BaseMessages { _: i18n =>
 
     val heading: String = "What is the excise ID of the tax warehouse of destination?"
-    val title = titleHelper(heading)
+    val title = titleHelper(heading, Some(SectionMessages.English.destinationSubHeading))
     val cyaLabel: String = "Warehouse excise ID"
     val cyaChangeHidden: String = "Warehouse excise ID"
     val errorRequired: String = "Enter the excise ID of the tax warehouse of destination"

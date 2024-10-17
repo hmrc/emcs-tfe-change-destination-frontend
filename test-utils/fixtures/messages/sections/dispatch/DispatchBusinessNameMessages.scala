@@ -16,13 +16,13 @@
 
 package fixtures.messages.sections.dispatch
 
-import fixtures.messages.{BaseEnglish, BaseMessages, i18n}
+import fixtures.messages.{BaseEnglish, BaseMessages, SectionMessages, i18n}
 
 object DispatchBusinessNameMessages {
 
   sealed trait ViewMessages extends BaseMessages { _: i18n =>
     val heading = "What is the business name of the place of dispatch?"
-    val title = titleHelper(heading)
+    val title = titleHelper(heading, Some(SectionMessages.English.dispatchSubHeading))
     val errorNoInput = "Enter the business name of the place of dispatch"
     val errorTooLong = "Enter a business name up to 182 characters"
     val errorInvalidCharacters = "Business name must not contain < and > and : and ;"

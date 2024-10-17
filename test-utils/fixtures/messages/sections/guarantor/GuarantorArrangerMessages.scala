@@ -16,13 +16,13 @@
 
 package fixtures.messages.sections.guarantor
 
-import fixtures.messages.{BaseEnglish, BaseMessages, i18n}
+import fixtures.messages.{BaseEnglish, BaseMessages, SectionMessages, i18n}
 
 object GuarantorArrangerMessages {
 
   sealed trait ViewMessages extends BaseMessages { _: i18n =>
-    val title = titleHelper("Who is providing the guarantee for this movement?")
     val heading = "Who is providing the guarantee for this movement?"
+    val title = titleHelper(heading, Some(SectionMessages.English.guarantorSubHeading))
     val consignorRadioOption = "Consignor"
     val consigneeRadioOption = "Consignee"
     val goodsOwnerRadioOption = "Goods owner"

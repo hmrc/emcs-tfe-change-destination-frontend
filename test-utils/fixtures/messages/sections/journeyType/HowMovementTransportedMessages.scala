@@ -16,14 +16,14 @@
 
 package fixtures.messages.sections.journeyType
 
-import fixtures.messages.{BaseEnglish, BaseMessages, i18n}
+import fixtures.messages.{BaseEnglish, BaseMessages, SectionMessages, i18n}
 
 object HowMovementTransportedMessages {
   sealed trait ViewMessages extends BaseMessages { _: i18n =>
     val heading = "How will the goods be transported?"
-    val title: String = titleHelper(heading)
+    val title: String = titleHelper(heading, Some(SectionMessages.English.journeyTypeSubHeading))
     val headingFixed: String = "How the goods will be transported"
-    val titleFixed: String = titleHelper(headingFixed)
+    val titleFixed: String = titleHelper(headingFixed, Some(SectionMessages.English.journeyTypeSubHeading))
     val radioOption1: String = "Air transport"
     val radioOption2: String = "Fixed transport installations"
     val radioOption3: String = "Inland waterway transport"

@@ -36,21 +36,21 @@ object AddressMessages {
       case _ => "Enter the consignee’s address"
     }
 
-    val title = (page: QuestionPage[UserAddress]) => titleHelper(heading(page))
+    def title(page: QuestionPage[UserAddress], subHeading: Option[String]): String = titleHelper(heading(page), subHeading)
 
     val transportArrangerAddressGoodsOwnerHeading = "Enter the goods owner’s business address"
-    val transportArrangerAddressGoodsOwnerTitle = titleHelper(transportArrangerAddressGoodsOwnerHeading)
+    val transportArrangerAddressGoodsOwnerTitle = titleHelper(transportArrangerAddressGoodsOwnerHeading, Some(SectionMessages.English.transportArrangerSubHeading))
     val transportArrangerAddressOtherHeading = "Enter the transporter’s business address"
-    val transportArrangerAddressOtherTitle = titleHelper(transportArrangerAddressOtherHeading)
+    val transportArrangerAddressOtherTitle = titleHelper(transportArrangerAddressOtherHeading, Some(SectionMessages.English.transportArrangerSubHeading))
 
     val firstTransporterAddressHeading = "Enter the first transporter’s business address"
-    val firstTransporterAddressTitle = titleHelper(firstTransporterAddressHeading)
+    val firstTransporterAddressTitle = titleHelper(firstTransporterAddressHeading, Some(SectionMessages.English.firstTransporterSubHeading))
 
     val destinationAddressHeading = "Enter the place of destination address"
-    val destinationAddressTitle = titleHelper(destinationAddressHeading)
+    val destinationAddressTitle = titleHelper(destinationAddressHeading, Some(SectionMessages.English.destinationSubHeading))
 
     val dispatchAddressHeading = "Enter the place of dispatch address"
-    val dispatchAddressTitle = titleHelper(dispatchAddressHeading)
+    val dispatchAddressTitle = titleHelper(dispatchAddressHeading, Some(SectionMessages.English.dispatchSubHeading))
 
     def guarantorAddressHeading(guarantorArranger: GuarantorArranger): String = guarantorArranger match {
       case GoodsOwner => "Enter the good owner’s business address"
@@ -58,7 +58,8 @@ object AddressMessages {
       case _ => ""
     }
 
-    def guarantorAddressTitle(guarantorArranger: GuarantorArranger): String = titleHelper(guarantorAddressHeading(guarantorArranger))
+    def guarantorAddressTitle(guarantorArranger: GuarantorArranger): String =
+      titleHelper(guarantorAddressHeading(guarantorArranger), Some(SectionMessages.English.guarantorSubHeading))
 
     val subheading = (page: QuestionPage[UserAddress]) => page match {
       case ConsignorAddressPage => "Consignor information"

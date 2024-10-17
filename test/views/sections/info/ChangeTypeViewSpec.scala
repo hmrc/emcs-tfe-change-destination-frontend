@@ -60,7 +60,7 @@ class ChangeTypeViewSpec extends SpecBase with ViewBehaviours {
               behave like pageWithExpectedElementsAndMessages(Seq(
                 Selectors.title -> messagesForLanguage.title,
                 Selectors.h1 -> messagesForLanguage.heading,
-                Selectors.h2(1) -> messagesForLanguage.infoSection(testArc),
+                Selectors.h2(1) -> messagesForLanguage.changeOfDestinationSection(testArc),
                 Selectors.radioButton(1) -> messagesForLanguage.destinationRadio,
                 Selectors.radioButton(2) -> messagesForLanguage.returnToSenderRadio,
                 Selectors.button -> messagesForLanguage.continue
@@ -85,7 +85,7 @@ class ChangeTypeViewSpec extends SpecBase with ViewBehaviours {
           behave like pageWithExpectedElementsAndMessages(Seq(
             Selectors.title -> messagesForLanguage.title,
             Selectors.h1 -> messagesForLanguage.heading,
-            Selectors.h2(1) -> messagesForLanguage.infoSection(testArc),
+            Selectors.h2(1) -> messagesForLanguage.changeOfDestinationSection(testArc),
             Selectors.radioButton(1) -> messagesForLanguage.consigneeRadio,
             Selectors.radioButton(2) -> messagesForLanguage.exportOfficeRadio,
             Selectors.button -> messagesForLanguage.continue
@@ -114,7 +114,7 @@ class ChangeTypeViewSpec extends SpecBase with ViewBehaviours {
               behave like pageWithExpectedElementsAndMessages(Seq(
                 Selectors.title -> messagesForLanguage.title,
                 Selectors.h1 -> messagesForLanguage.heading,
-                Selectors.h2(1) -> messagesForLanguage.infoSection(testArc),
+                Selectors.h2(1) -> messagesForLanguage.changeOfDestinationSection(testArc),
                 Selectors.radioButton(1) -> messagesForLanguage.consigneeRadio,
                 Selectors.radioButton(2) -> messagesForLanguage.destinationRadio,
                 Selectors.button -> messagesForLanguage.continue

@@ -34,7 +34,7 @@
 
 @(form: Form[_], currentDate: String, onSubmitCall: Call)(implicit request: DataRequest[_], messages: Messages)
 
-@layout(pageTitle = title(form, messages("invoiceDetails.title")), maybeShowActiveTrader = maybeShowActiveTrader(request)) {
+@layout(pageTitle = title(form, messages("invoiceDetails.title"), Some(messages("movementInformation.subHeading"))), maybeShowActiveTrader = maybeShowActiveTrader(request)) {
 
   @formHelper(action = onSubmitCall) {
 

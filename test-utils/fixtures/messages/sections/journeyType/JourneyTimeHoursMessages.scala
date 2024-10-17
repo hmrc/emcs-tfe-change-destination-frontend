@@ -16,12 +16,12 @@
 
 package fixtures.messages.sections.journeyType
 
-import fixtures.messages.{BaseEnglish, BaseMessages, i18n}
+import fixtures.messages.{BaseEnglish, BaseMessages, SectionMessages, i18n}
 
 object JourneyTimeHoursMessages {
   sealed trait ViewMessages extends BaseMessages { _: i18n =>
     val heading = "How many hours will the journey take?"
-    val title: String = titleHelper(heading)
+    val title: String = titleHelper(heading, Some(SectionMessages.English.journeyTypeSubHeading))
     val hint: String = "Journey time in hours must be a whole number."
     val suffix: String = "hours"
     val toJourneyDaysLink: String = "Journey time is longer than 24 hours"

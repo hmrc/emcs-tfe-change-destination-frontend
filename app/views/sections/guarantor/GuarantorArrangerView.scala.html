@@ -31,7 +31,7 @@
 
 @(form: Form[_], mode: Mode, movementScenario: MovementScenario)(implicit request: DataRequest[_], messages: Messages)
 
-@layout(pageTitle = title(form, messages("guarantorArranger.title")), maybeShowActiveTrader = maybeShowActiveTrader(request)) {
+@layout(pageTitle = title(form, messages("guarantorArranger.title"), Some(messages("guarantor.subHeading"))), maybeShowActiveTrader = maybeShowActiveTrader(request)) {
 
     @formHelper(action = controllers.sections.guarantor.routes.GuarantorArrangerController.onSubmit(request.ern, request.arc, mode), 'autoComplete -> "off") {
 

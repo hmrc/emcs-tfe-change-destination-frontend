@@ -16,13 +16,13 @@
 
 package fixtures.messages.sections.firstTransporter
 
-import fixtures.messages.{BaseEnglish, BaseMessages, i18n}
+import fixtures.messages.{BaseEnglish, BaseMessages, SectionMessages, i18n}
 
 object FirstTransporterNameMessages {
 
   sealed trait ViewMessages extends BaseMessages { _: i18n =>
     val heading = "What is the first transporter’s business name?"
-    val title = titleHelper(heading)
+    val title = titleHelper(heading, Some(SectionMessages.English.firstTransporterSubHeading))
 
     val errorRequired = "Enter the business name"
     val errorLength = "Business name must be 182 characters or less"
