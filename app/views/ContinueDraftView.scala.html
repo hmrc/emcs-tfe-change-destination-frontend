@@ -47,10 +47,11 @@
         @insetText() {
             @p() { @messages("continueDraft.insetText") }
         }
+
         @govukRadios(
             RadiosViewModel.yesNo(
                 field = form("value"),
-                legend = LegendViewModel(Text(messages("continueDraft.heading"))).hidden,
+                legend = LegendViewModel(Text(messages("continueDraft.label"))).withCssClass("govuk-fieldset__legend--m"),
                 yesMessageKey = "continueDraft.yes",
                 noMessageKey = "continueDraft.no"
             )

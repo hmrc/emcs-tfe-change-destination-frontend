@@ -1396,10 +1396,11 @@ transportUnitCheckAnswers.title = Check your answers
 transportUnitCheckAnswers.heading = Check your answers
 transportUnitCheckAnswers.heading.transportUnits = Transport units
 
-continueDraft.title = Do you want to continue with this draft change of destination?
-continueDraft.heading = Do you want to continue with this draft change of destination?
-continueDraft.p1 = A change of destination is already in progress for this movement. You can continue with this draft, or start a new one.
+continueDraft.title = A change of destination is already in progress for this movement
+continueDraft.heading = A change of destination is already in progress for this movement
+continueDraft.p1 = You can continue with this draft, or start a new one.
 continueDraft.insetText = If you choose to start a new change of destination this draft will be deleted.
+continueDraft.label = Do you want to continue with this draft?
 continueDraft.yes = Continue with this draft
 continueDraft.no = Start a new change of destination
 continueDraft.error.required = Select if you want to continue with this draft
