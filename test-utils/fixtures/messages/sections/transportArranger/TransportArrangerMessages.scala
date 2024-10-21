@@ -16,13 +16,13 @@
 
 package fixtures.messages.sections.transportArranger
 
-import fixtures.messages.{BaseEnglish, BaseMessages, i18n}
+import fixtures.messages.{BaseEnglish, BaseMessages, SectionMessages, i18n}
 
 object TransportArrangerMessages {
 
   sealed trait ViewMessages extends BaseMessages { _: i18n =>
-    val title = titleHelper("Who is arranging the transport for this movement?")
     val heading = "Who is arranging the transport for this movement?"
+    val title = titleHelper(heading, Some(SectionMessages.English.transportArrangerSubHeading))
     val consignorRadioOption = "Consignor"
     val consigneeRadioOption = "Consignee"
     val goodsOwnerRadioOption = "Goods owner"

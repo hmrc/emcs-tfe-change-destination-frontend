@@ -16,16 +16,16 @@
 
 package fixtures.messages.sections.transportUnit
 
-import fixtures.messages.{BaseEnglish, BaseMessages, i18n}
+import fixtures.messages.{BaseEnglish, BaseMessages, SectionMessages, i18n}
 
 object TransportUnitAddToListMessages {
 
   sealed trait ViewMessages extends BaseMessages { _: i18n =>
     val heading = "You have given information for 1 transport unit"
-    val title = titleHelper(heading)
+    val title = titleHelper(heading, Some(SectionMessages.English.transportUnitSubHeading))
 
     val headingMultiple = "You have given information for 2 transport units"
-    val titleMultiple = titleHelper(headingMultiple)
+    val titleMultiple = titleHelper(headingMultiple, Some(SectionMessages.English.transportUnitSubHeading))
 
     val question = "Do you need to add another transport unit?"
     val yesOption = "Yes"

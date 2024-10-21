@@ -35,10 +35,11 @@
 @(form: Form[_], onSubmitCall: Call, destinationType: MovementScenario, QuestionSkipCall: Call)(implicit request: DataRequest[_], messages: Messages)
 
 @layout(pageTitle = title(form, if(destinationType.stringValue == "direct delivery") {
-messages("destinationBusinessName.directDelivery.title")
-} else {
-messages("destinationBusinessName.title")
-}
+        messages("destinationBusinessName.directDelivery.title")
+    } else {
+        messages("destinationBusinessName.title")
+    },
+    section = Some(messages("destination.subHeading"))
 ), maybeShowActiveTrader = maybeShowActiveTrader(request)) {
 
     @formHelper(action = onSubmitCall) {

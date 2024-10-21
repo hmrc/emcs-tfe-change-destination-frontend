@@ -16,14 +16,14 @@
 
 package fixtures.messages.sections.destination
 
-import fixtures.messages.{BaseEnglish, BaseMessages, i18n}
+import fixtures.messages.{BaseEnglish, BaseMessages, SectionMessages, i18n}
 
 object DestinationDetailsChoiceMessages {
 
   sealed trait ViewMessages extends BaseMessages { _: i18n =>
 
     val heading = "Do you want to give the address and business name of the registered consignee?"
-    val title = titleHelper(heading)
+    val title = titleHelper(heading, Some(SectionMessages.English.destinationSubHeading))
     val hint = "This information is optional."
     val cyaLabel: String => String = destinationType => s"Give details of $destinationType"
     val cyaChangeHidden: String => String = destinationType => s"Give details of $destinationType"

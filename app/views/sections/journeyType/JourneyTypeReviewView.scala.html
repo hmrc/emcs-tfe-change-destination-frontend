@@ -31,7 +31,7 @@
 
 @(form: Form[_], summaryList: SummaryList, action: Call)(implicit request: DataRequest[_], messages: Messages)
 
-@layout(pageTitle = title(form, messages("journeyTypeReview.title")), maybeShowActiveTrader = maybeShowActiveTrader(request)) {
+@layout(pageTitle = title(form, messages("journeyTypeReview.title"), Some(messages("journeyType.subHeading"))), maybeShowActiveTrader = maybeShowActiveTrader(request)) {
 
   @formHelper(action = action, 'autoComplete -> "off") {
 

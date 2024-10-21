@@ -32,54 +32,66 @@
 
 @defining(headingKey.getOrElse(addressPage.toString)) { msgKey =>
 
-    @layout(pageTitle = title(form, messages(s"address.$msgKey.title")), maybeShowActiveTrader = maybeShowActiveTrader(request)) {
+    @defining(addressPage.toString match {
+        case "consigneeAddress" => Some(messages("consignee.subHeading"))
+        case "consignorAddress" => Some(messages("consignor.subHeading"))
+        case "destinationAddress" => Some(messages("destination.subHeading"))
+        case "dispatchAddress" => Some(messages("dispatch.subHeading"))
+        case "transportArrangerAddress" => Some(messages("transportArranger.subHeading"))
+        case "firstTransporterAddress" => Some(messages("firstTransporter.subHeading"))
+        case "guarantorAddress" => Some(messages("guarantor.subHeading"))
+        case _ => None
+    }) { section =>
 
-        @formHelper(action = call) {
+        @layout(pageTitle = title(form, messages(s"address.$msgKey.title"), section), maybeShowActiveTrader = maybeShowActiveTrader(request)) {
 
-            @if(form.errors.nonEmpty) {
-                @govukErrorSummary(ErrorSummaryViewModel(form))
+            @formHelper(action = call) {
+
+                @if(form.errors.nonEmpty) {
+                    @govukErrorSummary(ErrorSummaryViewModel(form))
+                }
+
+                @h1(s"address.$msgKey.heading", Some(messages(s"address.$addressPage.subheading")), "govuk-heading-l")
+
+                @govukInput(
+                    InputViewModel(
+                        field = form("property"),
+                        label = LabelViewModel(Text(messages("address.property")))
+                    )
+                    .withWidth(Full)
+                    .withAutocomplete("address-line1")
+                )
+
+                @govukInput(
+                    InputViewModel(
+                        field = form("street"),
+                        label = LabelViewModel(Text(messages("address.street")))
+                    )
+                    .withWidth(Full)
+                    .withAutocomplete("address-line2")
+                )
+
+                @govukInput(
+                    InputViewModel(
+                        field = form("town"),
+                        label = LabelViewModel(Text(messages("address.town")))
+                    )
+                    .withWidth(TwoThirds)
+                    .withAutocomplete("address-level1")
+                )
+
+                @govukInput(
+                    InputViewModel(
+                        field = form("postcode"),
+                        label = LabelViewModel(Text(messages("address.postcode")))
+                    )
+                    .withWidth(OneThird)
+                    .withAutocomplete("postal-code")
+                )
+
+                @continueOrExit()
+
             }
-
-            @h1(s"address.$msgKey.heading", Some(messages(s"address.$addressPage.subheading")), "govuk-heading-l")
-
-            @govukInput(
-                InputViewModel(
-                    field = form("property"),
-                    label = LabelViewModel(Text(messages("address.property")))
-                )
-                        .withWidth(Full)
-                        .withAutocomplete("address-line1")
-            )
-
-            @govukInput(
-                InputViewModel(
-                    field = form("street"),
-                    label = LabelViewModel(Text(messages("address.street")))
-                )
-                        .withWidth(Full)
-                        .withAutocomplete("address-line2")
-            )
-
-            @govukInput(
-                InputViewModel(
-                    field = form("town"),
-                    label = LabelViewModel(Text(messages("address.town")))
-                )
-                        .withWidth(TwoThirds)
-                        .withAutocomplete("address-level1")
-            )
-
-            @govukInput(
-                InputViewModel(
-                    field = form("postcode"),
-                    label = LabelViewModel(Text(messages("address.postcode")))
-                )
-                        .withWidth(OneThird)
-                        .withAutocomplete("postal-code")
-            )
-
-            @continueOrExit()
-
         }
     }
 }

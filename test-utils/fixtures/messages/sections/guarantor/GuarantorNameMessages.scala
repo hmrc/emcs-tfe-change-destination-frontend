@@ -16,7 +16,7 @@
 
 package fixtures.messages.sections.guarantor
 
-import fixtures.messages.{BaseEnglish, BaseMessages, i18n}
+import fixtures.messages.{BaseEnglish, BaseMessages, SectionMessages, i18n}
 import models.sections.guarantor.GuarantorArranger
 import models.sections.guarantor.GuarantorArranger.GoodsOwner
 
@@ -26,8 +26,8 @@ object GuarantorNameMessages {
   sealed trait ViewMessages extends BaseMessages {
     _: i18n =>
     def title()(implicit guarantorArranger: GuarantorArranger): String = guarantorArranger match {
-      case GoodsOwner => titleHelper(heading())
-      case _ => titleHelper(heading())
+      case GoodsOwner => titleHelper(heading(), Some(SectionMessages.English.guarantorSubHeading))
+      case _ => titleHelper(heading(), Some(SectionMessages.English.guarantorSubHeading))
     }
 
     def heading()(implicit guarantorArranger: GuarantorArranger): String = guarantorArranger match {

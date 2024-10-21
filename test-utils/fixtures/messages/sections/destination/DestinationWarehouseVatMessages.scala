@@ -16,13 +16,13 @@
 
 package fixtures.messages.sections.destination
 
-import fixtures.messages.{BaseEnglish, BaseMessages, i18n}
+import fixtures.messages.{BaseEnglish, BaseMessages, SectionMessages, i18n}
 
 object DestinationWarehouseVatMessages {
 
   sealed trait ViewMessages extends BaseMessages { _: i18n =>
     val heading: String => String = "Enter an identifier for the " + _
-    val title: String => String = destinationType => titleHelper(heading(destinationType))
+    val title: String => String = destinationType => titleHelper(heading(destinationType), Some(SectionMessages.English.destinationSubHeading))
     val hint: String = "This can be a VAT registration number or any other identifier, such as an excise ID."
     val cyaLabel: String = "Identification number"
     val cyaChangeHidden: String = "identification number"

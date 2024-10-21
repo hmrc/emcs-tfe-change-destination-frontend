@@ -16,7 +16,7 @@
 
 package fixtures.messages.sections.transportUnit
 
-import fixtures.messages.{BaseEnglish, BaseMessages, i18n}
+import fixtures.messages.{BaseEnglish, BaseMessages, SectionMessages, i18n}
 import models.Index
 import models.sections.transportUnit.TransportUnitType
 import models.sections.transportUnit.TransportUnitType._
@@ -26,7 +26,7 @@ object TransportSealChoiceMessages {
   sealed trait ViewMessages extends BaseMessages { _: i18n =>
 
     val title: TransportUnitType => String =
-      transportUnitType => titleHelper(heading(transportUnitType))
+      transportUnitType => titleHelper(heading(transportUnitType), Some(SectionMessages.English.transportUnitSubHeading))
 
     val heading: TransportUnitType => String = {
       case Container => "Is there a commercial seal on this container?"

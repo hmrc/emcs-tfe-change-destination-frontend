@@ -16,13 +16,13 @@
 
 package fixtures.messages.sections.consignee
 
-import fixtures.messages.{BaseEnglish, BaseMessages, i18n}
+import fixtures.messages.{BaseEnglish, BaseMessages, SectionMessages, i18n}
 
 object ConsigneeExportVatMessages {
 
   sealed trait ViewMessages extends BaseMessages { _: i18n =>
     val heading = "Enter the VAT registration number of the person representing the consignor at the office of export"
-    val title = titleHelper(heading)
+    val title = titleHelper(heading, Some(SectionMessages.English.consigneeSubHeading))
     val hint = "This is 9 numbers, sometimes with ‘GB’ at the start, for example 123456789 or GB123456789."
     val errorRequired = "Enter the VAT registration number"
 

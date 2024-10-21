@@ -39,7 +39,7 @@
 @(onwardRoute: Call, newGuarantorIsRequired: Boolean)(implicit request: DataRequest[_], messages: Messages)
 
 
-@layout(pageTitle = titleNoForm(messages(s"guarantorRequired.export.isRequired.$messageKey.title")), maybeShowActiveTrader = maybeShowActiveTrader(request)) {
+@layout(pageTitle = titleNoForm(messages(s"guarantorRequired.export.isRequired.$messageKey.title"), Some(messages("guarantor.subHeading"))), maybeShowActiveTrader = maybeShowActiveTrader(request)) {
 
     @h1(s"guarantorRequired.export.isRequired.$messageKey.heading", Some(messages("guarantor.subHeading")), "govuk-heading-l", hiddenContent = Some(messages("subHeading.hidden")))
 

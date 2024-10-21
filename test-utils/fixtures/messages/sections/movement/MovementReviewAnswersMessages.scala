@@ -16,14 +16,14 @@
 
 package fixtures.messages.sections.movement
 
-import fixtures.messages.{BaseEnglish, BaseMessages, i18n}
+import fixtures.messages.{BaseEnglish, BaseMessages, SectionMessages, i18n}
 
 object MovementReviewAnswersMessages {
 
   sealed trait ViewMessages extends BaseMessages { _: i18n =>
 
     val heading = "Section summary"
-    val title = titleHelper(s"$heading - Movement details")
+    val title = titleHelper(heading, Some(SectionMessages.English.movementInformationSubHeading))
     val invoiceReference = "Invoice reference"
     val invoiceDate = "Invoice date of issue"
     val legend = "Do you need to change any details in this section?"

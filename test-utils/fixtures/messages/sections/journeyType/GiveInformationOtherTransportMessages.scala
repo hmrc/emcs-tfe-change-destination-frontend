@@ -16,14 +16,14 @@
 
 package fixtures.messages.sections.journeyType
 
-import fixtures.messages.{BaseEnglish, BaseMessages, i18n}
+import fixtures.messages.{BaseEnglish, BaseMessages, SectionMessages, i18n}
 
 object GiveInformationOtherTransportMessages {
   sealed trait ViewMessages extends BaseMessages {
     _: i18n =>
     val subHeading = "Journey type"
     val heading = "Give information about your other type of transport"
-    val title: String = titleHelper(heading)
+    val title: String = titleHelper(heading, Some(SectionMessages.English.journeyTypeSubHeading))
 
     val cyaLabel: String = "Information about other transport"
     val cyaChangeHidden: String = "give information about your other type of transport"

@@ -40,7 +40,7 @@
 @(form: Form[_], onwardRoute: Call)(implicit request: DataRequest[_], messages: Messages)
 
 
-@layout(pageTitle = titleNoForm(messages(s"guarantorRequired.export.notRequired.title")), maybeShowActiveTrader = maybeShowActiveTrader(request)) {
+@layout(pageTitle = titleNoForm(messages(s"guarantorRequired.export.notRequired.title"), Some(messages("guarantor.subHeading"))), maybeShowActiveTrader = maybeShowActiveTrader(request)) {
 
     @formHelper(action = onwardRoute, 'autoComplete -> "off") {
 

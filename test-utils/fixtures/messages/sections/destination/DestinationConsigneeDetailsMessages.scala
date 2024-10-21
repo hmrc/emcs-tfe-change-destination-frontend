@@ -16,13 +16,13 @@
 
 package fixtures.messages.sections.destination
 
-import fixtures.messages.{BaseEnglish, BaseMessages, i18n}
+import fixtures.messages.{BaseEnglish, BaseMessages, SectionMessages, i18n}
 
 object DestinationConsigneeDetailsMessages {
 
   sealed trait ViewMessages extends BaseMessages { _: i18n =>
     val heading = "Is the place of destination the same as the consignee details?"
-    val title = titleHelper(heading)
+    val title = titleHelper(heading, Some(SectionMessages.English.destinationSubHeading))
     val errorRequired = "Select yes if the place of destination and consignee details are the same"
 
     val cyaLabel: String = "Use consignee details"

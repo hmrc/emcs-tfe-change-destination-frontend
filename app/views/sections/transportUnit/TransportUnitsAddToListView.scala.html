@@ -34,7 +34,7 @@
 
 @(optionalForm: Option[Form[_]], transportUnits: Seq[SummaryList], mode: Mode)(implicit request: DataRequest[_], messages: Messages)
 
-@layout(pageTitle = optionalForm.fold(titleNoForm(pluralSingular("transportUnitsAddToList.title", transportUnits.size)))(form => title(form, pluralSingular("transportUnitsAddToList.title", transportUnits.size))), maybeShowActiveTrader = maybeShowActiveTrader(request)) {
+@layout(pageTitle = optionalForm.fold(titleNoForm(pluralSingular("transportUnitsAddToList.title", transportUnits.size), Some(messages("transportUnit.subHeading"))))(form => title(form, pluralSingular("transportUnitsAddToList.title", transportUnits.size), Some(messages("transportUnit.subHeading")))), maybeShowActiveTrader = maybeShowActiveTrader(request)) {
 
     @formHelper(action = controllers.sections.transportUnit.routes.TransportUnitsAddToListController.onSubmit(request.ern, request.arc), 'autoComplete -> "off") {
 

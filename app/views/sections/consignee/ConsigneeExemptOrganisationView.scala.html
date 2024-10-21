@@ -32,7 +32,7 @@
 
 @(form: Form[_], items: Seq[SelectItem], call: Call)(implicit request: DataRequest[_], messages: Messages)
 
-@layout(pageTitle = title(form, messages("consigneeExemptOrganisation.title")), maybeShowActiveTrader = maybeShowActiveTrader(request)) {
+@layout(pageTitle = title(form, messages("consigneeExemptOrganisation.title"), Some(messages("consignee.subHeading"))), maybeShowActiveTrader = maybeShowActiveTrader(request)) {
 
     @formHelper(action = call) {
 

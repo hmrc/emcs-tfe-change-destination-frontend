@@ -36,7 +36,7 @@
 
 @(form: Form[_], action: Call, movementScenario: MovementScenario, skipQuestionCall: Call)(implicit request: DataRequest[_], messages: Messages)
 
-@layout(pageTitle = title(form, messages("destinationWarehouseVat.title", movementScenario.stringValue)), maybeShowActiveTrader = maybeShowActiveTrader(request)) {
+@layout(pageTitle = title(form, messages("destinationWarehouseVat.title", movementScenario.stringValue), Some(messages("destination.subHeading"))), maybeShowActiveTrader = maybeShowActiveTrader(request)) {
 
     @formHelper(action, Symbol("autoComplete") -> "off") {
         @if(form.errors.nonEmpty) {
