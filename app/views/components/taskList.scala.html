@@ -33,11 +33,11 @@
               @row.link.fold{
                 @row.taskName
               }{ link =>
-                <a href="@link" aria-describedby="@row.id" id="@row.id">@row.taskName</a>
+                <a href="@link" aria-describedby="@row.id-status" id="@row.id">@row.taskName</a>
               }
             </span>
             @row.status.map { status =>
-                <strong class="govuk-tag @status.tagClass.getOrElse("") app-task-list__tag">@messages(status.msgKey)</strong>
+                <strong id="@row.id-status" class="govuk-tag @status.tagClass.getOrElse("") app-task-list__tag">@messages(status.msgKey)</strong>
             }
           </li>
         }

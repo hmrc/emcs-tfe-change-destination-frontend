@@ -40,9 +40,9 @@ class TaskListSpec extends SpecBase {
             TaskListSection("Test 1", Seq(
               TaskListSectionRow("Row 1", "ern-1", Some("link"), None, Some(Completed)),
               TaskListSectionRow("Row 2", "ern-2", Some("link"), None, Some(InProgress)),
-              TaskListSectionRow("Row 3", "ern-2", Some("link"), None, Some(NotStarted)),
+              TaskListSectionRow("Row 3", "ern-3", Some("link"), None, Some(NotStarted)),
               TaskListSectionRow("Row 4", "ern-4", None, None, Some(CannotStartYet)),
-              TaskListSectionRow("Row 4", "ern-4", None, None, None),
+              TaskListSectionRow("Row 5", "ern-5", None, None, None),
             )),
             TaskListSection("Test 2", Seq(
               TaskListSectionRow("Row 1", "ern-1", None, None, Some(CannotStartYet))
@@ -70,6 +70,10 @@ class TaskListSpec extends SpecBase {
                 row.select("span > a").text() mustBe "Row 1"
               }
 
+              "should have the correct aria-describedby" in {
+                row.select("span > a").attr("aria-describedby") mustBe "ern-1-status"
+              }
+
               "should have the correct link" in {
                 row.select("span > a").attr("href") mustBe "link"
               }
@@ -89,6 +93,10 @@ class TaskListSpec extends SpecBase {
                 row.select("span > a").text() mustBe "Row 2"
               }
 
+              "should have the correct aria-describedby" in {
+                row.select("span > a").attr("aria-describedby") mustBe "ern-2-status"
+              }
+
               "should have the correct link" in {
                 row.select("span > a").attr("href") mustBe "link"
               }
@@ -106,6 +114,10 @@ class TaskListSpec extends SpecBase {
 
               "should have the correct text" in {
                 row.select("span > a").text() mustBe "Row 3"
+              }
+
+              "should have the correct aria-describedby" in {
+                row.select("span > a").attr("aria-describedby") mustBe "ern-3-status"
               }
 
               "should have the correct link" in {
