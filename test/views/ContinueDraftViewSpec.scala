@@ -57,6 +57,7 @@ class ContinueDraftViewSpec extends SpecBase with ViewBehaviours {
           Selectors.h1 -> messagesForLanguage.heading,
           Selectors.p(1) -> messagesForLanguage.p1,
           Selectors.insetText -> messagesForLanguage.insetText,
+          Selectors.legend -> messagesForLanguage.label,
           Selectors.radioButton(1) -> messagesForLanguage.yes,
           Selectors.radioButton(2) -> messagesForLanguage.no,
           Selectors.button -> messagesForLanguage.continue
