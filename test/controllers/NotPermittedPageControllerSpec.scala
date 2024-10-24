@@ -52,7 +52,7 @@ class NotPermittedPageControllerSpec extends SpecBase with SubmitChangeDestinati
       val res = controller.onPageLoad(testGreatBritainErn, testArc)(request)
 
       status(res) mustBe OK
-      contentAsString(res) mustBe view(testErn, testArc).toString()
+      contentAsString(res) mustBe view().toString()
     }
   }
 }
