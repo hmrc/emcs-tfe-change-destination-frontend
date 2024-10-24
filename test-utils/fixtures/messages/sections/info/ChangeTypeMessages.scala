@@ -22,10 +22,11 @@ object ChangeTypeMessages {
   sealed trait ViewMessages extends BaseMessages { _: i18n =>
     val heading = "What do you want to change about this movement?"
     val title = titleHelper(heading)
-    val consigneeRadio = "I want to change the consignee"
-    val destinationRadio = "I want to keep the consignee the same and change the place of destination"
-    val exportOfficeRadio = "I want to keep the consignee the same and change the office of export"
-    val returnToSenderRadio = "I want to return the goods to the consignor’s place of dispatch"
+    val consigneeRadio = "Consignee"
+    val destinationRadio = "Place of destination"
+    val exportOfficeRadio = "Office of export"
+    val exportOfficeHint  = "The consignee will not change."
+    val returnToSenderRadio = "Return the goods to the consignor’s place of dispatch"
     val errorRequired: String = "Select what you want to change about the movement"
   }
 

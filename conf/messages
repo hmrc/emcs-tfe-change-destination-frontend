@@ -1411,10 +1411,11 @@ continueDraft.error.required = Select if you want to continue with this draft
 
 changeType.title = What do you want to change about this movement?
 changeType.heading = What do you want to change about this movement?
-changeType.consignee = I want to change the consignee
-changeType.destination = I want to keep the consignee the same and change the place of destination
-changeType.exportOffice = I want to keep the consignee the same and change the office of export
-changeType.return = I want to return the goods to the consignor’s place of dispatch
+changeType.consignee = Consignee
+changeType.destination = Place of destination
+changeType.exportOffice = Office of export
+changeType.exportOffice.hint = The consignee will not change
+changeType.return = Return the goods to the consignor’s place of dispatch
 changeType.error.required = Select what you want to change about the movement
 
 changeDestinationType.title = Current destination type
