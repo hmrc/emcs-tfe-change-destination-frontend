@@ -47,6 +47,12 @@ class AppConfigSpec extends SpecBase with BeforeAndAfterEach with FeatureSwitchi
       }
     }
 
+    ".emcsGeneralEnquiriesUrl" - {
+      "should generate the correct url" in {
+        appConfig.emcsGeneralEnquiriesUrl mustBe "https://www.gov.uk/government/organisations/hm-revenue-customs/contact/excise-movement-and-control-system-emcs-enquiries"
+      }
+    }
+
     ".emcsMovementDetailsUrl() must return the correct URL" in {
       config.emcsMovementDetailsUrl(testErn, testArc) mustBe s"http://localhost:8310/emcs/account/trader/$testErn/movement/$testArc/overview"
     }
