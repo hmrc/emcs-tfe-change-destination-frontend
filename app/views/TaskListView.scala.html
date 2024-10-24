@@ -55,10 +55,6 @@
         @messages("taskList.lrn", request.movementDetails.localReferenceNumber)
     }
 
-    @p("govuk-body govuk-!-margin-bottom-9") {
-        @link(testOnly.controllers.routes.UnderConstructionController.onPageLoad().url, "taskList.delete", id = Some("delete-draft"))
-    }
-
     @taskList(TaskList(helper.sections))
 }
 
