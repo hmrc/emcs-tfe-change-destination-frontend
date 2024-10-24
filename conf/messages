@@ -1414,7 +1414,7 @@ changeType.heading = What do you want to change about this movement?
 changeType.consignee = Consignee
 changeType.destination = Place of destination
 changeType.exportOffice = Office of export
-changeType.exportOffice.hint = The consignee will not change
+changeType.exportOffice.hint = The consignee will not change.
 changeType.return = Return the goods to the consignor’s place of dispatch
 changeType.error.required = Select what you want to change about the movement
 
