@@ -206,7 +206,7 @@ class TaskListHelper @Inject()(list: list, p: p) extends Logging {
         id = "submit",
         link = if (completed) Some(controllers.routes.DeclarationController.onPageLoad(request.ern, request.arc).url) else None,
         section = None,
-        status = if (completed) None else Some(CannotStartYet)
+        status = if (completed) Some(NotStarted) else Some(CannotStartYet)
       ))
     )
   }

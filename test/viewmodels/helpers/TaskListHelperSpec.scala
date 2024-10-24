@@ -477,7 +477,7 @@ class TaskListHelperSpec extends SpecBase {
                   id = "submit",
                   link = Some(controllers.routes.DeclarationController.onPageLoad(request.ern, request.arc).url),
                   section = None,
-                  status = None
+                  status = Some(NotStarted)
                 )
               )
             )
