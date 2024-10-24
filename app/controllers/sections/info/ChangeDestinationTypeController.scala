@@ -53,7 +53,7 @@ class ChangeDestinationTypeController @Inject()(
 
   def onPageLoad(ern: String, arc: String): Action[AnyContent] =
     authorisedWithPreDraftDataUpToDateMovementAsync(ern, arc) { implicit request =>
-      renderView(Ok, fillForm(ChangeDestinationTypePage, formProvider()))
+      renderView(Ok, fillFormFromUserAnswersOnly(ChangeDestinationTypePage, formProvider()))
     }
 
   def onSubmit(ern: String, arc: String): Action[AnyContent] =

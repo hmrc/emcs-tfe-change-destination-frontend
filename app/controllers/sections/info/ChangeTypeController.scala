@@ -51,7 +51,7 @@ class ChangeTypeController @Inject()(
 
   def onPageLoad(ern: String, arc: String): Action[AnyContent] =
     authorisedWithPreDraftDataUpToDateMovementAsync(ern, arc) { implicit request =>
-      renderView(Ok, fillForm(ChangeTypePage, formProvider()))
+      renderView(Ok, fillFormFromUserAnswersOnly(ChangeTypePage, formProvider()))
     }
 
   def onSubmit(ern: String, arc: String): Action[AnyContent] =

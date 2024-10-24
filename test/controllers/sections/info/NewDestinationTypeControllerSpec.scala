@@ -109,7 +109,7 @@ class NewDestinationTypeControllerSpec extends SpecBase with MockUserAnswersServ
           contentAsString(getResult) mustEqual
             view(
               GreatBritain,
-              form.fill(EuTaxWarehouse),
+              form,
               controllers.sections.info.routes.NewDestinationTypeController.onPreDraftSubmit("XIRC123", testArc)
             )(getRequest, messages(getRequest)).toString
         }
@@ -127,7 +127,7 @@ class NewDestinationTypeControllerSpec extends SpecBase with MockUserAnswersServ
           contentAsString(getResult) mustEqual
             view(
               NorthernIreland,
-              form.fill(EuTaxWarehouse),
+              form,
               controllers.sections.info.routes.NewDestinationTypeController.onPreDraftSubmit("XIWK123", testArc)
             )(getRequest, messages(getRequest)).toString
         }
