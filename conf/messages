@@ -1558,3 +1558,12 @@ guarantorRequired.enterDetails = Enter guarantor details
 guarantorRequired.error.required = Select yes if a guarantor is required for this movement
 guarantorRequired.checkYourAnswersLabel = Guarantor required
 guarantorRequired.change.hidden = if a guarantor is required for this movement
+
+notPermittedPage.title = There is a problem
+notPermittedPage.heading = There is a problem
+notPermittedPage.p1 = You do not have permission to view this page.
+notPermittedPage.p2.link = Go to your ‘Account home’ page
+notPermittedPage.p2.suffix = to access all of your movements and messages.
+notPermittedPage.p3.prefix = You can also visit the
+notPermittedPage.p3.link = EMCS general enquiries page
+notPermittedPage.p3.suffix = for more help.
