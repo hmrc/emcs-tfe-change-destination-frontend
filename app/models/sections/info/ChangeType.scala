@@ -52,8 +52,10 @@ object ChangeType extends Enumerable.Implicits {
         value   = Some(value.toString),
         id      = Some(s"value_$index"),
         hint    = value match {
-          case ExportOffice => Some(HintViewModel(Text(messages("changeType.exportOffice.hint"))))
-          case _            => None
+          case ExportOffice | Destination =>
+            Some(HintViewModel(Text(messages("changeType.consigneeWillNotChange.hint"))))
+          case _ =>
+            None
         }
       )
   }

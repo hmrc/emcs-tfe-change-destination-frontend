@@ -25,7 +25,7 @@ object ChangeTypeMessages {
     val consigneeRadio = "Consignee"
     val destinationRadio = "Place of destination"
     val exportOfficeRadio = "Office of export"
-    val exportOfficeHint  = "The consignee will not change."
+    val consigneeWillNotChangeHint  = "The consignee will not change."
     val returnToSenderRadio = "Return the goods to the consignor’s place of dispatch"
     val errorRequired: String = "Select what you want to change about the movement"
   }
