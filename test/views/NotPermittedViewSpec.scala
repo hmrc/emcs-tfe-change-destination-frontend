@@ -41,7 +41,7 @@ class NotPermittedViewSpec extends SpecBase with ViewBehaviours {
 
         val view = app.injector.instanceOf[NotPermittedView]
 
-        implicit val doc: Document = Jsoup.parse(view(testErn, testArc).toString())
+        implicit val doc: Document = Jsoup.parse(view().toString())
 
         behave like pageWithExpectedElementsAndMessages(Seq(
           Selectors.h1 -> messagesForLanguage.heading,
