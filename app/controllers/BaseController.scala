@@ -36,6 +36,10 @@ trait BaseController extends FrontendBaseController with I18nSupport with Enumer
                  (implicit request: DataRequest[_], format: Format[A]): Form[A] =
     request.userAnswers.get(page).fold(form)(form.fill)
 
+  def fillFormFromUserAnswersOnly[A](page: QuestionPage[A], form: Form[A])
+                 (implicit request: DataRequest[_], format: Format[A]): Form[A] =
+    request.userAnswers.getFromUserAnswersOnly(page).fold(form)(form.fill)
+
   def withAnswer[A](
                      page: QuestionPage[A],
                      redirectRoute: Call = routes.JourneyRecoveryController.onPageLoad()
