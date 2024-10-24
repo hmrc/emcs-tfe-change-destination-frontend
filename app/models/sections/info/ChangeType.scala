@@ -22,6 +22,7 @@ import models.{Enumerable, WithName}
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.Aliases.Text
 import uk.gov.hmrc.govukfrontend.views.viewmodels.radios.RadioItem
+import viewmodels.govuk.all.HintViewModel
 
 sealed trait ChangeType
 
@@ -49,7 +50,11 @@ object ChangeType extends Enumerable.Implicits {
       RadioItem(
         content = Text(messages(s"changeType.${value.toString}")),
         value   = Some(value.toString),
-        id      = Some(s"value_$index")
+        id      = Some(s"value_$index"),
+        hint    = value match {
+          case ExportOffice => Some(HintViewModel(Text(messages("changeType.exportOffice.hint"))))
+          case _            => None
+        }
       )
   }
 

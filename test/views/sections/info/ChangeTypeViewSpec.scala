@@ -88,6 +88,7 @@ class ChangeTypeViewSpec extends SpecBase with ViewBehaviours {
             Selectors.h2(1) -> messagesForLanguage.changeOfDestinationSection(testArc),
             Selectors.radioButton(1) -> messagesForLanguage.consigneeRadio,
             Selectors.radioButton(2) -> messagesForLanguage.exportOfficeRadio,
+            Selectors.hint -> messagesForLanguage.exportOfficeHint,
             Selectors.button -> messagesForLanguage.continue
           ))
         }
