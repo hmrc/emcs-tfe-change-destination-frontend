@@ -32,7 +32,7 @@ class AppConfigSpec extends SpecBase with BeforeAndAfterEach with FeatureSwitchi
     }
 
     ".feedbackFrontendSurveyUrl() must handoff to feedback frontend with the correct URL" in {
-      config.feedbackFrontendSurveyUrl mustBe s"http://localhost:9514/feedback/${config.deskproName}/beta"
+      config.feedbackFrontendSurveyUrl mustBe s"http://localhost:9514/feedback/${config.deskproName}"
     }
 
     ".signOutUrl()" - {
