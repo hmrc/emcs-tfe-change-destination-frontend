@@ -53,7 +53,7 @@ class DispatchDetailsController @Inject()(
     authorisedWithPreDraftDataUpToDateMovementAsync(ern, arc) { implicit request =>
       renderViewPreDraft(
         Ok,
-        fillForm(DispatchDetailsPage(), formProvider()),
+        fillFormFromUserAnswersOnly(DispatchDetailsPage(), formProvider()),
         controllers.sections.info.routes.DispatchDetailsController.onPreDraftSubmit(request.ern, request.arc, mode),
         mode
       )
