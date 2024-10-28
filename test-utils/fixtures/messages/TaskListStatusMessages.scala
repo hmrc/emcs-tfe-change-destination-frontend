@@ -20,9 +20,9 @@ object TaskListStatusMessages {
 
   sealed trait ViewMessages { _: i18n =>
     val completed: String = "Completed"
-    val inProgress: String = "In Progress"
-    val notStartedYet: String = "Not Started"
-    val cannotStartYet: String = "Cannot Start Yet"
+    val inProgress: String = "In progress"
+    val notStartedYet: String = "Not started"
+    val cannotStartYet: String = "Cannot start yet"
   }
 
   object English extends ViewMessages with BaseEnglish
