@@ -27,6 +27,8 @@ GET         /trader/:ern/movement/:arc/confirmation           controllers.Confir
 GET         /trader/:ern/movement/:arc/declaration            controllers.DeclarationController.onPageLoad(ern: String, arc: String)
 POST        /trader/:ern/movement/:arc/declaration            controllers.DeclarationController.onSubmit(ern: String, arc: String)
 
+GET         /trader/:ern/movement/:arc/not-permitted          controllers.NotPermittedPageController.onPageLoad(ern, arc)
+
 ->          /                                                 info.Routes
 ->          /                                                 movement.Routes
 ->          /                                                 consignee.Routes
