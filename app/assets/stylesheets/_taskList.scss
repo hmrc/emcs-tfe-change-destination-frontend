@@ -61,6 +61,9 @@
   margin-top: govuk-spacing(2);
   margin-bottom: govuk-spacing(1);
 
+  //This text-transform is temporary until play-frontend-hmrc intercepts the new CSS from GovUK
+  text-transform: none !important;
+
   @include govuk-media-query($from: 450px) {
     float: right;
     margin-top: 0;
