@@ -34,7 +34,9 @@ import pages.sections.transportArranger.TransportArrangerSection
 import pages.sections.transportUnit.TransportUnitsSection
 import play.api.i18n.Messages
 import play.twirl.api.{Html, HtmlFormat}
+import uk.gov.hmrc.govukfrontend.views.Aliases.{TaskListItemStatus, Text}
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.HtmlContent
+import uk.gov.hmrc.govukfrontend.views.viewmodels.tasklist.{TaskListItem, TaskListItemTitle}
 import utils.Logging
 import viewmodels.taskList._
 import views.html.components.{list, p}
@@ -76,112 +78,115 @@ class TaskListHelper @Inject()(list: list, p: p) extends Logging {
         throw InvalidUserTypeException(s"[TaskListHelper][heading] invalid UserType and destinationType combination for CAM journey: $userType | $destinationType")
     }
 
-  private[helpers] def movementSection(implicit request: DataRequest[_], messages: Messages): TaskListSection = TaskListSection(
-    sectionHeading = messages("taskList.section.movement"),
-    rows = Seq(
-      TaskListSectionRow(
-        taskName = messages("taskList.section.movement.movementDetails"),
-        id = "movementDetails",
-        link = Some(controllers.sections.movement.routes.MovementIndexController.onPageLoad(request.ern, request.arc).url),
-        section = Some(MovementSection),
-        status = Some(MovementSection.status)
+  private[helpers] def movementSection(implicit request: DataRequest[_], messages: Messages): TaskListSection =
+
+    TaskListSection(
+      sectionHeading = messages("taskList.section.movement"),
+      rows = Seq(
+        TaskListItemViewModel(
+          TaskListItem(
+            title = TaskListItemTitle(Text(messages("taskList.section.movement.movementDetails"))),
+            status = TaskListItemStatus(Some(MovementSection.status.toTag)),
+            href = Some(controllers.sections.movement.routes.MovementIndexController.onPageLoad(request.ern, request.arc).url)
+          ),
+          Some(MovementSection)
+        )
       )
     )
-  )
 
-  //noinspection ScalaStyle
+  //  //noinspection ScalaStyle
   private[helpers] def deliverySection(implicit request: DataRequest[_], messages: Messages): Option[TaskListSection] = {
     if(request.userAnswers.get(ChangeTypePage).contains(ReturnToConsignor)) None else {
       Some(TaskListSection(
         sectionHeading = messages("taskList.section.delivery"),
         rows = Seq(
-          if (ConsigneeSection.canBeCompletedForTraderAndDestinationType) {
-            Some(TaskListSectionRow(
-              taskName = messages("taskList.section.delivery.consignee"),
-              id = "consignee",
-              link = Some(controllers.sections.consignee.routes.ConsigneeIndexController.onPageLoad(request.ern, request.arc).url),
-              section = Some(ConsigneeSection),
-              status = Some(ConsigneeSection.status)
-            ))
-          } else {
-            None
+          Option.when(ConsigneeSection.canBeCompletedForTraderAndDestinationType) {
+            TaskListItemViewModel(
+              TaskListItem(
+                title = TaskListItemTitle(Text(messages("taskList.section.delivery.consignee"))),
+                status = TaskListItemStatus(Some(ConsigneeSection.status.toTag)),
+                href = Some(controllers.sections.consignee.routes.ConsigneeIndexController.onPageLoad(request.ern, request.arc).url)
+              ),
+              Some(ConsigneeSection)
+            )
           },
-          if (DestinationSection.canBeCompletedForTraderAndDestinationType) {
-            Some(TaskListSectionRow(
-              taskName = messages("taskList.section.delivery.destination"),
-              id = "destination",
-              link = Some(controllers.sections.destination.routes.DestinationIndexController.onPageLoad(request.ern, request.arc).url),
-              section = Some(DestinationSection),
-              status = Some(DestinationSection.status)
-            ))
-          } else {
-            None
+          Option.when(DestinationSection.canBeCompletedForTraderAndDestinationType) {
+            TaskListItemViewModel(
+              TaskListItem(
+                title = TaskListItemTitle(Text(messages("taskList.section.delivery.destination"))),
+                status = TaskListItemStatus(Some(DestinationSection.status.toTag)),
+                href = Some(controllers.sections.destination.routes.DestinationIndexController.onPageLoad(request.ern, request.arc).url)
+              ),
+              Some(DestinationSection)
+            )
           },
-          if (ExportInformationSection.canBeCompletedForTraderAndDestinationType) {
-            Some(TaskListSectionRow(
-              taskName = messages("taskList.section.delivery.export"),
-              id = "export",
-              link = Some(controllers.sections.exportInformation.routes.ExportInformationIndexController.onPageLoad(request.ern, request.arc).url),
-              section = Some(ExportInformationSection),
-              status = Some(ExportInformationSection.status)
-            ))
-          } else {
-            None
+          Option.when(ExportInformationSection.canBeCompletedForTraderAndDestinationType) {
+            TaskListItemViewModel(
+              TaskListItem(
+                title = TaskListItemTitle(Text(messages("taskList.section.delivery.export"))),
+                status = TaskListItemStatus(Some(ExportInformationSection.status.toTag)),
+                href = Some(controllers.sections.exportInformation.routes.ExportInformationIndexController.onPageLoad(request.ern, request.arc).url)
+              ),
+              Some(ExportInformationSection)
+            )
           }
         ).flatten
       ))
     }
   }
 
-
-
   private[helpers] def guarantorSection(implicit request: DataRequest[_], messages: Messages): TaskListSection =
     TaskListSection(
       sectionHeading = messages("taskList.section.guarantor"),
       rows = Seq(
-        Some(TaskListSectionRow(
-          taskName = messages("taskList.section.guarantor.guarantor"),
-          id = "guarantor",
-          link = Some(controllers.sections.guarantor.routes.GuarantorIndexController.onPageLoad(request.ern, request.arc).url),
-          section = Some(GuarantorSection),
-          status = Some(GuarantorSection.status)
-        ))
-      ).flatten
+        TaskListItemViewModel(
+          TaskListItem(
+            title = TaskListItemTitle(Text(messages("taskList.section.guarantor.guarantor"))),
+            status = TaskListItemStatus(Some(GuarantorSection.status.toTag)),
+            href = Some(controllers.sections.guarantor.routes.GuarantorIndexController.onPageLoad(request.ern, request.arc).url)
+          ),
+          Some(GuarantorSection)
+        )
+      )
     )
 
   private[helpers] def transportSection(implicit request: DataRequest[_], messages: Messages): TaskListSection = {
     TaskListSection(
       sectionHeading = messages("taskList.section.transport"),
       rows = Seq(
-        Some(TaskListSectionRow(
-          taskName = messages("taskList.section.transport.journeyType"),
-          id = "journeyType",
-          link = Some(controllers.sections.journeyType.routes.JourneyTypeIndexController.onPageLoad(request.ern, request.arc).url),
-          section = Some(JourneyTypeSection),
-          status = Some(JourneyTypeSection.status)
-        )),
-        Some(TaskListSectionRow(
-          taskName = messages("taskList.section.transport.transportArranger"),
-          id = "transportArranger",
-          link = Some(controllers.sections.transportArranger.routes.TransportArrangerIndexController.onPageLoad(request.ern, request.arc).url),
-          section = Some(TransportArrangerSection),
-          status = Some(TransportArrangerSection.status)
-        )),
-        Some(TaskListSectionRow(
-          taskName = messages("taskList.section.transport.firstTransporter"),
-          id = "firstTransporter",
-          link = Some(controllers.sections.firstTransporter.routes.FirstTransporterIndexController.onPageLoad(request.ern, request.arc).url),
-          section = Some(FirstTransporterSection),
-          status = Some(FirstTransporterSection.status)
-        )),
-        Some(TaskListSectionRow(
-          taskName = messages("taskList.section.transport.units"),
-          id = "units",
-          link = Some(controllers.sections.transportUnit.routes.TransportUnitIndexController.onPageLoad(request.ern, request.arc).url),
-          section = Some(TransportUnitsSection),
-          status = Some(TransportUnitsSection.status)
-        ))
-      ).flatten
+        TaskListItemViewModel(
+          TaskListItem(
+            title = TaskListItemTitle(Text(messages("taskList.section.transport.journeyType"))),
+            status = TaskListItemStatus(Some(JourneyTypeSection.status.toTag)),
+            href = Some(controllers.sections.journeyType.routes.JourneyTypeIndexController.onPageLoad(request.ern, request.arc).url)
+          ),
+          Some(JourneyTypeSection)
+        ),
+        TaskListItemViewModel(
+          TaskListItem(
+            title = TaskListItemTitle(Text(messages("taskList.section.transport.transportArranger"))),
+            status = TaskListItemStatus(Some(TransportArrangerSection.status.toTag)),
+            href = Some(controllers.sections.transportArranger.routes.TransportArrangerIndexController.onPageLoad(request.ern, request.arc).url)
+          ),
+          Some(TransportArrangerSection)
+        ),
+        TaskListItemViewModel(
+          TaskListItem(
+            title = TaskListItemTitle(Text(messages("taskList.section.transport.firstTransporter"))),
+            status = TaskListItemStatus(Some(FirstTransporterSection.status.toTag)),
+            href = Some(controllers.sections.firstTransporter.routes.FirstTransporterIndexController.onPageLoad(request.ern, request.arc).url)
+          ),
+          Some(FirstTransporterSection)
+        ),
+        TaskListItemViewModel(
+          TaskListItem(
+            title = TaskListItemTitle(Text(messages("taskList.section.transport.units"))),
+            status = TaskListItemStatus(Some(TransportUnitsSection.status.toTag)),
+            href = Some(controllers.sections.transportUnit.routes.TransportUnitIndexController.onPageLoad(request.ern, request.arc).url)
+          ),
+          Some(TransportUnitsSection)
+        )
+      )
     )
   }
 
@@ -195,18 +200,21 @@ class TaskListHelper @Inject()(list: list, p: p) extends Logging {
   private[helpers] def submitSection(sectionsExceptSubmit: Seq[TaskListSection])
                                     (implicit request: DataRequest[_], messages: Messages): TaskListSection = {
 
-    val rows: Seq[TaskListSectionRow] = sectionsExceptSubmit.flatMap(_.rows).filter(_.section.exists(_.canBeCompletedForTraderAndDestinationType))
+    val rows: Seq[TaskListItemViewModel] = sectionsExceptSubmit.flatMap(_.rows).filter(_.section.exists(_.canBeCompletedForTraderAndDestinationType))
 
-    val completed: Boolean = rows.nonEmpty && rows.forall(_.status.contains(Completed))
+    val completed: Boolean = rows.nonEmpty && rows.forall(_.section.map(_.status).contains(Completed))
+
+    val status = if (completed) NotStarted else CannotStartYet
 
     TaskListSection(
       sectionHeading = messages("taskList.section.submit"),
-      rows = Seq(TaskListSectionRow(
-        taskName = messages("taskList.section.submit"),
-        id = "submit",
-        link = if (completed) Some(controllers.routes.DeclarationController.onPageLoad(request.ern, request.arc).url) else None,
-        section = None,
-        status = if (completed) Some(NotStarted) else Some(CannotStartYet)
+      rows = Seq(TaskListItemViewModel(
+        TaskListItem(
+          title = TaskListItemTitle(Text(messages("taskList.section.submit"))),
+          status = TaskListItemStatus(Some(status.toTag)),
+          href = if (completed) Some(controllers.routes.DeclarationController.onPageLoad(request.ern, request.arc).url) else None
+        ),
+        None
       ))
     )
   }

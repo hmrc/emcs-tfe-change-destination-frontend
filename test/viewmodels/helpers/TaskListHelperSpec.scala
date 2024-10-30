@@ -46,7 +46,8 @@ import play.api.i18n.{Messages, MessagesApi}
 import play.api.libs.json.{JsObject, JsPath}
 import play.api.test.FakeRequest
 import play.twirl.api.{Html, HtmlFormat}
-import uk.gov.hmrc.govukfrontend.views.Aliases.HtmlContent
+import uk.gov.hmrc.govukfrontend.views.Aliases.{HtmlContent, TaskListItem, TaskListItemTitle, Text}
+import uk.gov.hmrc.govukfrontend.views.viewmodels.tasklist.TaskListItemStatus
 import viewmodels.taskList._
 import views.ViewUtils.titleNoForm
 import views.html.components.{list, p}
@@ -183,12 +184,13 @@ class TaskListHelperSpec extends SpecBase {
           helper.movementSection mustBe TaskListSection(
             messagesForLanguage.movementSectionHeading,
             Seq(
-              TaskListSectionRow(
-                messagesForLanguage.movementDetails,
-                "movementDetails",
-                Some(controllers.sections.movement.routes.MovementIndexController.onPageLoad(testErn, testArc).url),
-                Some(MovementSection),
-                Some(Review)
+              TaskListItemViewModel(
+                row = TaskListItem(
+                  title = TaskListItemTitle(Text(messagesForLanguage.movementDetails)),
+                  status = TaskListItemStatus(Some(Review.toTag)),
+                  href = Some(controllers.sections.movement.routes.MovementIndexController.onPageLoad(testErn, testArc).url)
+                ),
+                section = Some(MovementSection)
               )
             )
           )
@@ -197,29 +199,35 @@ class TaskListHelperSpec extends SpecBase {
 
       "deliverySection" - {
 
-        def consigneeRow(ern: String) = TaskListSectionRow(
-          messagesForLanguage.consignee,
-          "consignee",
-          Some(controllers.sections.consignee.routes.ConsigneeIndexController.onPageLoad(ern, testArc).url),
-          Some(ConsigneeSection),
-          Some(NotStarted)
-        )
+        def consigneeRow(ern: String) =
+          TaskListItemViewModel(
+            row = TaskListItem(
+              title = TaskListItemTitle(Text(messagesForLanguage.consignee)),
+              status = TaskListItemStatus(Some(NotStarted.toTag)),
+              href = Some(controllers.sections.consignee.routes.ConsigneeIndexController.onPageLoad(ern, testArc).url)
+            ),
+            section = Some(ConsigneeSection)
+          )
 
-        def destinationRow(ern: String) = TaskListSectionRow(
-          messagesForLanguage.destination,
-          "destination",
-          Some(controllers.sections.destination.routes.DestinationIndexController.onPageLoad(ern, testArc).url),
-          Some(DestinationSection),
-          Some(NotStarted)
-        )
+        def destinationRow(ern: String) =
+          TaskListItemViewModel(
+            row = TaskListItem(
+              title = TaskListItemTitle(Text(messagesForLanguage.destination)),
+              status = TaskListItemStatus(Some(NotStarted.toTag)),
+              href = Some(controllers.sections.destination.routes.DestinationIndexController.onPageLoad(ern, testArc).url)
+            ),
+            section = Some(DestinationSection)
+          )
 
-        def exportRow(ern: String) = TaskListSectionRow(
-          messagesForLanguage.export,
-          "export",
-          Some(controllers.sections.exportInformation.routes.ExportInformationIndexController.onPageLoad(ern, testArc).url),
-          Some(ExportInformationSection),
-          Some(NotStarted)
-        )
+        def exportRow(ern: String) =
+          TaskListItemViewModel(
+            row = TaskListItem(
+              title = TaskListItemTitle(Text(messagesForLanguage.export)),
+              status = TaskListItemStatus(Some(NotStarted.toTag)),
+              href = Some(controllers.sections.exportInformation.routes.ExportInformationIndexController.onPageLoad(ern, testArc).url)
+            ),
+            section = Some(ExportInformationSection)
+          )
 
         "when ChangeType is ReturnToConsignorPlaceOfDispatch" - {
 
@@ -347,12 +355,13 @@ class TaskListHelperSpec extends SpecBase {
           helper.guarantorSection mustBe TaskListSection(
             messagesForLanguage.guarantorSectionHeading,
             Seq(
-              TaskListSectionRow(
-                messagesForLanguage.guarantor,
-                "guarantor",
-                Some(controllers.sections.guarantor.routes.GuarantorIndexController.onPageLoad(testErn, testArc).url),
-                Some(GuarantorSection),
-                Some(Review)
+              TaskListItemViewModel(
+                row = TaskListItem(
+                  title = TaskListItemTitle(Text(messagesForLanguage.guarantor)),
+                  status = TaskListItemStatus(Some(Review.toTag)),
+                  href = Some(controllers.sections.guarantor.routes.GuarantorIndexController.onPageLoad(testErn, testArc).url)
+                ),
+                section = Some(GuarantorSection)
               )
             ))
         }
@@ -366,12 +375,13 @@ class TaskListHelperSpec extends SpecBase {
         }
         "should render the journeyType row" in {
           implicit val request: DataRequest[_] = dataRequest(FakeRequest(), ern = testErn, answers = emptyUserAnswers.set(JourneyTypeReviewPage, ChangeAnswers))
-          helper.transportSection.rows must contain(TaskListSectionRow(
-            messagesForLanguage.journeyType,
-            "journeyType",
-            Some(controllers.sections.journeyType.routes.JourneyTypeIndexController.onPageLoad(testErn, testArc).url),
-            Some(JourneyTypeSection),
-            Some(InProgress) //Cannot be in 'Not started' state as a journey type answer either is in the user answers or 801
+          helper.transportSection.rows must contain(TaskListItemViewModel(
+            row = TaskListItem(
+              title = TaskListItemTitle(Text(messagesForLanguage.journeyType)),
+              status = TaskListItemStatus(Some(InProgress.toTag)), //Cannot be in 'Not started' state as a transport arranger answer either is in the user answers or 801
+              href = Some(controllers.sections.journeyType.routes.JourneyTypeIndexController.onPageLoad(testErn, testArc).url)
+            ),
+            section = Some(JourneyTypeSection)
           ))
         }
         "should render the transportArranger row" in {
@@ -383,34 +393,37 @@ class TaskListHelperSpec extends SpecBase {
               journeyTime = "10 hours",
               transportArrangement = TransportArranger.GoodsOwner
             )))
-          helper.transportSection.rows must contain(TaskListSectionRow(
-            messagesForLanguage.transportArranger,
-            "transportArranger",
-            Some(controllers.sections.transportArranger.routes.TransportArrangerIndexController.onPageLoad(testErn, testArc).url),
-            Some(TransportArrangerSection),
-            Some(InProgress) //Cannot be in 'Not started' state as a transport arranger answer either is in the user answers or 801
+          helper.transportSection.rows must contain(TaskListItemViewModel(
+            row = TaskListItem(
+              title = TaskListItemTitle(Text(messagesForLanguage.transportArranger)),
+              status = TaskListItemStatus(Some(InProgress.toTag)), //Cannot be in 'Not started' state as a transport arranger answer either is in the user answers or 801
+              href = Some(controllers.sections.transportArranger.routes.TransportArrangerIndexController.onPageLoad(testErn, testArc).url)
+            ),
+            section = Some(TransportArrangerSection)
           ))
         }
         "should render the firstTransporter row" in {
           implicit val request: DataRequest[_] = dataRequest(FakeRequest(), ern = testErn, answers = emptyUserAnswers.set(FirstTransporterReviewPage, ChangeAnswers),
             movementDetails = maxGetMovementResponse.copy(firstTransporterTrader = None))
-          helper.transportSection.rows must contain(TaskListSectionRow(
-            messagesForLanguage.firstTransporter,
-            "firstTransporter",
-            Some(controllers.sections.firstTransporter.routes.FirstTransporterIndexController.onPageLoad(testErn, testArc).url),
-            Some(FirstTransporterSection),
-            Some(NotStarted)
+          helper.transportSection.rows must contain(TaskListItemViewModel(
+            row = TaskListItem(
+              title = TaskListItemTitle(Text(messagesForLanguage.firstTransporter)),
+              status = TaskListItemStatus(Some(NotStarted.toTag)),
+              href = Some(controllers.sections.firstTransporter.routes.FirstTransporterIndexController.onPageLoad(testErn, testArc).url)
+            ),
+            section = Some(FirstTransporterSection)
           ))
         }
         "should render the units row" in {
           implicit val request: DataRequest[_] = dataRequest(FakeRequest(), ern = testErn, answers = emptyUserAnswers.set(TransportUnitsReviewPage, ChangeAnswers),
             movementDetails = maxGetMovementResponse.copy(transportDetails = Seq.empty))
-          helper.transportSection.rows must contain(TaskListSectionRow(
-            messagesForLanguage.units,
-            "units",
-            Some(controllers.sections.transportUnit.routes.TransportUnitIndexController.onPageLoad(testErn, testArc).url),
-            Some(TransportUnitsSection),
-            Some(NotStarted)
+          helper.transportSection.rows must contain(TaskListItemViewModel(
+            row = TaskListItem(
+              title = TaskListItemTitle(Text(messagesForLanguage.units)),
+              status = TaskListItemStatus(Some(NotStarted.toTag)),
+              href = Some(controllers.sections.transportUnit.routes.TransportUnitIndexController.onPageLoad(testErn, testArc).url)
+            ),
+            section = Some(TransportUnitsSection)
           ))
         }
       }
@@ -432,38 +445,42 @@ class TaskListHelperSpec extends SpecBase {
               TaskListSection(
                 sectionHeading = "testHeading1",
                 rows = Seq(
-                  TaskListSectionRow(
-                    taskName = "testName1",
-                    id = "testId1",
-                    link = None,
-                    section = Some(TestSection),
-                    status = Some(Completed)
+                  TaskListItemViewModel(
+                    row = TaskListItem(
+                      title = TaskListItemTitle(Text("testName1")),
+                      status = TaskListItemStatus(Some(Completed.toTag)),
+                      href = None
+                    ),
+                    section = Some(TestSection)
                   ),
-                  TaskListSectionRow(
-                    taskName = "testName2",
-                    id = "testId2",
-                    link = None,
-                    section = Some(TestSection),
-                    status = Some(Completed)
+                  TaskListItemViewModel(
+                    row = TaskListItem(
+                      title = TaskListItemTitle(Text("testName2")),
+                      status = TaskListItemStatus(Some(Completed.toTag)),
+                      href = None
+                    ),
+                    section = Some(TestSection)
                   )
                 )
               ),
               TaskListSection(
                 sectionHeading = "testHeading2",
                 rows = Seq(
-                  TaskListSectionRow(
-                    taskName = "testName3",
-                    id = "testId3",
-                    link = None,
-                    section = Some(TestSection),
-                    status = Some(Completed)
+                  TaskListItemViewModel(
+                    row = TaskListItem(
+                      title = TaskListItemTitle(Text("testName3")),
+                      status = TaskListItemStatus(Some(Completed.toTag)),
+                      href = None
+                    ),
+                    section = Some(TestSection)
                   ),
-                  TaskListSectionRow(
-                    taskName = "testName4",
-                    id = "testId4",
-                    link = None,
-                    section = Some(TestSection),
-                    status = Some(Completed)
+                  TaskListItemViewModel(
+                    row = TaskListItem(
+                      title = TaskListItemTitle(Text("testName4")),
+                      status = TaskListItemStatus(Some(Completed.toTag)),
+                      href = None
+                    ),
+                    section = Some(TestSection)
                   )
                 )
               )
@@ -472,12 +489,13 @@ class TaskListHelperSpec extends SpecBase {
             helper.submitSection(testSections) mustBe TaskListSection(
               sectionHeading = messagesForLanguage.submitSectionHeading,
               rows = Seq(
-                TaskListSectionRow(
-                  taskName = messagesForLanguage.submit,
-                  id = "submit",
-                  link = Some(controllers.routes.DeclarationController.onPageLoad(request.ern, request.arc).url),
-                  section = None,
-                  status = Some(NotStarted)
+                TaskListItemViewModel(
+                  row = TaskListItem(
+                    title = TaskListItemTitle(Text(messagesForLanguage.submit)),
+                    status = TaskListItemStatus(Some(NotStarted.toTag)),
+                    href = Some(controllers.routes.DeclarationController.onPageLoad(request.ern, request.arc).url)
+                  ),
+                  section = None
                 )
               )
             )
@@ -490,38 +508,42 @@ class TaskListHelperSpec extends SpecBase {
               TaskListSection(
                 sectionHeading = "testHeading1",
                 rows = Seq(
-                  TaskListSectionRow(
-                    taskName = "testName1",
-                    id = "testId1",
-                    link = None,
-                    section = None,
-                    status = Some(InProgress)
+                  TaskListItemViewModel(
+                    row = TaskListItem(
+                      title = TaskListItemTitle(Text("testName1")),
+                      status = TaskListItemStatus(Some(InProgress.toTag)),
+                      href = None
+                    ),
+                    section = None
                   ),
-                  TaskListSectionRow(
-                    taskName = "testName2",
-                    id = "testId2",
-                    link = None,
-                    section = None,
-                    status = Some(NotStarted)
+                  TaskListItemViewModel(
+                    row = TaskListItem(
+                      title = TaskListItemTitle(Text("testName2")),
+                      status = TaskListItemStatus(Some(NotStarted.toTag)),
+                      href = None
+                    ),
+                    section = None
                   )
                 )
               ),
               TaskListSection(
                 sectionHeading = "testHeading2",
                 rows = Seq(
-                  TaskListSectionRow(
-                    taskName = "testName3",
-                    id = "testId3",
-                    link = None,
-                    section = None,
-                    status = Some(Completed)
+                  TaskListItemViewModel(
+                    row = TaskListItem(
+                      title = TaskListItemTitle(Text("testName3")),
+                      status = TaskListItemStatus(Some(Completed.toTag)),
+                      href = None
+                    ),
+                    section = None
                   ),
-                  TaskListSectionRow(
-                    taskName = "testName4",
-                    id = "testId4",
-                    link = None,
-                    section = None,
-                    status = Some(Completed)
+                  TaskListItemViewModel(
+                    row = TaskListItem(
+                      title = TaskListItemTitle(Text("testName4")),
+                      status = TaskListItemStatus(Some(Completed.toTag)),
+                      href = None
+                    ),
+                    section = None
                   )
                 )
               )
@@ -530,12 +552,13 @@ class TaskListHelperSpec extends SpecBase {
             helper.submitSection(testSections) mustBe TaskListSection(
               sectionHeading = messagesForLanguage.submitSectionHeading,
               rows = Seq(
-                TaskListSectionRow(
-                  taskName = messagesForLanguage.submit,
-                  id = "submit",
-                  link = None,
-                  section = None,
-                  status = Some(CannotStartYet)
+                TaskListItemViewModel(
+                  row = TaskListItem(
+                    title = TaskListItemTitle(Text(messagesForLanguage.submit)),
+                    status = TaskListItemStatus(Some(CannotStartYet.toTag)),
+                    href = None
+                  ),
+                  section = None
                 )
               )
             )
@@ -545,38 +568,42 @@ class TaskListHelperSpec extends SpecBase {
               TaskListSection(
                 sectionHeading = "testHeading1",
                 rows = Seq(
-                  TaskListSectionRow(
-                    taskName = "testName1",
-                    id = "testId1",
-                    link = None,
-                    section = None,
-                    status = Some(NotStarted)
+                  TaskListItemViewModel(
+                    row = TaskListItem(
+                      title = TaskListItemTitle(Text("testName1")),
+                      status = TaskListItemStatus(Some(NotStarted.toTag)),
+                      href = None
+                    ),
+                    section = None
                   ),
-                  TaskListSectionRow(
-                    taskName = "testName2",
-                    id = "testId2",
-                    link = None,
-                    section = None,
-                    status = Some(NotStarted)
+                  TaskListItemViewModel(
+                    row = TaskListItem(
+                      title = TaskListItemTitle(Text("testName2")),
+                      status = TaskListItemStatus(Some(NotStarted.toTag)),
+                      href = None
+                    ),
+                    section = None
                   )
                 )
               ),
               TaskListSection(
                 sectionHeading = "testHeading2",
                 rows = Seq(
-                  TaskListSectionRow(
-                    taskName = "testName3",
-                    id = "testId3",
-                    link = None,
-                    section = None,
-                    status = Some(NotStarted)
+                  TaskListItemViewModel(
+                    row = TaskListItem(
+                      title = TaskListItemTitle(Text("testName3")),
+                      status = TaskListItemStatus(Some(NotStarted.toTag)),
+                      href = None
+                    ),
+                    section = None
                   ),
-                  TaskListSectionRow(
-                    taskName = "testName4",
-                    id = "testId4",
-                    link = None,
-                    section = None,
-                    status = Some(NotStarted)
+                  TaskListItemViewModel(
+                    row = TaskListItem(
+                      title = TaskListItemTitle(Text("testName4")),
+                      status = TaskListItemStatus(Some(NotStarted.toTag)),
+                      href = None
+                    ),
+                    section = None
                   )
                 )
               )
@@ -585,12 +612,13 @@ class TaskListHelperSpec extends SpecBase {
             helper.submitSection(testSections) mustBe TaskListSection(
               sectionHeading = messagesForLanguage.submitSectionHeading,
               rows = Seq(
-                TaskListSectionRow(
-                  taskName = messagesForLanguage.submit,
-                  id = "submit",
-                  link = None,
-                  section = None,
-                  status = Some(CannotStartYet)
+                TaskListItemViewModel(
+                  row = TaskListItem(
+                    title = TaskListItemTitle(Text(messagesForLanguage.submit)),
+                    status = TaskListItemStatus(Some(CannotStartYet.toTag)),
+                    href = None
+                  ),
+                  section = None
                 )
               )
             )
@@ -611,12 +639,13 @@ class TaskListHelperSpec extends SpecBase {
             helper.submitSection(testSections) mustBe TaskListSection(
               sectionHeading = messagesForLanguage.submitSectionHeading,
               rows = Seq(
-                TaskListSectionRow(
-                  taskName = messagesForLanguage.submit,
-                  id = "submit",
-                  link = None,
-                  section = None,
-                  status = Some(CannotStartYet)
+                TaskListItemViewModel(
+                  row = TaskListItem(
+                    title = TaskListItemTitle(Text(messagesForLanguage.submit)),
+                    status = TaskListItemStatus(Some(CannotStartYet.toTag)),
+                    href = None
+                  ),
+                  section = None
                 )
               )
             )
@@ -627,12 +656,13 @@ class TaskListHelperSpec extends SpecBase {
             helper.submitSection(testSections) mustBe TaskListSection(
               sectionHeading = messagesForLanguage.submitSectionHeading,
               rows = Seq(
-                TaskListSectionRow(
-                  taskName = messagesForLanguage.submit,
-                  id = "submit",
-                  link = None,
-                  section = None,
-                  status = Some(CannotStartYet)
+                TaskListItemViewModel(
+                  row = TaskListItem(
+                    title = TaskListItemTitle(Text(messagesForLanguage.submit)),
+                    status = TaskListItemStatus(Some(CannotStartYet.toTag)),
+                    href = None
+                  ),
+                  section = None
                 )
               )
             )
@@ -652,12 +682,13 @@ class TaskListHelperSpec extends SpecBase {
             TaskListSection(
               sectionHeading = "testHeading",
               rows = Seq(
-                TaskListSectionRow(
-                  taskName = "testName",
-                  id = "testid",
-                  None,
-                  Some(TestSection),
-                  Some(Completed)
+                TaskListItemViewModel(
+                  row = TaskListItem(
+                    title = TaskListItemTitle(Text("testName")),
+                    status = TaskListItemStatus(Some(Completed.toTag)),
+                    href = None
+                  ),
+                  section = Some(TestSection)
                 )
               )
             )
@@ -666,12 +697,13 @@ class TaskListHelperSpec extends SpecBase {
           helper.submitSection(testSections) mustBe TaskListSection(
             sectionHeading = messagesForLanguage.submitSectionHeading,
             rows = Seq(
-              TaskListSectionRow(
-                taskName = messagesForLanguage.submit,
-                id = "submit",
-                link = None,
-                section = None,
-                status = Some(CannotStartYet)
+              TaskListItemViewModel(
+                row = TaskListItem(
+                  title = TaskListItemTitle(Text(messagesForLanguage.submit)),
+                  status = TaskListItemStatus(Some(CannotStartYet.toTag)),
+                  href = None
+                ),
+                section = None
               )
             )
           )

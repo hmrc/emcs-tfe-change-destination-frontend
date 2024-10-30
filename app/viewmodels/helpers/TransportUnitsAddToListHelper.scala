@@ -78,7 +78,7 @@ class TransportUnitsAddToListHelper @Inject()(implicit link: link, tagHelper: Ta
       content = Text(messages("site.remove")),
       href = transportUnitRoutes.TransportUnitRemoveUnitController.onPageLoad(request.ern, request.arc, idx).url,
       id = s"removeTransportUnit${idx.displayIndex}"
-    ).withVisuallyHiddenText(messages("transportUnitsAddToList.transportUnitCardTitle", idx.displayIndex))
+    )
   }
 
   private def continueEditingLink(idx: Index, transportUnitStatus: TaskListStatus)
@@ -89,7 +89,7 @@ class TransportUnitsAddToListHelper @Inject()(implicit link: link, tagHelper: Ta
           content = Text(messages("site.continueEditing")),
           href = transportUnitRoutes.TransportUnitTypeController.onPageLoad(request.ern, request.arc, idx, NormalMode).url,
           id = s"editTransportUnit${idx.displayIndex}"
-        ).withVisuallyHiddenText(messages("transportUnitsAddToList.transportUnitCardTitle", idx.displayIndex))
+        )
       )
     } else {
       None

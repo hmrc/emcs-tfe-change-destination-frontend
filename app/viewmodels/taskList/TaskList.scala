@@ -17,10 +17,15 @@
 package viewmodels.taskList
 
 import pages.sections.Section
+import play.api.i18n.Messages
+import uk.gov.hmrc.govukfrontend.views.Aliases.{Tag, Text}
+import uk.gov.hmrc.govukfrontend.views.viewmodels.tasklist.TaskListItem
 
 sealed trait TaskListStatus {
   val msgKey: String
   val tagClass: Option[String] = None
+
+  def toTag(implicit messages: Messages) = Tag(Text(messages(msgKey)), tagClass.getOrElse(""))
 }
 
 case object Completed extends TaskListStatus {
@@ -52,13 +57,8 @@ case object UpdateNeeded extends TaskListStatus {
   override val tagClass = Some("govuk-tag--orange")
 }
 
-case class TaskListSectionRow(taskName: String,
-                              id: String,
-                              link: Option[String],
-                              section: Option[Section[_]],
-                              status: Option[TaskListStatus])
-
 case class TaskListSection(sectionHeading: String,
-                           rows: Seq[TaskListSectionRow])
+                           rows: Seq[TaskListItemViewModel])
 
-case class TaskList(sections: Seq[TaskListSection])
+case class TaskListItemViewModel(row: TaskListItem,
+                                 section: Option[Section[_]])

@@ -54,7 +54,7 @@ class TransportUnitIdentitySummarySpec extends SpecBase with Matchers {
                     content = messagesForLanguage.change,
                     href = transportUnitRoutes.TransportUnitIdentityController.onPageLoad(testErn, testArc, testIndex1, CheckMode).url,
                     id = "changeTransportUnitIdentity1"
-                  ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHidden(testIndex1))
+                  ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHidden)
                 )
               )
           }
@@ -87,7 +87,7 @@ class TransportUnitIdentitySummarySpec extends SpecBase with Matchers {
                     content = messagesForLanguage.change,
                     href = transportUnitRoutes.TransportUnitIdentityController.onPageLoad(testErn, testArc, testIndex1, CheckMode).url,
                     id = "changeTransportUnitIdentity1"
-                  ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHidden(testIndex1))
+                  ).withVisuallyHiddenText(messagesForLanguage.cyaChangeHidden)
                 )
               )
           }
