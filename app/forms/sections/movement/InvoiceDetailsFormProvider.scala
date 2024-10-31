@@ -33,10 +33,11 @@ class InvoiceDetailsFormProvider @Inject()(appConfig: AppConfig) extends Mapping
       "invoice-reference" -> text("invoiceDetails.invoice-reference.error.required")
         .verifying(maxLength(35, "invoiceDetails.invoice-reference.error.length")),
       "value" -> optional(localDate(
-        invalidKey = "invoiceDetails.value.error.invalid",
         allRequiredKey = "invoiceDetails.value.error.required.all",
+        oneRequiredKey = "invoiceDetails.value.error.required.one",
         twoRequiredKey = "invoiceDetails.value.error.required.two",
-        requiredKey = "invoiceDetails.value.error.required"
+        oneInvalidKey  = "invoiceDetails.value.error.invalid.one",
+        notARealDateKey = "invoiceDetails.value.error.notARealDate"
       )
         .verifying(
           firstError(

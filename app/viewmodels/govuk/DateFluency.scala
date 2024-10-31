@@ -62,7 +62,7 @@ trait DateFluency {
           name    = s"${field.name}.month",
           value   = field("month").value,
           label   = Some(messages("date.month")),
-          classes = s"govuk-input--width-2 ${fieldError("month")}".trim
+          classes = s"govuk-input--width-5 ${fieldError("month")}".trim
         ),
         InputItem(
           id      = s"${field.id}.year",
