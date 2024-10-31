@@ -48,7 +48,7 @@ class TaskListHelper @Inject()(list: list, p: p) extends Logging {
   def heading(implicit request: DataRequest[_], messages: Messages): String =
     (request.userTypeFromErn, request.userAnswers.get(DestinationTypePage)) match {
       case (GreatBritainWarehouseKeeper, Some(UkTaxWarehouse.GB)) =>
-        messages("taskList.heading.gbTaxWarehouseTo", messages(Seq(s"taskList.heading.${UkTaxWarehouse.GB}", s"destinationType.${UkTaxWarehouse.GB}")))
+        messages("taskList.heading.movementBetweenGBTaxWarehouses")
 
       case (GreatBritainWarehouseKeeper, Some(UkTaxWarehouse.NI)) =>
         messages("taskList.heading.gbTaxWarehouseTo", messages(Seq(s"taskList.heading.${UkTaxWarehouse.NI}", s"destinationType.${UkTaxWarehouse.NI}")))

@@ -21,11 +21,12 @@ import controllers.actions.predraft.FakePreDraftRetrievalAction
 import controllers.actions.{FakeDataRetrievalAction, FakeMovementAction}
 import forms.sections.info.NewDestinationTypeFormProvider
 import mocks.services.{MockPreDraftService, MockUserAnswersService}
+import models.UserAnswers
 import models.requests.DataRequest
 import models.sections.info.DispatchPlace
 import models.sections.info.DispatchPlace.{GreatBritain, NorthernIreland}
 import models.sections.info.movementScenario.MovementScenario
-import models.sections.info.movementScenario.MovementScenario.{EuTaxWarehouse, ExportWithCustomsDeclarationLodgedInTheUk}
+import models.sections.info.movementScenario.MovementScenario.ExportWithCustomsDeclarationLodgedInTheUk
 import navigation.FakeNavigators.FakeInfoNavigator
 import pages.sections.info.{DestinationTypePage, DispatchPlacePage}
 import play.api.data.Form
@@ -47,7 +48,7 @@ class NewDestinationTypeControllerSpec extends SpecBase with MockUserAnswersServ
                  value: String = "unknownDestination"
                ) {
 
-    val userAnswersSoFar = dispatchPlace match {
+    val userAnswersSoFar: UserAnswers = dispatchPlace match {
       case Some(place) => emptyUserAnswers.copy(ern = ern).set(DispatchPlacePage, place)
       case None => emptyUserAnswers.copy(ern = ern)
     }
@@ -146,7 +147,7 @@ class NewDestinationTypeControllerSpec extends SpecBase with MockUserAnswersServ
 
     "onPreDraftSubmit" - {
       "must redirect to the next page when valid data is submitted" in new Fixture(None, value = "exportWithCustomsDeclarationLodgedInTheUk") {
-        val expectedAnswersToSave = emptyUserAnswers.copy(ern = testGreatBritainErn).set(DestinationTypePage, ExportWithCustomsDeclarationLodgedInTheUk)
+        val expectedAnswersToSave: UserAnswers = emptyUserAnswers.copy(ern = testGreatBritainErn).set(DestinationTypePage, ExportWithCustomsDeclarationLodgedInTheUk)
 
         MockUserAnswersService.set(expectedAnswersToSave).returns(Future.successful(expectedAnswersToSave))
         MockPreDraftService.clear(testGreatBritainErn, testArc).returns(Future.successful(true))
@@ -156,7 +157,7 @@ class NewDestinationTypeControllerSpec extends SpecBase with MockUserAnswersServ
       }
 
       "must return a Bad Request and errors when invalid data is submitted" in new Fixture(None, value = "") {
-        val boundForm = form.bind(Map("value" -> ""))
+        val boundForm: Form[MovementScenario] = form.bind(Map("value" -> ""))
 
         status(postResult) mustEqual BAD_REQUEST
         contentAsString(postResult) mustEqual

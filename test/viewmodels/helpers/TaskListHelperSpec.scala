@@ -82,19 +82,19 @@ class TaskListHelperSpec extends SpecBase {
                 titleNoForm(helper.heading) mustBe messagesForLanguage.titleDutyPaid(movementScenario)
             }
           }
+          "must return the taskList.heading.movementBetweenGBTaxWarehouses message" in {
+            implicit val request: DataRequest[_] = dataRequest(FakeRequest(), ern = "GBWK123", answers = emptyUserAnswers.set(DestinationTypePage, UkTaxWarehouse.GB))
+
+            helper.heading mustBe messagesForLanguage.headingMovementBetweenGbTaxWarehouses
+            titleNoForm(helper.heading) mustBe messagesForLanguage.titleMovementBetweenGbTaxWarehouses
+          }
           "must return the taskList.heading.gbTaxWarehouseTo message" in {
-            Seq[(String, MovementScenario)](
-              ("GBWK123", UkTaxWarehouse.GB),
-              ("GBWK123", UkTaxWarehouse.NI)
-            ).foreach {
-              case (ern, movementScenario) =>
-                implicit val request: DataRequest[_] = dataRequest(FakeRequest(), ern = ern, answers = emptyUserAnswers.set(DestinationTypePage, movementScenario))
+            implicit val request: DataRequest[_] = dataRequest(FakeRequest(), ern = "GBWK123", answers = emptyUserAnswers.set(DestinationTypePage, UkTaxWarehouse.NI))
 
-                val destination = msgs(s"taskList.heading.$movementScenario")
+            val destination = msgs(s"taskList.heading.${UkTaxWarehouse.NI}")
 
-                helper.heading mustBe messagesForLanguage.headingGbTaxWarehouseTo(destination)
-                titleNoForm(helper.heading) mustBe messagesForLanguage.titleGbTaxWarehouseTo(destination)
-            }
+            helper.heading mustBe messagesForLanguage.headingGbTaxWarehouseTo(destination)
+            titleNoForm(helper.heading) mustBe messagesForLanguage.titleGbTaxWarehouseTo(destination)
           }
           "must return the taskList.heading.dispatchPlaceTo message" in {
             Seq[(String, DispatchPlace, MovementScenario)](
