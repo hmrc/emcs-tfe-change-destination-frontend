@@ -22,15 +22,18 @@ object ExportCustomsOfficeMessages {
 
   sealed trait ViewMessages extends BaseMessages { _: i18n =>
 
-    val heading: String = "Enter the customs office code for the place where the export declaration is lodged"
+    val heading: String = "Customs office code for the place where the export declaration is lodged"
     val title: String = titleHelper(heading, Some(SectionMessages.English.exportInformationSubHeading))
 
-    def hint(euExport: Boolean): String =
+    def p1(euExport: Boolean): String =
       if(euExport) {
-        "This code is also known as a customs office reference number. It starts with 2 letters representing the member state. For example, GBSOU001. Search for EU customs office codes here (opens in new tab)."
+        "This code is also known as a customs office reference number. Search for EU customs office codes here (opens in new tab)."
       } else {
-        "This code is also known as a customs office reference number. It starts with 2 letters representing the member state. For example, GBSOU001. Search for UK customs office codes here (opens in new tab)."
+        "This code is also known as a customs office reference number. Search for UK customs office codes here (opens in new tab)."
       }
+
+    val hint = "The code starts with 2 letters representing the member state, followed by 6 numbers or mixed letters and numbers. For example, GB000060."
+    val label = "Enter the customs office code"
 
     val errorRequired = "Enter the customs office code"
     val errorLength = (int: Int) => s"Customs office code must be $int characters"
