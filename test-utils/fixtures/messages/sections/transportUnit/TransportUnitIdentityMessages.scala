@@ -17,7 +17,6 @@
 package fixtures.messages.sections.transportUnit
 
 import fixtures.messages.{BaseEnglish, BaseMessages, SectionMessages, i18n}
-import models.Index
 import models.sections.transportUnit.TransportUnitType
 
 object TransportUnitIdentityMessages {
@@ -54,7 +53,7 @@ object TransportUnitIdentityMessages {
 
     val cyaLabel: String = "Transport identifier"
 
-    def cyaChangeHidden(idx: Index): String = s"transport identifier for transport unit ${idx.displayIndex}"
+    val cyaChangeHidden: String = s"transport identifier"
   }
 
   object English extends ViewMessages with BaseEnglish

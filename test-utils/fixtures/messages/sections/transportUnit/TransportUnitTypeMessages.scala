@@ -32,7 +32,7 @@ object TransportUnitTypeMessages {
     val vehicleRadioOption = "Vehicle"
     val addToListLabel = "Transport type"
     val cyaLabel = "Type of transport"
-    def addToListChangeHidden(idx: Index): String = s"transport type for transport unit ${idx.displayIndex}"
+    val addToListChangeHidden: String = "transport type"
     val addToListValue: TransportUnitType => String = {
       case TransportUnitType.Tractor        => tractorRadioOption
       case TransportUnitType.Trailer        => trailerRadioOption

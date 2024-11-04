@@ -15,8 +15,6 @@
  *@
 
 @import models.requests.DataRequest
-@import pages.sections.consignee.ConsigneeBusinessNamePage
-@import viewmodels.taskList.TaskList
 @import viewmodels.helpers.TaskListHelper
 
 @this(
@@ -27,7 +25,7 @@
         h2: components.h2,
         p: components.p,
         link: components.link,
-        taskList: components.taskList,
+        taskList: GovukTaskList,
         helper: TaskListHelper,
         notificationBanner: GovukNotificationBanner,
         saveAndContinue: components.saveAndContinue
@@ -55,7 +53,13 @@
         @messages("taskList.lrn", request.movementDetails.localReferenceNumber)
     }
 
-    @taskList(TaskList(helper.sections))
+    @helper.sections.map { section =>
+        @h2(messages(section.sectionHeading), "govuk-heading-m")
+        @taskList(TaskList(
+            section.rows.map(_.row),
+            idPrefix = section.sectionHeading.toLowerCase.replace(" ", "-"),
+        ))
+    }
 }
 
 @{

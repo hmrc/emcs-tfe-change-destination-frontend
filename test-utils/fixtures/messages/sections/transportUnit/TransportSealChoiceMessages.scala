@@ -17,7 +17,6 @@
 package fixtures.messages.sections.transportUnit
 
 import fixtures.messages.{BaseEnglish, BaseMessages, SectionMessages, i18n}
-import models.Index
 import models.sections.transportUnit.TransportUnitType
 import models.sections.transportUnit.TransportUnitType._
 
@@ -48,7 +47,7 @@ object TransportSealChoiceMessages {
 
     val cyaLabel = "Commercial seal"
 
-    def moreInfoCyaChangeHidden(idx: Index) = s"commercial seal for transport unit ${idx.displayIndex}"
+    val moreInfoCyaChangeHidden = s"commercial seal"
   }
 
   object English extends ViewMessages with BaseEnglish

@@ -90,7 +90,7 @@ class TransportSealInformationSummarySpec extends SpecBase with Matchers with Tr
                       content = messagesForLanguage.change,
                       href = controllers.sections.transportUnit.routes.TransportSealTypeController.onPageLoad(testErn, testArc, testIndex1, CheckMode).url,
                       id = "changeTransportSealInformation1"
-                    ).withVisuallyHiddenText(messagesForLanguage.moreInfoCyaChangeHidden(testIndex1))
+                    ).withVisuallyHiddenText(messagesForLanguage.moreInfoCyaChangeHidden)
                   )
                 )
               )

@@ -71,10 +71,10 @@ class DeclarationController @Inject()(
           case Left(value) =>
             logger.warn(s"Received Left from SubmitChangeDestinationService: $value")
             throw SubmitChangeDestinationException(s"Failed to submit Change Destination to emcs-tfe for ern: '${request.ern}' & ARC: '${request.arc}'")
-        }.recover {
+        }.recoverWith {
           case exception =>
             logger.error(s"Error thrown when calling Submit Change Destination: ${exception.getMessage}")
-            InternalServerError(errorHandler.internalServerErrorTemplate)
+            errorHandler.internalServerErrorTemplate.map(InternalServerError(_))
         }
       }
     }

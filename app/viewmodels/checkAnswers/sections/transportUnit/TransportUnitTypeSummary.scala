@@ -38,7 +38,7 @@ object TransportUnitTypeSummary {
               "site.change",
               routes.TransportUnitTypeController.onPageLoad(request.userAnswers.ern, request.userAnswers.arc, idx, CheckMode).url,
               s"changeTransportUnitType${idx.displayIndex}"
-            ).withVisuallyHiddenText(messages("transportUnitType.change.hidden", idx.displayIndex))
+            ).withVisuallyHiddenText(messages("transportUnitType.change.hidden"))
           )
         )
     }

@@ -113,7 +113,7 @@ class TransportArrangerVatControllerSpec extends SpecBase with MockUserAnswersSe
 
       implicit val msgs: Messages = messages(request)
 
-      val boundForm = form.fill(inputModelWithVATNumber.copy(vatNumber = None)).withError(vatNumberField, msgs(vatNumberRequired))
+      val boundForm = form.fill(inputModelWithVATNumber.copy(vatNumber = Some(""))).withError(vatNumberField, msgs(vatNumberRequired))
 
       val result = controller.onSubmit(testErn, testArc, NormalMode)(request.withFormUrlEncodedBody(hasVatNumberField -> "true", vatNumberField -> ""))
 

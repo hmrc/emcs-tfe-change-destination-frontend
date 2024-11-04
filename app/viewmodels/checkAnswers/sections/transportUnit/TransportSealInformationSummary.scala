@@ -41,7 +41,7 @@ object TransportSealInformationSummary {
               "site.change",
               routes.TransportSealTypeController.onPageLoad(request.userAnswers.ern, request.userAnswers.arc, idx, CheckMode).url,
               s"changeTransportSealInformation${idx.displayIndex}"
-            ).withVisuallyHiddenText(messages("transportSealType.moreInfo.change.hidden", idx.displayIndex))
+            ).withVisuallyHiddenText(messages("transportSealType.moreInfo.change.hidden"))
           )
         )
         case _ =>

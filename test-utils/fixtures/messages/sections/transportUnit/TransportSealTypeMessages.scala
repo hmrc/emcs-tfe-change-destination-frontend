@@ -17,7 +17,6 @@
 package fixtures.messages.sections.transportUnit
 
 import fixtures.messages.{BaseEnglish, BaseMessages, SectionMessages, i18n}
-import models.Index
 import models.sections.transportUnit.TransportUnitType
 import models.sections.transportUnit.TransportUnitType._
 
@@ -41,13 +40,13 @@ object TransportSealTypeMessages {
     val sealTypeErrorLength = "Commercial seal type must be 35 characters or less"
     val sealTypeErrorInvalid = "Commercial seal type must only contain letters and numbers"
     val sealTypeCYA = "Commercial seal type"
-    def sealTypeCyaChangeHidden(idx: Index) = s"commercial seal type for transport unit ${idx.displayIndex}"
+    val sealTypeCyaChangeHidden = s"commercial seal type"
     val moreInfo = "Give more information (optional)"
     val moreInfoHint = "Describe the seal so that it can be identified if the packaging has been tampered with. Include a reference number if there is one."
     val moreInfoErrorCharacters = "Information must only contain letters and numbers"
     val moreInfoErrorLength = "Information must be 350 characters or less"
     val moreInfoCYA = "Commercial seal information"
-    def moreInfoCyaChangeHidden(idx: Index) = s"commercial seal information for transport unit ${idx.displayIndex}"
+    val moreInfoCyaChangeHidden = s"commercial seal information"
     val moreInfoCYAAddInfo = "Enter more information about the commercial seal (optional)"
   }
 
