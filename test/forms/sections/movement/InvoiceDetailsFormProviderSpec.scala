@@ -115,7 +115,7 @@ class InvoiceDetailsFormProviderSpec extends SpecBase with StringFieldBehaviours
 
         "when the date is invalid" in {
 
-          val data = formAnswersMap(day = "1000", month = "1000", year = "1000")
+          val data = formAnswersMap(day = "1000", month = "1000", year = "A")
 
           val expectedResult = Seq(FormError(dateField, s"invoiceDetails.$dateField.error.notARealDate"))
 

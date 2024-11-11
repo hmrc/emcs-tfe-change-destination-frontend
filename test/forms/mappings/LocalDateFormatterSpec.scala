@@ -30,6 +30,7 @@ class LocalDateFormatterSpec extends AnyFreeSpec with Matchers with OptionValues
   val oneRequiredKey = "error.oneRequired"
   val twoRequiredKey = "error.twoRequired"
   val oneInvalidKey = "error.oneInvalid"
+  val twoInvalidKey = "error.invalid.two"
   val notARealDateKey = "error.notARealDate"
   val args = Seq.empty[String]
 
@@ -38,6 +39,7 @@ class LocalDateFormatterSpec extends AnyFreeSpec with Matchers with OptionValues
     oneRequiredKey,
     twoRequiredKey,
     oneInvalidKey,
+    twoInvalidKey,
     notARealDateKey,
     args
   )

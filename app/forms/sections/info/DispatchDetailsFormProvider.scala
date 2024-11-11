@@ -36,7 +36,8 @@ class DispatchDetailsFormProvider @Inject()(appConfig: AppConfig) extends Mappin
           oneRequiredKey = "dispatchDetails.value.error.required.one",
           twoRequiredKey = "dispatchDetails.value.error.required.two",
           oneInvalidKey  = "dispatchDetails.value.error.invalid.one",
-          notARealDateKey = "dispatchDetails.value.error.notARealDate"
+          notARealDateKey = "dispatchDetails.value.error.notARealDate",
+          twoInvalidKey  = "dispatchDetails.value.error.invalid.two"
         )
           .verifying(
             firstError(
