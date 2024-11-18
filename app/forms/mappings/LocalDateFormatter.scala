@@ -27,6 +27,7 @@ private[mappings] class LocalDateFormatter(
                                             oneRequiredKey: String,
                                             twoRequiredKey: String,
                                             oneInvalidKey: String,
+                                            twoInvalidKey: String,
                                             notARealDateKey: String,
                                             args: Seq[String] = Seq.empty
                                           ) extends Formatter[LocalDate] with Formatters {
@@ -80,9 +81,9 @@ private[mappings] class LocalDateFormatter(
       case (false, true, true) => Seq(FormError(key, oneInvalidKey, Seq(dayText) ++ args))
       case (true, false, true) => Seq(FormError(key, oneInvalidKey, Seq(monthText) ++ args))
       case (true, true, false) => Seq(FormError(key, oneInvalidKey, Seq(yearText) ++ args))
-      case (true, false, false) => Seq(FormError(key, notARealDateKey, args))
-      case (false, true, false) => Seq(FormError(key, notARealDateKey, args))
-      case (false, false, true) => Seq(FormError(key, notARealDateKey, args))
+      case (true, false, false) => Seq(FormError(key, twoInvalidKey, Seq(monthText, yearText) ++ args))
+      case (false, true, false) => Seq(FormError(key, twoInvalidKey, Seq(dayText, yearText) ++ args))
+      case (false, false, true) => Seq(FormError(key, twoInvalidKey, Seq(dayText, monthText) ++ args))
       case (false, false, false) => Seq(FormError(key, notARealDateKey, args))
     }
   }
@@ -97,12 +98,13 @@ private[mappings] class LocalDateFormatter(
     handlePartialInputs(key, data) match {
       case Nil =>
         handleRangeInputs(key, data) match {
-          case Nil =>
+          case Nil => {
             val day = data(s"$key.day").trim.toInt
             val month = Try(data(s"$key.month").trim.toInt).getOrElse(monthNumberFromMonthName(data(s"$key.month").trim))
             val year = data(s"$key.year").trim.toInt
 
             toDate(key, day, month, year)
+          }
           case rangeErrors => Left(rangeErrors)
         }
       case partialInputErrors => Left(partialInputErrors)
