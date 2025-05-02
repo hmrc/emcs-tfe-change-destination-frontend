@@ -17,14 +17,13 @@
 package fixtures.messages.sections.transportUnit
 
 import fixtures.messages.{BaseEnglish, BaseMessages, SectionMessages, i18n}
-import models.Index
 import models.sections.transportUnit.TransportUnitType
 
 object TransportUnitTypeMessages {
 
   sealed trait ViewMessages extends BaseMessages { _: i18n =>
     val heading = "What will the goods be transported in?"
-    val title = titleHelper(heading, Some(SectionMessages.English.transportUnitSubHeading))
+    val title: String = titleHelper(heading, Some(SectionMessages.English.transportUnitSubHeading))
     val containerRadioOption = "Container"
     val fixedTransportRadioOption = "Fixed transport installations"
     val tractorRadioOption = "Tractor"

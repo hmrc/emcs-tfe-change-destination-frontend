@@ -53,7 +53,7 @@ class CheckYourAnswersConsigneeController @Inject()(override val messagesApi: Me
                       controllers.sections.consignee.routes.CheckYourAnswersConsigneeController.onSubmit(ern, arc),
                       ern,
                       arc,
-                      consigneeCheckAnswersHelper.summaryList
+                      consigneeCheckAnswersHelper.summaryList()
                     ))
                 }
             }

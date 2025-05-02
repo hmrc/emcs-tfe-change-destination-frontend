@@ -142,6 +142,7 @@ package object models {
                   }
                 }
             }
+        case _ => JsError("path and key cannot be empty")
       }
 
     private def removeAtSubPathArray(array: JsArray, idx: IdxPathNode, pageKey: String): JsResult[JsValue] =

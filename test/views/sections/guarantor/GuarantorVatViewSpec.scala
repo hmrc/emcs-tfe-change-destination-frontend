@@ -56,9 +56,9 @@ class GuarantorVatViewSpec extends SpecBase with ViewBehaviours {
               ).toString())
 
             behave like pageWithExpectedElementsAndMessages(Seq(
-              Selectors.title -> messagesForLanguage.title,
-              Selectors.h1 -> messagesForLanguage.heading,
-              Selectors.link(1) -> messagesForLanguage.notVatRegisteredLink,
+              Selectors.title -> messagesForLanguage.title(),
+              Selectors.h1 -> messagesForLanguage.heading(),
+              Selectors.link(1) -> messagesForLanguage.notVatRegisteredLink(),
               Selectors.button -> messagesForLanguage.saveAndContinue,
               Selectors.saveAndExitLink -> messagesForLanguage.returnToDraft
             ))

@@ -56,8 +56,8 @@ class TransportArrangerNameViewSpec extends SpecBase with ViewBehaviours {
               ).toString())
 
             behave like pageWithExpectedElementsAndMessages(Seq(
-              Selectors.title -> messagesForLanguage.title,
-              Selectors.h1 -> messagesForLanguage.heading,
+              Selectors.title -> messagesForLanguage.title(),
+              Selectors.h1 -> messagesForLanguage.heading(),
 
               Selectors.button -> messagesForLanguage.saveAndContinue,
               Selectors.link(1) -> messagesForLanguage.returnToDraft

@@ -20,13 +20,14 @@ import config.AppConfig
 import models.response.emcsTfe.GetMovementResponse
 import models.response.{ErrorResponse, JsonValidationError, UnexpectedDownstreamResponseError}
 import play.api.libs.json.{JsResultException, Reads}
-import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
+import uk.gov.hmrc.http.client.HttpClientV2
+import uk.gov.hmrc.http.{HeaderCarrier, StringContextOps}
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class GetMovementConnector @Inject()(val http: HttpClient,
+class GetMovementConnector @Inject()(val http: HttpClientV2,
                                      config: AppConfig) extends EmcsTfeHttpParser[GetMovementResponse] {
 
   override implicit val reads: Reads[GetMovementResponse] = GetMovementResponse.reads
@@ -35,7 +36,7 @@ class GetMovementConnector @Inject()(val http: HttpClient,
 
   def getMovement(exciseRegistrationNumber: String, arc: String, forceFetchNew: Boolean)
                  (implicit headerCarrier: HeaderCarrier, executionContext: ExecutionContext): Future[Either[ErrorResponse, GetMovementResponse]] =
-    get(s"$baseUrl/movement/$exciseRegistrationNumber/$arc?forceFetchNew=$forceFetchNew")
+    get(url"$baseUrl/movement/$exciseRegistrationNumber/$arc?forceFetchNew=$forceFetchNew")
       .recover {
         case JsResultException(errors) =>
           logger.warn(s"[getCountryCodesAndMemberStates] Bad JSON response from emcs-tfe: " + errors)

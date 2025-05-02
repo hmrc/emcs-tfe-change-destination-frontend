@@ -19,7 +19,7 @@ package connectors.referenceData
 import base.SpecBase
 import mocks.connectors.MockHttpClient
 import models.response.UnexpectedDownstreamResponseError
-import uk.gov.hmrc.http.HeaderCarrier
+import uk.gov.hmrc.http.{HeaderCarrier, StringContextOps}
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -39,7 +39,7 @@ class GetMemberStatesConnectorSpec extends SpecBase with MockHttpClient {
         val expectedResult = Right(Seq(countryJsonAT, countryJsonBE))
 
         MockHttpClient.get(
-          url = s"${appConfig.referenceDataBaseUrl}/oracle/member-states"
+          url = url"${appConfig.referenceDataBaseUrl}/oracle/member-states"
         ).returns(Future.successful(expectedResult))
 
         val actualResult = connector.getMemberStates().futureValue
@@ -55,7 +55,7 @@ class GetMemberStatesConnectorSpec extends SpecBase with MockHttpClient {
         val expectedResult = Left(UnexpectedDownstreamResponseError)
 
         MockHttpClient.get(
-          url = s"${appConfig.referenceDataBaseUrl}/oracle/member-states"
+          url = url"${appConfig.referenceDataBaseUrl}/oracle/member-states"
         ).returns(Future.successful(expectedResult))
 
         val actualResult = connector.getMemberStates().futureValue

@@ -21,11 +21,12 @@ import mocks.connectors.MockHttpClient
 import models.response.{JsonValidationError, UnexpectedDownstreamResponseError}
 import play.api.http.Status
 import play.api.libs.json.Json
-import uk.gov.hmrc.http.{HttpClient, HttpResponse}
+import uk.gov.hmrc.http.client.HttpClientV2
+import uk.gov.hmrc.http.HttpResponse
 
 class GetCountriesHttpParserSpec extends SpecBase with GetCountriesHttpParser with MockHttpClient {
 
-  override def http: HttpClient = mockHttpClient
+  override def http: HttpClientV2 = mockHttpClient
 
   "GetCountriesReads" - {
 

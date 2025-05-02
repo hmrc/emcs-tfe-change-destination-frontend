@@ -47,7 +47,7 @@ class TransportUnitIndexController @Inject()(
 
   def onPageLoad(ern: String, arc: String): Action[AnyContent] =
     authorisedDataRequestWithUpToDateMovementAsync(ern, arc) { implicit request =>
-      val userAnswersWith801TransportUnits = populateTransportUnitsFrom801IfEmpty
+      val userAnswersWith801TransportUnits = populateTransportUnitsFrom801IfEmpty()
       (userAnswersWith801TransportUnits.get(TransportUnitsCount), request.userAnswers.get(HowMovementTransportedPage)) match {
         case (_, Some(FixedTransportInstallations)) =>
           saveAnswersAndRedirect(Redirect(

@@ -22,8 +22,9 @@ import mocks.connectors.MockHttpClient
 import models.requests.DataRequest
 import models.response.JsonValidationError
 import play.api.http.{HeaderNames, MimeTypes, Status}
+import play.api.libs.json.Json
 import play.api.test.FakeRequest
-import uk.gov.hmrc.http.HeaderCarrier
+import uk.gov.hmrc.http.{HeaderCarrier, StringContextOps}
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -43,8 +44,8 @@ class SubmitChangeDestinationConnectorSpec extends SpecBase
       "when downstream call is successful" in {
 
         MockHttpClient.post(
-          url = s"${appConfig.emcsTfeBaseUrl}/change-destination/$testErn/$testArc",
-          body = minimumSubmitChangeDestinationModel
+          url = url"${appConfig.emcsTfeBaseUrl}/change-destination/$testErn/$testArc",
+          body = Json.toJson(minimumSubmitChangeDestinationModel)
         ).returns(Future.successful(Right(submitChangeDestinationResponseEIS)))
 
         connector.submit(minimumSubmitChangeDestinationModel).futureValue mustBe Right(submitChangeDestinationResponseEIS)
@@ -56,8 +57,8 @@ class SubmitChangeDestinationConnectorSpec extends SpecBase
       "when downstream call fails" in {
 
         MockHttpClient.post(
-          url = s"${appConfig.emcsTfeBaseUrl}/change-destination/$testErn/$testArc",
-          body = minimumSubmitChangeDestinationModel
+          url = url"${appConfig.emcsTfeBaseUrl}/change-destination/$testErn/$testArc",
+          body = Json.toJson(minimumSubmitChangeDestinationModel)
         ).returns(Future.successful(Left(JsonValidationError)))
 
         connector.submit(minimumSubmitChangeDestinationModel).futureValue mustBe Left(JsonValidationError)

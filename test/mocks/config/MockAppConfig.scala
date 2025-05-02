@@ -25,8 +25,8 @@ trait MockAppConfig extends MockFactory {
   lazy val mockAppConfig: AppConfig = mock[AppConfig]
 
   object MockAppConfig {
-    def destinationOfficeSuffix: CallHandler0[String] = (mockAppConfig.destinationOfficeSuffix _).expects()
-    def nrsBrokerBaseUrl: CallHandler0[String] = (mockAppConfig.nrsBrokerBaseUrl _).expects()
+    def destinationOfficeSuffix: CallHandler0[String] = (() => mockAppConfig.destinationOfficeSuffix).expects()
+    def nrsBrokerBaseUrl: CallHandler0[String] = (() => mockAppConfig.nrsBrokerBaseUrl()).expects()
     def getFeatureSwitchValue(feature: FeatureSwitch): CallHandler1[String, Boolean] = {
       val featureSwitchName = feature.configName
       (mockAppConfig.getFeatureSwitchValue(_: String)).expects(featureSwitchName)

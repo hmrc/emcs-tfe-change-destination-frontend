@@ -21,17 +21,19 @@ import mocks.connectors.MockHttpClient
 import models.response.{JsonValidationError, UnexpectedDownstreamResponseError}
 import play.api.http.Status
 import play.api.libs.json.Json
-import uk.gov.hmrc.http.{HttpClient, HttpResponse}
+import uk.gov.hmrc.http.client.HttpClientV2
+import uk.gov.hmrc.http.HttpResponse
 
 class GetTraderKnownFactsHttpParserSpec extends SpecBase with GetTraderKnownFactsHttpParser with MockHttpClient {
 
-  override def http: HttpClient = mockHttpClient
+  override def http: HttpClientV2 = mockHttpClient
 
   "GetTraderKnownFactsReads.read(method: String, url: String, response: HttpResponse)" - {
 
     "should return 'Some(traderKnownFacts)'" - {
       s"when an OK (${Status.OK}) response is retrieved" in {
-        GetTraderKnownFactsReads(testErn).read("", "", HttpResponse(Status.OK, Json.obj("traderName" -> "testTraderName").toString())) mustBe Right(Some(testMinTraderKnownFacts))
+        GetTraderKnownFactsReads(testErn)
+          .read("", "", HttpResponse(Status.OK, Json.obj("traderName" -> "testTraderName").toString())) mustBe Right(Some(testMinTraderKnownFacts))
       }
     }
 

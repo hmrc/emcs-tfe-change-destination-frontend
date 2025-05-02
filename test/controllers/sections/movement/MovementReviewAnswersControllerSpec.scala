@@ -29,7 +29,6 @@ import play.api.mvc.{AnyContentAsEmpty, Call}
 import play.api.test.Helpers._
 import play.api.test.{FakeRequest, Helpers}
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryList
-import viewmodels.govuk.all.FluentSummaryList
 import viewmodels.govuk.summarylist._
 import views.html.sections.movement.MovementReviewAnswersView
 

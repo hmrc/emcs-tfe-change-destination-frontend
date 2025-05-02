@@ -16,61 +16,75 @@
 
 package mocks.connectors
 
+import izumi.reflect.Tag
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
 import org.scalatest.matchers.should.Matchers
-import play.api.libs.json.Writes
-import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpReads}
+import play.api.libs.json.JsValue
+import play.api.libs.ws.BodyWritable
+import uk.gov.hmrc.http.client.{HttpClientV2, RequestBuilder}
+import uk.gov.hmrc.http.{HeaderCarrier, HttpReads}
 
+import java.net.URL
 import scala.concurrent.{ExecutionContext, Future}
 
 trait MockHttpClient extends MockFactory {
 
-  val mockHttpClient: HttpClient = mock[HttpClient]
+  val mockHttpClient: HttpClientV2 = mock[HttpClientV2]
+  val mockRequestBuilder: RequestBuilder = mock[RequestBuilder]
 
   object MockHttpClient extends Matchers {
 
-    def get[T](url: String,
-               parameters: Seq[(String, String)] = Seq.empty): CallHandler[Future[T]] = {
+    def get[T](url: URL): CallHandler[Future[T]] = {
       (mockHttpClient
-        .GET(_: String, _: Seq[(String, String)], _: Seq[(String, String)])(_: HttpReads[T], _: HeaderCarrier, _: ExecutionContext))
-        .expects(assertArgs {
-          (actualUrl: String, actualParams: Seq[(String, String)], _, _, _, _) => {
-            actualUrl shouldBe url
-            actualParams shouldBe parameters
-          }
-        })
+        .get(_: URL)(_: HeaderCarrier))
+        .expects(url, *)
+        .returns(mockRequestBuilder)
+      (mockRequestBuilder
+        .execute[T](_: HttpReads[T], _: ExecutionContext))
+        .expects(*, *)
     }
 
-    def post[I, T](url: String,
-                   body: I): CallHandler[Future[T]] = {
+    def post[I, T](url: URL,
+                   body: JsValue): CallHandler[Future[T]] = {
       (mockHttpClient
-        .POST[I, T](_: String, _: I, _: Seq[(String, String)])(_: Writes[I], _: HttpReads[T], _: HeaderCarrier, _: ExecutionContext))
-        .expects(assertArgs { (actualUrl, actualBody: I, _, _, _, _, _) => {
-          actualUrl shouldBe url
-          actualBody shouldBe body
-        }
-        })
+        .post(_: URL)(_: HeaderCarrier))
+        .expects(url, *)
+        .returns(mockRequestBuilder)
+
+      (mockRequestBuilder
+        .withBody(_: JsValue)(_: BodyWritable[JsValue], _: Tag[JsValue], _: ExecutionContext))
+        .expects(body, *, *, *)
+        .returns(mockRequestBuilder)
+
+      (mockRequestBuilder
+        .execute[T](_: HttpReads[T], _: ExecutionContext))
+        .expects(*, *)
     }
 
-    def put[I, T](url: String,
-                  body: I): CallHandler[Future[T]] = {
+    def put[I, T](url: URL,
+                  body: JsValue): CallHandler[Future[T]] = {
       (mockHttpClient
-        .PUT[I, T](_: String, _: I, _: Seq[(String, String)])(_: Writes[I], _: HttpReads[T], _: HeaderCarrier, _: ExecutionContext))
-        .expects(assertArgs { (actualUrl, actualBody: I, _, _, _, _, _) => {
-          actualUrl shouldBe url
-          actualBody shouldBe body
-        }
-        })
+        .put(_: URL)(_: HeaderCarrier))
+        .expects(url, *)
+        .returns(mockRequestBuilder)
+
+      (mockRequestBuilder
+        .withBody(_: JsValue)(_: BodyWritable[JsValue], _: Tag[JsValue], _:ExecutionContext))
+        .expects(body, *, *, *)
+        .returns(mockRequestBuilder)
+
+      (mockRequestBuilder.execute[T](_: HttpReads[T], _: ExecutionContext))
+        .expects(*, *)
     }
 
-    def delete[T](url: String): CallHandler[Future[T]] = {
-      (mockHttpClient
-        .DELETE(_: String, _: Seq[(String, String)])(_: HttpReads[T], _: HeaderCarrier, _: ExecutionContext))
-        .expects(assertArgs { (actualUrl, _, _, _, _) => {
-          actualUrl shouldBe url
-        }
-        })
+    def delete[T](url: URL): CallHandler[Future[T]] = {
+      (mockHttpClient.delete(_: URL)(_: HeaderCarrier))
+        .expects(url, *)
+        .returns(mockRequestBuilder)
+
+      (mockRequestBuilder.execute[T](_: HttpReads[T], _: ExecutionContext))
+        .expects(*, *)
     }
 
   }
