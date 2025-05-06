@@ -19,6 +19,7 @@ package models
 import play.api.mvc.PathBindable
 
 import scala.util.{Failure, Success, Try}
+import scala.language.implicitConversions
 
 case class Index(position: Int) {
   val displayIndex: String = s"${position + 1}"

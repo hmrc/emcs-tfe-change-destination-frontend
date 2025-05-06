@@ -26,7 +26,7 @@ import play.api.data.Form
 import play.api.data.Forms.text
 import play.api.i18n.MessagesApi
 import play.api.libs.json.JsPath
-import play.api.mvc.MessagesControllerComponents
+import play.api.mvc.{AnyContentAsEmpty, MessagesControllerComponents}
 import play.api.test.FakeRequest
 import play.api.test.Helpers.GET
 import uk.gov.hmrc.http.HeaderCarrier
@@ -38,7 +38,7 @@ class BaseControllerSpec extends SpecBase with GuiceOneAppPerSuite with BaseCont
 
   implicit lazy val hc: HeaderCarrier = HeaderCarrier()
 
-  val testForm = Form("value" -> text)
+  val testForm: Form[String] = Form("value" -> text)
 
   object TestPage extends QuestionPage[String] {
     override val path: JsPath = JsPath \ "test"
@@ -50,7 +50,7 @@ class BaseControllerSpec extends SpecBase with GuiceOneAppPerSuite with BaseCont
   class Test(val userAnswers: UserAnswers = emptyUserAnswers,
              val movementDetails: GetMovementResponse = maxGetMovementResponse) {
 
-    implicit val request = dataRequest(FakeRequest(GET, "/foo/bar"), userAnswers, movementDetails = movementDetails)
+    implicit val request: DataRequest[AnyContentAsEmpty.type] = dataRequest(FakeRequest(GET, "/foo/bar"), userAnswers, movementDetails = movementDetails)
   }
 
   "fillForm" - {

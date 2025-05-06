@@ -21,13 +21,14 @@ import models.requests.DataRequest
 import models.response.{ErrorResponse, SubmitChangeDestinationResponse}
 import models.submitChangeDestination.SubmitChangeDestinationModel
 import play.api.libs.json.{Json, Reads}
-import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
+import uk.gov.hmrc.http.client.HttpClientV2
+import uk.gov.hmrc.http.{HeaderCarrier, StringContextOps}
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class SubmitChangeDestinationConnector @Inject()(val http: HttpClient,
+class SubmitChangeDestinationConnector @Inject()(val http: HttpClientV2,
                                               config: AppConfig) extends EmcsTfeHttpParser[SubmitChangeDestinationResponse] {
 
   override implicit val reads: Reads[SubmitChangeDestinationResponse] = SubmitChangeDestinationResponse.reads
@@ -36,7 +37,7 @@ class SubmitChangeDestinationConnector @Inject()(val http: HttpClient,
   def submit(submitChangeDestinationModel: SubmitChangeDestinationModel)
             (implicit request: DataRequest[_], hc: HeaderCarrier, ec: ExecutionContext): Future[Either[ErrorResponse, SubmitChangeDestinationResponse]] = {
     logger.debug(s"[submit][${request.ern}][${request.arc}] Submitting body: ${Json.toJson(submitChangeDestinationModel)}")
-    post(s"$baseUrl/change-destination/${request.ern}/${request.arc}", submitChangeDestinationModel)
+    post(url"$baseUrl/change-destination/${request.ern}/${request.arc}", submitChangeDestinationModel)
   }
 
 }

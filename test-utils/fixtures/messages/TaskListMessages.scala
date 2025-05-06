@@ -28,7 +28,7 @@ object TaskListMessages {
       case _ =>
         throw new IllegalArgumentException(s"DestinationType of '$destinationType' is not a valid Duty Paid scenario")
     }
-    def titleDutyPaid(destinationType: MovementScenario) = titleHelper(headingDutyPaid(destinationType))
+    def titleDutyPaid(destinationType: MovementScenario): String = titleHelper(headingDutyPaid(destinationType))
     def headingMovementBetweenGbTaxWarehouses: String = "Movement between tax warehouses in Great Britain"
     def headingGbTaxWarehouseTo(input: String): String = s"Great Britain tax warehouse to $input"
     def titleMovementBetweenGbTaxWarehouses: String = titleHelper(headingMovementBetweenGbTaxWarehouses)
@@ -50,7 +50,7 @@ object TaskListMessages {
     val dispatch: String = "Place of dispatch"
     val consignee: String = "Consignee"
     val destination: String = "Place of destination"
-    val export: String = "Export"
+    val `export`: String = "Export"
 
     val guarantorSectionHeading: String = "Guarantor"
     val guarantor: String = "Guarantor"

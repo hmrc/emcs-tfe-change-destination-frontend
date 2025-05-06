@@ -20,11 +20,12 @@ import connectors.BaseConnectorUtils
 import models.UserAnswers
 import models.response.{BadRequestError, ErrorResponse, JsonValidationError, UnexpectedDownstreamResponseError}
 import play.api.http.Status.{BAD_REQUEST, NO_CONTENT, OK}
-import uk.gov.hmrc.http.{HttpClient, HttpReads, HttpResponse}
+import uk.gov.hmrc.http.client.HttpClientV2
+import uk.gov.hmrc.http.{HttpReads, HttpResponse}
 
 trait UserAnswersHttpParsers extends BaseConnectorUtils[UserAnswers] {
 
-  def http: HttpClient
+  def http: HttpClientV2
 
   object GetUserAnswersReads extends HttpReads[Either[ErrorResponse, Option[UserAnswers]]] {
     override def read(method: String, url: String, response: HttpResponse): Either[ErrorResponse, Option[UserAnswers]] =

@@ -19,8 +19,9 @@ package connectors.emcsTfe
 import config.AppConfig
 import models.UserAnswers
 import models.response.ErrorResponse
-import play.api.libs.json.Reads
-import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
+import play.api.libs.json.{Json, Reads}
+import uk.gov.hmrc.http.client.HttpClientV2
+import uk.gov.hmrc.http.{HeaderCarrier, StringContextOps}
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
@@ -37,7 +38,7 @@ trait UserAnswersConnector {
 }
 
 @Singleton
-class UserAnswersConnectorImpl @Inject()(val http: HttpClient,
+class UserAnswersConnectorImpl @Inject()(val http: HttpClientV2,
                                      config: AppConfig) extends UserAnswersHttpParsers with UserAnswersConnector {
 
   override implicit val reads: Reads[UserAnswers] = UserAnswers.format
@@ -46,21 +47,21 @@ class UserAnswersConnectorImpl @Inject()(val http: HttpClient,
 
   def get(ern: String, arc: String)
          (implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Either[ErrorResponse, Option[UserAnswers]]] =
-    http.GET[Either[ErrorResponse, Option[UserAnswers]]](
-      url = s"$baseUrl/user-answers/change-destination/$ern/$arc"
-    )(GetUserAnswersReads, hc, ec)
+    http
+      .get(url"$baseUrl/user-answers/change-destination/$ern/$arc")
+      .execute[Either[ErrorResponse, Option[UserAnswers]]](GetUserAnswersReads, ec)
 
   def put(userAnswers: UserAnswers)
          (implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Either[ErrorResponse, UserAnswers]] =
-    http.PUT[UserAnswers, Either[ErrorResponse, UserAnswers]](
-      url = s"$baseUrl/user-answers/change-destination/${userAnswers.ern}/${userAnswers.arc}",
-      body = userAnswers
-    )(UserAnswers.writes, PutUserAnswersReads, hc, ec)
+    http
+      .put(url"$baseUrl/user-answers/change-destination/${userAnswers.ern}/${userAnswers.arc}")
+      .withBody(Json.toJson(userAnswers))
+      .execute[Either[ErrorResponse, UserAnswers]](PutUserAnswersReads, ec)
 
   def delete(ern: String, arc: String)
             (implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Either[ErrorResponse, Boolean]] =
-    http.DELETE[Either[ErrorResponse, Boolean]](
-      url = s"$baseUrl/user-answers/change-destination/$ern/$arc"
-    )(DeleteUserAnswersReads, hc, ec)
+    http
+      .delete(url"$baseUrl/user-answers/change-destination/$ern/$arc")
+      .execute[Either[ErrorResponse, Boolean]](DeleteUserAnswersReads, ec)
 
 }

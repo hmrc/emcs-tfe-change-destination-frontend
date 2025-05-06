@@ -22,14 +22,15 @@ import mocks.connectors.MockHttpClient
 import models.response.{JsonValidationError, SubmitChangeDestinationResponse, UnexpectedDownstreamSubmissionResponseError}
 import play.api.http.{HeaderNames, MimeTypes, Status}
 import play.api.libs.json.{Json, Reads}
-import uk.gov.hmrc.http.{HttpClient, HttpResponse}
+import uk.gov.hmrc.http.client.HttpClientV2
+import uk.gov.hmrc.http.HttpResponse
 
 class EmcsTfeHttpParserSpec extends SpecBase
   with Status with MimeTypes with HeaderNames with MockHttpClient with SubmitChangeDestinationFixtures {
 
-  lazy val httpParser = new EmcsTfeHttpParser[SubmitChangeDestinationResponse] {
+  lazy val httpParser: EmcsTfeHttpParser[SubmitChangeDestinationResponse] = new EmcsTfeHttpParser[SubmitChangeDestinationResponse] {
     override implicit val reads: Reads[SubmitChangeDestinationResponse] = SubmitChangeDestinationResponse.reads
-    override def http: HttpClient = mockHttpClient
+    override def http: HttpClientV2 = mockHttpClient
   }
 
   "EmcsTfeReads.read(method: String, url: String, response: HttpResponse)" - {
@@ -50,7 +51,8 @@ class EmcsTfeHttpParserSpec extends SpecBase
 
         val httpResponse = HttpResponse(Status.INTERNAL_SERVER_ERROR, Json.obj(), Map())
 
-        httpParser.EmcsTfeReads.read("POST", "/change-destination/ern/arc", httpResponse) mustBe Left(UnexpectedDownstreamSubmissionResponseError(Status.INTERNAL_SERVER_ERROR))
+        httpParser.EmcsTfeReads.read("POST", "/change-destination/ern/arc", httpResponse) mustBe
+          Left(UnexpectedDownstreamSubmissionResponseError(Status.INTERNAL_SERVER_ERROR))
       }
     }
 

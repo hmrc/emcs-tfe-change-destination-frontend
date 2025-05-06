@@ -21,14 +21,15 @@ import models.CountryModel
 import models.response.{ErrorResponse, JsonValidationError, UnexpectedDownstreamResponseError}
 import play.api.http.Status.OK
 import play.api.libs.json.Reads
-import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpReads, HttpResponse}
+import uk.gov.hmrc.http.client.HttpClientV2
+import uk.gov.hmrc.http.{HeaderCarrier, HttpReads, HttpResponse, StringContextOps}
 
 import scala.concurrent.{ExecutionContext, Future}
 
 trait GetCountriesHttpParser extends BaseConnectorUtils[Seq[CountryModel]] {
 
   implicit val reads: Reads[Seq[CountryModel]] = Reads.seq(CountryModel.format)
-  def http: HttpClient
+  def http: HttpClientV2
 
   class GetCountriesReads() extends HttpReads[Either[ErrorResponse, Seq[CountryModel]]] {
     override def read(method: String, url: String, response: HttpResponse): Either[ErrorResponse, Seq[CountryModel]] = {
@@ -47,7 +48,10 @@ trait GetCountriesHttpParser extends BaseConnectorUtils[Seq[CountryModel]] {
     }
   }
 
-  def get(url: String)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Either[ErrorResponse, Seq[CountryModel]]] =
-    http.GET[Either[ErrorResponse, Seq[CountryModel]]](url = url)(new GetCountriesReads(), hc, ec)
+  def get(url: String)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Either[ErrorResponse, Seq[CountryModel]]] = {
+    http
+      .get(url"$url")
+      .execute[Either[ErrorResponse, Seq[CountryModel]]](new GetCountriesReads(), ec)
+  }
 
 }

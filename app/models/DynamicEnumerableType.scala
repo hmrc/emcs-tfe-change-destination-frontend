@@ -16,6 +16,8 @@
 
 package models
 
+import scala.language.implicitConversions
+
 trait DynamicEnumerableType[T <: Checkboxable[T]] extends Enumerable.Implicits {
 
   implicit def enumerable(values: Seq[T]): Enumerable[T] =

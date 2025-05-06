@@ -28,7 +28,7 @@ class ChangeDestinationTypeHelper @Inject()() {
   def summaryList()(implicit request: DataRequest[_], messages: Messages): SummaryList = {
     SummaryListViewModel(
       rows = Seq(
-        ChangeDestinationTypeSummary.row
+        ChangeDestinationTypeSummary.row()
       )
     ).withCssClass("govuk-!-margin-bottom-9")
   }
