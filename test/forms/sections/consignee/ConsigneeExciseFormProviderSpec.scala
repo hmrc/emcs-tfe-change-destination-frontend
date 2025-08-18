@@ -24,7 +24,7 @@ import models.requests.DataRequest
 import models.sections.info.ChangeType
 import models.sections.info.ChangeType.ChangeConsignee
 import models.sections.info.movementScenario.MovementScenario
-import models.sections.info.movementScenario.MovementScenario.{EuTaxWarehouse, TemporaryCertifiedConsignee, TemporaryRegisteredConsignee, UkTaxWarehouse}
+import models.sections.info.movementScenario.MovementScenario.{EuTaxWarehouse, TemporaryCertifiedConsignee, TemporaryRegisteredConsignee, RegisteredConsignee, UkTaxWarehouse}
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import pages.sections.info.DestinationTypePage
 import play.api.data.FormError
@@ -159,6 +159,32 @@ class ConsigneeExciseFormProviderSpec extends StringFieldBehaviours with GuiceOn
 
           val boundForm = form.bind(Map(fieldName -> "0034567890123"))
           boundForm.errors.headOption mustBe Some(FormError(fieldName, "consigneeExcise.error.format", Seq("[A-Z]{2}[a-zA-Z0-9]{11}")))
+        }
+      }
+    }
+
+    "when Destination is RegisteredConsignee" - {
+      val rcDestination: DataRequest[AnyContentAsEmpty.type] = dataRequest(
+          request   = FakeRequest(),
+          answers   = emptyUserAnswers.set(DestinationTypePage, RegisteredConsignee),
+          ern       = testNorthernIrelandWarehouseKeeperErn
+        )
+
+      val form = new ConsigneeExciseFormProvider().apply(None, RegisteredConsignee, ChangeConsignee)(rcDestination)
+
+      "must accept warehouse-keeper prefixes" in {
+        Seq("GBWK123456789", "XIWK123456789").foreach { ern =>
+          val bound = form.bind(Map(fieldName -> ern))
+          bound.errors mustBe empty
+          bound.value.value mustBe ern
+        }
+      }
+
+      "must accept registered-consignee prefixes" in {
+        Seq("GBRC123456789", "XIRC123456789").foreach { ern =>
+          val bound = form.bind(Map(fieldName -> ern))
+          bound.errors mustBe empty
+          bound.value.value mustBe ern
         }
       }
     }

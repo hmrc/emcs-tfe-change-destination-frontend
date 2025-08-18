@@ -509,6 +509,7 @@ consigneeExcise.error.mustStartWithGBWKOrXIWK = ERN must start with GBWK or XIWK
 consigneeExcise.error.mustStartWithXIWK = ERN must start with XIWK because the destination is a tax warehouse in Northern Ireland
 consigneeExcise.error.mustNotStartWithGBOrXI = ERN must not start with GBWK or XIWK because the destination is not a tax warehouse in the United Kingdom
 consigneeExcise.error.sameAsExisting = Consignee ERN must not be the same as the previous submission of this movement
+consigneeExcise.error.mustStartWithGBWKOrXIWKOrGBRCOrXIRC =  ERN must start with GBWK, XIWK, GBRC or XIRC
 
 consigneeExcise.checkYourAnswersLabel.ern = Excise registration number (ERN)
 consigneeExcise.change.hidden.ern = consignee excise registration number (ERN)
