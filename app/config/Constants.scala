@@ -22,5 +22,6 @@ object Constants {
   val GB_PREFIX = "GB"
   val GBWK_PREFIX = "GBWK"
   val XIWK_PREFIX = "XIWK"
-
+  val GBRC_PREFIX = "GBRC"
+  val XIRC_PREFIX = "XIRC"
 }

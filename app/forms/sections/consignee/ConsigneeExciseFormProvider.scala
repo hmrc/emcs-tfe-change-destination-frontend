@@ -75,6 +75,10 @@ class ConsigneeExciseFormProvider @Inject() extends Mappings {
   //noinspection ScalaStyle
   private def validateErn(memberStates: Option[Seq[CountryModel]])(implicit request: DataRequest[_]): Constraint[String] =
     Constraint {
+      case ern if DestinationTypePage.value.contains(MovementScenario.RegisteredConsignee) =>
+        if (Seq(Constants.GBWK_PREFIX, Constants.XIWK_PREFIX, Constants.GBRC_PREFIX, Constants.XIRC_PREFIX).exists(ern.startsWith)) Valid
+        else Invalid("consigneeExcise.error.mustStartWithGBWKOrXIWKOrGBRCOrXIRC")
+
       case ern if DestinationTypePage.value.contains(UkTaxWarehouse.GB) =>
         if (Seq(Constants.GBWK_PREFIX, Constants.XIWK_PREFIX).exists(ern.startsWith)) Valid else Invalid("consigneeExcise.error.mustStartWithGBWKOrXIWK")
 

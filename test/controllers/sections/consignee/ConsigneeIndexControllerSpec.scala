@@ -178,6 +178,17 @@ class ConsigneeIndexControllerSpec extends SpecBase with MockUserAnswersService 
           redirectLocation(result) mustBe
             Some(controllers.sections.consignee.routes.ConsigneeExciseController.onPageLoad(ern, testArc, NormalMode).url)
         }
+
+        s"and destination is $RegisteredConsignee" in new Fixture(
+          Some(emptyUserAnswers.set(DestinationTypePage, RegisteredConsignee))
+        ) {
+          val result: Future[Result] =
+            testController.onPageLoad(ern, testArc)(request)
+
+          status(result) mustBe SEE_OTHER
+          redirectLocation(result) mustBe
+            Some(controllers.sections.consignee.routes.ConsigneeExciseController.onPageLoad(ern, testArc, NormalMode).url)
+        }
       }
     }
 

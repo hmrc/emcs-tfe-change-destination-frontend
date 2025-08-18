@@ -100,8 +100,8 @@ class ConsigneeIndexController @Inject()(override val messagesApi: MessagesApi,
       userTypeFromErn == NorthernIrelandRegisteredConsignor && validDestinationTypes.contains(destinationTypePageAnswer)
     }
 
-    val xiwkAndRegisteredConsignee: Boolean =
-      (userTypeFromErn == NorthernIrelandWarehouseKeeper) && (destinationTypePageAnswer == TemporaryRegisteredConsignee)
+    val xiwkAndRegisteredConsignee: Boolean = userTypeFromErn == NorthernIrelandWarehouseKeeper && Seq(TemporaryRegisteredConsignee, RegisteredConsignee)
+      .contains(destinationTypePageAnswer)
 
     validDestinationTypesRegardlessOfUserTypes || gbrcAndValidDestinationType || xircAndValidDestinationType || xiwkAndRegisteredConsignee
   }
