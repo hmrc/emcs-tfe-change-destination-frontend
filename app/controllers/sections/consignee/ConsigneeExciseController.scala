@@ -21,7 +21,7 @@ import controllers.BaseNavigationController
 import controllers.actions._
 import forms.sections.consignee.ConsigneeExciseFormProvider
 import models.requests.DataRequest
-import models.sections.info.movementScenario.MovementScenario.{EuTaxWarehouse, TemporaryCertifiedConsignee, TemporaryRegisteredConsignee}
+import models.sections.info.movementScenario.MovementScenario.{EuTaxWarehouse, TemporaryCertifiedConsignee, TemporaryRegisteredConsignee, RegisteredConsignee}
 import models.{CountryModel, Mode}
 import navigation.ConsigneeNavigator
 import pages.sections.consignee.ConsigneeExcisePage
@@ -92,7 +92,7 @@ class ConsigneeExciseController @Inject()(override val messagesApi: MessagesApi,
     }
 
   private def withOptionalEuMemberStates[A](f: Option[Seq[CountryModel]] => Future[A])(implicit request: DataRequest[_]): Future[A] =
-    Option.when(DestinationTypePage.value.contains(EuTaxWarehouse)) {
+    Option.when(DestinationTypePage.value.contains(EuTaxWarehouse) || DestinationTypePage.value.contains(RegisteredConsignee)) {
       memberStatesService.getEuMemberStates()
     }.traverse(identity).flatMap(f)
 

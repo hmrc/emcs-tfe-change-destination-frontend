@@ -164,27 +164,32 @@ class ConsigneeExciseFormProviderSpec extends StringFieldBehaviours with GuiceOn
     }
 
     "when Destination is RegisteredConsignee" - {
+
       val rcDestination: DataRequest[AnyContentAsEmpty.type] = dataRequest(
-          request   = FakeRequest(),
-          answers   = emptyUserAnswers.set(DestinationTypePage, RegisteredConsignee),
-          ern       = testNorthernIrelandWarehouseKeeperErn
-        )
+        request = FakeRequest(),
+        answers = emptyUserAnswers.set(DestinationTypePage, RegisteredConsignee),
+        ern     = testNorthernIrelandWarehouseKeeperErn
+      )
 
-      val form = new ConsigneeExciseFormProvider().apply(None, RegisteredConsignee, ChangeConsignee)(rcDestination)
+      val form = new ConsigneeExciseFormProvider()
+        .apply(Some(Seq(CountryModel("FR", "France"), CountryModel("EL", "Greece"))), RegisteredConsignee, ChangeConsignee)(rcDestination)
 
-      "must accept warehouse-keeper prefixes" in {
-        Seq("GBWK123456789", "XIWK123456789").foreach { ern =>
-          val bound = form.bind(Map(fieldName -> ern))
-          bound.errors mustBe empty
-          bound.value.value mustBe ern
+      "when ERN starts with a code that is NOT in the EU member states list" - {
+
+        "must return an error with correct message" in {
+
+          val boundForm = form.bind(Map(fieldName -> "XE00123456789"))
+          boundForm.errors.headOption mustBe Some(FormError(fieldName, "consigneeExcise.error.invalidMemberState", Seq()))
         }
       }
 
-      "must accept registered-consignee prefixes" in {
-        Seq("GBRC123456789", "XIRC123456789").foreach { ern =>
-          val bound = form.bind(Map(fieldName -> ern))
-          bound.errors mustBe empty
-          bound.value.value mustBe ern
+      "when ERN starts with a code that's in the EU member states list" - {
+
+        "must return success" in {
+
+          val boundForm = form.bind(Map(fieldName -> testEuErn)) // e.g. FR12345678901 from SpecBase
+          boundForm.errors.headOption mustBe None
+          boundForm.value mustBe Some(testEuErn)
         }
       }
     }
