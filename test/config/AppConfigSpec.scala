@@ -37,7 +37,7 @@ class AppConfigSpec extends SpecBase with BeforeAndAfterEach with FeatureSwitchi
 
     ".signOutUrl()" - {
       "should have the correct url" in {
-        appConfig.signOutUrl mustBe "http://localhost:8308/gg/sign-out"
+        appConfig.signOutUrl mustBe "http://localhost:8308/bas-gateway/sign-out-without-state"
       }
     }
 
