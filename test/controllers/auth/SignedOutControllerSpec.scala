@@ -61,7 +61,7 @@ class SignedOutControllerSpec extends SpecBase with FeatureSwitching {
           val result = testController.signOut()(request)
 
           status(result) mustEqual SEE_OTHER
-          redirectLocation(result) mustBe Some(s"http://localhost:8308/gg/sign-out?continue=${URLEncoder.encode(config.feedbackFrontendSurveyUrl, "UTF-8")}")
+          redirectLocation(result) mustBe Some(s"http://localhost:8308/bas-gateway/sign-out-without-state?continue=${URLEncoder.encode(config.feedbackFrontendSurveyUrl, "UTF-8")}")
         }
       }
 
@@ -77,7 +77,7 @@ class SignedOutControllerSpec extends SpecBase with FeatureSwitching {
 
             status(result) mustEqual SEE_OTHER
             redirectLocation(result) mustBe
-              Some(s"http://localhost:8308/gg/sign-out?continue=${URLEncoder.encode(appConfig.host + routes.SignedOutController.signedOutSaved().url, "UTF-8")}")
+              Some(s"http://localhost:8308/bas-gateway/sign-out-without-state?continue=${URLEncoder.encode(appConfig.host + routes.SignedOutController.signedOutSaved().url, "UTF-8")}")
           }
         }
 
@@ -91,7 +91,7 @@ class SignedOutControllerSpec extends SpecBase with FeatureSwitching {
 
             status(result) mustEqual SEE_OTHER
             redirectLocation(result) mustBe
-              Some(s"http://localhost:8308/gg/sign-out?continue=${URLEncoder.encode(appConfig.host + routes.SignedOutController.signedOutNotSaved().url, "UTF-8")}")
+              Some(s"http://localhost:8308/bas-gateway/sign-out-without-state?continue=${URLEncoder.encode(appConfig.host + routes.SignedOutController.signedOutNotSaved().url, "UTF-8")}")
           }
         }
       }
