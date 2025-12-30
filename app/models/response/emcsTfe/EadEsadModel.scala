@@ -27,7 +27,7 @@ case class EadEsadModel(
                          dateOfDispatch: String,
                          timeOfDispatch: Option[String],
                          upstreamArc: Option[String],
-                         importSadNumber: Option[Seq[String]]
+                         importCustomDeclarationNumber: Option[Seq[String]]
                        )
 
 object EadEsadModel {

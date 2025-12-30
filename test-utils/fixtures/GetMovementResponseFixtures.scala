@@ -141,7 +141,7 @@ trait GetMovementResponseFixtures extends BaseFixtures {
       dateOfDispatch = "EadEsadDateOfDispatch",
       timeOfDispatch = Some("EadEsadTimeOfDispatch"),
       upstreamArc = Some("EadEsadUpstreamArc"),
-      importSadNumber = Some(Seq("ImportSadNumber1", "ImportSadNumber2"))
+      importCustomDeclarationNumber = Some(Seq("importCustomDeclarationNumber1", "importCustomDeclarationNumber2"))
     ),
     headerEadEsad = HeaderEadEsadModel(
       sequenceNumber = 1,
@@ -340,7 +340,7 @@ trait GetMovementResponseFixtures extends BaseFixtures {
       "dateOfDispatch"       -> "EadEsadDateOfDispatch",
       "timeOfDispatch"       -> "EadEsadTimeOfDispatch",
       "upstreamArc"          -> "EadEsadUpstreamArc",
-      "importSadNumber"      -> Json.arr("ImportSadNumber1", "ImportSadNumber2")
+      "importCustomDeclarationNumber"      -> Json.arr("importCustomDeclarationNumber1", "importCustomDeclarationNumber2")
     ),
     "headerEadEsad" -> Json.obj(
       "sequenceNumber"                -> 1,
