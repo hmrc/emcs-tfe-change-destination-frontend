@@ -16,6 +16,7 @@
 
 @import models.requests.DataRequest
 @import viewmodels.LabelSize
+@import config.AppConfig
 
 @this(layout: templates.Layout,
         formHelper: FormWithCSRF,
@@ -24,6 +25,9 @@
         govukButton: GovukButton,
         h1: components.h1,
         h2: components.h2,
+        p: components.p,
+        link: components.link,
+        appConfig: AppConfig,
         continueOrExit: components.continueOrExit)
 
 @(form: Form[_], action: Call, isNorthernIrishTemporaryRegisteredConsignee: Boolean, isNorthernIrishTemporaryCertifiedConsignee: Boolean)(implicit request: DataRequest[_], messages: Messages)
@@ -35,7 +39,7 @@
     } else if(isNorthernIrishTemporaryCertifiedConsignee){
         messages("consigneeExcise.temporaryCertifiedConsignee.title")
     } else {
-        messages("consigneeExcise.title")
+        messages("consigneeExcise.h1")
     },
     section = Some(messages("consignee.subHeading"))
 ), maybeShowActiveTrader = maybeShowActiveTrader(request)) {
@@ -47,6 +51,9 @@
         }
 
         @h2(messages("consignee.subHeading"), "govuk-caption-xl", hiddenContent = Some(messages("subHeading.hidden")))
+        @if(!(isNorthernIrishTemporaryRegisteredConsignee || isNorthernIrishTemporaryCertifiedConsignee)) {
+            @vpd
+        }
         @govukInput(
             InputViewModel(
                 field = form("value"),
@@ -79,7 +86,15 @@
         @continueOrExit()
     }
 }
+@vpd ={
+    @h1(messages("consigneeExcise.h1"),  hiddenContent = None)
+          <p></p>
+         @h2(messages("consigneeExcise.h2"), "govuk-heading-m", hiddenContent = None)
+         @p(){@messages("consigneeExcise.p1")<br>@messages("consigneeExcise.p2")<br>
+         @link(appConfig.euCodes, "consigneeExcise.link", opensInNewTab = true, withFullStop = true)}
 
+         <p></p>
+}
 @{
     //$COVERAGE-OFF$
 }

@@ -21,11 +21,18 @@ import fixtures.messages.{BaseEnglish, BaseMessages, i18n}
 object NewDestinationTypeMessages {
   sealed trait ViewMessages extends BaseMessages {
     _: i18n =>
+    val h1 = "Destination Type"
     val headingMovement = "What is the new destination type for this movement?"
-    val titleMovement = titleHelper(headingMovement)
+    val titleMovement = titleHelper(h1)
     val headingImport = "What is the new destination type for this import?"
-    val titleImport = titleHelper(headingImport)
-
+    val titleImport = titleHelper(h1)
+    val h2 = "If you’re moving vaping products"
+    val p1 = "You must submit a separate movement for vaping products when the movement is going from:"
+    val bullet1 = "Northern Ireland to the EU"
+    val bullet2 = "the EU to Northern Ireland"
+    val bullet3 = "Northern Ireland to a destination outside the EU but the export declaration is lodged in an EU member state"
+    val p2 = "This applies even if you transport them with other excise goods."
+    val hint = "Not applicable to movements with vaping products"
     val exportWithCustomsDeclarationLodgedInTheUk = "Export with customs declaration lodged in the United Kingdom"
     val gbTaxWarehouse = "Tax warehouse in Great Britain"
     val niTaxWarehouse = "Tax warehouse in Northern Ireland"

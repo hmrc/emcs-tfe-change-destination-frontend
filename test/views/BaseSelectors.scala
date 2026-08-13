@@ -36,6 +36,7 @@ trait BaseSelectors {
   val label: String => String = forId => s"main label[for='$forId']"
   val legend = "main legend"
   def radioButton(radioIndex: Int) = s".govuk-radios > div:nth-child($radioIndex) > label"
+  def radioButtonHint(radioIndex: Int) = s".govuk-radios > div:nth-child($radioIndex) > .govuk-hint "
   def radioDividerButton(radioIndex: Int) = s".govuk-radios > div:nth-child($radioIndex)"
   def checkboxItem(index: Int) = s".govuk-checkboxes > div:nth-child($index) > label"
   def checkboxDividerItem(index: Int) = s".govuk-checkboxes > div:nth-child($index)"

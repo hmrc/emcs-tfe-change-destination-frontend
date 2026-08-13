@@ -54,9 +54,11 @@ class ConsigneeExciseViewSpec extends SpecBase with ViewBehaviours {
 
       behave like pageWithExpectedElementsAndMessages(Seq(
         Selectors.title -> English.title,
-        Selectors.h1 -> English.heading,
+        Selectors.h1 -> English.h1,
         Selectors.h2(1) -> English.consigneeInformationSection,
         Selectors.hint -> English.hint,
+        Selectors.h2(2) -> English.h2,
+        Selectors.p(2) -> English.p,
         Selectors.button -> English.saveAndContinue
       ))
     }
