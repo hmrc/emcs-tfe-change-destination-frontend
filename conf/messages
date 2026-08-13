@@ -290,6 +290,14 @@ newDestinationType.heading.import = What is the new destination type for this im
 newDestinationType.title.movement = What is the new destination type for this movement?
 newDestinationType.title.import = What is the new destination type for this import?
 
+destinationType.h1 = Destination Type
+destinationType.h2 = If you’re moving vaping products
+destinationType.p1 = You must submit a separate movement for vaping products when the movement is going from:
+destinationType.p1.bullet1 =  Northern Ireland to the EU
+destinationType.p1.bullet2 =  the EU to Northern Ireland
+destinationType.p1.bullet3 =  Northern Ireland to a destination outside the EU but the export declaration is lodged in an EU member state
+destinationType.p2 =  This applies even if you transport them with other excise goods.
+
 destinationType.exportWithCustomsDeclarationLodgedInTheUk = Export with customs declaration lodged in the United Kingdom
 destinationType.gbTaxWarehouse = Tax warehouse in Great Britain
 destinationType.gbTaxWarehouse.hint = (England, Scotland and Wales)
@@ -304,6 +312,12 @@ destinationType.certifiedConsignee = Certified consignee
 destinationType.temporaryCertifiedConsignee = Temporary certified consignee
 destinationType.returnToThePlaceOfDispatch = Return to the place of dispatch of the consignor
 destinationType.unknownDestination = Unknown destination
+
+destinationType.directDelivery.hint = Not applicable to movements with vaping products
+destinationType.exemptedOrganisation.hint = Not applicable to movements with vaping products
+destinationType.registeredConsignee.hint = Not applicable to movements with vaping products
+destinationType.temporaryRegisteredConsignee.hint = Not applicable to movements with vaping products
+destinationType.unknownDestination.hint = Not applicable to movements with vaping products
 
 destinationType.error.required.movement = Select the place of destination for this movement
 destinationType.error.required.import = Select the place of destination for this import
@@ -499,6 +513,12 @@ consigneeExcise.temporaryCertifiedConsignee.error.noInput = Enter the authorisat
 consigneeExcise.temporaryCertifiedConsignee.error.length = The authorisation reference must be 13 characters
 consigneeExcise.temporaryCertifiedConsignee.error.invalidCharacters = The authorisation reference must only contain letters and numbers
 consigneeExcise.temporaryCertifiedConsignee.error.format = Authorisation reference must start with 2 capital letters, usually followed by 11 numbers or mixed letters and numbers
+
+consigneeExcise.h1 = Excise Registration Number (ERN)
+consigneeExcise.h2 = For movements of vaping products from the EU to Northern Ireland
+consigneeExcise.p1 = Enter the excise ID in this format: EU Country code followed by VPD12345678.
+consigneeExcise.p2 = For example, FRVPD12345678
+consigneeExcise.link = Find EU country codes
 
 consigneeExcise.error.noInput = Enter the consignee’s ERN
 consigneeExcise.error.length = The consignee’s ERN must be 13 characters

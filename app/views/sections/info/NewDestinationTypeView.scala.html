@@ -27,6 +27,7 @@
         govukButton: GovukButton,
         h1: components.h1,
         h2: components.h2,
+        bullets: components.bullets,
         p: components.p,
         details: components.details,
         destinationTypeHelper: DestinationTypeHelper
@@ -47,6 +48,20 @@
         }
 
         @h2(messages("arc.subHeading", request.arc), "govuk-caption-l", hiddenContent = Some(messages("subHeading.hidden")))
+        @h1(messages("destinationType.h1"),  hiddenContent = None)
+                <p></p>
+                @h2(messages("destinationType.h2"), "govuk-heading-m", hiddenContent = None)
+                @p(){
+                    @messages("destinationType.p1")
+                     @bullets(Seq(
+                         Html(messages("destinationType.p1.bullet1")),
+                         Html(messages("destinationType.p1.bullet2")),
+                         Html(messages("destinationType.p1.bullet3"))
+                      ))
+                }
+                @p(){
+                     @messages("destinationType.p2")
+                }
         @govukRadios(
             RadiosViewModel(
                 field = form("value"),

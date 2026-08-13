@@ -40,7 +40,7 @@ class DestinationTypeHelperSpec extends SpecBase {
           s"when ERN is a warehouse keeper and starts with $ern" - {
             "title" - {
               "must return the correct value" in {
-                helper.title(dataRequest(FakeRequest(), ern = s"${ern}123"), msgs) mustBe messagesForLanguage.headingMovement
+                helper.title(dataRequest(FakeRequest(), ern = s"${ern}123"), msgs) mustBe messagesForLanguage.h1
               }
             }
             "heading" - {
@@ -55,7 +55,7 @@ class DestinationTypeHelperSpec extends SpecBase {
           s"when ERN is a registered consignor and starts with $ern" - {
             "title" - {
               "must return the correct value" in {
-                helper.title(dataRequest(FakeRequest(), ern = s"${ern}123"), msgs) mustBe messagesForLanguage.headingImport
+                helper.title(dataRequest(FakeRequest(), ern = s"${ern}123"), msgs) mustBe messagesForLanguage.h1
               }
             }
             "heading" - {
