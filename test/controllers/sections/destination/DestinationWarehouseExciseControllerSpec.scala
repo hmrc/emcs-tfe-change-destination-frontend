@@ -103,7 +103,7 @@ class DestinationWarehouseExciseControllerSpec extends SpecBase with MockUserAns
 
       MockUserAnswersService.set().returns(Future.successful(emptyUserAnswers))
 
-      val req = FakeRequest(POST, destinationWarehouseExciseRoute).withFormUrlEncodedBody(("value", "answer"))
+      val req = FakeRequest(POST, destinationWarehouseExciseRoute).withFormUrlEncodedBody(("value", "FRVPD01234567"))
 
       val result = testController.onSubmit(testErn, testArc, NormalMode)(req)
 

@@ -18,6 +18,7 @@ package views.sections.destination
 
 import base.SpecBase
 import fixtures.messages.sections.destination.DestinationWarehouseExciseMessages
+import fixtures.messages.sections.destination.DestinationWarehouseExciseMessages.English
 import forms.sections.destination.DestinationWarehouseExciseFormProvider
 import models.NormalMode
 import models.requests.DataRequest
@@ -33,6 +34,7 @@ import views.{BaseSelectors, ViewBehaviours}
 
 class DestinationWarehouseExciseViewSpec extends SpecBase with ViewBehaviours {
 
+  def linkHelper(i: Int) = s"main div > a:nth-of-type($i)"
   object Selectors extends BaseSelectors
 
   "Destination Warehouse Excise view" - {
@@ -57,9 +59,12 @@ class DestinationWarehouseExciseViewSpec extends SpecBase with ViewBehaviours {
           Selectors.title -> messagesForLanguage.title,
           Selectors.h1 -> messagesForLanguage.heading,
           Selectors.h2(1) -> messagesForLanguage.destinationSection,
+          Selectors.h2(2) -> messagesForLanguage.h2,
+          Selectors.p(2) -> messagesForLanguage.p,
           Selectors.hint -> messagesForLanguage.text,
           Selectors.button -> messagesForLanguage.saveAndContinue,
-          Selectors.link(1) -> messagesForLanguage.returnToDraft
+          Selectors.link(1) -> messagesForLanguage.link,
+          linkHelper(1) -> messagesForLanguage.returnToDraft
         ))
       }
     }

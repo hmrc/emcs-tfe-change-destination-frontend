@@ -22,12 +22,18 @@ object DestinationWarehouseExciseMessages {
 
   sealed trait ViewMessages extends BaseMessages { _: i18n =>
 
-    val heading: String = "What is the excise ID of the tax warehouse of destination?"
+    val heading: String = "Excise ID"
+    val heading2: String = "What is the excise ID of the tax warehouse of destination?"
     val title = titleHelper(heading, Some(SectionMessages.English.destinationSubHeading))
+    val h2 = "For movements of vaping products from Northern Ireland to the EU"
+    val p1 = "Enter the excise ID in this format: EU Country code followed by VPD12345678."
+    val p2 = "For example, FRVPD12345678"
+    val link = "Find EU country codes (opens in new tab)"
+    val p = p1 + " " + p2 + " " + link + "."
     val cyaLabel: String = "Warehouse excise ID"
     val cyaChangeHidden: String = "Warehouse excise ID"
     val errorRequired: String = "Enter the excise ID of the tax warehouse of destination"
-    val errorLength: String = "Excise ID of the tax warehouse must be 16 characters or less"
+    val errorLength: String = "Excise ID of the tax warehouse must be 13 characters"
     val errorInvalidCharacters: String = "Excise ID of the tax warehouse must not include < and > and : and ;"
     val errorInvalidGB00: String = "Excise ID must begin GB00, followed by 9 characters"
     val errorInvalidXI00: String = "Excise ID must begin XI00, followed by 9 characters"
