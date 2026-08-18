@@ -33,7 +33,7 @@ class DestinationWarehouseExciseFormProviderSpec extends SpecBase with StringFie
 
   val requiredKey = "destinationWarehouseExcise.error.required"
   val lengthKey = "destinationWarehouseExcise.error.length"
-  val maxLength = 16
+  val maxLength = 13
   val invalidCharactersKey = "destinationWarehouseExcise.error.invalidCharacter"
 
   val form = new DestinationWarehouseExciseFormProvider().apply(MovementScenario.CertifiedConsignee, ChangeConsignee)(dataRequest(FakeRequest()))
@@ -114,6 +114,7 @@ class DestinationWarehouseExciseFormProviderSpec extends SpecBase with StringFie
   "inputIsValidForDestinationType" - {
     "for destination tax warehouse in GB" - {
       "must return Valid when the input starts with GB00" in {
+        implicit val dr: DataRequest[_] = dataRequest(FakeRequest())
         val result =
           new DestinationWarehouseExciseFormProvider()
             .inputIsValidForDestinationType(MovementScenario.UkTaxWarehouse.GB)
@@ -122,6 +123,7 @@ class DestinationWarehouseExciseFormProviderSpec extends SpecBase with StringFie
         result mustBe Valid
       }
       "must return Invalid when the input starts with XI00" in {
+        implicit val dr: DataRequest[_] = dataRequest(FakeRequest())
         val result: ValidationResult =
           new DestinationWarehouseExciseFormProvider()
             .inputIsValidForDestinationType(MovementScenario.UkTaxWarehouse.GB)
@@ -131,6 +133,7 @@ class DestinationWarehouseExciseFormProviderSpec extends SpecBase with StringFie
         result.asInstanceOf[Invalid].errors.flatMap(_.messages.map(msgs(_))) mustBe Seq(English.errorInvalidGB00)
       }
       "must return Invalid when the input doesn't start with GB00" in {
+        implicit val dr: DataRequest[_] = dataRequest(FakeRequest())
         val result: ValidationResult =
           new DestinationWarehouseExciseFormProvider()
             .inputIsValidForDestinationType(MovementScenario.UkTaxWarehouse.GB)
@@ -140,6 +143,7 @@ class DestinationWarehouseExciseFormProviderSpec extends SpecBase with StringFie
         result.asInstanceOf[Invalid].errors.flatMap(_.messages.map(msgs(_))) mustBe Seq(English.errorInvalidGB00)
       }
       "must return Invalid when the input is empty" in {
+        implicit val dr: DataRequest[_] = dataRequest(FakeRequest())
         val result: ValidationResult =
           new DestinationWarehouseExciseFormProvider()
             .inputIsValidForDestinationType(MovementScenario.UkTaxWarehouse.GB)
@@ -150,6 +154,7 @@ class DestinationWarehouseExciseFormProviderSpec extends SpecBase with StringFie
     }
     "for destination tax warehouse in XI" - {
       "must return Valid when the input starts with XI00" in {
+        implicit val dr: DataRequest[_] = dataRequest(FakeRequest())
         val result =
           new DestinationWarehouseExciseFormProvider()
             .inputIsValidForDestinationType(MovementScenario.UkTaxWarehouse.NI)
@@ -158,6 +163,7 @@ class DestinationWarehouseExciseFormProviderSpec extends SpecBase with StringFie
         result mustBe Valid
       }
       "must return Invalid when the input starts with GB00" in {
+        implicit val dr: DataRequest[_] = dataRequest(FakeRequest())
         val result: ValidationResult =
           new DestinationWarehouseExciseFormProvider()
             .inputIsValidForDestinationType(MovementScenario.UkTaxWarehouse.NI)
@@ -167,6 +173,7 @@ class DestinationWarehouseExciseFormProviderSpec extends SpecBase with StringFie
         result.asInstanceOf[Invalid].errors.flatMap(_.messages.map(msgs(_))) mustBe Seq(English.errorInvalidXI00)
       }
       "must return Invalid when the input doesn't start with XI00" in {
+        implicit val dr: DataRequest[_] = dataRequest(FakeRequest())
         val result: ValidationResult =
           new DestinationWarehouseExciseFormProvider()
             .inputIsValidForDestinationType(MovementScenario.UkTaxWarehouse.NI)
@@ -176,6 +183,7 @@ class DestinationWarehouseExciseFormProviderSpec extends SpecBase with StringFie
         result.asInstanceOf[Invalid].errors.flatMap(_.messages.map(msgs(_))) mustBe Seq(English.errorInvalidXI00)
       }
       "must return Invalid when the input is empty" in {
+        implicit val dr: DataRequest[_] = dataRequest(FakeRequest())
         val result: ValidationResult =
           new DestinationWarehouseExciseFormProvider()
             .inputIsValidForDestinationType(MovementScenario.UkTaxWarehouse.NI)
@@ -189,6 +197,7 @@ class DestinationWarehouseExciseFormProviderSpec extends SpecBase with StringFie
         movementScenario =>
           s"when destination type is $movementScenario" - {
             "must return Valid when the input doesn't start with XI or GB" in {
+              implicit val dr: DataRequest[_] = dataRequest(FakeRequest())
               val result =
                 new DestinationWarehouseExciseFormProvider()
                   .inputIsValidForDestinationType(movementScenario)
@@ -197,6 +206,7 @@ class DestinationWarehouseExciseFormProviderSpec extends SpecBase with StringFie
               result mustBe Valid
             }
             "must return Invalid when the input starts with GB" in {
+              implicit val dr: DataRequest[_] = dataRequest(FakeRequest())
               val result: ValidationResult =
                 new DestinationWarehouseExciseFormProvider()
                   .inputIsValidForDestinationType(movementScenario)
@@ -205,6 +215,7 @@ class DestinationWarehouseExciseFormProviderSpec extends SpecBase with StringFie
               result.asInstanceOf[Invalid].errors.flatMap(_.messages.map(msgs(_))) mustBe Seq(English.errorInvalidXIOrGB)
             }
             "must return Invalid when the input starts with XI" in {
+              implicit val dr: DataRequest[_] = dataRequest(FakeRequest())
               val result: ValidationResult =
                 new DestinationWarehouseExciseFormProvider()
                   .inputIsValidForDestinationType(movementScenario)

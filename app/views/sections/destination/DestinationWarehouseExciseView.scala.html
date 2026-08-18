@@ -17,6 +17,7 @@
 @import models.requests.DataRequest
 @import viewmodels.InputWidth._
 @import viewmodels.LabelSize
+@import config.AppConfig
 
 @this(
     layout: templates.Layout,
@@ -27,12 +28,14 @@
     continueOrExit: components.continueOrExit,
     h1: components.h1,
     h2: components.h2,
+    link:components.link,
+    appConfig:AppConfig,
     p: components.p
 )
 
 @(form: Form[_], onSubmitCall: Call)(implicit request: DataRequest[_], messages: Messages)
 
-@layout(pageTitle = title(form, messages("destinationWarehouseExcise.title"), Some(messages("destination.subHeading"))), maybeShowActiveTrader = maybeShowActiveTrader(request)) {
+@layout(pageTitle = title(form, messages("destinationWarehouseExcise.h1"), Some(messages("destination.subHeading"))), maybeShowActiveTrader = maybeShowActiveTrader(request)) {
 
     @formHelper(action = onSubmitCall) {
 
@@ -41,11 +44,17 @@
         }
 
         @h2(messages("destination.subHeading"), "govuk-caption-xl", hiddenContent = Some(messages("subHeading.hidden")))
+        @h1(messages("destinationWarehouseExcise.h1"),  hiddenContent = None)
+        <p></p>
+        @h2(messages("destinationWarehouseExcise.h2"), "govuk-heading-m", hiddenContent = None)
+        @p(){@messages("destinationWarehouseExcise.p1")<br>@messages("consigneeExcise.p2")<br>
+        @link(appConfig.euCodes, "destinationWarehouseExcise.link", opensInNewTab = true, withFullStop = true)}
+        <p></p>
 
         @govukInput(
             InputViewModel(
                 field = form("value"),
-                label = LabelViewModel(Text(messages("destinationWarehouseExcise.heading"))).asPageHeading(LabelSize.Large)
+                label = LabelViewModel(Text(messages("destinationWarehouseExcise.heading"))).asPageHeading(LabelSize.Medium)
             )
             .withWidth(Full)
             .withHint(HintViewModel(content = Text(messages("destinationWarehouseExcise.text"))))

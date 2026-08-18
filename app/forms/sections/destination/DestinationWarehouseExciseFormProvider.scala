@@ -21,15 +21,21 @@ import forms.{GB_00_EXCISE_NUMBER_REGEX, XI_00_EXCISE_NUMBER_REGEX, XI_OR_GB_00_
 import models.requests.DataRequest
 import models.sections.info.ChangeType
 import models.sections.info.movementScenario.MovementScenario
-import play.api.data.Form
+import models.sections.info.movementScenario.MovementScenario.UkTaxWarehouse
+import pages.sections.info.DestinationTypePage
+import play.api.data.{Form, validation}
 import play.api.data.validation.{Constraint, Valid}
 
 import javax.inject.Inject
 
 class DestinationWarehouseExciseFormProvider @Inject() extends Mappings {
 
-  private[forms] def inputIsValidForDestinationType(movementScenario: MovementScenario): Constraint[String] =
+  private[forms] def inputIsValidForDestinationType(movementScenario: MovementScenario)(implicit request: DataRequest[_]): Constraint[String] = {
+
     Constraint {
+      case answer if movementScenario == MovementScenario.UkTaxWarehouse.NI &&
+        request.userAnswers.get(DestinationTypePage).contains(UkTaxWarehouse.NI) =>
+        validation.Valid
       case answer if movementScenario == MovementScenario.UkTaxWarehouse.GB =>
         regexp(GB_00_EXCISE_NUMBER_REGEX, "destinationWarehouseExcise.error.invalidGB00").apply(answer)
       case answer if movementScenario == MovementScenario.UkTaxWarehouse.NI =>
@@ -37,6 +43,7 @@ class DestinationWarehouseExciseFormProvider @Inject() extends Mappings {
       case answer =>
         regexpToNotMatch(XI_OR_GB_00_EXCISE_NUMBER_REGEX, "destinationWarehouseExcise.error.invalidXIOrGB").apply(answer)
     }
+  }
 
   private[forms] def inputIsValidForChangeType(movementScenario: MovementScenario, changeType: ChangeType)
                                               (implicit request: DataRequest[_]): Constraint[String] = {
@@ -63,7 +70,7 @@ class DestinationWarehouseExciseFormProvider @Inject() extends Mappings {
         .verifying(
           firstError(
             regexpUnlessEmpty(XSS_REGEX, "destinationWarehouseExcise.error.invalidCharacter"),
-            maxLength(16, "destinationWarehouseExcise.error.length"),
+            fixedLength(13, "destinationWarehouseExcise.error.length"),
             inputIsValidForDestinationType(movementScenario),
             inputIsValidForChangeType(movementScenario, changeType)
           )

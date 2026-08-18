@@ -818,9 +818,14 @@ dispatchCheckAnswers.heading = Check your answers
 
 destinationWarehouseExcise.title = What is the excise ID of the tax warehouse of destination?
 destinationWarehouseExcise.heading = What is the excise ID of the tax warehouse of destination?
+destinationWarehouseExcise.h1 = Excise ID
+destinationWarehouseExcise.h2 = For movements of vaping products from Northern Ireland to the EU
+destinationWarehouseExcise.p1 = Enter the excise ID in this format: EU Country code followed by VPD12345678.
+destinationWarehouseExcise.p2 = For example, FRVPD12345678
+destinationWarehouseExcise.link = Find EU country codes
 destinationWarehouseExcise.text = This is sometimes called an excise registration number (ERN), starting with two letters identifying the member state of the destination warehouse. For example, GB00123456789.
 destinationWarehouseExcise.error.required = Enter the excise ID of the tax warehouse of destination
-destinationWarehouseExcise.error.length = Excise ID of the tax warehouse must be 16 characters or less
+destinationWarehouseExcise.error.length = Excise ID of the tax warehouse must be 13 characters
 destinationWarehouseExcise.error.invalidCharacter = Excise ID of the tax warehouse must not include < and > and : and ;
 destinationWarehouseExcise.error.invalidGB00 = Excise ID must begin GB00, followed by 9 characters
 destinationWarehouseExcise.error.invalidXI00 = Excise ID must begin XI00, followed by 9 characters
