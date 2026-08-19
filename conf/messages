@@ -515,7 +515,7 @@ consigneeExcise.temporaryCertifiedConsignee.error.invalidCharacters = The author
 consigneeExcise.temporaryCertifiedConsignee.error.format = Authorisation reference must start with 2 capital letters, usually followed by 11 numbers or mixed letters and numbers
 
 consigneeExcise.h1 = Excise Registration Number (ERN)
-consigneeExcise.h2 = For movements of vaping products from the EU to Northern Ireland
+consigneeExcise.h2 = For movements of vaping products from Northern Ireland to the EU
 consigneeExcise.p1 = Enter the excise ID in this format: EU Country code followed by VPD12345678.
 consigneeExcise.p2 = For example, FRVPD12345678
 consigneeExcise.link = Find EU country codes

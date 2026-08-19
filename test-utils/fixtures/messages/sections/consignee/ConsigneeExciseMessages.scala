@@ -26,7 +26,7 @@ object ConsigneeExciseMessages {
     val heading = "What is the consignee’s excise registration number (ERN)?"
     val title = titleHelper(h1, Some(SectionMessages.English.consigneeSubHeading))
     val hint = "An ERN contains 13 characters, starting with 2 letters that represent the member state of the consignee, such as GBWK123456789. It can be found on your approval letter."
-    val h2 = "For movements of vaping products from the EU to Northern Ireland"
+    val h2 = "For movements of vaping products from Northern Ireland to the EU"
     val p1 = "Enter the excise ID in this format: EU Country code followed by VPD12345678."
     val p2 = "For example, FRVPD12345678"
     val link = "Find EU country codes (opens in new tab)."
