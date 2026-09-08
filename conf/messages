@@ -208,6 +208,7 @@ address.consigneeAddress.checkYourAnswers.label = Address
 address.destinationAddress.title = Enter the place of destination address
 address.destinationAddress.heading = Enter the place of destination address
 address.destinationAddress.subheading = Place of destination information
+address.destinationAddress.p1 = For movements of vaping products from Northern Ireland to the EU, you must enter the EU address of the consignee.
 address.destinationAddress.checkYourAnswers.label = Address
 address.destinationAddress.change.hidden = Address
 
