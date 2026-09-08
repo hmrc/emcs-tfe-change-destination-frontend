@@ -53,6 +53,10 @@
 
                 @h1(s"address.$msgKey.heading", Some(messages(s"address.$addressPage.subheading")), "govuk-heading-l")
 
+                @if(messages.isDefinedAt(s"address.$addressPage.p1")) {
+                    <p class="govuk-body">@messages(s"address.$addressPage.p1")</p>
+                }
+
                 @govukInput(
                     InputViewModel(
                         field = form("property"),

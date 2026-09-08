@@ -202,6 +202,7 @@ address.consignorAddress.subheading = Consignor information
 address.consigneeAddress.title = Enter the consignee’s address
 address.consigneeAddress.heading = Enter the consignee’s address
 address.consigneeAddress.subheading = Consignee information
+address.consigneeAddress.p1 = For movements of vaping products from Northern Ireland to the EU, you must enter the EU address of the consignee.
 address.consigneeAddress.checkYourAnswers.label = Address
 
 address.destinationAddress.title = Enter the place of destination address
