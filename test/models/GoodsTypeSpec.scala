@@ -34,6 +34,7 @@ class GoodsTypeSpec extends SpecBase with GuiceOneAppPerSuite {
       GoodsType.apply("T300") mustBe Tobacco
       GoodsType.apply("E400") mustBe Energy
       GoodsType.apply("B300") mustBe Beer
+      GoodsType.apply("V000") mustBe Vaping
     }
 
     "throws illegal argument error when EPC can't be mapped to GoodsType" in {
@@ -62,6 +63,8 @@ class GoodsTypeSpec extends SpecBase with GuiceOneAppPerSuite {
           Energy.toPluralOutput() mustBe "energies"
           Beer.toSingularOutput() mustBe "beer"
           Beer.toPluralOutput() mustBe "beers"
+          Vaping.toSingularOutput() mustBe "vaping product"
+          Vaping.toPluralOutput() mustBe "vaping products"
         }
       }
     }

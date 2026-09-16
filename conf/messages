@@ -977,6 +977,8 @@ goodsType.S.singular = spirit
 goodsType.S.plural = spirits
 goodsType.E.singular = energy
 goodsType.E.plural = energies
+goodsType.V.singular = vaping product
+goodsType.V.plural = vaping products
 
 itemExciseProductCode.title = Choose the Excise Product Code (EPC) for the item
 itemExciseProductCode.heading = Choose the Excise Product Code (EPC) for the item
@@ -1065,6 +1067,7 @@ itemCommercialDescription.hint.I = Include any information that will help to ide
 itemCommercialDescription.hint.S = This will be used to help identify the goods. For example: 20 x 1 litre bottles of London dry gin.
 itemCommercialDescription.hint.T = This will be used to help identify the goods. For example: 500 x 30g packets of hand rolling tobacco.
 itemCommercialDescription.hint.E = Include any information that will help to identify the goods.
+itemCommercialDescription.hint.V = This will be used to help identify the goods. For example: 15 boxes of 100 2ml pods. VapeCo Blue Raspberry E-liquid 20mg/ml nicotine. SKU: VPD-BR-2-20
 itemCommercialDescription.details.beer.p = Include any information that will help to identify the goods, such as:
 itemCommercialDescription.details.beer.b1 = the number of the lowest level of packaging used, such as cans, bottles or kegs
 itemCommercialDescription.details.beer.b2 = if transporting multipacks or cases, state both the number of multipacks or cases, and the number of individual units. For example: 10 x cases of 12 x 300ml bottles of lager beer
@@ -1083,6 +1086,10 @@ itemCommercialDescription.details.tobacco.p = Include any information that will 
 itemCommercialDescription.details.tobacco.b1 = the number of the lowest level of packaging used, such as individual cigarette packets or cigar boxes
 itemCommercialDescription.details.tobacco.b2 = if transporting multipacks state both the number of multipacks and number of individual units. For example: 200 x multipacks of 5 x 20 cigarettes
 itemCommercialDescription.details.tobacco.b3 = if transporting hand rolling or pipe tobacco state the number and weight of individual packets
+itemCommercialDescription.details.vaping.p = Include any information that will help to identify the goods, such as:
+itemCommercialDescription.details.vaping.b1 = the brand name, flavour, container size, nicotine strength and product SKU
+itemCommercialDescription.details.vaping.b2 = the lowest level of packaging used, such as pods, cartridges or refill bottles
+itemCommercialDescription.details.vaping.b3 = if transporting multipacks or boxes, state both the number of multipacks or boxes and the number of individual units
 itemCommercialDescription.summary = Help with commercial description
 itemCommercialDescription.error.invalidCharacter = Description cannot contain < and > and : and ;
 
@@ -1116,6 +1123,7 @@ itemSmallIndependentProducer.error.required = Select ‘Yes’ if the product ha
 itemSmallIndependentProducer.checkYourAnswersLabel = Independent small producer
 itemSmallIndependentProducer.change.hidden = if the producer is an independent small producer
 
+#TODO: delete unused itemFiscalMarksChoice/itemFiscalMarks messages (and check the others too)
 itemFiscalMarksChoice.title = Does the {0} have any fiscal marks?
 itemFiscalMarksChoice.heading = Does the {0} have any fiscal marks?
 itemFiscalMarksChoice.checkYourAnswersLabel = Fiscal marks
