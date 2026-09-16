@@ -37,12 +37,6 @@ object GoodsType {
     override val code: String = "W"
   }
 
-  case class Fermented(epc: String) extends GoodsType {
-    override val code: String = epc.take(1)
-
-    override val isAlcohol: Boolean = true
-  }
-
   case object Energy extends GoodsType {
     override val code: String = "E"
   }
@@ -59,6 +53,16 @@ object GoodsType {
     override val code: String = "I"
   }
 
+  case object Vaping extends GoodsType {
+    override val code: String = "V"
+  }
+
+  case class Fermented(epc: String) extends GoodsType {
+    override val code: String = epc.take(1)
+
+    override val isAlcohol: Boolean = true
+  }
+
   // TODO: see below
   // Fermented is currently only used in BodyEadEsadModel.
   // When (if) we implement Fermented text throughout the frontend, remove default value and (maybe) change from Option[String] to String.
@@ -73,6 +77,7 @@ object GoodsType {
         case Spirits.code => Spirits
         case Tobacco.code => Tobacco
         case Intermediate.code => Intermediate
+        case Vaping.code => Vaping
         case invalid => throw new IllegalArgumentException(s"Invalid argument of '$invalid' received which can not be mapped to a GoodsType")
       }
     }
@@ -87,5 +92,5 @@ object GoodsType {
     "22060089"
   )
 
-  val values: Seq[GoodsType] = Seq(Beer, Wine, Energy, Spirits, Tobacco, Intermediate)
+  val values: Seq[GoodsType] = Seq(Beer, Wine, Energy, Spirits, Tobacco, Intermediate, Vaping)
 }
