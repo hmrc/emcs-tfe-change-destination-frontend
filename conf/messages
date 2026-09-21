@@ -518,7 +518,7 @@ consigneeExcise.temporaryCertifiedConsignee.error.format = Authorisation referen
 
 consigneeExcise.h1 = Excise Registration Number (ERN)
 consigneeExcise.h2 = For movements of vaping products from Northern Ireland to the EU
-consigneeExcise.p1 = Enter the excise ID in this format: EU Country code followed by VPD12345678.
+consigneeExcise.p1 = Enter the ERN in this format: EU Country code followed by VPD12345678.
 consigneeExcise.p2 = For example, FRVPD12345678
 consigneeExcise.link = Find EU country codes
 
