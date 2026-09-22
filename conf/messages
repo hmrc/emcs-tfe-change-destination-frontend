@@ -198,6 +198,7 @@ checkYourAnswers.submit.button = Submit movement
 address.consignorAddress.title = Enter the consignor’s address
 address.consignorAddress.heading = Enter the consignor’s address
 address.consignorAddress.subheading = Consignor information
+address.consignorAddress.p1 = For vaping products from the EU to Northern Ireland, enter the consignee's business details.
 
 address.consigneeAddress.title = Enter the consignee’s address
 address.consigneeAddress.heading = Enter the consignee’s address
