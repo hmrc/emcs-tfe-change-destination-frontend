@@ -19,7 +19,7 @@ package models.requests
 import models.UserType
 import models.response.emcsTfe.GetMovementResponse
 import play.api.mvc.WrappedRequest
-import play.twirl.api.Html
+import uk.gov.hmrc.govukfrontend.views.viewmodels.servicenavigation.ServiceNavigationItem
 
 case class MovementRequest[A](request: UserRequest[A],
                               arc: String,
@@ -34,5 +34,5 @@ case class MovementRequest[A](request: UserRequest[A],
   lazy val isRegisteredConsignor: Boolean = request.isRegisteredConsignor
   lazy val isCertifiedConsignor: Boolean = request.isCertifiedConsignor
 
-  override val navBar: Option[Html] = request.navBar
+  override val navBarItems: Option[Seq[ServiceNavigationItem]] = request.navBarItems
 }
