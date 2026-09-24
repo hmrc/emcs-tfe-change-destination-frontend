@@ -33,7 +33,7 @@ import play.api.Play.materializer
 import play.api.i18n.{Lang, Messages, MessagesApi}
 import play.api.mvc.{MessagesControllerComponents, Request}
 import play.api.test.Helpers.stubPlayBodyParsers
-import play.twirl.api.Html
+import uk.gov.hmrc.govukfrontend.views.viewmodels.servicenavigation.ServiceNavigationItem
 
 trait SpecBase extends AnyFreeSpec
   with Matchers with OptionValues with ScalaFutures with BaseFixtures with GuiceOneAppPerSuite with GetMovementResponseFixtures {
@@ -53,29 +53,29 @@ trait SpecBase extends AnyFreeSpec
 
   val fakeAuthAction = new FakeAuthAction(stubPlayBodyParsers)
 
-  def userRequest[A](request: Request[A], ern: String = testErn, navBar: Option[Html] = None): UserRequest[A] =
-    UserRequest(request, ern, testInternalId, testCredId, testSessionId, hasMultipleErns = false, navBar)
+  def userRequest[A](request: Request[A], ern: String = testErn, navBarItems: Option[Seq[ServiceNavigationItem]] = None): UserRequest[A] =
+    UserRequest(request, ern, testInternalId, testCredId, testSessionId, hasMultipleErns = false, navBarItems)
 
   def movementRequest[A](request: Request[A],
                          ern: String = testErn,
                          movementDetails: GetMovementResponse = maxGetMovementResponse,
-                         navBar: Option[Html] = None
+                         navBarItems: Option[Seq[ServiceNavigationItem]] = None
                         ): MovementRequest[A] =
-    MovementRequest(userRequest(request, ern, navBar), testArc, movementDetails)
+    MovementRequest(userRequest(request, ern, navBarItems), testArc, movementDetails)
 
   def dataRequest[A](request: Request[A],
                      answers: UserAnswers = emptyUserAnswers,
                      ern: String = testErn,
                      movementDetails: GetMovementResponse = maxGetMovementResponse,
-                     navBar: Option[Html] = None
+                     navBarItems: Option[Seq[ServiceNavigationItem]] = None
                     ): DataRequest[A] =
-    DataRequest(movementRequest(request, ern, movementDetails, navBar), answers, Some(testMinTraderKnownFacts))
+    DataRequest(movementRequest(request, ern, movementDetails, navBarItems), answers, Some(testMinTraderKnownFacts))
 
   def optionalDataRequest[A](request: Request[A],
                              optAnswers: Option[UserAnswers] = None,
                              ern: String = testErn,
                              movementDetails: GetMovementResponse = maxGetMovementResponse,
-                             navBar: Option[Html] = None
+                             navBarItems: Option[Seq[ServiceNavigationItem]] = None
                             ): OptionalDataRequest[A] =
-    OptionalDataRequest(movementRequest(request, ern, movementDetails, navBar), optAnswers, Some(testMinTraderKnownFacts))
+    OptionalDataRequest(movementRequest(request, ern, movementDetails, navBarItems), optAnswers, Some(testMinTraderKnownFacts))
 }

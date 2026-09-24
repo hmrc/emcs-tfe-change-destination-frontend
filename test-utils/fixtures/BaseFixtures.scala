@@ -20,6 +20,8 @@ import models._
 import models.sections.info.{DispatchDetailsModel, InvoiceDetailsModel}
 import play.api.libs.json.{JsObject, Json}
 import play.api.mvc.Call
+import uk.gov.hmrc.govukfrontend.views.Aliases.Text
+import uk.gov.hmrc.govukfrontend.views.viewmodels.servicenavigation.ServiceNavigationItem
 
 import java.time.temporal.ChronoUnit
 import java.time.{Instant, LocalDate, LocalDateTime, LocalTime}
@@ -146,4 +148,10 @@ trait BaseFixtures {
     "date" -> Json.toJson(LocalDate.of(2020, 2, 2)),
     "time" -> "07:25"
   )
+
+  val someNavItems =
+    Some(Seq(
+      ServiceNavigationItem(content = Text("Home"), href = "/home-link"),
+      ServiceNavigationItem(content = Text("Messages"), href = "/messages-link")
+    ))
 }

@@ -19,7 +19,7 @@ package mocks.connectors
 import connectors.emcsTfeFrontend.NavBarPartialConnector
 import org.scalamock.handlers.CallHandler3
 import org.scalamock.scalatest.MockFactory
-import play.twirl.api.Html
+import uk.gov.hmrc.govukfrontend.views.viewmodels.servicenavigation.ServiceNavigationItem
 import uk.gov.hmrc.http.HeaderCarrier
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -30,8 +30,8 @@ trait MockNavBarPartialConnector extends MockFactory {
 
   object MockNavBarPartialConnector {
 
-    def getNavBar(ern: String): CallHandler3[String, HeaderCarrier, ExecutionContext, Future[Option[Html]]] =
-      (mockNavBarPartialConnector.getNavBar(_: String)(_: HeaderCarrier, _: ExecutionContext))
+    def getNavBarItems(ern: String): CallHandler3[String, HeaderCarrier, ExecutionContext, Future[Option[Seq[ServiceNavigationItem]]]] =
+      (mockNavBarPartialConnector.getNavBarItems(_: String)(_: HeaderCarrier, _: ExecutionContext))
         .expects(ern, *, *)
   }
 }

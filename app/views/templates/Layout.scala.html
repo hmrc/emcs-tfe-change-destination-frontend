@@ -20,16 +20,18 @@
 @import views.html.helper.CSPNonce
 @import views.html.templates.FullWidthMainContentTemplate
 @import models.requests.NavBarRequest
+@import uk.gov.hmrc.govukfrontend.views.viewmodels.servicenavigation.{ServiceNavigation, ServiceNavigationItem}
+@import uk.gov.hmrc.hmrcfrontend.views.viewmodels.header.v2.{HeaderParams, HeaderUrls}
 
 @this(
     appConfig: AppConfig,
     govukLayout: GovukLayout,
     govukBackLink: GovukBackLink,
     hmrcHead: HmrcHead,
+    hmrcHeader: HmrcHeader,
     hmrcStandardHeader: HmrcStandardHeader,
     hmrcStandardFooter: HmrcStandardFooter,
     hmrcTrackingConsentSnippet: HmrcTrackingConsentSnippet,
-    hmrcLanguageSelect: HmrcLanguageSelect,
     hmrcTimeoutDialog: HmrcTimeoutDialog,
     hmrcReportTechnicalIssueHelper: HmrcReportTechnicalIssueHelper,
     hmrcScripts: HmrcScripts,
@@ -78,10 +80,6 @@
 
 @beforeContent = {
     @{ activeTrader(maybeShowActiveTrader, appConfig) }
-    @{ request match {
-        case navBarRequest: NavBarRequest => navBarRequest.navBar.getOrElse(Html(""))
-        case _ => Html("")
-    }}
     @if(showBackLink) {
         @govukBackLink(BackLinkViewModel(href = "#").withCssClass("js-visible"))
     }
@@ -99,11 +97,23 @@
 @govukLayout(
     pageTitle   = Some(pageTitle),
     headBlock   = Some(head),
-    headerBlock = Some(hmrcStandardHeader(
-        serviceUrl  = Some(appConfig.emcsTfeHomeUrl),
-        signOutUrl  = if(showSignOut) Some(controllers.auth.routes.SignedOutController.signOut().url) else None,
-        phaseBanner = None
-    )),
+    headerBlock = Some(hmrcHeader(HeaderParams(
+        headerUrls = HeaderUrls(
+            homepageUrl = messages("header.govuk.url"),
+            signOutHref = if(showSignOut) Some(controllers.auth.routes.SignedOutController.signOut().url) else None,
+            assetsPath = uk.gov.hmrc.hmrcfrontend.controllers.routes.Assets.at("govuk/images").url
+        ),
+        serviceNavigation = Some(ServiceNavigation(
+            serviceName = Some(messages("service.name")),
+            serviceUrl = Some(appConfig.emcsTfeHomeUrl),
+            navigation = request match {
+                case navBarRequest: NavBarRequest => navBarRequest.navBarItems.getOrElse(Seq.empty[ServiceNavigationItem])
+                case _ => Seq.empty[ServiceNavigationItem]
+            },
+            navigationLabel = Some("Account")
+        )),
+        language = if(messages.lang.code == "cy") Cy else En
+    ))),
     beforeContentBlock = Some(beforeContent),
     footerBlock        = Some(hmrcStandardFooter()),
     scriptsBlock       = Some(hmrcScripts(

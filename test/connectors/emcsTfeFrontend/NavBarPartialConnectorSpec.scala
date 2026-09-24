@@ -20,7 +20,6 @@ import base.SpecBase
 import fixtures.GetMovementResponseFixtures
 import mocks.connectors.MockHttpClient
 import play.api.http.{HeaderNames, MimeTypes, Status}
-import play.twirl.api.Html
 import uk.gov.hmrc.http.{HeaderCarrier, StringContextOps}
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -33,18 +32,16 @@ class NavBarPartialConnectorSpec extends SpecBase
 
   lazy val connector = new NavBarPartialConnector(mockHttpClient, appConfig)
 
-  val dummyHtml: Html = Html("<div><p>hello</p></div>")
-
-  "getNavBar()" - {
+  "getNavBarItems()" - {
 
     "should return Some(Html)" - {
 
       "when call to TFE Frontend is successful" in {
 
-        MockHttpClient.get(url"${appConfig.emcsTfeFrontendBaseUrl}/emcs/partials/navigation/trader/$testErn")
-          .returns(Future.successful(Some(dummyHtml)))
+        MockHttpClient.get(url"${appConfig.emcsTfeFrontendBaseUrl}/emcs/partials/navigation-items/trader/$testErn")
+          .returns(Future.successful(someNavItems))
 
-        connector.getNavBar(exciseRegistrationNumber = testErn).futureValue mustBe Some(dummyHtml)
+        connector.getNavBarItems(exciseRegistrationNumber = testErn).futureValue mustBe someNavItems
       }
     }
 
@@ -52,10 +49,10 @@ class NavBarPartialConnectorSpec extends SpecBase
 
       "when call to TFE Frontend fails" in {
 
-        MockHttpClient.get(url"${appConfig.emcsTfeFrontendBaseUrl}/emcs/partials/navigation/trader/$testErn")
+        MockHttpClient.get(url"${appConfig.emcsTfeFrontendBaseUrl}/emcs/partials/navigation-items/trader/$testErn")
           .returns(Future.failed(new Exception("foo")))
 
-        connector.getNavBar(exciseRegistrationNumber = testErn).futureValue mustBe None
+        connector.getNavBarItems(exciseRegistrationNumber = testErn).futureValue mustBe None
       }
     }
   }

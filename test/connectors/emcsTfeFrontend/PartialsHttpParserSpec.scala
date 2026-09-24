@@ -18,22 +18,23 @@ package connectors.emcsTfeFrontend
 
 import base.SpecBase
 import play.api.http.Status
-import play.twirl.api.Html
 import uk.gov.hmrc.http.HttpResponse
 
 class PartialsHttpParserSpec extends SpecBase with Status with PartialsHttpParser {
 
-  val htmlString = "<div><p>hello</p></div>"
+  val jsonString =
+    """[{"text":"Home","href":"/home-link","active":false,"current":false,"classes":"","attributes":{}},
+      |{"text":"Messages","href":"/messages-link","active":false,"current":false,"classes":"",
+      |"attributes":{}}]""".stripMargin
 
   "PartialReads.read(method: String, url: String, response: HttpResponse)" - {
 
     "should return a successful response" - {
 
       "when valid HTML is returned that can be parsed to the model" in {
+        val httpResponse = HttpResponse(Status.OK, jsonString)
 
-        val httpResponse = HttpResponse(Status.OK, "<div><p>hello</p></div>")
-
-        PartialReads.read("GET", s"/emcs/partial/navigation/trader/$testErn", httpResponse) mustBe Some(Html(htmlString))
+        PartialReads.read("GET", s"/emcs/partial/navigation/trader/$testErn", httpResponse) mustBe someNavItems
       }
     }
 
