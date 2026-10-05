@@ -241,14 +241,14 @@ class AuthActionSpec extends SpecBase with BaseFixtures with BeforeAndAfterAll w
                   ))
 
                   "allow the User through, returning a 200 (OK)" in new Harness {
-                    MockNavBarPartialConnector.getNavBar(testErn).returns(Future.successful(Some(Html("<nav>NavBar</nav>"))))
+                    MockNavBarPartialConnector.getNavBarItems(testErn).returns(Future.successful(someNavItems))
                     override val authConnector = new FakeSuccessAuthConnector(authResponse(enrolments = singleEnrolement))
 
                     status(result) mustBe OK
                   }
 
                   "set UserRequest.hasMultipleErns to false" in new Harness {
-                    MockNavBarPartialConnector.getNavBar(testErn).returns(Future.successful(None))
+                    MockNavBarPartialConnector.getNavBarItems(testErn).returns(Future.successful(None))
                     override val authConnector = new FakeSuccessAuthConnector(authResponse(enrolments = singleEnrolement))
                     val hasMultipleErns = testRequest(req => req.hasMultipleErns)
 
@@ -276,14 +276,14 @@ class AuthActionSpec extends SpecBase with BaseFixtures with BeforeAndAfterAll w
                   ))
 
                   "allow the User through, returning a 200 (OK)" in new Harness {
-                    MockNavBarPartialConnector.getNavBar(testErn).returns(Future.successful(None))
+                    MockNavBarPartialConnector.getNavBarItems(testErn).returns(Future.successful(None))
                     override val authConnector = new FakeSuccessAuthConnector(authResponse(enrolments = multipleEnrolements))
 
                     status(result) mustBe OK
                   }
 
                   "set UserRequest.hasMultipleErns to true" in new Harness {
-                    MockNavBarPartialConnector.getNavBar(testErn).returns(Future.successful(None))
+                    MockNavBarPartialConnector.getNavBarItems(testErn).returns(Future.successful(None))
                     override val authConnector = new FakeSuccessAuthConnector(authResponse(enrolments = multipleEnrolements))
                     val hasMultipleErns = testRequest(req => req.hasMultipleErns)
 

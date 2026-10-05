@@ -16,8 +16,8 @@
 
 package models.requests
 
-import play.twirl.api.Html
+import uk.gov.hmrc.govukfrontend.views.viewmodels.servicenavigation.ServiceNavigationItem
 
 trait NavBarRequest {
-  val navBar: Option[Html]
+  val navBarItems: Option[Seq[ServiceNavigationItem]]
 }

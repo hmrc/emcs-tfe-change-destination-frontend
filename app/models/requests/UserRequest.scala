@@ -19,7 +19,7 @@ package models.requests
 import models.UserType
 import models.UserType.{GreatBritainRegisteredConsignor, GreatBritainWarehouseKeeper, NorthernIrelandCertifiedConsignor, NorthernIrelandRegisteredConsignor, NorthernIrelandTemporaryCertifiedConsignor, NorthernIrelandWarehouseKeeper}
 import play.api.mvc.{Request, WrappedRequest}
-import play.twirl.api.Html
+import uk.gov.hmrc.govukfrontend.views.viewmodels.servicenavigation.ServiceNavigationItem
 
 case class UserRequest[A](request: Request[A],
                           ern: String,
@@ -27,7 +27,7 @@ case class UserRequest[A](request: Request[A],
                           credId: String,
                           sessionId: String,
                           hasMultipleErns: Boolean,
-                          override val navBar: Option[Html] = None) extends WrappedRequest[A](request) with NavBarRequest {
+                          override val navBarItems: Option[Seq[ServiceNavigationItem]] = None) extends WrappedRequest[A](request) with NavBarRequest {
 
 
   lazy val userTypeFromErn: UserType = UserType(ern)

@@ -124,8 +124,8 @@ class AuthActionImpl @Inject()(override val authConnector: AuthConnector,
       logger.warn(s"[checkIfUserErnCanAccessCoD] User attempted to access CoD with invalid ern: '$ernFromUrl'")
       Future.successful(Redirect(controllers.error.routes.ErrorController.unauthorised()))
     } else {
-      navBarPartialConnector.getNavBar(ernFromUrl).flatMap { navBar =>
-        block(UserRequest(request, ernFromUrl, internalId, credId, sessionId.get.value, hasMultipleEnrolments, navBar))
+      navBarPartialConnector.getNavBarItems(ernFromUrl).flatMap { navBarItems =>
+        block(UserRequest(request, ernFromUrl, internalId, credId, sessionId.get.value, hasMultipleEnrolments, navBarItems))
       }
     }
   }

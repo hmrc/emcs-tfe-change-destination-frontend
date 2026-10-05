@@ -17,16 +17,17 @@
 package connectors.emcsTfeFrontend
 
 import play.api.http.Status.OK
-import play.twirl.api.Html
+import play.api.libs.json.Json
+import uk.gov.hmrc.govukfrontend.views.viewmodels.servicenavigation.ServiceNavigationItem
 import uk.gov.hmrc.http.{HttpReads, HttpResponse}
 import utils.Logging
 
 trait PartialsHttpParser extends Logging {
 
-  implicit object PartialReads extends HttpReads[Option[Html]] {
-    override def read(method: String, url: String, response: HttpResponse): Option[Html] = {
+  implicit object PartialReads extends HttpReads[Option[Seq[ServiceNavigationItem]]] {
+    override def read(method: String, url: String, response: HttpResponse): Option[Seq[ServiceNavigationItem]] = {
       response.status match {
-        case OK => Some(Html(response.body))
+        case OK => Some(Json.parse(response.body).as[Seq[ServiceNavigationItem]])
         case status =>
           logger.warn(s"[read] Unexpected status from emcs-tfe-frontend: $status")
           None

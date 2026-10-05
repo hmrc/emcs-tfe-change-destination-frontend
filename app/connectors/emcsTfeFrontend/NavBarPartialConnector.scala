@@ -17,7 +17,7 @@
 package connectors.emcsTfeFrontend
 
 import config.AppConfig
-import play.twirl.api.Html
+import uk.gov.hmrc.govukfrontend.views.viewmodels.servicenavigation.ServiceNavigationItem
 import uk.gov.hmrc.http.client.HttpClientV2
 import uk.gov.hmrc.http.{HeaderCarrier, StringContextOps}
 import utils.Logging
@@ -29,13 +29,14 @@ import scala.concurrent.{ExecutionContext, Future}
 class NavBarPartialConnector @Inject()(val http: HttpClientV2,
                                        config: AppConfig) extends PartialsHttpParser with Logging {
 
-  def getNavBar(exciseRegistrationNumber: String)
-               (implicit headerCarrier: HeaderCarrier, executionContext: ExecutionContext): Future[Option[Html]] =
+  def getNavBarItems(exciseRegistrationNumber: String)
+                    (implicit headerCarrier: HeaderCarrier, executionContext: ExecutionContext): Future[Option[Seq[ServiceNavigationItem]]] = {
     http
-      .get(url"${config.emcsTfeFrontendBaseUrl}/emcs/partials/navigation/trader/$exciseRegistrationNumber")
-      .execute[Option[Html]]
+      .get(url"${config.emcsTfeFrontendBaseUrl}/emcs/partials/navigation-items/trader/$exciseRegistrationNumber")
+      .execute[Option[Seq[ServiceNavigationItem]]]
       .recover { _ =>
-        logger.warn(s"[getNavBar] Failed to retrieve nav bar for ERN: $exciseRegistrationNumber")
+        logger.warn(s"[getNavBarItems] Failed to retrieve nav bar items for ERN: $exciseRegistrationNumber")
         None
       }
+  }
 }

@@ -23,6 +23,7 @@ import models.{TraderKnownFacts, UserAnswers, UserType}
 import pages.sections.info.DispatchPlacePage
 import play.api.mvc.WrappedRequest
 import play.twirl.api.Html
+import uk.gov.hmrc.govukfrontend.views.viewmodels.servicenavigation.ServiceNavigationItem
 import utils.Logging
 
 case class DataRequest[A](request: MovementRequest[A],
@@ -54,6 +55,6 @@ case class DataRequest[A](request: MovementRequest[A],
       throw new Exception(s"Invalid value for DISPATCH_PLACE: $value")
   }
 
-  override val navBar: Option[Html] = request.navBar
+  override val navBarItems: Option[Seq[ServiceNavigationItem]] = request.navBarItems
 
 }

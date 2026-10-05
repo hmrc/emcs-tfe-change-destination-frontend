@@ -32,16 +32,17 @@ class LayoutTemplateSpec extends SpecBase with ViewBehaviours {
   "must render NavBar when supplied from request" - {
 
     Seq(
-      userRequest(FakeRequest(), navBar = Some(Html("NavBar"))),
-      movementRequest(FakeRequest(), navBar = Some(Html("NavBar"))),
-      optionalDataRequest(FakeRequest(), navBar = Some(Html("NavBar"))),
-      dataRequest(FakeRequest(), navBar = Some(Html("NavBar")))
+      userRequest(FakeRequest(), navBarItems = someNavItems),
+      movementRequest(FakeRequest(), navBarItems = someNavItems),
+      optionalDataRequest(FakeRequest(), navBarItems = someNavItems),
+      dataRequest(FakeRequest(), navBarItems = someNavItems)
     ).foreach(implicit request => {
 
       s"when the request is of type ${request.getClass.getSimpleName}" in {
         implicit val msgs = messages(request)
         val doc: Document = Jsoup.parse(template(pageTitle = "Title", maybeShowActiveTrader = None)(contentBlock).toString())
-        doc.html().contains("NavBar") mustBe true
+        doc.getElementsByAttributeValue("href", "/home-link").text() mustBe "Home"
+        doc.getElementsByAttributeValue("href", "/messages-link").text() mustBe "Messages"
       }
     })
   }
